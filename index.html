@@ -47,12 +47,18 @@
         .sidebar.minimized .sidebar-subtitle,
         .sidebar.minimized .menu-section-title,
         .sidebar.minimized .menu-item-text,
-        .sidebar.minimized .menu-badge {
-            display: none;
+        .sidebar.minimized .menu-badge,
+        .sidebar.minimized .sidebar-logo span:last-child {
+            display: none !important;
         }
         
         .sidebar.minimized .sidebar-logo {
             justify-content: center;
+        }
+        
+        .sidebar.minimized .sidebar-header {
+            padding: 1rem 0.5rem;
+            text-align: center;
         }
         
         .sidebar.minimized .menu-item {
@@ -64,8 +70,16 @@
             margin-right: 0;
         }
         
+        .sidebar.minimized .menu-section {
+            margin-bottom: 1rem;
+        }
+        
         .sidebar.minimized .menu-item {
             position: relative;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .sidebar.minimized .menu-item:hover::after {
@@ -509,6 +523,10 @@
                 width: 80px;
             }
             
+            .sidebar.minimized .sidebar-header {
+                padding: 1.5rem 0.5rem;
+            }
+            
             .main-content {
                 margin-left: 300px;
             }
@@ -536,6 +554,10 @@
                 width: 70px;
             }
             
+            .sidebar.minimized .sidebar-header {
+                padding: 1rem 0.5rem;
+            }
+            
             .main-content {
                 margin-left: 280px;
             }
@@ -553,6 +575,10 @@
             
             .sidebar.minimized {
                 width: 60px;
+            }
+            
+            .sidebar.minimized .sidebar-header {
+                padding: 0.8rem 0.5rem;
             }
             
             .main-content {
