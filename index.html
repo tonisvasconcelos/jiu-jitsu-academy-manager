@@ -1211,6 +1211,9 @@
                                     <button type="button" class="btn btn-warning" onclick="clearAllData()" style="margin-top: 10px;">
                                         <span>🗑️</span> Clear All Data (Debug)
                                     </button>
+                                    <button type="button" class="btn btn-info" onclick="debugLocalStorage()" style="margin-top: 10px;">
+                                        <span>🔍</span> Debug LocalStorage
+                                    </button>
                                 </div>
                             </div>
                             <p class="setting-description">Upload your company logo. Recommended size: 200x200px. Supported formats: JPG, PNG, GIF.</p>
@@ -1281,6 +1284,7 @@
         // Data Management
         class DataManager {
             constructor() {
+                console.log('DataManager constructor called');
                 this.students = this.loadData('students') || [
                     { id: 1, name: 'João Silva', email: 'joao@email.com', phone: '+55 11 99999-9999', belt: 'Blue', branch: 'Main Academy', joinDate: '2024-01-15', status: 'Active', age: 28, address: 'Rua das Flores, 123' },
                     { id: 2, name: 'Maria Santos', email: 'maria@email.com', phone: '+55 11 88888-8888', belt: 'Purple', branch: 'Downtown Branch', joinDate: '2023-11-20', status: 'Active', age: 25, address: 'Av. Principal, 456' }
@@ -1297,7 +1301,10 @@
                     { id: 1, name: 'Beginner Gi Class', instructor: 'Carlos Mendes', day: 'Mon, Wed', time: '18:00', branch: 'Main Academy', level: 'Beginner', students: 12, maxStudents: 20, status: 'Active' },
                     { id: 2, name: 'Kids Class', instructor: 'Ana Costa', day: 'Tue, Thu', time: '16:00', branch: 'Downtown Branch', level: 'Kids', students: 8, maxStudents: 15, status: 'Active' }
                 ];
-                this.settings = this.loadData('settings') || {
+                console.log('Loading settings...');
+                const loadedSettings = this.loadData('settings');
+                console.log('Loaded settings from localStorage:', loadedSettings);
+                this.settings = loadedSettings || {
                     languageCode: 'PTB',
                     companyName: '',
                     companyResponsible: '',
@@ -1311,6 +1318,7 @@
                     timeFormat: '24h',
                     currency: 'BRL'
                 };
+                console.log('Final settings object:', this.settings);
                 
                 // Only save default data if no existing data is found in localStorage
                 const hasExistingStudents = localStorage.getItem('students') !== null;
@@ -2740,6 +2748,22 @@
                 console.log('All data cleared from localStorage');
                 showNotification('All data cleared. Please refresh the page.');
             }
+        }
+
+        function debugLocalStorage() {
+            console.log('=== localStorage Debug ===');
+            console.log('Students:', localStorage.getItem('students'));
+            console.log('Teachers:', localStorage.getItem('teachers'));
+            console.log('Branches:', localStorage.getItem('branches'));
+            console.log('Classes:', localStorage.getItem('classes'));
+            console.log('Settings:', localStorage.getItem('settings'));
+            console.log('=== DataManager Debug ===');
+            console.log('dataManager.students:', dataManager.students);
+            console.log('dataManager.teachers:', dataManager.teachers);
+            console.log('dataManager.branches:', dataManager.branches);
+            console.log('dataManager.classes:', dataManager.classes);
+            console.log('dataManager.settings:', dataManager.settings);
+            showNotification('LocalStorage debug info logged to console');
         }
 
         function saveCompanyInfo() {
