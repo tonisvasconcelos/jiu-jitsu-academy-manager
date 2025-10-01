@@ -5008,6 +5008,14 @@
             showMainApp() {
                 document.getElementById('login-page').style.display = 'none';
                 document.getElementById('main-app').style.display = 'flex';
+                
+                // Ensure sidebar is visible
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) {
+                    sidebar.classList.remove('collapsed');
+                    sidebar.style.display = 'flex';
+                }
+                
                 this.updateUIForUser();
             }
             
@@ -5070,14 +5078,27 @@
             
             updateSidebarForRole() {
                 const menuItems = document.querySelectorAll('.menu-item');
+                console.log('Updating sidebar for role:', this.currentUser?.role);
+                console.log('Found menu items:', menuItems.length);
+                
                 menuItems.forEach(item => {
                     const page = item.dataset.page;
-                    if (!this.hasPermission(page)) {
+                    const hasPermission = this.hasPermission(page);
+                    console.log(`Page ${page}: hasPermission = ${hasPermission}`);
+                    
+                    if (!hasPermission) {
                         item.style.display = 'none';
                     } else {
                         item.style.display = 'flex';
                     }
                 });
+                
+                // Ensure sidebar itself is visible
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) {
+                    sidebar.style.display = 'flex';
+                    sidebar.classList.remove('collapsed');
+                }
             }
             
             hasPermission(page) {
@@ -5112,6 +5133,16 @@
         
         // Initialize authentication
         const authManager = new AuthManager();
+        
+        // Force show sidebar after authentication loads
+        setTimeout(() => {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.style.display = 'flex';
+                sidebar.classList.remove('collapsed');
+                console.log('Forced sidebar to be visible');
+            }
+        }, 1000);
         
         // Login form functions
         function showLoginForm() {
@@ -5162,9 +5193,26 @@
         // Add debug button for testing (remove in production)
         setTimeout(() => {
             const debugBtn = document.createElement('button');
-            debugBtn.textContent = 'Debug Menu';
+            debugBtn.textContent = 'Show Sidebar';
+            debugBtn.style.position = 'fixed';
+            debugBtn.style.top = '10px';
+            debugBtn.style.right = '10px';
+            debugBtn.style.zIndex = '9999';
+            debugBtn.style.padding = '10px';
+            debugBtn.style.background = '#667eea';
+            debugBtn.style.color = 'white';
+            debugBtn.style.border = 'none';
+            debugBtn.style.borderRadius = '5px';
+            debugBtn.style.cursor = 'pointer';
+            debugBtn.onclick = () => {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) {
+                    sidebar.style.display = 'flex';
+                    sidebar.classList.remove('collapsed');
+                    console.log('Sidebar forced to show');
+                }
+            };
             debugBtn.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999; background: red; color: white; padding: 5px; border: none; border-radius: 3px;';
-            debugBtn.onclick = debugMobileMenu;
             document.body.appendChild(debugBtn);
         }, 1000);
         
