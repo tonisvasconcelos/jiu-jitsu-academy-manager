@@ -1313,8 +1313,21 @@
 
             loadData(key) {
                 try {
-                    return JSON.parse(localStorage.getItem(key)) || [];
+                    const data = localStorage.getItem(key);
+                    if (data) {
+                        return JSON.parse(data);
+                    }
+                    // Return appropriate default based on key
+                    if (key === 'settings') {
+                        return {};
+                    }
+                    return [];
                 } catch (e) {
+                    console.error('Error loading data for key:', key, e);
+                    // Return appropriate default based on key
+                    if (key === 'settings') {
+                        return {};
+                    }
                     return [];
                 }
             }
@@ -2698,6 +2711,8 @@
             console.log('Testing sidebar logo update...');
             const currentLogo = dataManager.settings.companyLogo;
             console.log('Current logo data:', currentLogo ? 'exists' : 'empty');
+            console.log('Full settings object:', dataManager.settings);
+            console.log('localStorage settings:', localStorage.getItem('settings'));
             updateSidebarLogo(currentLogo);
             showNotification('Sidebar logo test completed. Check console for details.');
         }
@@ -2754,7 +2769,9 @@
                 
                 // Save logo to settings
                 dataManager.settings.companyLogo = e.target.result;
+                console.log('Saving logo to settings:', dataManager.settings.companyLogo ? 'logo data saved' : 'no logo data');
                 dataManager.saveAllData();
+                console.log('Settings saved to localStorage');
                 
                 // Update sidebar logo with a small delay to ensure DOM is ready
                 setTimeout(() => {
@@ -2907,12 +2924,19 @@
         
         // Load settings when app starts
         setTimeout(() => {
+            console.log('Loading settings on app start...');
+            console.log('Current settings:', dataManager.settings);
             loadSettings();
             // Ensure sidebar logo is updated after settings are loaded
             setTimeout(() => {
                 const currentLogo = dataManager.settings.companyLogo;
+                console.log('Current logo on startup:', currentLogo ? 'exists' : 'empty');
                 if (currentLogo) {
+                    console.log('Updating sidebar logo on startup');
                     updateSidebarLogo(currentLogo);
+                } else {
+                    console.log('No logo found, setting default');
+                    updateSidebarLogo('');
                 }
             }, 200);
         }, 100);
