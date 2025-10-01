@@ -3287,8 +3287,6 @@
             const formData = new FormData(event.target);
             const userData = Object.fromEntries(formData.entries());
             
-            console.log('Saving user data:', userData);
-            
             if (userId) {
                 // Edit existing user
                 const userIndex = authManager.users.findIndex(u => u.id === userId);
@@ -3303,7 +3301,6 @@
                         entityId: userData.entityId ? parseInt(userData.entityId) : null,
                         ...(userData.password && { password: userData.password })
                     };
-                    console.log('Updating user:', updatedUser);
                     authManager.users[userIndex] = updatedUser;
                     authManager.saveUsers(authManager.users);
                     showNotification('User updated successfully!', 'success');
@@ -3314,14 +3311,11 @@
                     ...userData,
                     password: userData.password || 'default123'
                 };
-                console.log('Creating new user with data:', newUserData);
                 
                 const result = authManager.register(newUserData);
                 if (result.success) {
-                    console.log('User created successfully:', result.user);
                     showNotification('User created successfully!', 'success');
                 } else {
-                    console.log('User creation failed:', result.message);
                     showNotification(result.message, 'error');
                     return;
                 }
@@ -5029,11 +5023,7 @@
             }
             
             login(email, password) {
-                console.log('Login attempt:', email);
-                console.log('Available users:', this.users);
-                
                 const user = this.users.find(u => u.email === email && u.password === password);
-                console.log('Found user:', user);
                 
                 if (user && user.status === 'active') {
                     this.currentUser = user;
@@ -5047,11 +5037,8 @@
             }
             
             register(userData) {
-                console.log('Register function called with:', userData);
-                
                 const existingUser = this.users.find(u => u.email === userData.email);
                 if (existingUser) {
-                    console.log('User already exists:', existingUser);
                     return { success: false, message: 'User with this email already exists' };
                 }
                 
@@ -5065,10 +5052,8 @@
                     entityId: userData.entityId ? parseInt(userData.entityId) : null
                 };
                 
-                console.log('Creating new user:', newUser);
                 this.users.push(newUser);
                 this.saveUsers(this.users);
-                console.log('Users after registration:', this.users);
                 return { success: true, user: newUser };
             }
             
@@ -5097,13 +5082,10 @@
             
             updateSidebarForRole() {
                 const menuItems = document.querySelectorAll('.menu-item');
-                console.log('Updating sidebar for role:', this.currentUser?.role);
-                console.log('Found menu items:', menuItems.length);
                 
                 menuItems.forEach(item => {
                     const page = item.dataset.page;
                     const hasPermission = this.hasPermission(page);
-                    console.log(`Page ${page}: hasPermission = ${hasPermission}`);
                     
                     if (!hasPermission) {
                         item.style.display = 'none';
@@ -5153,69 +5135,13 @@
         // Initialize authentication
         const authManager = new AuthManager();
         
-        // Function to reset default users
-        function resetDefaultUsers() {
-            const defaultUsers = [
-                {
-                    id: 1,
-                    name: 'System Administrator',
-                    email: 'admin@academy.com',
-                    password: 'admin123',
-                    role: 'system_admin',
-                    status: 'active',
-                    lastLogin: null,
-                    createdAt: new Date().toISOString(),
-                    permissions: ['all'],
-                    entityId: null
-                },
-                {
-                    id: 2,
-                    name: 'Fight Team Admin',
-                    email: 'admin@elitefight.com',
-                    password: 'admin123',
-                    role: 'fight_team_admin',
-                    status: 'active',
-                    lastLogin: null,
-                    createdAt: new Date().toISOString(),
-                    permissions: ['manage_entity', 'manage_students', 'manage_teachers', 'manage_classes', 'view_reports'],
-                    entityId: 1
-                }
-            ];
-            
-            localStorage.setItem('academy_users', JSON.stringify(defaultUsers));
-            authManager.users = defaultUsers;
-            console.log('Default users reset:', defaultUsers);
-            showNotification('Default users reset successfully!', 'success');
-        }
         
-        // Function to clear all data and start fresh
-        function clearAllData() {
-            localStorage.clear();
-            location.reload();
-        }
-        
-        // Function to show all users for debugging
-        function showAllUsers() {
-            console.log('All users in system:', authManager.users);
-            const userList = authManager.users.map(u => `${u.name} (${u.email}) - Role: ${u.role} - Status: ${u.status}`).join('\n');
-            alert('All Users:\n' + userList);
-        }
-        
-        // Function to test login with specific user
-        function testLogin(email, password) {
-            console.log('Testing login for:', email);
-            const result = authManager.login(email, password);
-            console.log('Login result:', result);
-            return result;
-        }
-        
-        // Force show sidebar after authentication loads
+        // Ensure sidebar is visible after authentication loads
         setTimeout(() => {
             const sidebar = document.getElementById('sidebar');
             if (sidebar) {
                 sidebar.style.display = 'flex';
                 sidebar.classList.remove('collapsed');
-                console.log('Forced sidebar to be visible');
             }
         }, 1000);
         
@@ -5263,58 +5189,10 @@
         });
         
         // Initialize the app
-        console.log('Jiu-Jitsu Academy Manager loaded successfully!');
         
-        // Add debug buttons for testing (remove in production)
-        setTimeout(() => {
-            // Show Sidebar button
-            const sidebarBtn = document.createElement('button');
-            sidebarBtn.textContent = 'Show Sidebar';
-            sidebarBtn.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999; background: #667eea; color: white; padding: 5px; border: none; border-radius: 3px; margin-right: 5px;';
-            sidebarBtn.onclick = () => {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar) {
-                    sidebar.style.display = 'flex';
-                    sidebar.classList.remove('collapsed');
-                    console.log('Sidebar forced to show');
-                }
-            };
-            document.body.appendChild(sidebarBtn);
-            
-            // Reset Users button
-            const resetBtn = document.createElement('button');
-            resetBtn.textContent = 'Reset Users';
-            resetBtn.style.cssText = 'position: fixed; top: 10px; right: 120px; z-index: 9999; background: #e74c3c; color: white; padding: 5px; border: none; border-radius: 3px;';
-            resetBtn.onclick = () => {
-                resetDefaultUsers();
-            };
-            document.body.appendChild(resetBtn);
-            
-            // Clear All Data button
-            const clearBtn = document.createElement('button');
-            clearBtn.textContent = 'Clear All';
-            clearBtn.style.cssText = 'position: fixed; top: 10px; right: 200px; z-index: 9999; background: #8e44ad; color: white; padding: 5px; border: none; border-radius: 3px;';
-            clearBtn.onclick = () => {
-                if (confirm('This will clear all data and reload the page. Are you sure?')) {
-                    clearAllData();
-                }
-            };
-            document.body.appendChild(clearBtn);
-            
-            // Show All Users button
-            const usersBtn = document.createElement('button');
-            usersBtn.textContent = 'Show Users';
-            usersBtn.style.cssText = 'position: fixed; top: 40px; right: 10px; z-index: 9999; background: #27ae60; color: white; padding: 5px; border: none; border-radius: 3px;';
-            usersBtn.onclick = () => {
-                showAllUsers();
-            };
-            document.body.appendChild(usersBtn);
-        }, 1000);
         
         // Load settings when app starts
         setTimeout(() => {
-            console.log('Loading settings on app start...');
-            console.log('Current settings:', dataManager.settings);
             loadSettings();
             
             // Apply language translation on startup
