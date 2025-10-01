@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jiu-Jitsu Team Management</title>
+    <title>Jiu-Jitsu Academy Manager</title>
     <style>
         * {
             margin: 0;
@@ -15,109 +15,157 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 600px;
-            width: 90%;
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         .logo {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
-        }
-        
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.2rem;
-        }
-        
-        .success-badge {
-            background: #4CAF50;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 50px;
-            display: inline-block;
-            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
             font-weight: bold;
-            font-size: 1.1rem;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .feature {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .feature h3 {
             color: #333;
-            margin-bottom: 10px;
         }
         
-        .feature p {
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            min-height: 70vh;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
             color: #666;
-            font-size: 0.9rem;
         }
         
-        .status {
-            background: #e8f5e8;
-            border: 1px solid #4CAF50;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
         }
         
-        .status h3 {
-            color: #2e7d32;
-            margin-bottom: 10px;
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
         }
         
-        .status p {
-            color: #388e3c;
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
         }
         
-        .buttons {
-            margin-top: 30px;
+        .stat-card p {
+            opacity: 0.9;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card p {
+            color: #666;
+            margin-bottom: 1rem;
         }
         
         .btn {
             background: #667eea;
             color: white;
-            padding: 12px 24px;
+            padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 25px;
             cursor: pointer;
-            margin: 0 10px;
             text-decoration: none;
             display: inline-block;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            font-weight: 500;
         }
         
         .btn:hover {
             background: #5a6fd8;
+            transform: translateY(-2px);
         }
         
         .btn-secondary {
@@ -128,70 +176,439 @@
             background: #5a6268;
         }
         
-        .github-info {
-            background: #f1f3f4;
-            border: 1px solid #dadce0;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
+        .form-group {
+            margin-bottom: 1rem;
         }
         
-        .github-info h3 {
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
             color: #333;
-            margin-bottom: 10px;
+            font-weight: 500;
         }
         
-        .github-info p {
-            color: #666;
-            font-size: 0.9rem;
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .table th, .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .mobile-menu {
+            display: none;
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .mobile-menu select {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            background: white;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <span>🥋</span>
+                <span>Jiu-Jitsu Academy Manager</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active" data-page="dashboard">Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-page="students">Students</a></li>
+                <li><a href="#" class="nav-link" data-page="teachers">Teachers</a></li>
+                <li><a href="#" class="nav-link" data-page="branches">Branches</a></li>
+                <li><a href="#" class="nav-link" data-page="classes">Classes</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <div class="container">
-        <div class="logo">🥋</div>
-        <h1>Jiu-Jitsu International Team</h1>
-        <p class="subtitle">Team Management System</p>
-        
-        <div class="success-badge">✅ App is Working!</div>
-        
-        <div class="status">
-            <h3>🚀 GitHub Pages Deployment</h3>
-            <p>Your Jiu-Jitsu Team Management app is successfully deployed and accessible to all users!</p>
+        <div class="mobile-menu">
+            <select id="mobile-nav">
+                <option value="dashboard">Dashboard</option>
+                <option value="students">Students</option>
+                <option value="teachers">Teachers</option>
+                <option value="branches">Branches</option>
+                <option value="classes">Classes</option>
+            </select>
         </div>
-        
-        <div class="github-info">
-            <h3>🌐 Multi-User Access</h3>
-            <p>This app is now hosted on GitHub Pages and can be accessed by anyone with the URL. No login required!</p>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <div class="page-header">
+                <h1>🏠 Dashboard</h1>
+                <p>Welcome to your Jiu-Jitsu Academy Management System</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="total-students">0</h3>
+                    <p>Total Students</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="total-teachers">0</h3>
+                    <p>Active Teachers</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="total-branches">0</h3>
+                    <p>Academy Branches</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="total-classes">0</h3>
+                    <p>Weekly Classes</p>
+                </div>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>👥 Student Management</h3>
+                    <p>Manage student records, belt progressions, and enrollment information.</p>
+                    <a href="#" class="btn" onclick="showPage('students')">Manage Students</a>
+                </div>
+                <div class="feature-card">
+                    <h3>👨‍🏫 Teacher Management</h3>
+                    <p>Track instructor qualifications, schedules, and performance.</p>
+                    <a href="#" class="btn" onclick="showPage('teachers')">Manage Teachers</a>
+                </div>
+                <div class="feature-card">
+                    <h3>🏢 Branch Management</h3>
+                    <p>Handle multiple academy locations and their specific details.</p>
+                    <a href="#" class="btn" onclick="showPage('branches')">Manage Branches</a>
+                </div>
+                <div class="feature-card">
+                    <h3>📅 Class Scheduling</h3>
+                    <p>Schedule classes, track attendance, and manage timetables.</p>
+                    <a href="#" class="btn" onclick="showPage('classes')">Manage Classes</a>
+                </div>
+            </div>
         </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>👥 Student Management</h3>
-                <p>Complete CRUD operations for student records with belt tracking</p>
+
+        <!-- Students Page -->
+        <div id="students" class="page">
+            <div class="page-header">
+                <h1>👥 Student Management</h1>
+                <p>Manage your academy's student records and progressions</p>
             </div>
-            <div class="feature">
-                <h3>👨‍🏫 Teacher Management</h3>
-                <p>Manage instructors and their qualifications</p>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Student Records</h2>
+                <button class="btn" onclick="showStudentForm()">Add New Student</button>
             </div>
-            <div class="feature">
-                <h3>🏢 Branch Management</h3>
-                <p>Handle multiple academy locations</p>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Belt Level</th>
+                        <th>Branch</th>
+                        <th>Join Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="students-table">
+                    <tr>
+                        <td>João Silva</td>
+                        <td><span class="badge badge-warning">Blue Belt</span></td>
+                        <td>Main Academy</td>
+                        <td>2024-01-15</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Maria Santos</td>
+                        <td><span class="badge badge-info">Purple Belt</span></td>
+                        <td>Downtown Branch</td>
+                        <td>2023-11-20</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Teachers Page -->
+        <div id="teachers" class="page">
+            <div class="page-header">
+                <h1>👨‍🏫 Teacher Management</h1>
+                <p>Manage your academy's instructors and their qualifications</p>
             </div>
-            <div class="feature">
-                <h3>🌍 Bilingual Support</h3>
-                <p>Full Portuguese/English internationalization</p>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Instructor Records</h2>
+                <button class="btn" onclick="showTeacherForm()">Add New Teacher</button>
+            </div>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Belt Level</th>
+                        <th>Specialization</th>
+                        <th>Branch</th>
+                        <th>Experience</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="teachers-table">
+                    <tr>
+                        <td>Carlos Mendes</td>
+                        <td><span class="badge badge-info">Black Belt</span></td>
+                        <td>Gi & No-Gi</td>
+                        <td>Main Academy</td>
+                        <td>8 years</td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ana Costa</td>
+                        <td><span class="badge badge-info">Brown Belt</span></td>
+                        <td>Kids Classes</td>
+                        <td>Downtown Branch</td>
+                        <td>5 years</td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Branches Page -->
+        <div id="branches" class="page">
+            <div class="page-header">
+                <h1>🏢 Branch Management</h1>
+                <p>Manage your academy's different locations</p>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Academy Branches</h2>
+                <button class="btn" onclick="showBranchForm()">Add New Branch</button>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🏛️ Main Academy</h3>
+                    <p><strong>Address:</strong> 123 Main Street, City Center</p>
+                    <p><strong>Capacity:</strong> 50 students</p>
+                    <p><strong>Classes:</strong> 15 per week</p>
+                    <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
+                    <button class="btn btn-secondary" style="margin-top: 1rem;">Edit Details</button>
+                </div>
+                <div class="feature-card">
+                    <h3>🏢 Downtown Branch</h3>
+                    <p><strong>Address:</strong> 456 Business Ave, Downtown</p>
+                    <p><strong>Capacity:</strong> 30 students</p>
+                    <p><strong>Classes:</strong> 10 per week</p>
+                    <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
+                    <button class="btn btn-secondary" style="margin-top: 1rem;">Edit Details</button>
+                </div>
             </div>
         </div>
-        
-        <div class="buttons">
-            <a href="#" class="btn" onclick="alert('Student Management coming soon!')">Manage Students</a>
-            <a href="#" class="btn btn-secondary" onclick="alert('More features coming soon!')">View Features</a>
+
+        <!-- Classes Page -->
+        <div id="classes" class="page">
+            <div class="page-header">
+                <h1>📅 Class Management</h1>
+                <p>Schedule and manage your academy's classes</p>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Class Schedule</h2>
+                <button class="btn" onclick="showClassForm()">Add New Class</button>
+            </div>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Class Name</th>
+                        <th>Instructor</th>
+                        <th>Day & Time</th>
+                        <th>Branch</th>
+                        <th>Level</th>
+                        <th>Students</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="classes-table">
+                    <tr>
+                        <td>Beginner Gi Class</td>
+                        <td>Carlos Mendes</td>
+                        <td>Mon, Wed 18:00</td>
+                        <td>Main Academy</td>
+                        <td><span class="badge badge-info">Beginner</span></td>
+                        <td>12/20</td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Kids Class</td>
+                        <td>Ana Costa</td>
+                        <td>Tue, Thu 16:00</td>
+                        <td>Downtown Branch</td>
+                        <td><span class="badge badge-warning">Kids</span></td>
+                        <td>8/15</td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        
-        <p style="margin-top: 30px; color: #666; font-size: 0.9rem;">
-            Built with React + TypeScript + GitHub Pages
-        </p>
     </div>
+
+    <script>
+        // Navigation functionality
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Add active class to clicked nav link
+            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+            
+            // Update mobile menu
+            document.getElementById('mobile-nav').value = pageId;
+        }
+
+        // Mobile navigation
+        document.getElementById('mobile-nav').addEventListener('change', function() {
+            showPage(this.value);
+        });
+
+        // Add click event listeners to nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage(this.dataset.page);
+            });
+        });
+
+        // Form functions (placeholders for now)
+        function showStudentForm() {
+            alert('Student form will be implemented here!');
+        }
+
+        function showTeacherForm() {
+            alert('Teacher form will be implemented here!');
+        }
+
+        function showBranchForm() {
+            alert('Branch form will be implemented here!');
+        }
+
+        function showClassForm() {
+            alert('Class form will be implemented here!');
+        }
+
+        // Update dashboard stats (mock data for now)
+        function updateStats() {
+            document.getElementById('total-students').textContent = '24';
+            document.getElementById('total-teachers').textContent = '6';
+            document.getElementById('total-branches').textContent = '2';
+            document.getElementById('total-classes').textContent = '25';
+        }
+
+        // Initialize the app
+        updateStats();
+    </script>
 </body>
 </html>
