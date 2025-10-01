@@ -15,59 +15,184 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
         }
         
-        .header {
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .menu-section {
+            margin-bottom: 2rem;
+        }
+        
+        .menu-section-title {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .menu-item {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            position: relative;
+        }
+        
+        .menu-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border-left-color: #667eea;
+        }
+        
+        .menu-item.active {
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+            border-left-color: #667eea;
+            font-weight: 600;
+        }
+        
+        .menu-item-icon {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            width: 20px;
+            display: inline-block;
+        }
+        
+        .menu-item-text {
+            font-size: 0.95rem;
+        }
+        
+        .menu-item-badge {
+            background: #667eea;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+        }
+        
+        .main-content.expanded {
+            margin-left: 0;
+        }
+        
+        .top-bar {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 1rem 2rem;
             box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
         }
         
-        .nav {
+        .top-bar-left {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
+            gap: 1rem;
         }
         
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .sidebar-toggle {
+            background: none;
+            border: none;
             font-size: 1.5rem;
-            font-weight: bold;
+            cursor: pointer;
+            color: #333;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        
+        .sidebar-toggle:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
             color: #333;
         }
         
-        .nav-links {
+        .top-bar-right {
             display: flex;
-            list-style: none;
-            gap: 2rem;
+            align-items: center;
+            gap: 1rem;
         }
         
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             padding: 0.5rem 1rem;
+            background: rgba(102, 126, 234, 0.1);
             border-radius: 25px;
-            transition: all 0.3s;
-        }
-        
-        .nav-links a:hover, .nav-links a.active {
-            background: #667eea;
-            color: white;
+            color: #667eea;
+            font-weight: 500;
         }
         
         .container {
+            padding: 2rem;
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            margin: 0 auto;
         }
         
         .page {
@@ -110,6 +235,11 @@
             padding: 1.5rem;
             border-radius: 15px;
             text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
         
         .stat-card h3 {
@@ -251,31 +381,23 @@
             color: #0c5460;
         }
         
-        .mobile-menu {
-            display: none;
-            background: #667eea;
-            color: white;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
         }
         
-        .mobile-menu select {
-            width: 100%;
-            padding: 0.5rem;
-            border: none;
-            border-radius: 5px;
-            background: white;
-            color: #333;
-        }
-        
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
+            .sidebar {
+                transform: translateX(-100%);
             }
             
-            .mobile-menu {
-                display: block;
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
             }
             
             .form-row {
@@ -285,268 +407,518 @@
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .top-bar {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+        
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <nav class="nav">
-            <div class="logo">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
                 <span>🥋</span>
-                <span>Jiu-Jitsu Academy Manager</span>
+                <span>Academy Manager</span>
             </div>
-            <ul class="nav-links">
-                <li><a href="#" class="nav-link active" data-page="dashboard">Dashboard</a></li>
-                <li><a href="#" class="nav-link" data-page="students">Students</a></li>
-                <li><a href="#" class="nav-link" data-page="teachers">Teachers</a></li>
-                <li><a href="#" class="nav-link" data-page="branches">Branches</a></li>
-                <li><a href="#" class="nav-link" data-page="classes">Classes</a></li>
-            </ul>
+            <div class="sidebar-subtitle">Jiu-Jitsu Management System</div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <!-- Main Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Main</div>
+                <a href="#" class="menu-item active" data-page="dashboard">
+                    <span class="menu-item-icon">🏠</span>
+                    <span class="menu-item-text">Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" data-page="analytics">
+                    <span class="menu-item-icon">📊</span>
+                    <span class="menu-item-text">Analytics</span>
+                </a>
+            </div>
+            
+            <!-- Management Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Management</div>
+                <a href="#" class="menu-item" data-page="students">
+                    <span class="menu-item-icon">👥</span>
+                    <span class="menu-item-text">Students</span>
+                    <span class="menu-item-badge">24</span>
+                </a>
+                <a href="#" class="menu-item" data-page="teachers">
+                    <span class="menu-item-icon">👨‍🏫</span>
+                    <span class="menu-item-text">Teachers</span>
+                    <span class="menu-item-badge">6</span>
+                </a>
+                <a href="#" class="menu-item" data-page="branches">
+                    <span class="menu-item-icon">🏢</span>
+                    <span class="menu-item-text">Branches</span>
+                    <span class="menu-item-badge">2</span>
+                </a>
+                <a href="#" class="menu-item" data-page="classes">
+                    <span class="menu-item-icon">📅</span>
+                    <span class="menu-item-text">Classes</span>
+                    <span class="menu-item-badge">25</span>
+                </a>
+            </div>
+            
+            <!-- Operations Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Operations</div>
+                <a href="#" class="menu-item" data-page="schedule">
+                    <span class="menu-item-icon">⏰</span>
+                    <span class="menu-item-text">Schedule</span>
+                </a>
+                <a href="#" class="menu-item" data-page="attendance">
+                    <span class="menu-item-icon">✅</span>
+                    <span class="menu-item-text">Attendance</span>
+                </a>
+                <a href="#" class="menu-item" data-page="payments">
+                    <span class="menu-item-icon">💳</span>
+                    <span class="menu-item-text">Payments</span>
+                </a>
+                <a href="#" class="menu-item" data-page="events">
+                    <span class="menu-item-icon">🎯</span>
+                    <span class="menu-item-text">Events</span>
+                </a>
+            </div>
+            
+            <!-- Reports Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Reports</div>
+                <a href="#" class="menu-item" data-page="reports">
+                    <span class="menu-item-icon">📈</span>
+                    <span class="menu-item-text">Reports</span>
+                </a>
+                <a href="#" class="menu-item" data-page="exports">
+                    <span class="menu-item-icon">📤</span>
+                    <span class="menu-item-text">Exports</span>
+                </a>
+            </div>
+            
+            <!-- Settings Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Settings</div>
+                <a href="#" class="menu-item" data-page="settings">
+                    <span class="menu-item-icon">⚙️</span>
+                    <span class="menu-item-text">Settings</span>
+                </a>
+                <a href="#" class="menu-item" data-page="profile">
+                    <span class="menu-item-icon">👤</span>
+                    <span class="menu-item-text">Profile</span>
+                </a>
+            </div>
         </nav>
-    </header>
-
-    <div class="container">
-        <div class="mobile-menu">
-            <select id="mobile-nav">
-                <option value="dashboard">Dashboard</option>
-                <option value="students">Students</option>
-                <option value="teachers">Teachers</option>
-                <option value="branches">Branches</option>
-                <option value="classes">Classes</option>
-            </select>
-        </div>
-
-        <!-- Dashboard Page -->
-        <div id="dashboard" class="page active">
-            <div class="page-header">
-                <h1>🏠 Dashboard</h1>
-                <p>Welcome to your Jiu-Jitsu Academy Management System</p>
+    </div>
+    
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    ☰
+                </button>
+                <h1 class="page-title" id="page-title">Dashboard</h1>
             </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3 id="total-students">0</h3>
-                    <p>Total Students</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="total-teachers">0</h3>
-                    <p>Active Teachers</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="total-branches">0</h3>
-                    <p>Academy Branches</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="total-classes">0</h3>
-                    <p>Weekly Classes</p>
-                </div>
-            </div>
-            
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>👥 Student Management</h3>
-                    <p>Manage student records, belt progressions, and enrollment information.</p>
-                    <a href="#" class="btn" onclick="showPage('students')">Manage Students</a>
-                </div>
-                <div class="feature-card">
-                    <h3>👨‍🏫 Teacher Management</h3>
-                    <p>Track instructor qualifications, schedules, and performance.</p>
-                    <a href="#" class="btn" onclick="showPage('teachers')">Manage Teachers</a>
-                </div>
-                <div class="feature-card">
-                    <h3>🏢 Branch Management</h3>
-                    <p>Handle multiple academy locations and their specific details.</p>
-                    <a href="#" class="btn" onclick="showPage('branches')">Manage Branches</a>
-                </div>
-                <div class="feature-card">
-                    <h3>📅 Class Scheduling</h3>
-                    <p>Schedule classes, track attendance, and manage timetables.</p>
-                    <a href="#" class="btn" onclick="showPage('classes')">Manage Classes</a>
+            <div class="top-bar-right">
+                <div class="user-info">
+                    <span>👤</span>
+                    <span>Admin User</span>
                 </div>
             </div>
         </div>
-
-        <!-- Students Page -->
-        <div id="students" class="page">
-            <div class="page-header">
-                <h1>👥 Student Management</h1>
-                <p>Manage your academy's student records and progressions</p>
-            </div>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h2>Student Records</h2>
-                <button class="btn" onclick="showStudentForm()">Add New Student</button>
-            </div>
-            
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Belt Level</th>
-                        <th>Branch</th>
-                        <th>Join Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="students-table">
-                    <tr>
-                        <td>João Silva</td>
-                        <td><span class="badge badge-warning">Blue Belt</span></td>
-                        <td>Main Academy</td>
-                        <td>2024-01-15</td>
-                        <td><span class="badge badge-success">Active</span></td>
-                        <td>
-                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Maria Santos</td>
-                        <td><span class="badge badge-info">Purple Belt</span></td>
-                        <td>Downtown Branch</td>
-                        <td>2023-11-20</td>
-                        <td><span class="badge badge-success">Active</span></td>
-                        <td>
-                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Teachers Page -->
-        <div id="teachers" class="page">
-            <div class="page-header">
-                <h1>👨‍🏫 Teacher Management</h1>
-                <p>Manage your academy's instructors and their qualifications</p>
-            </div>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h2>Instructor Records</h2>
-                <button class="btn" onclick="showTeacherForm()">Add New Teacher</button>
-            </div>
-            
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Belt Level</th>
-                        <th>Specialization</th>
-                        <th>Branch</th>
-                        <th>Experience</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="teachers-table">
-                    <tr>
-                        <td>Carlos Mendes</td>
-                        <td><span class="badge badge-info">Black Belt</span></td>
-                        <td>Gi & No-Gi</td>
-                        <td>Main Academy</td>
-                        <td>8 years</td>
-                        <td>
-                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Ana Costa</td>
-                        <td><span class="badge badge-info">Brown Belt</span></td>
-                        <td>Kids Classes</td>
-                        <td>Downtown Branch</td>
-                        <td>5 years</td>
-                        <td>
-                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Branches Page -->
-        <div id="branches" class="page">
-            <div class="page-header">
-                <h1>🏢 Branch Management</h1>
-                <p>Manage your academy's different locations</p>
-            </div>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h2>Academy Branches</h2>
-                <button class="btn" onclick="showBranchForm()">Add New Branch</button>
-            </div>
-            
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>🏛️ Main Academy</h3>
-                    <p><strong>Address:</strong> 123 Main Street, City Center</p>
-                    <p><strong>Capacity:</strong> 50 students</p>
-                    <p><strong>Classes:</strong> 15 per week</p>
-                    <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
-                    <button class="btn btn-secondary" style="margin-top: 1rem;">Edit Details</button>
+        
+        <div class="container">
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page active">
+                <div class="page-header">
+                    <h1>🏠 Dashboard</h1>
+                    <p>Welcome to your Jiu-Jitsu Academy Management System</p>
                 </div>
-                <div class="feature-card">
-                    <h3>🏢 Downtown Branch</h3>
-                    <p><strong>Address:</strong> 456 Business Ave, Downtown</p>
-                    <p><strong>Capacity:</strong> 30 students</p>
-                    <p><strong>Classes:</strong> 10 per week</p>
-                    <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
-                    <button class="btn btn-secondary" style="margin-top: 1rem;">Edit Details</button>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="total-students">24</h3>
+                        <p>Total Students</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="total-teachers">6</h3>
+                        <p>Active Teachers</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="total-branches">2</h3>
+                        <p>Academy Branches</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="total-classes">25</h3>
+                        <p>Weekly Classes</p>
+                    </div>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>👥 Student Management</h3>
+                        <p>Manage student records, belt progressions, and enrollment information.</p>
+                        <a href="#" class="btn" onclick="showPage('students')">Manage Students</a>
+                    </div>
+                    <div class="feature-card">
+                        <h3>👨‍🏫 Teacher Management</h3>
+                        <p>Track instructor qualifications, schedules, and performance.</p>
+                        <a href="#" class="btn" onclick="showPage('teachers')">Manage Teachers</a>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🏢 Branch Management</h3>
+                        <p>Handle multiple academy locations and their specific details.</p>
+                        <a href="#" class="btn" onclick="showPage('branches')">Manage Branches</a>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📅 Class Scheduling</h3>
+                        <p>Schedule classes, track attendance, and manage timetables.</p>
+                        <a href="#" class="btn" onclick="showPage('classes')">Manage Classes</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Classes Page -->
-        <div id="classes" class="page">
-            <div class="page-header">
-                <h1>📅 Class Management</h1>
-                <p>Schedule and manage your academy's classes</p>
+            <!-- Students Page -->
+            <div id="students" class="page">
+                <div class="page-header">
+                    <h1>👥 Student Management</h1>
+                    <p>Manage your academy's student records and progressions</p>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Student Records</h2>
+                    <button class="btn" onclick="showStudentForm()">Add New Student</button>
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Belt Level</th>
+                            <th>Branch</th>
+                            <th>Join Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-table">
+                        <tr>
+                            <td>João Silva</td>
+                            <td><span class="badge badge-warning">Blue Belt</span></td>
+                            <td>Main Academy</td>
+                            <td>2024-01-15</td>
+                            <td><span class="badge badge-success">Active</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Maria Santos</td>
+                            <td><span class="badge badge-info">Purple Belt</span></td>
+                            <td>Downtown Branch</td>
+                            <td>2023-11-20</td>
+                            <td><span class="badge badge-success">Active</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h2>Class Schedule</h2>
-                <button class="btn" onclick="showClassForm()">Add New Class</button>
+
+            <!-- Teachers Page -->
+            <div id="teachers" class="page">
+                <div class="page-header">
+                    <h1>👨‍🏫 Teacher Management</h1>
+                    <p>Manage your academy's instructors and their qualifications</p>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Instructor Records</h2>
+                    <button class="btn" onclick="showTeacherForm()">Add New Teacher</button>
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Belt Level</th>
+                            <th>Specialization</th>
+                            <th>Branch</th>
+                            <th>Experience</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teachers-table">
+                        <tr>
+                            <td>Carlos Mendes</td>
+                            <td><span class="badge badge-info">Black Belt</span></td>
+                            <td>Gi & No-Gi</td>
+                            <td>Main Academy</td>
+                            <td>8 years</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ana Costa</td>
+                            <td><span class="badge badge-info">Brown Belt</span></td>
+                            <td>Kids Classes</td>
+                            <td>Downtown Branch</td>
+                            <td>5 years</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Class Name</th>
-                        <th>Instructor</th>
-                        <th>Day & Time</th>
-                        <th>Branch</th>
-                        <th>Level</th>
-                        <th>Students</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="classes-table">
-                    <tr>
-                        <td>Beginner Gi Class</td>
-                        <td>Carlos Mendes</td>
-                        <td>Mon, Wed 18:00</td>
-                        <td>Main Academy</td>
-                        <td><span class="badge badge-info">Beginner</span></td>
-                        <td>12/20</td>
-                        <td>
-                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Kids Class</td>
-                        <td>Ana Costa</td>
-                        <td>Tue, Thu 16:00</td>
-                        <td>Downtown Branch</td>
-                        <td><span class="badge badge-warning">Kids</span></td>
-                        <td>8/15</td>
-                        <td>
-                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+            <!-- Branches Page -->
+            <div id="branches" class="page">
+                <div class="page-header">
+                    <h1>🏢 Branch Management</h1>
+                    <p>Manage your academy's different locations</p>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Academy Branches</h2>
+                    <button class="btn" onclick="showBranchForm()">Add New Branch</button>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>🏛️ Main Academy</h3>
+                        <p><strong>Address:</strong> 123 Main Street, City Center</p>
+                        <p><strong>Capacity:</strong> 50 students</p>
+                        <p><strong>Classes:</strong> 15 per week</p>
+                        <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
+                        <button class="btn btn-secondary" style="margin-top: 1rem;">Edit Details</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🏢 Downtown Branch</h3>
+                        <p><strong>Address:</strong> 456 Business Ave, Downtown</p>
+                        <p><strong>Capacity:</strong> 30 students</p>
+                        <p><strong>Classes:</strong> 10 per week</p>
+                        <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
+                        <button class="btn btn-secondary" style="margin-top: 1rem;">Edit Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Classes Page -->
+            <div id="classes" class="page">
+                <div class="page-header">
+                    <h1>📅 Class Management</h1>
+                    <p>Schedule and manage your academy's classes</p>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Class Schedule</h2>
+                    <button class="btn" onclick="showClassForm()">Add New Class</button>
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Class Name</th>
+                            <th>Instructor</th>
+                            <th>Day & Time</th>
+                            <th>Branch</th>
+                            <th>Level</th>
+                            <th>Students</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="classes-table">
+                        <tr>
+                            <td>Beginner Gi Class</td>
+                            <td>Carlos Mendes</td>
+                            <td>Mon, Wed 18:00</td>
+                            <td>Main Academy</td>
+                            <td><span class="badge badge-info">Beginner</span></td>
+                            <td>12/20</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kids Class</td>
+                            <td>Ana Costa</td>
+                            <td>Tue, Thu 16:00</td>
+                            <td>Downtown Branch</td>
+                            <td><span class="badge badge-warning">Kids</span></td>
+                            <td>8/15</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Placeholder pages for new menu items -->
+            <div id="analytics" class="page">
+                <div class="page-header">
+                    <h1>📊 Analytics</h1>
+                    <p>View detailed analytics and insights about your academy</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Analytics Dashboard</h3>
+                    <p>This page will contain charts, graphs, and detailed analytics about your academy's performance.</p>
+                </div>
+            </div>
+
+            <div id="schedule" class="page">
+                <div class="page-header">
+                    <h1>⏰ Schedule</h1>
+                    <p>Manage your academy's class schedule and timetables</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Schedule Management</h3>
+                    <p>This page will contain a comprehensive schedule management system.</p>
+                </div>
+            </div>
+
+            <div id="attendance" class="page">
+                <div class="page-header">
+                    <h1>✅ Attendance</h1>
+                    <p>Track student attendance and class participation</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Attendance Tracking</h3>
+                    <p>This page will contain attendance tracking and reporting features.</p>
+                </div>
+            </div>
+
+            <div id="payments" class="page">
+                <div class="page-header">
+                    <h1>💳 Payments</h1>
+                    <p>Manage student payments and billing</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Payment Management</h3>
+                    <p>This page will contain payment tracking and billing management.</p>
+                </div>
+            </div>
+
+            <div id="events" class="page">
+                <div class="page-header">
+                    <h1>🎯 Events</h1>
+                    <p>Manage tournaments, seminars, and special events</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Event Management</h3>
+                    <p>This page will contain event planning and management features.</p>
+                </div>
+            </div>
+
+            <div id="reports" class="page">
+                <div class="page-header">
+                    <h1>📈 Reports</h1>
+                    <p>Generate and view various reports</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Report Generation</h3>
+                    <p>This page will contain various reporting tools and analytics.</p>
+                </div>
+            </div>
+
+            <div id="exports" class="page">
+                <div class="page-header">
+                    <h1>📤 Exports</h1>
+                    <p>Export data and generate reports</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Data Export</h3>
+                    <p>This page will contain data export and backup features.</p>
+                </div>
+            </div>
+
+            <div id="settings" class="page">
+                <div class="page-header">
+                    <h1>⚙️ Settings</h1>
+                    <p>Configure your academy management system</p>
+                </div>
+                <div class="feature-card">
+                    <h3>System Settings</h3>
+                    <p>This page will contain system configuration and preferences.</p>
+                </div>
+            </div>
+
+            <div id="profile" class="page">
+                <div class="page-header">
+                    <h1>👤 Profile</h1>
+                    <p>Manage your user profile and account settings</p>
+                </div>
+                <div class="feature-card">
+                    <h3>User Profile</h3>
+                    <p>This page will contain user profile management and account settings.</p>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const mainContent = document.getElementById('main-content');
+        const pageTitle = document.getElementById('page-title');
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            sidebar.classList.toggle('collapsed');
+            sidebarOverlay.classList.toggle('active');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // Close sidebar on mobile when clicking overlay
+        sidebarOverlay.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('active');
+            }
+        });
+
+        // Toggle sidebar on mobile
+        sidebarToggle.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('mobile-open');
+                sidebarOverlay.classList.toggle('active');
+            } else {
+                toggleSidebar();
+            }
+        });
+
         // Navigation functionality
         function showPage(pageId) {
             // Hide all pages
@@ -554,29 +926,46 @@
                 page.classList.remove('active');
             });
             
-            // Remove active class from all nav links
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
+            // Remove active class from all menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
             });
             
             // Show selected page
             document.getElementById(pageId).classList.add('active');
             
-            // Add active class to clicked nav link
+            // Add active class to clicked menu item
             document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
             
-            // Update mobile menu
-            document.getElementById('mobile-nav').value = pageId;
+            // Update page title
+            const pageNames = {
+                'dashboard': 'Dashboard',
+                'analytics': 'Analytics',
+                'students': 'Students',
+                'teachers': 'Teachers',
+                'branches': 'Branches',
+                'classes': 'Classes',
+                'schedule': 'Schedule',
+                'attendance': 'Attendance',
+                'payments': 'Payments',
+                'events': 'Events',
+                'reports': 'Reports',
+                'exports': 'Exports',
+                'settings': 'Settings',
+                'profile': 'Profile'
+            };
+            pageTitle.textContent = pageNames[pageId] || 'Dashboard';
+            
+            // Close sidebar on mobile after navigation
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('active');
+            }
         }
 
-        // Mobile navigation
-        document.getElementById('mobile-nav').addEventListener('change', function() {
-            showPage(this.value);
-        });
-
-        // Add click event listeners to nav links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
+        // Add click event listeners to menu items
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
                 e.preventDefault();
                 showPage(this.dataset.page);
             });
@@ -599,16 +988,16 @@
             alert('Class form will be implemented here!');
         }
 
-        // Update dashboard stats (mock data for now)
-        function updateStats() {
-            document.getElementById('total-students').textContent = '24';
-            document.getElementById('total-teachers').textContent = '6';
-            document.getElementById('total-branches').textContent = '2';
-            document.getElementById('total-classes').textContent = '25';
-        }
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('active');
+            }
+        });
 
         // Initialize the app
-        updateStats();
+        console.log('Jiu-Jitsu Academy Manager loaded successfully!');
     </script>
 </body>
 </html>
