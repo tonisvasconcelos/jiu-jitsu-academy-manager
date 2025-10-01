@@ -1208,6 +1208,9 @@
                                     <button type="button" class="btn btn-info" onclick="testSidebarLogo()" style="margin-top: 10px;">
                                         <span>🔧</span> Test Sidebar Logo
                                     </button>
+                                    <button type="button" class="btn btn-warning" onclick="clearAllData()" style="margin-top: 10px;">
+                                        <span>🗑️</span> Clear All Data (Debug)
+                                    </button>
                                 </div>
                             </div>
                             <p class="setting-description">Upload your company logo. Recommended size: 200x200px. Supported formats: JPG, PNG, GIF.</p>
@@ -1308,7 +1311,20 @@
                     timeFormat: '24h',
                     currency: 'BRL'
                 };
-                this.saveAllData();
+                
+                // Only save default data if no existing data is found in localStorage
+                const hasExistingStudents = localStorage.getItem('students') !== null;
+                const hasExistingTeachers = localStorage.getItem('teachers') !== null;
+                const hasExistingBranches = localStorage.getItem('branches') !== null;
+                const hasExistingClasses = localStorage.getItem('classes') !== null;
+                const hasExistingSettings = localStorage.getItem('settings') !== null;
+                
+                if (!hasExistingStudents && !hasExistingTeachers && !hasExistingBranches && !hasExistingClasses && !hasExistingSettings) {
+                    console.log('No existing data found, saving default data');
+                    this.saveAllData();
+                } else {
+                    console.log('Existing data found, preserving saved data');
+                }
             }
 
             loadData(key) {
@@ -2454,6 +2470,7 @@
         // Settings Functions
         function loadSettings() {
             const settings = dataManager.settings;
+            console.log('loadSettings called, current settings:', settings);
             
             // Load language
             document.getElementById('languageCode').value = settings.languageCode;
@@ -2715,6 +2732,14 @@
             console.log('localStorage settings:', localStorage.getItem('settings'));
             updateSidebarLogo(currentLogo);
             showNotification('Sidebar logo test completed. Check console for details.');
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data? This will remove all students, teachers, branches, classes, and settings.')) {
+                localStorage.clear();
+                console.log('All data cleared from localStorage');
+                showNotification('All data cleared. Please refresh the page.');
+            }
         }
 
         function saveCompanyInfo() {
