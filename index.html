@@ -1132,140 +1132,32 @@
                     <p>Configure your academy management system preferences</p>
                 </div>
                 
-                <div class="settings-container">
-                    <!-- Language Settings -->
-                    <div class="settings-section">
-                        <h2>🌐 Language Settings</h2>
-                        <div class="feature-card">
-                            <div class="form-group">
-                                <label for="languageCode">Language Code *</label>
-                                <select id="languageCode" onchange="updateLanguage()">
-                                    <option value="PTB">Portuguese (PTB)</option>
-                                    <option value="ENU">English (ENU)</option>
-                                </select>
-                            </div>
-                            <p class="setting-description">Choose the default language for the application interface.</p>
-                        </div>
+                <div class="page-content">
+                    <div class="content-header">
+                        <h2>Settings Records</h2>
+                        <button class="btn" onclick="showSettingsForm()">Add New Settings</button>
                     </div>
-
-                    <!-- Company Information -->
-                    <div class="settings-section">
-                        <h2>🏢 Company Information</h2>
-                        <div class="feature-card">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="companyName">Company Name *</label>
-                                    <input type="text" id="companyName" placeholder="Enter company name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="companyResponsible">Company Responsible *</label>
-                                    <input type="text" id="companyResponsible" placeholder="Enter responsible person name">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="companyAddress">Company Address *</label>
-                                <textarea id="companyAddress" rows="3" placeholder="Enter complete company address"></textarea>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="companyPhone">Phone Number</label>
-                                    <input type="tel" id="companyPhone" placeholder="Enter phone number">
-                                </div>
-                                <div class="form-group">
-                                    <label for="companyEmail">Email Address</label>
-                                    <input type="email" id="companyEmail" placeholder="Enter email address">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="companyWebsite">Website</label>
-                                    <input type="url" id="companyWebsite" placeholder="Enter website URL">
-                                </div>
-                                <div class="form-group">
-                                    <label for="companyTaxId">Tax ID</label>
-                                    <input type="text" id="companyTaxId" placeholder="Enter tax identification number">
-                                </div>
-                            </div>
-                            <button class="btn" onclick="saveCompanyInfo()">Save Company Information</button>
-                        </div>
+                    
+                    <div class="search-container">
+                        <input type="text" id="settingsSearch" placeholder="Search settings by name, company, or language..." onkeyup="searchSettings()">
                     </div>
-
-                    <!-- Logo Upload -->
-                    <div class="settings-section">
-                        <h2>🖼️ Company Logo</h2>
-                        <div class="feature-card">
-                            <div class="logo-upload-container">
-                                <div class="logo-preview" id="logoPreview">
-                                    <div class="logo-placeholder">
-                                        <span>📷</span>
-                                        <p>No logo uploaded</p>
-                                    </div>
-                                </div>
-                                <div class="logo-upload-controls">
-                                    <input type="file" id="logoUpload" accept="image/*" onchange="handleLogoUpload(event)" style="display: none;">
-                                    <button class="btn" onclick="document.getElementById('logoUpload').click()">Choose Logo</button>
-                                    <button class="btn btn-secondary" onclick="removeLogo()" id="removeLogoBtn" style="display: none;">Remove Logo</button>
-                                    <button type="button" class="btn btn-info" onclick="testSidebarLogo()" style="margin-top: 10px;">
-                                        <span>🔧</span> Test Sidebar Logo
-                                    </button>
-                                    <button type="button" class="btn btn-warning" onclick="clearAllData()" style="margin-top: 10px;">
-                                        <span>🗑️</span> Clear All Data (Debug)
-                                    </button>
-                                    <button type="button" class="btn btn-info" onclick="debugLocalStorage()" style="margin-top: 10px;">
-                                        <span>🔍</span> Debug LocalStorage
-                                    </button>
-                                    <button type="button" class="btn btn-success" onclick="refreshBadges()" style="margin-top: 10px;">
-                                        <span>🔄</span> Refresh Badges
-                                    </button>
-                                </div>
-                            </div>
-                            <p class="setting-description">Upload your company logo. Recommended size: 200x200px. Supported formats: JPG, PNG, GIF.</p>
-                        </div>
-                    </div>
-
-                    <!-- System Preferences -->
-                    <div class="settings-section">
-                        <h2>🔧 System Preferences</h2>
-                        <div class="feature-card">
-                            <div class="form-group">
-                                <label for="dateFormat">Date Format</label>
-                                <select id="dateFormat">
-                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="timeFormat">Time Format</label>
-                                <select id="timeFormat">
-                                    <option value="24h">24 Hour (HH:MM)</option>
-                                    <option value="12h">12 Hour (HH:MM AM/PM)</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="currency">Currency</label>
-                                <select id="currency">
-                                    <option value="USD">USD ($)</option>
-                                    <option value="EUR">EUR (€)</option>
-                                    <option value="BRL">BRL (R$)</option>
-                                    <option value="GBP">GBP (£)</option>
-                                </select>
-                            </div>
-                            <button class="btn" onclick="saveSystemPreferences()">Save Preferences</button>
-                        </div>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="settings-section">
-                        <h2>💾 Actions</h2>
-                        <div class="feature-card">
-                            <div class="settings-actions">
-                                <button class="btn" onclick="saveAllSettings()">Save All Settings</button>
-                                <button class="btn btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
-                                <button class="btn" onclick="exportSettings()" style="background: #28a745;">Export Settings</button>
-                                <button class="btn" onclick="importSettings()" style="background: #17a2b8;">Import Settings</button>
-                            </div>
-                        </div>
+                    
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Company</th>
+                                    <th>Language</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="settingsTableBody">
+                                <!-- Settings will be populated here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -1310,21 +1202,27 @@
                 console.log('Loading settings...');
                 const loadedSettings = this.loadData('settings');
                 console.log('Loaded settings from localStorage:', loadedSettings);
-                this.settings = loadedSettings || {
-                    languageCode: 'PTB',
-                    companyName: '',
-                    companyResponsible: '',
-                    companyAddress: '',
-                    companyPhone: '',
-                    companyEmail: '',
-                    companyWebsite: '',
-                    companyTaxId: '',
-                    companyLogo: '',
-                    dateFormat: 'DD/MM/YYYY',
-                    timeFormat: '24h',
-                    currency: 'BRL'
-                };
-                console.log('Final settings object:', this.settings);
+                this.settings = loadedSettings || [
+                    { 
+                        id: 1, 
+                        name: 'Default Settings',
+                        languageCode: 'PTB',
+                        companyName: '',
+                        companyResponsible: '',
+                        companyAddress: '',
+                        companyPhone: '',
+                        companyEmail: '',
+                        companyWebsite: '',
+                        companyTaxId: '',
+                        companyLogo: '',
+                        dateFormat: 'DD/MM/YYYY',
+                        timeFormat: '24h',
+                        currency: 'BRL',
+                        isActive: true,
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                console.log('Final settings array:', this.settings);
                 
                 // Only save default data if no existing data is found in localStorage
                 const hasExistingStudents = localStorage.getItem('students') !== null;
@@ -1376,11 +1274,12 @@
             }
 
             updateBadges() {
-                console.log('updateBadges called - students:', this.students.length, 'teachers:', this.teachers.length, 'branches:', this.branches.length, 'classes:', this.classes.length);
+                console.log('updateBadges called - students:', this.students.length, 'teachers:', this.teachers.length, 'branches:', this.branches.length, 'classes:', this.classes.length, 'settings:', this.settings.length);
                 document.querySelector('[data-page="students"] .menu-item-badge').textContent = this.students.length;
                 document.querySelector('[data-page="teachers"] .menu-item-badge').textContent = this.teachers.length;
                 document.querySelector('[data-page="branches"] .menu-item-badge').textContent = this.branches.length;
                 document.querySelector('[data-page="classes"] .menu-item-badge').textContent = this.classes.length;
+                document.querySelector('[data-page="settings"] .menu-item-badge').textContent = this.settings.length;
                 
                 // Update dashboard stats
                 const totalStudentsEl = document.getElementById('total-students');
@@ -1886,9 +1785,9 @@
                 case 'classes':
                     renderClassesTable();
                     break;
-                case 'settings':
-                    loadSettings();
-                    break;
+            case 'settings':
+                renderSettingsTable();
+                break;
             }
         }
 
@@ -2785,6 +2684,199 @@
             console.log('Manually refreshing badges...');
             dataManager.updateBadges();
             showNotification('Badges refreshed. Check console for details.');
+        }
+
+        // Settings CRUD Functions
+        function renderSettingsTable() {
+            const tbody = document.getElementById('settingsTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            
+            dataManager.settings.forEach(setting => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${setting.name}</td>
+                    <td>${setting.companyName || 'N/A'}</td>
+                    <td><span class="badge badge-${setting.languageCode === 'PTB' ? 'info' : 'success'}">${setting.languageCode}</span></td>
+                    <td><span class="badge badge-${setting.isActive ? 'success' : 'secondary'}">${setting.isActive ? 'Active' : 'Inactive'}</span></td>
+                    <td>${new Date(setting.createdAt).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-sm" onclick="editSettings(${setting.id})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteSettings(${setting.id})">Delete</button>
+                        <button class="btn btn-sm btn-success" onclick="activateSettings(${setting.id})">${setting.isActive ? 'Deactivate' : 'Activate'}</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function searchSettings() {
+            const searchTerm = document.getElementById('settingsSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#settingsTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function showSettingsForm(settingsId = null) {
+            const setting = settingsId ? dataManager.settings.find(s => s.id === settingsId) : null;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>${setting ? 'Edit Settings' : 'Add New Settings'}</h2>
+                        <button class="close-btn" onclick="closeModal()">&times;</button>
+                    </div>
+                    <form onsubmit="saveSettings(event, ${setting ? setting.id : 'null'})">
+                        <div class="form-group">
+                            <label for="settingsName">Settings Name *</label>
+                            <input type="text" id="settingsName" name="name" value="${setting ? setting.name : ''}" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="settingsLanguage">Language *</label>
+                                <select id="settingsLanguage" name="languageCode" required>
+                                    <option value="PTB" ${setting && setting.languageCode === 'PTB' ? 'selected' : ''}>Portuguese (PTB)</option>
+                                    <option value="ENU" ${setting && setting.languageCode === 'ENU' ? 'selected' : ''}>English (ENU)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="settingsCompanyName">Company Name *</label>
+                                <input type="text" id="settingsCompanyName" name="companyName" value="${setting ? setting.companyName : ''}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="settingsCompanyResponsible">Company Responsible *</label>
+                            <input type="text" id="settingsCompanyResponsible" name="companyResponsible" value="${setting ? setting.companyResponsible : ''}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="settingsCompanyAddress">Company Address *</label>
+                            <textarea id="settingsCompanyAddress" name="companyAddress" rows="3" required>${setting ? setting.companyAddress : ''}</textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="settingsCompanyPhone">Phone Number</label>
+                                <input type="tel" id="settingsCompanyPhone" name="companyPhone" value="${setting ? setting.companyPhone : ''}">
+                            </div>
+                            <div class="form-group">
+                                <label for="settingsCompanyEmail">Email Address</label>
+                                <input type="email" id="settingsCompanyEmail" name="companyEmail" value="${setting ? setting.companyEmail : ''}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="settingsCompanyWebsite">Website</label>
+                                <input type="url" id="settingsCompanyWebsite" name="companyWebsite" value="${setting ? setting.companyWebsite : ''}">
+                            </div>
+                            <div class="form-group">
+                                <label for="settingsCompanyTaxId">Tax ID</label>
+                                <input type="text" id="settingsCompanyTaxId" name="companyTaxId" value="${setting ? setting.companyTaxId : ''}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="settingsDateFormat">Date Format</label>
+                                <select id="settingsDateFormat" name="dateFormat">
+                                    <option value="DD/MM/YYYY" ${setting && setting.dateFormat === 'DD/MM/YYYY' ? 'selected' : ''}>DD/MM/YYYY</option>
+                                    <option value="MM/DD/YYYY" ${setting && setting.dateFormat === 'MM/DD/YYYY' ? 'selected' : ''}>MM/DD/YYYY</option>
+                                    <option value="YYYY-MM-DD" ${setting && setting.dateFormat === 'YYYY-MM-DD' ? 'selected' : ''}>YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="settingsTimeFormat">Time Format</label>
+                                <select id="settingsTimeFormat" name="timeFormat">
+                                    <option value="24h" ${setting && setting.timeFormat === '24h' ? 'selected' : ''}>24 Hour</option>
+                                    <option value="12h" ${setting && setting.timeFormat === '12h' ? 'selected' : ''}>12 Hour (AM/PM)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="settingsCurrency">Currency</label>
+                            <select id="settingsCurrency" name="currency">
+                                <option value="BRL" ${setting && setting.currency === 'BRL' ? 'selected' : ''}>Brazilian Real (BRL)</option>
+                                <option value="USD" ${setting && setting.currency === 'USD' ? 'selected' : ''}>US Dollar (USD)</option>
+                                <option value="EUR" ${setting && setting.currency === 'EUR' ? 'selected' : ''}>Euro (EUR)</option>
+                                <option value="GBP" ${setting && setting.currency === 'GBP' ? 'selected' : ''}>British Pound (GBP)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                            <button type="submit" class="btn">${setting ? 'Update Settings' : 'Add Settings'}</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function saveSettings(event, settingsId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const settingsData = Object.fromEntries(formData.entries());
+            
+            if (settingsId) {
+                // Update existing settings
+                const index = dataManager.settings.findIndex(s => s.id === settingsId);
+                if (index !== -1) {
+                    dataManager.settings[index] = {
+                        ...dataManager.settings[index],
+                        ...settingsData,
+                        updatedAt: new Date().toISOString()
+                    };
+                }
+            } else {
+                // Add new settings
+                const newSettings = {
+                    id: Date.now(),
+                    ...settingsData,
+                    companyLogo: '',
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                };
+                dataManager.settings.push(newSettings);
+            }
+            
+            dataManager.saveAllData();
+            closeModal();
+            renderSettingsTable();
+            showNotification(settingsId ? 'Settings updated successfully!' : 'Settings added successfully!');
+        }
+
+        function editSettings(id) {
+            showSettingsForm(id);
+        }
+
+        function deleteSettings(id) {
+            if (confirm('Are you sure you want to delete these settings?')) {
+                dataManager.settings = dataManager.settings.filter(s => s.id !== id);
+                dataManager.saveAllData();
+                renderSettingsTable();
+                showNotification('Settings deleted successfully!');
+            }
+        }
+
+        function activateSettings(id) {
+            const setting = dataManager.settings.find(s => s.id === id);
+            if (setting) {
+                setting.isActive = !setting.isActive;
+                dataManager.saveAllData();
+                renderSettingsTable();
+                showNotification(`Settings ${setting.isActive ? 'activated' : 'deactivated'} successfully!`);
+            }
         }
 
         function saveCompanyInfo() {
