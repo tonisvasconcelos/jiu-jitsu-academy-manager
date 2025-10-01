@@ -1205,6 +1205,9 @@
                                     <input type="file" id="logoUpload" accept="image/*" onchange="handleLogoUpload(event)" style="display: none;">
                                     <button class="btn" onclick="document.getElementById('logoUpload').click()">Choose Logo</button>
                                     <button class="btn btn-secondary" onclick="removeLogo()" id="removeLogoBtn" style="display: none;">Remove Logo</button>
+                                    <button type="button" class="btn btn-info" onclick="testSidebarLogo()" style="margin-top: 10px;">
+                                        <span>🔧</span> Test Sidebar Logo
+                                    </button>
                                 </div>
                             </div>
                             <p class="setting-description">Upload your company logo. Recommended size: 200x200px. Supported formats: JPG, PNG, GIF.</p>
@@ -2672,16 +2675,31 @@
         }
 
         function updateSidebarLogo(logoData) {
+            console.log('updateSidebarLogo called with:', logoData ? 'logo data' : 'empty');
             const sidebarLogoIcon = document.getElementById('sidebar-logo-icon');
+            console.log('sidebarLogoIcon found:', !!sidebarLogoIcon);
+            
             if (sidebarLogoIcon) {
                 if (logoData && logoData.trim() !== '') {
                     // Show uploaded logo
-                    sidebarLogoIcon.innerHTML = `<img src="${logoData}" alt="Company Logo">`;
+                    console.log('Setting logo image');
+                    sidebarLogoIcon.innerHTML = `<img src="${logoData}" alt="Company Logo" style="width: 100%; height: 100%; object-fit: contain;">`;
                 } else {
                     // Show default emoji
+                    console.log('Setting default emoji');
                     sidebarLogoIcon.innerHTML = `<span>🥋</span>`;
                 }
+            } else {
+                console.error('sidebar-logo-icon element not found');
             }
+        }
+
+        function testSidebarLogo() {
+            console.log('Testing sidebar logo update...');
+            const currentLogo = dataManager.settings.companyLogo;
+            console.log('Current logo data:', currentLogo ? 'exists' : 'empty');
+            updateSidebarLogo(currentLogo);
+            showNotification('Sidebar logo test completed. Check console for details.');
         }
 
         function saveCompanyInfo() {
@@ -2738,8 +2756,10 @@
                 dataManager.settings.companyLogo = e.target.result;
                 dataManager.saveAllData();
                 
-                // Update sidebar logo
-                updateSidebarLogo(e.target.result);
+                // Update sidebar logo with a small delay to ensure DOM is ready
+                setTimeout(() => {
+                    updateSidebarLogo(e.target.result);
+                }, 100);
                 
                 // Show remove button
                 document.getElementById('removeLogoBtn').style.display = 'inline-block';
@@ -2888,6 +2908,13 @@
         // Load settings when app starts
         setTimeout(() => {
             loadSettings();
+            // Ensure sidebar logo is updated after settings are loaded
+            setTimeout(() => {
+                const currentLogo = dataManager.settings.companyLogo;
+                if (currentLogo) {
+                    updateSidebarLogo(currentLogo);
+                }
+            }, 200);
         }, 100);
     </script>
   </body>
