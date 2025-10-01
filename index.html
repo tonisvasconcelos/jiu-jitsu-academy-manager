@@ -5020,7 +5020,12 @@
             }
             
             login(email, password) {
+                console.log('Login attempt:', email);
+                console.log('Available users:', this.users);
+                
                 const user = this.users.find(u => u.email === email && u.password === password);
+                console.log('Found user:', user);
+                
                 if (user && user.status === 'active') {
                     this.currentUser = user;
                     user.lastLogin = new Date().toISOString();
@@ -5134,6 +5139,47 @@
         // Initialize authentication
         const authManager = new AuthManager();
         
+        // Function to reset default users
+        function resetDefaultUsers() {
+            const defaultUsers = [
+                {
+                    id: 1,
+                    name: 'System Administrator',
+                    email: 'admin@academy.com',
+                    password: 'admin123',
+                    role: 'system_admin',
+                    status: 'active',
+                    lastLogin: null,
+                    createdAt: new Date().toISOString(),
+                    permissions: ['all'],
+                    entityId: null
+                },
+                {
+                    id: 2,
+                    name: 'Fight Team Admin',
+                    email: 'admin@elitefight.com',
+                    password: 'admin123',
+                    role: 'fight_team_admin',
+                    status: 'active',
+                    lastLogin: null,
+                    createdAt: new Date().toISOString(),
+                    permissions: ['manage_entity', 'manage_students', 'manage_teachers', 'manage_classes', 'view_reports'],
+                    entityId: 1
+                }
+            ];
+            
+            localStorage.setItem('academy_users', JSON.stringify(defaultUsers));
+            authManager.users = defaultUsers;
+            console.log('Default users reset:', defaultUsers);
+            showNotification('Default users reset successfully!', 'success');
+        }
+        
+        // Function to clear all data and start fresh
+        function clearAllData() {
+            localStorage.clear();
+            location.reload();
+        }
+        
         // Force show sidebar after authentication loads
         setTimeout(() => {
             const sidebar = document.getElementById('sidebar');
@@ -5190,21 +5236,13 @@
         // Initialize the app
         console.log('Jiu-Jitsu Academy Manager loaded successfully!');
         
-        // Add debug button for testing (remove in production)
+        // Add debug buttons for testing (remove in production)
         setTimeout(() => {
-            const debugBtn = document.createElement('button');
-            debugBtn.textContent = 'Show Sidebar';
-            debugBtn.style.position = 'fixed';
-            debugBtn.style.top = '10px';
-            debugBtn.style.right = '10px';
-            debugBtn.style.zIndex = '9999';
-            debugBtn.style.padding = '10px';
-            debugBtn.style.background = '#667eea';
-            debugBtn.style.color = 'white';
-            debugBtn.style.border = 'none';
-            debugBtn.style.borderRadius = '5px';
-            debugBtn.style.cursor = 'pointer';
-            debugBtn.onclick = () => {
+            // Show Sidebar button
+            const sidebarBtn = document.createElement('button');
+            sidebarBtn.textContent = 'Show Sidebar';
+            sidebarBtn.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999; background: #667eea; color: white; padding: 5px; border: none; border-radius: 3px; margin-right: 5px;';
+            sidebarBtn.onclick = () => {
                 const sidebar = document.getElementById('sidebar');
                 if (sidebar) {
                     sidebar.style.display = 'flex';
@@ -5212,8 +5250,27 @@
                     console.log('Sidebar forced to show');
                 }
             };
-            debugBtn.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999; background: red; color: white; padding: 5px; border: none; border-radius: 3px;';
-            document.body.appendChild(debugBtn);
+            document.body.appendChild(sidebarBtn);
+            
+            // Reset Users button
+            const resetBtn = document.createElement('button');
+            resetBtn.textContent = 'Reset Users';
+            resetBtn.style.cssText = 'position: fixed; top: 10px; right: 120px; z-index: 9999; background: #e74c3c; color: white; padding: 5px; border: none; border-radius: 3px;';
+            resetBtn.onclick = () => {
+                resetDefaultUsers();
+            };
+            document.body.appendChild(resetBtn);
+            
+            // Clear All Data button
+            const clearBtn = document.createElement('button');
+            clearBtn.textContent = 'Clear All';
+            clearBtn.style.cssText = 'position: fixed; top: 10px; right: 200px; z-index: 9999; background: #8e44ad; color: white; padding: 5px; border: none; border-radius: 3px;';
+            clearBtn.onclick = () => {
+                if (confirm('This will clear all data and reload the page. Are you sure?')) {
+                    clearAllData();
+                }
+            };
+            document.body.appendChild(clearBtn);
         }, 1000);
         
         // Load settings when app starts
