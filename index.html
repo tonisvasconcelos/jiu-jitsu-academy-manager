@@ -2185,27 +2185,61 @@
         }
 
         // Close sidebar on mobile when clicking overlay
-        sidebarOverlay.addEventListener('click', () => {
+        sidebarOverlay.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
             console.log('Overlay clicked, window width:', window.innerWidth);
+            console.log('Current sidebar classes before close:', sidebar.className);
+            
             if (window.innerWidth <= 767) {
-                console.log('Closing mobile sidebar');
+                console.log('Closing mobile sidebar via overlay');
                 sidebar.classList.remove('mobile-open');
                 sidebarOverlay.classList.remove('active');
+                console.log('Sidebar classes after close:', sidebar.className);
             }
         });
 
         // Toggle sidebar on mobile
-        sidebarToggle.addEventListener('click', () => {
+        sidebarToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
             console.log('Sidebar toggle clicked, window width:', window.innerWidth);
+            console.log('Current sidebar classes:', sidebar.className);
+            console.log('Current overlay classes:', sidebarOverlay.className);
+            
             if (window.innerWidth <= 767) {
                 console.log('Mobile mode: toggling mobile-open class');
-                sidebar.classList.toggle('mobile-open');
-                sidebarOverlay.classList.toggle('active');
+                const isOpen = sidebar.classList.contains('mobile-open');
+                console.log('Menu is currently:', isOpen ? 'OPEN' : 'CLOSED');
+                
+                if (isOpen) {
+                    console.log('Closing mobile menu');
+                    sidebar.classList.remove('mobile-open');
+                    sidebarOverlay.classList.remove('active');
+                } else {
+                    console.log('Opening mobile menu');
+                    sidebar.classList.add('mobile-open');
+                    sidebarOverlay.classList.add('active');
+                }
+                
+                console.log('After toggle - sidebar classes:', sidebar.className);
+                console.log('After toggle - overlay classes:', sidebarOverlay.className);
             } else {
                 console.log('Desktop mode: toggling collapsed class');
                 toggleSidebar();
             }
         });
+
+        // Function to close mobile menu
+        function closeMobileMenu() {
+            if (window.innerWidth <= 767) {
+                console.log('Closing mobile menu programmatically');
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('active');
+            }
+        }
 
         // Navigation functionality
         function showPage(pageId) {
@@ -2248,10 +2282,7 @@
             loadPageData(pageId);
             
             // Close sidebar on mobile after navigation
-            if (window.innerWidth <= 767) {
-                sidebar.classList.remove('mobile-open');
-                sidebarOverlay.classList.remove('active');
-            }
+            closeMobileMenu();
         }
 
         // Load page data
@@ -2280,6 +2311,8 @@
             item.addEventListener('click', function(e) {
                 e.preventDefault();
                 showPage(this.dataset.page);
+                // Ensure mobile menu closes when menu item is clicked
+                closeMobileMenu();
             });
         });
 
@@ -2301,6 +2334,14 @@
                     sidebarOverlay.classList.remove('active');
                 }
             }, 100);
+        });
+        
+        // Handle Escape key to close mobile menu
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && window.innerWidth <= 767) {
+                console.log('Escape key pressed, closing mobile menu');
+                closeMobileMenu();
+            }
         });
 
         // Form Management
