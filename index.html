@@ -1132,32 +1132,125 @@
                     <p>Configure your academy management system preferences</p>
                 </div>
                 
-                <div class="page-content">
-                    <div class="content-header">
-                        <h2>Settings Records</h2>
-                        <button class="btn" onclick="showSettingsForm()">Add New Settings</button>
+                <div class="settings-container">
+                    <!-- Company Information -->
+                    <div class="settings-section">
+                        <h2>🏢 Company Information</h2>
+                        <div class="feature-card">
+                            <form onsubmit="saveCompanySettings(event)">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="companyName">Company Name *</label>
+                                        <input type="text" id="companyName" name="companyName" placeholder="Enter company name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="companyResponsible">Company Responsible *</label>
+                                        <input type="text" id="companyResponsible" name="companyResponsible" placeholder="Enter responsible person name" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="companyAddress">Company Address *</label>
+                                    <textarea id="companyAddress" name="companyAddress" rows="3" placeholder="Enter complete company address" required></textarea>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="companyPhone">Phone Number</label>
+                                        <input type="tel" id="companyPhone" name="companyPhone" placeholder="Enter phone number">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="companyEmail">Email Address</label>
+                                        <input type="email" id="companyEmail" name="companyEmail" placeholder="Enter email address">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="companyWebsite">Website</label>
+                                        <input type="url" id="companyWebsite" name="companyWebsite" placeholder="Enter website URL">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="companyTaxId">Tax ID</label>
+                                        <input type="text" id="companyTaxId" name="companyTaxId" placeholder="Enter tax identification number">
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn">Save Company Information</button>
+                            </form>
+                        </div>
                     </div>
-                    
-                    <div class="search-container">
-                        <input type="text" id="settingsSearch" placeholder="Search settings by name, company, or language..." onkeyup="searchSettings()">
+
+                    <!-- Language Settings -->
+                    <div class="settings-section">
+                        <h2>🌐 Language Settings</h2>
+                        <div class="feature-card">
+                            <div class="form-group">
+                                <label for="languageCode">Language Code *</label>
+                                <select id="languageCode" name="languageCode" onchange="updateLanguage()">
+                                    <option value="PTB">Portuguese (PTB)</option>
+                                    <option value="ENU">English (ENU)</option>
+                                </select>
+                            </div>
+                            <p class="setting-description">Choose the default language for the application interface.</p>
+                        </div>
                     </div>
-                    
-                    <div class="table-container">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Company</th>
-                                    <th>Language</th>
-                                    <th>Status</th>
-                                    <th>Created</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="settingsTableBody">
-                                <!-- Settings will be populated here -->
-                            </tbody>
-                        </table>
+
+                    <!-- System Preferences -->
+                    <div class="settings-section">
+                        <h2>🔧 System Preferences</h2>
+                        <div class="feature-card">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="dateFormat">Date Format</label>
+                                    <select id="dateFormat" name="dateFormat">
+                                        <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                        <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="timeFormat">Time Format</label>
+                                    <select id="timeFormat" name="timeFormat">
+                                        <option value="24h">24 Hour</option>
+                                        <option value="12h">12 Hour (AM/PM)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="currency">Currency</label>
+                                <select id="currency" name="currency">
+                                    <option value="BRL">Brazilian Real (BRL)</option>
+                                    <option value="USD">US Dollar (USD)</option>
+                                    <option value="EUR">Euro (EUR)</option>
+                                    <option value="GBP">British Pound (GBP)</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn" onclick="saveSystemPreferences()">Save Preferences</button>
+                        </div>
+                    </div>
+
+                    <!-- Company Logo -->
+                    <div class="settings-section">
+                        <h2>🖼️ Company Logo</h2>
+                        <div class="feature-card">
+                            <div class="logo-upload-container">
+                                <div class="logo-preview" id="logoPreview">
+                                    <div class="logo-placeholder">
+                                        <span>📷</span>
+                                        <p>No logo uploaded</p>
+                                    </div>
+                                </div>
+                                <div class="logo-upload-controls">
+                                    <input type="file" id="logoUpload" accept="image/*" onchange="handleLogoUpload(event)" style="display: none;">
+                                    <button type="button" class="btn" onclick="document.getElementById('logoUpload').click()">Choose Logo</button>
+                                    <button type="button" class="btn btn-secondary" onclick="removeLogo()" id="removeLogoBtn" style="display: none;">Remove Logo</button>
+                                </div>
+                            </div>
+                            <p class="setting-description">Upload your company logo. Recommended size: 200x200px. Supported formats: JPG, PNG, GIF.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1205,7 +1298,7 @@
                 this.settings = loadedSettings || [
                     { 
                         id: 1, 
-                        name: 'Default Settings',
+                        name: 'Company Settings',
                         languageCode: 'PTB',
                         companyName: '',
                         companyResponsible: '',
@@ -1786,7 +1879,7 @@
                     renderClassesTable();
                     break;
             case 'settings':
-                renderSettingsTable();
+                loadSettings();
                 break;
             }
         }
@@ -2388,11 +2481,12 @@
 
         // Settings Functions
         function loadSettings() {
-            const settings = dataManager.settings;
+            // Get the first (and only) settings entry
+            const settings = dataManager.settings[0] || {};
             console.log('loadSettings called, current settings:', settings);
             
             // Load language
-            document.getElementById('languageCode').value = settings.languageCode;
+            document.getElementById('languageCode').value = settings.languageCode || 'PTB';
             
             // Load company info
             document.getElementById('companyName').value = settings.companyName || '';
@@ -2422,9 +2516,71 @@
             }
         }
 
+        function saveCompanySettings(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const companyData = Object.fromEntries(formData.entries());
+            
+            // Ensure we have at least one settings entry
+            if (dataManager.settings.length === 0) {
+                dataManager.settings.push({
+                    id: 1,
+                    name: 'Company Settings',
+                    languageCode: 'PTB',
+                    companyName: '',
+                    companyResponsible: '',
+                    companyAddress: '',
+                    companyPhone: '',
+                    companyEmail: '',
+                    companyWebsite: '',
+                    companyTaxId: '',
+                    companyLogo: '',
+                    dateFormat: 'DD/MM/YYYY',
+                    timeFormat: '24h',
+                    currency: 'BRL',
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                });
+            }
+            
+            // Update the first (and only) settings entry
+            dataManager.settings[0] = {
+                ...dataManager.settings[0],
+                ...companyData,
+                updatedAt: new Date().toISOString()
+            };
+            
+            dataManager.saveAllData();
+            showNotification('Company information saved successfully!');
+        }
+
         function updateLanguage() {
             const languageCode = document.getElementById('languageCode').value;
-            dataManager.settings.languageCode = languageCode;
+            
+            // Ensure we have at least one settings entry
+            if (dataManager.settings.length === 0) {
+                dataManager.settings.push({
+                    id: 1,
+                    name: 'Company Settings',
+                    languageCode: languageCode,
+                    companyName: '',
+                    companyResponsible: '',
+                    companyAddress: '',
+                    companyPhone: '',
+                    companyEmail: '',
+                    companyWebsite: '',
+                    companyTaxId: '',
+                    companyLogo: '',
+                    dateFormat: 'DD/MM/YYYY',
+                    timeFormat: '24h',
+                    currency: 'BRL',
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                });
+            } else {
+                dataManager.settings[0].languageCode = languageCode;
+            }
+            
             dataManager.saveAllData();
             
             // Update UI language
@@ -2929,9 +3085,31 @@
                 const logoPreview = document.getElementById('logoPreview');
                 logoPreview.innerHTML = `<img src="${e.target.result}" alt="Company Logo">`;
                 
+                // Ensure we have at least one settings entry
+                if (dataManager.settings.length === 0) {
+                    dataManager.settings.push({
+                        id: 1,
+                        name: 'Company Settings',
+                        languageCode: 'PTB',
+                        companyName: '',
+                        companyResponsible: '',
+                        companyAddress: '',
+                        companyPhone: '',
+                        companyEmail: '',
+                        companyWebsite: '',
+                        companyTaxId: '',
+                        companyLogo: '',
+                        dateFormat: 'DD/MM/YYYY',
+                        timeFormat: '24h',
+                        currency: 'BRL',
+                        isActive: true,
+                        createdAt: new Date().toISOString()
+                    });
+                }
+                
                 // Save logo to settings
-                dataManager.settings.companyLogo = e.target.result;
-                console.log('Saving logo to settings:', dataManager.settings.companyLogo ? 'logo data saved' : 'no logo data');
+                dataManager.settings[0].companyLogo = e.target.result;
+                console.log('Saving logo to settings:', dataManager.settings[0].companyLogo ? 'logo data saved' : 'no logo data');
                 dataManager.saveAllData();
                 console.log('Settings saved to localStorage');
                 
@@ -2959,8 +3137,10 @@
                 `;
                 
                 // Remove logo from settings
-                dataManager.settings.companyLogo = '';
-                dataManager.saveAllData();
+                if (dataManager.settings.length > 0) {
+                    dataManager.settings[0].companyLogo = '';
+                    dataManager.saveAllData();
+                }
                 
                 // Update sidebar logo to default
                 updateSidebarLogo('');
@@ -2979,9 +3159,36 @@
                 currency: document.getElementById('currency').value
             };
             
-            Object.assign(dataManager.settings, preferences);
-            dataManager.saveAllData();
+            // Ensure we have at least one settings entry
+            if (dataManager.settings.length === 0) {
+                dataManager.settings.push({
+                    id: 1,
+                    name: 'Company Settings',
+                    languageCode: 'PTB',
+                    companyName: '',
+                    companyResponsible: '',
+                    companyAddress: '',
+                    companyPhone: '',
+                    companyEmail: '',
+                    companyWebsite: '',
+                    companyTaxId: '',
+                    companyLogo: '',
+                    dateFormat: 'DD/MM/YYYY',
+                    timeFormat: '24h',
+                    currency: 'BRL',
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                });
+            }
             
+            // Update the first (and only) settings entry
+            dataManager.settings[0] = {
+                ...dataManager.settings[0],
+                ...preferences,
+                updatedAt: new Date().toISOString()
+            };
+            
+            dataManager.saveAllData();
             showNotification(t('preferences_saved'));
         }
 
@@ -3091,7 +3298,7 @@
             loadSettings();
             // Ensure sidebar logo is updated after settings are loaded
             setTimeout(() => {
-                const currentLogo = dataManager.settings.companyLogo;
+                const currentLogo = dataManager.settings.length > 0 ? dataManager.settings[0].companyLogo : '';
                 console.log('Current logo on startup:', currentLogo ? 'exists' : 'empty');
                 if (currentLogo) {
                     console.log('Updating sidebar logo on startup');
