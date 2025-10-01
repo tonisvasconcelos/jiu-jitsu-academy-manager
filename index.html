@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jiu-Jitsu Academy Manager</title>
@@ -432,9 +432,128 @@
         .sidebar-overlay.active {
             display: block;
         }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            color: #333;
+            font-size: 1.5rem;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+        
+        .modal-content form {
+            padding: 2rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        .notification.warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .notification.info {
+            background: #17a2b8;
+        }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -617,6 +736,11 @@
                     <button class="btn" onclick="showStudentForm()">Add New Student</button>
                 </div>
                 
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <input type="text" id="studentSearch" placeholder="Search students by name, email, belt, or branch..." 
+                           onkeyup="searchStudents()" style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 10px;">
+                </div>
+                
                 <table class="table">
                     <thead>
                         <tr>
@@ -663,6 +787,11 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <h2>Instructor Records</h2>
                     <button class="btn" onclick="showTeacherForm()">Add New Teacher</button>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <input type="text" id="teacherSearch" placeholder="Search teachers by name, email, belt, or specialization..." 
+                           onkeyup="searchTeachers()" style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 10px;">
                 </div>
                 
                 <table class="table">
@@ -713,6 +842,11 @@
                     <button class="btn" onclick="showBranchForm()">Add New Branch</button>
                 </div>
                 
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <input type="text" id="branchSearch" placeholder="Search branches by name, address, or manager..." 
+                           onkeyup="searchBranches()" style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 10px;">
+                </div>
+                
                 <div class="feature-grid">
                     <div class="feature-card">
                         <h3>🏛️ Main Academy</h3>
@@ -743,6 +877,11 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <h2>Class Schedule</h2>
                     <button class="btn" onclick="showClassForm()">Add New Class</button>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <input type="text" id="classSearch" placeholder="Search classes by name, instructor, branch, or level..." 
+                           onkeyup="searchClasses()" style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 10px;">
                 </div>
                 
                 <table class="table">
@@ -887,6 +1026,65 @@
     </div>
 
     <script>
+        // Data Management
+        class DataManager {
+            constructor() {
+                this.students = this.loadData('students') || [
+                    { id: 1, name: 'João Silva', email: 'joao@email.com', phone: '+55 11 99999-9999', belt: 'Blue', branch: 'Main Academy', joinDate: '2024-01-15', status: 'Active', age: 28, address: 'Rua das Flores, 123' },
+                    { id: 2, name: 'Maria Santos', email: 'maria@email.com', phone: '+55 11 88888-8888', belt: 'Purple', branch: 'Downtown Branch', joinDate: '2023-11-20', status: 'Active', age: 25, address: 'Av. Principal, 456' }
+                ];
+                this.teachers = this.loadData('teachers') || [
+                    { id: 1, name: 'Carlos Mendes', email: 'carlos@academy.com', phone: '+55 11 77777-7777', belt: 'Black', specialization: 'Gi & No-Gi', branch: 'Main Academy', experience: '8 years', status: 'Active', certifications: ['IBJJF Black Belt', 'First Aid'] },
+                    { id: 2, name: 'Ana Costa', email: 'ana@academy.com', phone: '+55 11 66666-6666', belt: 'Brown', specialization: 'Kids Classes', branch: 'Downtown Branch', experience: '5 years', status: 'Active', certifications: ['IBJJF Brown Belt', 'Kids Safety'] }
+                ];
+                this.branches = this.loadData('branches') || [
+                    { id: 1, name: 'Main Academy', address: '123 Main Street, City Center', capacity: 50, classes: 15, status: 'Active', manager: 'Carlos Mendes', phone: '+55 11 55555-5555' },
+                    { id: 2, name: 'Downtown Branch', address: '456 Business Ave, Downtown', capacity: 30, classes: 10, status: 'Active', manager: 'Ana Costa', phone: '+55 11 44444-4444' }
+                ];
+                this.classes = this.loadData('classes') || [
+                    { id: 1, name: 'Beginner Gi Class', instructor: 'Carlos Mendes', day: 'Mon, Wed', time: '18:00', branch: 'Main Academy', level: 'Beginner', students: 12, maxStudents: 20, status: 'Active' },
+                    { id: 2, name: 'Kids Class', instructor: 'Ana Costa', day: 'Tue, Thu', time: '16:00', branch: 'Downtown Branch', level: 'Kids', students: 8, maxStudents: 15, status: 'Active' }
+                ];
+                this.saveAllData();
+            }
+
+            loadData(key) {
+                try {
+                    return JSON.parse(localStorage.getItem(key)) || [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            saveData(key, data) {
+                localStorage.setItem(key, JSON.stringify(data));
+            }
+
+            saveAllData() {
+                this.saveData('students', this.students);
+                this.saveData('teachers', this.teachers);
+                this.saveData('branches', this.branches);
+                this.saveData('classes', this.classes);
+                this.updateBadges();
+            }
+
+            updateBadges() {
+                document.querySelector('[data-page="students"] .menu-item-badge').textContent = this.students.length;
+                document.querySelector('[data-page="teachers"] .menu-item-badge').textContent = this.teachers.length;
+                document.querySelector('[data-page="branches"] .menu-item-badge').textContent = this.branches.length;
+                document.querySelector('[data-page="classes"] .menu-item-badge').textContent = this.classes.length;
+                
+                // Update dashboard stats
+                document.getElementById('total-students').textContent = this.students.length;
+                document.getElementById('total-teachers').textContent = this.teachers.length;
+                document.getElementById('total-branches').textContent = this.branches.length;
+                document.getElementById('total-classes').textContent = this.classes.length;
+            }
+        }
+
+        // Initialize data manager
+        const dataManager = new DataManager();
+
         // Sidebar functionality
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebar-toggle');
@@ -956,10 +1154,31 @@
             };
             pageTitle.textContent = pageNames[pageId] || 'Dashboard';
             
+            // Load page data
+            loadPageData(pageId);
+            
             // Close sidebar on mobile after navigation
             if (window.innerWidth <= 768) {
                 sidebar.classList.remove('mobile-open');
                 sidebarOverlay.classList.remove('active');
+            }
+        }
+
+        // Load page data
+        function loadPageData(pageId) {
+            switch(pageId) {
+                case 'students':
+                    renderStudentsTable();
+                    break;
+                case 'teachers':
+                    renderTeachersTable();
+                    break;
+                case 'branches':
+                    renderBranchesTable();
+                    break;
+                case 'classes':
+                    renderClassesTable();
+                    break;
             }
         }
 
@@ -971,23 +1190,6 @@
             });
         });
 
-        // Form functions (placeholders for now)
-        function showStudentForm() {
-            alert('Student form will be implemented here!');
-        }
-
-        function showTeacherForm() {
-            alert('Teacher form will be implemented here!');
-        }
-
-        function showBranchForm() {
-            alert('Branch form will be implemented here!');
-        }
-
-        function showClassForm() {
-            alert('Class form will be implemented here!');
-        }
-
         // Handle window resize
         window.addEventListener('resize', () => {
             if (window.innerWidth > 768) {
@@ -996,8 +1198,587 @@
             }
         });
 
+        // Form Management
+        function showStudentForm(studentId = null) {
+            const student = studentId ? dataManager.students.find(s => s.id === studentId) : null;
+            const formHtml = `
+                <div class="modal-overlay" onclick="closeModal()">
+                    <div class="modal-content" onclick="event.stopPropagation()">
+                        <div class="modal-header">
+                            <h2>${student ? 'Edit Student' : 'Add New Student'}</h2>
+                            <button class="close-btn" onclick="closeModal()">&times;</button>
+                        </div>
+                        <form id="studentForm" onsubmit="saveStudent(event, ${studentId || 'null'})">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Full Name *</label>
+                                    <input type="text" name="name" value="${student?.name || ''}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email *</label>
+                                    <input type="email" name="email" value="${student?.email || ''}" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Phone *</label>
+                                    <input type="tel" name="phone" value="${student?.phone || ''}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Age</label>
+                                    <input type="number" name="age" value="${student?.age || ''}" min="1" max="100">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Belt Level *</label>
+                                    <select name="belt" required>
+                                        <option value="">Select Belt</option>
+                                        <option value="White" ${student?.belt === 'White' ? 'selected' : ''}>White Belt</option>
+                                        <option value="Blue" ${student?.belt === 'Blue' ? 'selected' : ''}>Blue Belt</option>
+                                        <option value="Purple" ${student?.belt === 'Purple' ? 'selected' : ''}>Purple Belt</option>
+                                        <option value="Brown" ${student?.belt === 'Brown' ? 'selected' : ''}>Brown Belt</option>
+                                        <option value="Black" ${student?.belt === 'Black' ? 'selected' : ''}>Black Belt</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Branch *</label>
+                                    <select name="branch" required>
+                                        <option value="">Select Branch</option>
+                                        ${dataManager.branches.map(branch => 
+                                            `<option value="${branch.name}" ${student?.branch === branch.name ? 'selected' : ''}>${branch.name}</option>`
+                                        ).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Join Date *</label>
+                                    <input type="date" name="joinDate" value="${student?.joinDate || new Date().toISOString().split('T')[0]}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status *</label>
+                                    <select name="status" required>
+                                        <option value="Active" ${student?.status === 'Active' ? 'selected' : ''}>Active</option>
+                                        <option value="Inactive" ${student?.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
+                                        <option value="Suspended" ${student?.status === 'Suspended' ? 'selected' : ''}>Suspended</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <textarea name="address" rows="2">${student?.address || ''}</textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                                <button type="submit" class="btn">${student ? 'Update Student' : 'Add Student'}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', formHtml);
+        }
+
+        function showTeacherForm(teacherId = null) {
+            const teacher = teacherId ? dataManager.teachers.find(t => t.id === teacherId) : null;
+            const formHtml = `
+                <div class="modal-overlay" onclick="closeModal()">
+                    <div class="modal-content" onclick="event.stopPropagation()">
+                        <div class="modal-header">
+                            <h2>${teacher ? 'Edit Teacher' : 'Add New Teacher'}</h2>
+                            <button class="close-btn" onclick="closeModal()">&times;</button>
+                        </div>
+                        <form id="teacherForm" onsubmit="saveTeacher(event, ${teacherId || 'null'})">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Full Name *</label>
+                                    <input type="text" name="name" value="${teacher?.name || ''}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email *</label>
+                                    <input type="email" name="email" value="${teacher?.email || ''}" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Phone *</label>
+                                    <input type="tel" name="phone" value="${teacher?.phone || ''}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Experience *</label>
+                                    <input type="text" name="experience" value="${teacher?.experience || ''}" placeholder="e.g., 5 years" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Belt Level *</label>
+                                    <select name="belt" required>
+                                        <option value="">Select Belt</option>
+                                        <option value="Brown" ${teacher?.belt === 'Brown' ? 'selected' : ''}>Brown Belt</option>
+                                        <option value="Black" ${teacher?.belt === 'Black' ? 'selected' : ''}>Black Belt</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Branch *</label>
+                                    <select name="branch" required>
+                                        <option value="">Select Branch</option>
+                                        ${dataManager.branches.map(branch => 
+                                            `<option value="${branch.name}" ${teacher?.branch === branch.name ? 'selected' : ''}>${branch.name}</option>`
+                                        ).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Specialization *</label>
+                                <input type="text" name="specialization" value="${teacher?.specialization || ''}" placeholder="e.g., Gi & No-Gi, Kids Classes" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Certifications</label>
+                                <textarea name="certifications" rows="2" placeholder="Enter certifications separated by commas">${teacher?.certifications?.join(', ') || ''}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Status *</label>
+                                <select name="status" required>
+                                    <option value="Active" ${teacher?.status === 'Active' ? 'selected' : ''}>Active</option>
+                                    <option value="Inactive" ${teacher?.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                                <button type="submit" class="btn">${teacher ? 'Update Teacher' : 'Add Teacher'}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', formHtml);
+        }
+
+        function showBranchForm(branchId = null) {
+            const branch = branchId ? dataManager.branches.find(b => b.id === branchId) : null;
+            const formHtml = `
+                <div class="modal-overlay" onclick="closeModal()">
+                    <div class="modal-content" onclick="event.stopPropagation()">
+                        <div class="modal-header">
+                            <h2>${branch ? 'Edit Branch' : 'Add New Branch'}</h2>
+                            <button class="close-btn" onclick="closeModal()">&times;</button>
+                        </div>
+                        <form id="branchForm" onsubmit="saveBranch(event, ${branchId || 'null'})">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Branch Name *</label>
+                                    <input type="text" name="name" value="${branch?.name || ''}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Manager *</label>
+                                    <input type="text" name="manager" value="${branch?.manager || ''}" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Address *</label>
+                                <textarea name="address" rows="2" required>${branch?.address || ''}</textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Phone *</label>
+                                    <input type="tel" name="phone" value="${branch?.phone || ''}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Capacity *</label>
+                                    <input type="number" name="capacity" value="${branch?.capacity || ''}" min="1" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Classes per Week *</label>
+                                    <input type="number" name="classes" value="${branch?.classes || ''}" min="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status *</label>
+                                    <select name="status" required>
+                                        <option value="Active" ${branch?.status === 'Active' ? 'selected' : ''}>Active</option>
+                                        <option value="Inactive" ${branch?.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                                <button type="submit" class="btn">${branch ? 'Update Branch' : 'Add Branch'}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', formHtml);
+        }
+
+        function showClassForm(classId = null) {
+            const classItem = classId ? dataManager.classes.find(c => c.id === classId) : null;
+            const formHtml = `
+                <div class="modal-overlay" onclick="closeModal()">
+                    <div class="modal-content" onclick="event.stopPropagation()">
+                        <div class="modal-header">
+                            <h2>${classItem ? 'Edit Class' : 'Add New Class'}</h2>
+                            <button class="close-btn" onclick="closeModal()">&times;</button>
+                        </div>
+                        <form id="classForm" onsubmit="saveClass(event, ${classId || 'null'})">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Class Name *</label>
+                                    <input type="text" name="name" value="${classItem?.name || ''}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Instructor *</label>
+                                    <select name="instructor" required>
+                                        <option value="">Select Instructor</option>
+                                        ${dataManager.teachers.map(teacher => 
+                                            `<option value="${teacher.name}" ${classItem?.instructor === teacher.name ? 'selected' : ''}>${teacher.name}</option>`
+                                        ).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Days *</label>
+                                    <input type="text" name="day" value="${classItem?.day || ''}" placeholder="e.g., Mon, Wed" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Time *</label>
+                                    <input type="time" name="time" value="${classItem?.time || ''}" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Branch *</label>
+                                    <select name="branch" required>
+                                        <option value="">Select Branch</option>
+                                        ${dataManager.branches.map(branch => 
+                                            `<option value="${branch.name}" ${classItem?.branch === branch.name ? 'selected' : ''}>${branch.name}</option>`
+                                        ).join('')}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Level *</label>
+                                    <select name="level" required>
+                                        <option value="">Select Level</option>
+                                        <option value="Beginner" ${classItem?.level === 'Beginner' ? 'selected' : ''}>Beginner</option>
+                                        <option value="Intermediate" ${classItem?.level === 'Intermediate' ? 'selected' : ''}>Intermediate</option>
+                                        <option value="Advanced" ${classItem?.level === 'Advanced' ? 'selected' : ''}>Advanced</option>
+                                        <option value="Kids" ${classItem?.level === 'Kids' ? 'selected' : ''}>Kids</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Max Students *</label>
+                                    <input type="number" name="maxStudents" value="${classItem?.maxStudents || ''}" min="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status *</label>
+                                    <select name="status" required>
+                                        <option value="Active" ${classItem?.status === 'Active' ? 'selected' : ''}>Active</option>
+                                        <option value="Inactive" ${classItem?.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                                <button type="submit" class="btn">${classItem ? 'Update Class' : 'Add Class'}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', formHtml);
+        }
+
+        // Save functions
+        function saveStudent(event, studentId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const studentData = Object.fromEntries(formData.entries());
+            
+            if (studentId) {
+                const index = dataManager.students.findIndex(s => s.id === studentId);
+                dataManager.students[index] = { ...dataManager.students[index], ...studentData };
+            } else {
+                const newId = Math.max(...dataManager.students.map(s => s.id), 0) + 1;
+                dataManager.students.push({ id: newId, ...studentData });
+            }
+            
+            dataManager.saveAllData();
+            closeModal();
+            renderStudentsTable();
+            showNotification(studentId ? 'Student updated successfully!' : 'Student added successfully!');
+        }
+
+        function saveTeacher(event, teacherId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const teacherData = Object.fromEntries(formData.entries());
+            
+            if (teacherData.certifications) {
+                teacherData.certifications = teacherData.certifications.split(',').map(c => c.trim()).filter(c => c);
+            }
+            
+            if (teacherId) {
+                const index = dataManager.teachers.findIndex(t => t.id === teacherId);
+                dataManager.teachers[index] = { ...dataManager.teachers[index], ...teacherData };
+            } else {
+                const newId = Math.max(...dataManager.teachers.map(t => t.id), 0) + 1;
+                dataManager.teachers.push({ id: newId, ...teacherData });
+            }
+            
+            dataManager.saveAllData();
+            closeModal();
+            renderTeachersTable();
+            showNotification(teacherId ? 'Teacher updated successfully!' : 'Teacher added successfully!');
+        }
+
+        function saveBranch(event, branchId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const branchData = Object.fromEntries(formData.entries());
+            
+            if (branchId) {
+                const index = dataManager.branches.findIndex(b => b.id === branchId);
+                dataManager.branches[index] = { ...dataManager.branches[index], ...branchData };
+            } else {
+                const newId = Math.max(...dataManager.branches.map(b => b.id), 0) + 1;
+                dataManager.branches.push({ id: newId, ...branchData });
+            }
+            
+            dataManager.saveAllData();
+            closeModal();
+            renderBranchesTable();
+            showNotification(branchId ? 'Branch updated successfully!' : 'Branch added successfully!');
+        }
+
+        function saveClass(event, classId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const classData = Object.fromEntries(formData.entries());
+            
+            if (classId) {
+                const index = dataManager.classes.findIndex(c => c.id === classId);
+                dataManager.classes[index] = { ...dataManager.classes[index], ...classData };
+            } else {
+                const newId = Math.max(...dataManager.classes.map(c => c.id), 0) + 1;
+                dataManager.classes.push({ id: newId, students: 0, ...classData });
+            }
+            
+            dataManager.saveAllData();
+            closeModal();
+            renderClassesTable();
+            showNotification(classId ? 'Class updated successfully!' : 'Class added successfully!');
+        }
+
+        // Modal functions
+        function closeModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Delete functions
+        function deleteStudent(id) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                dataManager.students = dataManager.students.filter(s => s.id !== id);
+                dataManager.saveAllData();
+                renderStudentsTable();
+                showNotification('Student deleted successfully!');
+            }
+        }
+
+        function deleteTeacher(id) {
+            if (confirm('Are you sure you want to delete this teacher?')) {
+                dataManager.teachers = dataManager.teachers.filter(t => t.id !== id);
+                dataManager.saveAllData();
+                renderTeachersTable();
+                showNotification('Teacher deleted successfully!');
+            }
+        }
+
+        function deleteBranch(id) {
+            if (confirm('Are you sure you want to delete this branch?')) {
+                dataManager.branches = dataManager.branches.filter(b => b.id !== id);
+                dataManager.saveAllData();
+                renderBranchesTable();
+                showNotification('Branch deleted successfully!');
+            }
+        }
+
+        function deleteClass(id) {
+            if (confirm('Are you sure you want to delete this class?')) {
+                dataManager.classes = dataManager.classes.filter(c => c.id !== id);
+                dataManager.saveAllData();
+                renderClassesTable();
+                showNotification('Class deleted successfully!');
+            }
+        }
+
+        // Search and filter functions
+        function searchStudents() {
+            const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
+            const filteredStudents = dataManager.students.filter(student => 
+                student.name.toLowerCase().includes(searchTerm) ||
+                student.email.toLowerCase().includes(searchTerm) ||
+                student.belt.toLowerCase().includes(searchTerm) ||
+                student.branch.toLowerCase().includes(searchTerm)
+            );
+            renderStudentsTable(filteredStudents);
+        }
+
+        function searchTeachers() {
+            const searchTerm = document.getElementById('teacherSearch').value.toLowerCase();
+            const filteredTeachers = dataManager.teachers.filter(teacher => 
+                teacher.name.toLowerCase().includes(searchTerm) ||
+                teacher.email.toLowerCase().includes(searchTerm) ||
+                teacher.belt.toLowerCase().includes(searchTerm) ||
+                teacher.specialization.toLowerCase().includes(searchTerm)
+            );
+            renderTeachersTable(filteredTeachers);
+        }
+
+        function searchBranches() {
+            const searchTerm = document.getElementById('branchSearch').value.toLowerCase();
+            const filteredBranches = dataManager.branches.filter(branch => 
+                branch.name.toLowerCase().includes(searchTerm) ||
+                branch.address.toLowerCase().includes(searchTerm) ||
+                branch.manager.toLowerCase().includes(searchTerm)
+            );
+            renderBranchesTable(filteredBranches);
+        }
+
+        function searchClasses() {
+            const searchTerm = document.getElementById('classSearch').value.toLowerCase();
+            const filteredClasses = dataManager.classes.filter(classItem => 
+                classItem.name.toLowerCase().includes(searchTerm) ||
+                classItem.instructor.toLowerCase().includes(searchTerm) ||
+                classItem.branch.toLowerCase().includes(searchTerm) ||
+                classItem.level.toLowerCase().includes(searchTerm)
+            );
+            renderClassesTable(filteredClasses);
+        }
+
+        // Render functions
+        function renderStudentsTable(students = dataManager.students) {
+            const tbody = document.getElementById('students-table');
+            tbody.innerHTML = students.map(student => `
+                <tr>
+                    <td>${student.name}</td>
+                    <td><span class="badge badge-${getBeltColor(student.belt)}">${student.belt} Belt</span></td>
+                    <td>${student.branch}</td>
+                    <td>${student.joinDate}</td>
+                    <td><span class="badge badge-${getStatusColor(student.status)}">${student.status}</span></td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; margin-right: 0.5rem;" onclick="showStudentForm(${student.id})">Edit</button>
+                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #dc3545;" onclick="deleteStudent(${student.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderTeachersTable(teachers = dataManager.teachers) {
+            const tbody = document.getElementById('teachers-table');
+            tbody.innerHTML = teachers.map(teacher => `
+                <tr>
+                    <td>${teacher.name}</td>
+                    <td><span class="badge badge-${getBeltColor(teacher.belt)}">${teacher.belt} Belt</span></td>
+                    <td>${teacher.specialization}</td>
+                    <td>${teacher.branch}</td>
+                    <td>${teacher.experience}</td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; margin-right: 0.5rem;" onclick="showTeacherForm(${teacher.id})">Edit</button>
+                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #dc3545;" onclick="deleteTeacher(${teacher.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderBranchesTable(branches = dataManager.branches) {
+            const container = document.querySelector('#branches .feature-grid');
+            container.innerHTML = branches.map(branch => `
+                <div class="feature-card">
+                    <h3>🏢 ${branch.name}</h3>
+                    <p><strong>Address:</strong> ${branch.address}</p>
+                    <p><strong>Manager:</strong> ${branch.manager}</p>
+                    <p><strong>Phone:</strong> ${branch.phone}</p>
+                    <p><strong>Capacity:</strong> ${branch.capacity} students</p>
+                    <p><strong>Classes:</strong> ${branch.classes} per week</p>
+                    <p><strong>Status:</strong> <span class="badge badge-${getStatusColor(branch.status)}">${branch.status}</span></p>
+                    <div style="margin-top: 1rem;">
+                        <button class="btn btn-secondary" style="margin-right: 0.5rem;" onclick="showBranchForm(${branch.id})">Edit</button>
+                        <button class="btn" style="background: #dc3545;" onclick="deleteBranch(${branch.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderClassesTable(classes = dataManager.classes) {
+            const tbody = document.getElementById('classes-table');
+            tbody.innerHTML = classes.map(classItem => `
+                <tr>
+                    <td>${classItem.name}</td>
+                    <td>${classItem.instructor}</td>
+                    <td>${classItem.day}, ${classItem.time}</td>
+                    <td>${classItem.branch}</td>
+                    <td><span class="badge badge-${getLevelColor(classItem.level)}">${classItem.level}</span></td>
+                    <td>${classItem.students}/${classItem.maxStudents}</td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; margin-right: 0.5rem;" onclick="showClassForm(${classItem.id})">Edit</button>
+                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #dc3545;" onclick="deleteClass(${classItem.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Helper functions
+        function getBeltColor(belt) {
+            const colors = {
+                'White': 'info',
+                'Blue': 'warning',
+                'Purple': 'info',
+                'Brown': 'warning',
+                'Black': 'info'
+            };
+            return colors[belt] || 'info';
+        }
+
+        function getStatusColor(status) {
+            return status === 'Active' ? 'success' : 'danger';
+        }
+
+        function getLevelColor(level) {
+            const colors = {
+                'Beginner': 'info',
+                'Intermediate': 'warning',
+                'Advanced': 'danger',
+                'Kids': 'warning'
+            };
+            return colors[level] || 'info';
+        }
+
         // Initialize the app
         console.log('Jiu-Jitsu Academy Manager loaded successfully!');
     </script>
-</body>
+  </body>
 </html>
