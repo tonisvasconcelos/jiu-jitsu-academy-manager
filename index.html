@@ -2514,6 +2514,9 @@
                 // Ensure sidebar shows default logo
                 updateSidebarLogo('');
             }
+            
+            // Update sidebar company name
+            updateSidebarCompanyName(settings.companyName);
         }
 
         function saveCompanySettings(event) {
@@ -2551,11 +2554,16 @@
             };
             
             dataManager.saveAllData();
+            
+            // Update sidebar company name
+            updateSidebarCompanyName(companyData.companyName);
+            
             showNotification('Company information saved successfully!');
         }
 
         function updateLanguage() {
             const languageCode = document.getElementById('languageCode').value;
+            console.log('Language changed to:', languageCode);
             
             // Ensure we have at least one settings entry
             if (dataManager.settings.length === 0) {
@@ -2583,9 +2591,9 @@
             
             dataManager.saveAllData();
             
-            // Update UI language
+            // Update UI language immediately
             updateUILanguage(languageCode);
-            showNotification(t('language_updated'));
+            showNotification('Language updated successfully!');
         }
 
         function updateUILanguage(languageCode) {
@@ -2796,6 +2804,16 @@
                 }
             } else {
                 console.error('sidebar-logo-icon element not found');
+            }
+        }
+
+        function updateSidebarCompanyName(companyName) {
+            const sidebarCompanyName = document.querySelector('.sidebar-logo span:last-child');
+            if (sidebarCompanyName) {
+                sidebarCompanyName.textContent = companyName || 'Academy Manager';
+                console.log('Updated sidebar company name to:', companyName || 'Academy Manager');
+            } else {
+                console.error('Sidebar company name element not found');
             }
         }
 
@@ -3296,16 +3314,33 @@
             console.log('Loading settings on app start...');
             console.log('Current settings:', dataManager.settings);
             loadSettings();
-            // Ensure sidebar logo is updated after settings are loaded
+            
+            // Apply language translation on startup
+            if (dataManager.settings.length > 0) {
+                const currentLanguage = dataManager.settings[0].languageCode;
+                console.log('Applying language on startup:', currentLanguage);
+                updateUILanguage(currentLanguage);
+            }
+            
+            // Ensure sidebar logo and company name are updated after settings are loaded
             setTimeout(() => {
                 const currentLogo = dataManager.settings.length > 0 ? dataManager.settings[0].companyLogo : '';
+                const currentCompanyName = dataManager.settings.length > 0 ? dataManager.settings[0].companyName : '';
+                
                 console.log('Current logo on startup:', currentLogo ? 'exists' : 'empty');
+                console.log('Current company name on startup:', currentCompanyName || 'none');
+                
                 if (currentLogo) {
                     console.log('Updating sidebar logo on startup');
                     updateSidebarLogo(currentLogo);
                 } else {
                     console.log('No logo found, setting default');
                     updateSidebarLogo('');
+                }
+                
+                if (currentCompanyName) {
+                    console.log('Updating sidebar company name on startup');
+                    updateSidebarCompanyName(currentCompanyName);
                 }
             }, 200);
         }, 100);
