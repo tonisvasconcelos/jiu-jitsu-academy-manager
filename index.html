@@ -30,13 +30,59 @@
             left: 0;
             top: 0;
             z-index: 1000;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, width 0.3s ease;
             overflow-y: auto;
             border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .sidebar.collapsed {
             transform: translateX(-100%);
+        }
+        
+        .sidebar.minimized {
+            width: 70px;
+            transform: translateX(0);
+        }
+        
+        .sidebar.minimized .sidebar-subtitle,
+        .sidebar.minimized .menu-section-title,
+        .sidebar.minimized .menu-item-text,
+        .sidebar.minimized .menu-badge {
+            display: none;
+        }
+        
+        .sidebar.minimized .sidebar-logo {
+            justify-content: center;
+        }
+        
+        .sidebar.minimized .menu-item {
+            justify-content: center;
+            padding: 1rem 0.5rem;
+        }
+        
+        .sidebar.minimized .menu-item-icon {
+            margin-right: 0;
+        }
+        
+        .sidebar.minimized .menu-item {
+            position: relative;
+        }
+        
+        .sidebar.minimized .menu-item:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            z-index: 1001;
+            margin-left: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         
         .sidebar-header {
@@ -153,6 +199,10 @@
         
         .main-content.expanded {
             margin-left: 0;
+        }
+        
+        .main-content.sidebar-minimized {
+            margin-left: 70px;
         }
         
         .top-bar {
@@ -455,8 +505,16 @@
                 width: 300px;
             }
             
+            .sidebar.minimized {
+                width: 80px;
+            }
+            
             .main-content {
                 margin-left: 300px;
+            }
+            
+            .main-content.sidebar-minimized {
+                margin-left: 80px;
             }
             
             .content-header {
@@ -474,8 +532,16 @@
                 width: 280px;
             }
             
+            .sidebar.minimized {
+                width: 70px;
+            }
+            
             .main-content {
                 margin-left: 280px;
+            }
+            
+            .main-content.sidebar-minimized {
+                margin-left: 70px;
             }
         }
         
@@ -485,8 +551,16 @@
                 width: 260px;
             }
             
+            .sidebar.minimized {
+                width: 60px;
+            }
+            
             .main-content {
                 margin-left: 260px;
+            }
+            
+            .main-content.sidebar-minimized {
+                margin-left: 60px;
             }
             
             .content-header {
@@ -1079,11 +1153,11 @@
             <!-- Main Section -->
             <div class="menu-section">
                 <div class="menu-section-title">Main</div>
-                <a href="#" class="menu-item active" data-page="dashboard">
+                <a href="#" class="menu-item active" data-page="dashboard" data-tooltip="Dashboard">
                     <span class="menu-item-icon">🏠</span>
                     <span class="menu-item-text">Dashboard</span>
                 </a>
-                <a href="#" class="menu-item" data-page="analytics">
+                <a href="#" class="menu-item" data-page="analytics" data-tooltip="Analytics">
                     <span class="menu-item-icon">📊</span>
                     <span class="menu-item-text">Analytics</span>
                 </a>
@@ -1092,22 +1166,22 @@
             <!-- Management Section -->
             <div class="menu-section">
                 <div class="menu-section-title">Management</div>
-                <a href="#" class="menu-item" data-page="students">
+                <a href="#" class="menu-item" data-page="students" data-tooltip="Students">
                     <span class="menu-item-icon">👥</span>
                     <span class="menu-item-text">Students</span>
                     <span class="menu-item-badge">24</span>
                 </a>
-                <a href="#" class="menu-item" data-page="teachers">
+                <a href="#" class="menu-item" data-page="teachers" data-tooltip="Teachers">
                     <span class="menu-item-icon">👨‍🏫</span>
                     <span class="menu-item-text">Teachers</span>
                     <span class="menu-item-badge">6</span>
                 </a>
-                <a href="#" class="menu-item" data-page="branches">
+                <a href="#" class="menu-item" data-page="branches" data-tooltip="Branches">
                     <span class="menu-item-icon">🏢</span>
                     <span class="menu-item-text">Branches</span>
                     <span class="menu-item-badge">2</span>
                 </a>
-                <a href="#" class="menu-item" data-page="classes">
+                <a href="#" class="menu-item" data-page="classes" data-tooltip="Classes">
                     <span class="menu-item-icon">📅</span>
                     <span class="menu-item-text">Classes</span>
                     <span class="menu-item-badge">25</span>
@@ -1151,7 +1225,7 @@
             <!-- Settings Section -->
             <div class="menu-section">
                 <div class="menu-section-title">Settings</div>
-                <a href="#" class="menu-item" data-page="settings">
+                <a href="#" class="menu-item" data-page="settings" data-tooltip="Settings">
                     <span class="menu-item-icon">⚙️</span>
                     <span class="menu-item-text">Settings</span>
                 </a>
@@ -2179,9 +2253,15 @@
 
         // Toggle sidebar
         function toggleSidebar() {
-            sidebar.classList.toggle('collapsed');
-            sidebarOverlay.classList.toggle('active');
-            mainContent.classList.toggle('expanded');
+            if (window.innerWidth <= 767) {
+                // Mobile: slide in/out
+                sidebar.classList.toggle('mobile-open');
+                sidebarOverlay.classList.toggle('active');
+            } else {
+                // Desktop/Tablet: minimize/expand
+                sidebar.classList.toggle('minimized');
+                mainContent.classList.toggle('sidebar-minimized');
+            }
         }
 
         // Close sidebar on mobile when clicking overlay
@@ -2200,14 +2280,13 @@
             }
         });
 
-        // Toggle sidebar on mobile
+        // Toggle sidebar on all devices
         sidebarToggle.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             
             console.log('Sidebar toggle clicked, window width:', window.innerWidth);
             console.log('Current sidebar classes:', sidebar.className);
-            console.log('Current overlay classes:', sidebarOverlay.className);
             
             if (window.innerWidth <= 767) {
                 console.log('Mobile mode: toggling mobile-open class');
@@ -2225,10 +2304,23 @@
                 }
                 
                 console.log('After toggle - sidebar classes:', sidebar.className);
-                console.log('After toggle - overlay classes:', sidebarOverlay.className);
             } else {
-                console.log('Desktop mode: toggling collapsed class');
-                toggleSidebar();
+                console.log('Desktop/Tablet mode: toggling minimized class');
+                const isMinimized = sidebar.classList.contains('minimized');
+                console.log('Sidebar is currently:', isMinimized ? 'MINIMIZED' : 'EXPANDED');
+                
+                if (isMinimized) {
+                    console.log('Expanding sidebar');
+                    sidebar.classList.remove('minimized');
+                    mainContent.classList.remove('sidebar-minimized');
+                } else {
+                    console.log('Minimizing sidebar');
+                    sidebar.classList.add('minimized');
+                    mainContent.classList.add('sidebar-minimized');
+                }
+                
+                console.log('After toggle - sidebar classes:', sidebar.className);
+                console.log('After toggle - main content classes:', mainContent.className);
             }
         });
 
@@ -2319,10 +2411,20 @@
         // Handle window resize
         window.addEventListener('resize', () => {
             if (window.innerWidth > 767) {
+                // Switch to desktop/tablet mode
                 sidebar.classList.remove('mobile-open');
                 sidebarOverlay.classList.remove('active');
                 sidebar.classList.remove('collapsed');
                 mainContent.classList.remove('expanded');
+                
+                // If sidebar was minimized, keep it minimized
+                if (sidebar.classList.contains('minimized')) {
+                    mainContent.classList.add('sidebar-minimized');
+                }
+            } else {
+                // Switch to mobile mode
+                sidebar.classList.remove('minimized');
+                mainContent.classList.remove('sidebar-minimized');
             }
         });
         
