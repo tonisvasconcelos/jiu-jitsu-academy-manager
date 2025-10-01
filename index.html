@@ -206,20 +206,6 @@
             gap: 1rem;
         }
         
-        .sidebar-toggle {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #e0e0e0;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-        
-        .sidebar-toggle:hover {
-            background: rgba(102, 126, 234, 0.2);
-        }
         
         .page-title {
             font-size: 1.5rem;
@@ -547,10 +533,19 @@
                 width: 280px;
                 transform: translateX(-100%);
                 z-index: 1001;
+                transition: transform 0.3s ease;
             }
             
             .sidebar.mobile-open {
                 transform: translateX(0);
+            }
+            
+            .sidebar-overlay {
+                display: block;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
             }
             
             .main-content {
@@ -835,6 +830,8 @@
             .sidebar-toggle {
                 min-height: 44px;
                 min-width: 44px;
+                display: block !important;
+                visibility: visible !important;
             }
             
             .table th,
@@ -2189,7 +2186,9 @@
 
         // Close sidebar on mobile when clicking overlay
         sidebarOverlay.addEventListener('click', () => {
-            if (window.innerWidth <= 768) {
+            console.log('Overlay clicked, window width:', window.innerWidth);
+            if (window.innerWidth <= 767) {
+                console.log('Closing mobile sidebar');
                 sidebar.classList.remove('mobile-open');
                 sidebarOverlay.classList.remove('active');
             }
@@ -2197,10 +2196,13 @@
 
         // Toggle sidebar on mobile
         sidebarToggle.addEventListener('click', () => {
-            if (window.innerWidth <= 768) {
+            console.log('Sidebar toggle clicked, window width:', window.innerWidth);
+            if (window.innerWidth <= 767) {
+                console.log('Mobile mode: toggling mobile-open class');
                 sidebar.classList.toggle('mobile-open');
                 sidebarOverlay.classList.toggle('active');
             } else {
+                console.log('Desktop mode: toggling collapsed class');
                 toggleSidebar();
             }
         });
@@ -2246,7 +2248,7 @@
             loadPageData(pageId);
             
             // Close sidebar on mobile after navigation
-            if (window.innerWidth <= 768) {
+            if (window.innerWidth <= 767) {
                 sidebar.classList.remove('mobile-open');
                 sidebarOverlay.classList.remove('active');
             }
@@ -3707,8 +3709,29 @@
             }, 3000);
         }
 
+        // Debug function for mobile menu
+        function debugMobileMenu() {
+            console.log('=== Mobile Menu Debug ===');
+            console.log('Window width:', window.innerWidth);
+            console.log('Sidebar element:', sidebar);
+            console.log('Sidebar classes:', sidebar.className);
+            console.log('Sidebar toggle element:', sidebarToggle);
+            console.log('Sidebar overlay element:', sidebarOverlay);
+            console.log('Overlay classes:', sidebarOverlay.className);
+            console.log('========================');
+        }
+        
         // Initialize the app
         console.log('Jiu-Jitsu Academy Manager loaded successfully!');
+        
+        // Add debug button for testing (remove in production)
+        setTimeout(() => {
+            const debugBtn = document.createElement('button');
+            debugBtn.textContent = 'Debug Menu';
+            debugBtn.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999; background: red; color: white; padding: 5px; border: none; border-radius: 3px;';
+            debugBtn.onclick = debugMobileMenu;
+            document.body.appendChild(debugBtn);
+        }, 1000);
         
         // Load settings when app starts
         setTimeout(() => {
