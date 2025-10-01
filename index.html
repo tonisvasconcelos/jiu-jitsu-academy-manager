@@ -35,6 +35,30 @@
             border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
         
+        /* Custom scrollbar styling for sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Firefox scrollbar styling */
+        .sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+        
         .sidebar.collapsed {
             transform: translateX(-100%);
         }
@@ -42,6 +66,19 @@
         .sidebar.minimized {
             width: 70px;
             transform: translateX(0);
+        }
+        
+        /* Minimized sidebar scrollbar - even thinner */
+        .sidebar.minimized::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .sidebar.minimized::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .sidebar.minimized::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
         }
         
         .sidebar.minimized .sidebar-subtitle,
@@ -523,6 +560,10 @@
                 width: 80px;
             }
             
+            .sidebar.minimized::-webkit-scrollbar {
+                width: 4px;
+            }
+            
             .sidebar.minimized .sidebar-header {
                 padding: 1.5rem 0.5rem;
             }
@@ -554,6 +595,10 @@
                 width: 70px;
             }
             
+            .sidebar.minimized::-webkit-scrollbar {
+                width: 4px;
+            }
+            
             .sidebar.minimized .sidebar-header {
                 padding: 1rem 0.5rem;
             }
@@ -575,6 +620,10 @@
             
             .sidebar.minimized {
                 width: 60px;
+            }
+            
+            .sidebar.minimized::-webkit-scrollbar {
+                width: 3px;
             }
             
             .sidebar.minimized .sidebar-header {
