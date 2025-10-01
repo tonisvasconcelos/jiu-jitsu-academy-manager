@@ -1214,6 +1214,9 @@
                                     <button type="button" class="btn btn-info" onclick="debugLocalStorage()" style="margin-top: 10px;">
                                         <span>🔍</span> Debug LocalStorage
                                     </button>
+                                    <button type="button" class="btn btn-success" onclick="refreshBadges()" style="margin-top: 10px;">
+                                        <span>🔄</span> Refresh Badges
+                                    </button>
                                 </div>
                             </div>
                             <p class="setting-description">Upload your company logo. Recommended size: 200x200px. Supported formats: JPG, PNG, GIF.</p>
@@ -1285,10 +1288,13 @@
         class DataManager {
             constructor() {
                 console.log('DataManager constructor called');
-                this.students = this.loadData('students') || [
+                const loadedStudents = this.loadData('students');
+                console.log('Loaded students from localStorage:', loadedStudents);
+                this.students = loadedStudents || [
                     { id: 1, name: 'João Silva', email: 'joao@email.com', phone: '+55 11 99999-9999', belt: 'Blue', branch: 'Main Academy', joinDate: '2024-01-15', status: 'Active', age: 28, address: 'Rua das Flores, 123' },
                     { id: 2, name: 'Maria Santos', email: 'maria@email.com', phone: '+55 11 88888-8888', belt: 'Purple', branch: 'Downtown Branch', joinDate: '2023-11-20', status: 'Active', age: 25, address: 'Av. Principal, 456' }
                 ];
+                console.log('Final students array length:', this.students.length);
                 this.teachers = this.loadData('teachers') || [
                     { id: 1, name: 'Carlos Mendes', email: 'carlos@academy.com', phone: '+55 11 77777-7777', belt: 'Black', specialization: 'Gi & No-Gi', branch: 'Main Academy', experience: '8 years', status: 'Active', certifications: ['IBJJF Black Belt', 'First Aid'] },
                     { id: 2, name: 'Ana Costa', email: 'ana@academy.com', phone: '+55 11 66666-6666', belt: 'Brown', specialization: 'Kids Classes', branch: 'Downtown Branch', experience: '5 years', status: 'Active', certifications: ['IBJJF Brown Belt', 'Kids Safety'] }
@@ -1370,16 +1376,22 @@
             }
 
             updateBadges() {
+                console.log('updateBadges called - students:', this.students.length, 'teachers:', this.teachers.length, 'branches:', this.branches.length, 'classes:', this.classes.length);
                 document.querySelector('[data-page="students"] .menu-item-badge').textContent = this.students.length;
                 document.querySelector('[data-page="teachers"] .menu-item-badge').textContent = this.teachers.length;
                 document.querySelector('[data-page="branches"] .menu-item-badge').textContent = this.branches.length;
                 document.querySelector('[data-page="classes"] .menu-item-badge').textContent = this.classes.length;
                 
                 // Update dashboard stats
-                document.getElementById('total-students').textContent = this.students.length;
-                document.getElementById('total-teachers').textContent = this.teachers.length;
-                document.getElementById('total-branches').textContent = this.branches.length;
-                document.getElementById('total-classes').textContent = this.classes.length;
+                const totalStudentsEl = document.getElementById('total-students');
+                const totalTeachersEl = document.getElementById('total-teachers');
+                const totalBranchesEl = document.getElementById('total-branches');
+                const totalClassesEl = document.getElementById('total-classes');
+                
+                if (totalStudentsEl) totalStudentsEl.textContent = this.students.length;
+                if (totalTeachersEl) totalTeachersEl.textContent = this.teachers.length;
+                if (totalBranchesEl) totalBranchesEl.textContent = this.branches.length;
+                if (totalClassesEl) totalClassesEl.textContent = this.classes.length;
             }
         }
 
@@ -2763,7 +2775,16 @@
             console.log('dataManager.branches:', dataManager.branches);
             console.log('dataManager.classes:', dataManager.classes);
             console.log('dataManager.settings:', dataManager.settings);
+            console.log('=== Badge Debug ===');
+            console.log('Students badge element:', document.querySelector('[data-page="students"] .menu-item-badge'));
+            console.log('Students badge text:', document.querySelector('[data-page="students"] .menu-item-badge')?.textContent);
             showNotification('LocalStorage debug info logged to console');
+        }
+
+        function refreshBadges() {
+            console.log('Manually refreshing badges...');
+            dataManager.updateBadges();
+            showNotification('Badges refreshed. Check console for details.');
         }
 
         function saveCompanyInfo() {
