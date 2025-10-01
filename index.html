@@ -56,6 +56,27 @@
             margin-bottom: 0.5rem;
         }
         
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(124, 158, 255, 0.1);
+        }
+        
+        .sidebar-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .sidebar-logo-icon span {
+            font-size: 1.5rem;
+        }
+        
         .sidebar-subtitle {
             color: #a0a0a0;
             font-size: 0.9rem;
@@ -660,7 +681,9 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <span>🥋</span>
+                <div class="sidebar-logo-icon" id="sidebar-logo-icon">
+                    <span>🥋</span>
+                </div>
                 <span>Academy Manager</span>
             </div>
             <div class="sidebar-subtitle">Jiu-Jitsu Management System</div>
@@ -2438,6 +2461,12 @@
                 const logoPreview = document.getElementById('logoPreview');
                 logoPreview.innerHTML = `<img src="${settings.companyLogo}" alt="Company Logo">`;
                 document.getElementById('removeLogoBtn').style.display = 'inline-block';
+                
+                // Update sidebar logo
+                updateSidebarLogo(settings.companyLogo);
+            } else {
+                // Ensure sidebar shows default logo
+                updateSidebarLogo('');
             }
         }
 
@@ -2642,6 +2671,19 @@
             }
         }
 
+        function updateSidebarLogo(logoData) {
+            const sidebarLogoIcon = document.getElementById('sidebar-logo-icon');
+            if (sidebarLogoIcon) {
+                if (logoData && logoData.trim() !== '') {
+                    // Show uploaded logo
+                    sidebarLogoIcon.innerHTML = `<img src="${logoData}" alt="Company Logo">`;
+                } else {
+                    // Show default emoji
+                    sidebarLogoIcon.innerHTML = `<span>🥋</span>`;
+                }
+            }
+        }
+
         function saveCompanyInfo() {
             const companyData = {
                 companyName: document.getElementById('companyName').value,
@@ -2696,6 +2738,9 @@
                 dataManager.settings.companyLogo = e.target.result;
                 dataManager.saveAllData();
                 
+                // Update sidebar logo
+                updateSidebarLogo(e.target.result);
+                
                 // Show remove button
                 document.getElementById('removeLogoBtn').style.display = 'inline-block';
                 
@@ -2717,6 +2762,9 @@
                 // Remove logo from settings
                 dataManager.settings.companyLogo = '';
                 dataManager.saveAllData();
+                
+                // Update sidebar logo to default
+                updateSidebarLogo('');
                 
                 // Hide remove button
                 document.getElementById('removeLogoBtn').style.display = 'none';
@@ -2762,6 +2810,7 @@
                 };
                 dataManager.saveAllData();
                 loadSettings();
+                updateSidebarLogo(''); // Reset sidebar logo to default
                 showNotification(t('settings_reset'));
             }
         }
