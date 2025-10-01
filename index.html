@@ -1323,6 +1323,400 @@
         // Initialize data manager
         const dataManager = new DataManager();
 
+        // Translation System
+        const translations = {
+            PTB: {
+                // Navigation
+                'dashboard': 'Painel de Controle',
+                'analytics': 'Análises',
+                'students': 'Alunos',
+                'teachers': 'Professores',
+                'branches': 'Filiais',
+                'classes': 'Aulas',
+                'schedule': 'Cronograma',
+                'attendance': 'Frequência',
+                'payments': 'Pagamentos',
+                'events': 'Eventos',
+                'reports': 'Relatórios',
+                'exports': 'Exportações',
+                'settings': 'Configurações',
+                'profile': 'Perfil',
+                
+                // Sidebar
+                'academy_manager': 'Gerenciador de Academia',
+                'management_system': 'Sistema de Gerenciamento de Jiu-Jitsu',
+                'main': 'Principal',
+                'management': 'Gerenciamento',
+                'operations': 'Operações',
+                'reports_section': 'Relatórios',
+                'settings_section': 'Configurações',
+                
+                // Dashboard
+                'welcome_message': 'Bem-vindo ao seu Sistema de Gerenciamento de Academia de Jiu-Jitsu',
+                'total_students': 'Total de Alunos',
+                'active_teachers': 'Professores Ativos',
+                'academy_branches': 'Filiais da Academia',
+                'weekly_classes': 'Aulas Semanais',
+                'student_management': 'Gerenciamento de Alunos',
+                'student_management_desc': 'Gerencie registros de alunos, progressões de faixa e informações de matrícula.',
+                'manage_students': 'Gerenciar Alunos',
+                'teacher_management': 'Gerenciamento de Professores',
+                'teacher_management_desc': 'Acompanhe qualificações de instrutores, cronogramas e desempenho.',
+                'manage_teachers': 'Gerenciar Professores',
+                'branch_management': 'Gerenciamento de Filiais',
+                'branch_management_desc': 'Gerencie diferentes localizações da academia e seus detalhes específicos.',
+                'manage_branches': 'Gerenciar Filiais',
+                'class_scheduling': 'Agendamento de Aulas',
+                'class_scheduling_desc': 'Agende aulas, acompanhe frequência e gerencie horários.',
+                'manage_classes': 'Gerenciar Aulas',
+                
+                // Students
+                'student_management_title': 'Gerenciamento de Alunos',
+                'student_management_subtitle': 'Gerencie os registros e progressões dos alunos da sua academia',
+                'student_records': 'Registros de Alunos',
+                'add_new_student': 'Adicionar Novo Aluno',
+                'search_students': 'Pesquisar alunos por nome, email, faixa ou filial...',
+                'name': 'Nome',
+                'belt_level': 'Nível de Faixa',
+                'branch': 'Filial',
+                'join_date': 'Data de Ingresso',
+                'status': 'Status',
+                'actions': 'Ações',
+                'edit': 'Editar',
+                'delete': 'Excluir',
+                'active': 'Ativo',
+                'inactive': 'Inativo',
+                'suspended': 'Suspenso',
+                
+                // Teachers
+                'teacher_management_title': 'Gerenciamento de Professores',
+                'teacher_management_subtitle': 'Gerencie os instrutores e suas qualificações da sua academia',
+                'instructor_records': 'Registros de Instrutores',
+                'add_new_teacher': 'Adicionar Novo Professor',
+                'search_teachers': 'Pesquisar professores por nome, email, faixa ou especialização...',
+                'specialization': 'Especialização',
+                'experience': 'Experiência',
+                
+                // Branches
+                'branch_management_title': 'Gerenciamento de Filiais',
+                'branch_management_subtitle': 'Gerencie as diferentes localizações da sua academia',
+                'academy_branches_title': 'Filiais da Academia',
+                'add_new_branch': 'Adicionar Nova Filial',
+                'search_branches': 'Pesquisar filiais por nome, endereço ou gerente...',
+                'address': 'Endereço',
+                'capacity': 'Capacidade',
+                'classes_per_week': 'Aulas por Semana',
+                'manager': 'Gerente',
+                
+                // Classes
+                'class_management_title': 'Gerenciamento de Aulas',
+                'class_management_subtitle': 'Agende e gerencie as aulas da sua academia',
+                'class_schedule': 'Cronograma de Aulas',
+                'add_new_class': 'Adicionar Nova Aula',
+                'search_classes': 'Pesquisar aulas por nome, instrutor, filial ou nível...',
+                'class_name': 'Nome da Aula',
+                'instructor': 'Instrutor',
+                'day_time': 'Dia e Horário',
+                'level': 'Nível',
+                'students_count': 'Alunos',
+                'beginner': 'Iniciante',
+                'intermediate': 'Intermediário',
+                'advanced': 'Avançado',
+                'kids': 'Infantil',
+                
+                // Settings
+                'system_settings': 'Configurações do Sistema',
+                'system_settings_subtitle': 'Configure as preferências do seu sistema de gerenciamento de academia',
+                'language_settings': 'Configurações de Idioma',
+                'language_code': 'Código do Idioma',
+                'language_description': 'Escolha o idioma padrão para a interface do aplicativo.',
+                'portuguese': 'Português (PTB)',
+                'english': 'Inglês (ENU)',
+                'company_information': 'Informações da Empresa',
+                'company_name': 'Nome da Empresa',
+                'company_responsible': 'Responsável pela Empresa',
+                'company_address': 'Endereço da Empresa',
+                'phone_number': 'Número de Telefone',
+                'email_address': 'Endereço de Email',
+                'website': 'Site',
+                'tax_id': 'CNPJ',
+                'save_company_info': 'Salvar Informações da Empresa',
+                'company_logo': 'Logo da Empresa',
+                'choose_logo': 'Escolher Logo',
+                'remove_logo': 'Remover Logo',
+                'logo_description': 'Faça upload do logo da sua empresa. Tamanho recomendado: 200x200px. Formatos suportados: JPG, PNG, GIF.',
+                'system_preferences': 'Preferências do Sistema',
+                'date_format': 'Formato de Data',
+                'time_format': 'Formato de Hora',
+                'currency': 'Moeda',
+                'save_preferences': 'Salvar Preferências',
+                'actions_title': 'Ações',
+                'save_all_settings': 'Salvar Todas as Configurações',
+                'reset_to_defaults': 'Restaurar Padrões',
+                'export_settings': 'Exportar Configurações',
+                'import_settings': 'Importar Configurações',
+                
+                // Form Labels
+                'full_name': 'Nome Completo',
+                'email': 'Email',
+                'phone': 'Telefone',
+                'age': 'Idade',
+                'belt_level_label': 'Nível de Faixa',
+                'select_belt': 'Selecionar Faixa',
+                'white_belt': 'Faixa Branca',
+                'blue_belt': 'Faixa Azul',
+                'purple_belt': 'Faixa Roxa',
+                'brown_belt': 'Faixa Marrom',
+                'black_belt': 'Faixa Preta',
+                'select_branch': 'Selecionar Filial',
+                'join_date_label': 'Data de Ingresso',
+                'status_label': 'Status',
+                'address_label': 'Endereço',
+                'cancel': 'Cancelar',
+                'add_student': 'Adicionar Aluno',
+                'update_student': 'Atualizar Aluno',
+                'add_teacher': 'Adicionar Professor',
+                'update_teacher': 'Atualizar Professor',
+                'add_branch': 'Adicionar Filial',
+                'update_branch': 'Atualizar Filial',
+                'add_class': 'Adicionar Aula',
+                'update_class': 'Atualizar Aula',
+                
+                // Notifications
+                'student_added': 'Aluno adicionado com sucesso!',
+                'student_updated': 'Aluno atualizado com sucesso!',
+                'student_deleted': 'Aluno excluído com sucesso!',
+                'teacher_added': 'Professor adicionado com sucesso!',
+                'teacher_updated': 'Professor atualizado com sucesso!',
+                'teacher_deleted': 'Professor excluído com sucesso!',
+                'branch_added': 'Filial adicionada com sucesso!',
+                'branch_updated': 'Filial atualizada com sucesso!',
+                'branch_deleted': 'Filial excluída com sucesso!',
+                'class_added': 'Aula adicionada com sucesso!',
+                'class_updated': 'Aula atualizada com sucesso!',
+                'class_deleted': 'Aula excluída com sucesso!',
+                'language_updated': 'Idioma atualizado com sucesso!',
+                'company_info_saved': 'Informações da empresa salvas com sucesso!',
+                'logo_uploaded': 'Logo carregado com sucesso!',
+                'logo_removed': 'Logo removido com sucesso!',
+                'preferences_saved': 'Preferências salvas com sucesso!',
+                'all_settings_saved': 'Todas as configurações salvas com sucesso!',
+                'settings_reset': 'Configurações restauradas para os padrões com sucesso!',
+                'settings_exported': 'Configurações exportadas com sucesso!',
+                'settings_imported': 'Configurações importadas com sucesso!',
+                'fill_required_fields': 'Por favor, preencha todos os campos obrigatórios (Nome da Empresa, Responsável e Endereço).',
+                'select_valid_image': 'Por favor, selecione um arquivo de imagem válido.',
+                'image_size_limit': 'O tamanho da imagem deve ser menor que 2MB.',
+                'invalid_settings_file': 'Formato de arquivo de configurações inválido.',
+                'error_reading_file': 'Erro ao ler arquivo de configurações.',
+                'confirm_delete_student': 'Tem certeza de que deseja excluir este aluno?',
+                'confirm_delete_teacher': 'Tem certeza de que deseja excluir este professor?',
+                'confirm_delete_branch': 'Tem certeza de que deseja excluir esta filial?',
+                'confirm_delete_class': 'Tem certeza de que deseja excluir esta aula?',
+                'confirm_remove_logo': 'Tem certeza de que deseja remover o logo da empresa?',
+                'confirm_reset_settings': 'Tem certeza de que deseja restaurar todas as configurações para os valores padrão? Esta ação não pode ser desfeita.',
+                'confirm_replace_settings': 'Isso substituirá suas configurações atuais. Tem certeza de que deseja continuar?'
+            },
+            ENU: {
+                // Navigation
+                'dashboard': 'Dashboard',
+                'analytics': 'Analytics',
+                'students': 'Students',
+                'teachers': 'Teachers',
+                'branches': 'Branches',
+                'classes': 'Classes',
+                'schedule': 'Schedule',
+                'attendance': 'Attendance',
+                'payments': 'Payments',
+                'events': 'Events',
+                'reports': 'Reports',
+                'exports': 'Exports',
+                'settings': 'Settings',
+                'profile': 'Profile',
+                
+                // Sidebar
+                'academy_manager': 'Academy Manager',
+                'management_system': 'Jiu-Jitsu Management System',
+                'main': 'Main',
+                'management': 'Management',
+                'operations': 'Operations',
+                'reports_section': 'Reports',
+                'settings_section': 'Settings',
+                
+                // Dashboard
+                'welcome_message': 'Welcome to your Jiu-Jitsu Academy Management System',
+                'total_students': 'Total Students',
+                'active_teachers': 'Active Teachers',
+                'academy_branches': 'Academy Branches',
+                'weekly_classes': 'Weekly Classes',
+                'student_management': 'Student Management',
+                'student_management_desc': 'Manage student records, belt progressions, and enrollment information.',
+                'manage_students': 'Manage Students',
+                'teacher_management': 'Teacher Management',
+                'teacher_management_desc': 'Track instructor qualifications, schedules, and performance.',
+                'manage_teachers': 'Manage Teachers',
+                'branch_management': 'Branch Management',
+                'branch_management_desc': 'Handle multiple academy locations and their specific details.',
+                'manage_branches': 'Manage Branches',
+                'class_scheduling': 'Class Scheduling',
+                'class_scheduling_desc': 'Schedule classes, track attendance, and manage timetables.',
+                'manage_classes': 'Manage Classes',
+                
+                // Students
+                'student_management_title': 'Student Management',
+                'student_management_subtitle': 'Manage your academy\'s student records and progressions',
+                'student_records': 'Student Records',
+                'add_new_student': 'Add New Student',
+                'search_students': 'Search students by name, email, belt, or branch...',
+                'name': 'Name',
+                'belt_level': 'Belt Level',
+                'branch': 'Branch',
+                'join_date': 'Join Date',
+                'status': 'Status',
+                'actions': 'Actions',
+                'edit': 'Edit',
+                'delete': 'Delete',
+                'active': 'Active',
+                'inactive': 'Inactive',
+                'suspended': 'Suspended',
+                
+                // Teachers
+                'teacher_management_title': 'Teacher Management',
+                'teacher_management_subtitle': 'Manage your academy\'s instructors and their qualifications',
+                'instructor_records': 'Instructor Records',
+                'add_new_teacher': 'Add New Teacher',
+                'search_teachers': 'Search teachers by name, email, belt, or specialization...',
+                'specialization': 'Specialization',
+                'experience': 'Experience',
+                
+                // Branches
+                'branch_management_title': 'Branch Management',
+                'branch_management_subtitle': 'Manage your academy\'s different locations',
+                'academy_branches_title': 'Academy Branches',
+                'add_new_branch': 'Add New Branch',
+                'search_branches': 'Search branches by name, address, or manager...',
+                'address': 'Address',
+                'capacity': 'Capacity',
+                'classes_per_week': 'Classes per Week',
+                'manager': 'Manager',
+                
+                // Classes
+                'class_management_title': 'Class Management',
+                'class_management_subtitle': 'Schedule and manage your academy\'s classes',
+                'class_schedule': 'Class Schedule',
+                'add_new_class': 'Add New Class',
+                'search_classes': 'Search classes by name, instructor, branch, or level...',
+                'class_name': 'Class Name',
+                'instructor': 'Instructor',
+                'day_time': 'Day & Time',
+                'level': 'Level',
+                'students_count': 'Students',
+                'beginner': 'Beginner',
+                'intermediate': 'Intermediate',
+                'advanced': 'Advanced',
+                'kids': 'Kids',
+                
+                // Settings
+                'system_settings': 'System Settings',
+                'system_settings_subtitle': 'Configure your academy management system preferences',
+                'language_settings': 'Language Settings',
+                'language_code': 'Language Code',
+                'language_description': 'Choose the default language for the application interface.',
+                'portuguese': 'Portuguese (PTB)',
+                'english': 'English (ENU)',
+                'company_information': 'Company Information',
+                'company_name': 'Company Name',
+                'company_responsible': 'Company Responsible',
+                'company_address': 'Company Address',
+                'phone_number': 'Phone Number',
+                'email_address': 'Email Address',
+                'website': 'Website',
+                'tax_id': 'Tax ID',
+                'save_company_info': 'Save Company Information',
+                'company_logo': 'Company Logo',
+                'choose_logo': 'Choose Logo',
+                'remove_logo': 'Remove Logo',
+                'logo_description': 'Upload your company logo. Recommended size: 200x200px. Supported formats: JPG, PNG, GIF.',
+                'system_preferences': 'System Preferences',
+                'date_format': 'Date Format',
+                'time_format': 'Time Format',
+                'currency': 'Currency',
+                'save_preferences': 'Save Preferences',
+                'actions_title': 'Actions',
+                'save_all_settings': 'Save All Settings',
+                'reset_to_defaults': 'Reset to Defaults',
+                'export_settings': 'Export Settings',
+                'import_settings': 'Import Settings',
+                
+                // Form Labels
+                'full_name': 'Full Name',
+                'email': 'Email',
+                'phone': 'Phone',
+                'age': 'Age',
+                'belt_level_label': 'Belt Level',
+                'select_belt': 'Select Belt',
+                'white_belt': 'White Belt',
+                'blue_belt': 'Blue Belt',
+                'purple_belt': 'Purple Belt',
+                'brown_belt': 'Brown Belt',
+                'black_belt': 'Black Belt',
+                'select_branch': 'Select Branch',
+                'join_date_label': 'Join Date',
+                'status_label': 'Status',
+                'address_label': 'Address',
+                'cancel': 'Cancel',
+                'add_student': 'Add Student',
+                'update_student': 'Update Student',
+                'add_teacher': 'Add Teacher',
+                'update_teacher': 'Update Teacher',
+                'add_branch': 'Add Branch',
+                'update_branch': 'Update Branch',
+                'add_class': 'Add Class',
+                'update_class': 'Update Class',
+                
+                // Notifications
+                'student_added': 'Student added successfully!',
+                'student_updated': 'Student updated successfully!',
+                'student_deleted': 'Student deleted successfully!',
+                'teacher_added': 'Teacher added successfully!',
+                'teacher_updated': 'Teacher updated successfully!',
+                'teacher_deleted': 'Teacher deleted successfully!',
+                'branch_added': 'Branch added successfully!',
+                'branch_updated': 'Branch updated successfully!',
+                'branch_deleted': 'Branch deleted successfully!',
+                'class_added': 'Class added successfully!',
+                'class_updated': 'Class updated successfully!',
+                'class_deleted': 'Class deleted successfully!',
+                'language_updated': 'Language updated successfully!',
+                'company_info_saved': 'Company information saved successfully!',
+                'logo_uploaded': 'Logo uploaded successfully!',
+                'logo_removed': 'Logo removed successfully!',
+                'preferences_saved': 'Preferences saved successfully!',
+                'all_settings_saved': 'All settings saved successfully!',
+                'settings_reset': 'Settings reset to defaults successfully!',
+                'settings_exported': 'Settings exported successfully!',
+                'settings_imported': 'Settings imported successfully!',
+                'fill_required_fields': 'Please fill in all required fields (Company Name, Responsible, and Address).',
+                'select_valid_image': 'Please select a valid image file.',
+                'image_size_limit': 'Image size must be less than 2MB.',
+                'invalid_settings_file': 'Invalid settings file format.',
+                'error_reading_file': 'Error reading settings file.',
+                'confirm_delete_student': 'Are you sure you want to delete this student?',
+                'confirm_delete_teacher': 'Are you sure you want to delete this teacher?',
+                'confirm_delete_branch': 'Are you sure you want to delete this branch?',
+                'confirm_delete_class': 'Are you sure you want to delete this class?',
+                'confirm_remove_logo': 'Are you sure you want to remove the company logo?',
+                'confirm_reset_settings': 'Are you sure you want to reset all settings to default values? This action cannot be undone.',
+                'confirm_replace_settings': 'This will replace your current settings. Are you sure you want to continue?'
+            }
+        };
+
+        // Translation function
+        function t(key) {
+            const currentLanguage = dataManager.settings.languageCode || 'PTB';
+            return translations[currentLanguage][key] || key;
+        }
+
         // Sidebar functionality
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebar-toggle');
@@ -1751,7 +2145,7 @@
             dataManager.saveAllData();
             closeModal();
             renderStudentsTable();
-            showNotification(studentId ? 'Student updated successfully!' : 'Student added successfully!');
+            showNotification(studentId ? t('student_updated') : t('student_added'));
         }
 
         function saveTeacher(event, teacherId) {
@@ -1774,7 +2168,7 @@
             dataManager.saveAllData();
             closeModal();
             renderTeachersTable();
-            showNotification(teacherId ? 'Teacher updated successfully!' : 'Teacher added successfully!');
+            showNotification(teacherId ? t('teacher_updated') : t('teacher_added'));
         }
 
         function saveBranch(event, branchId) {
@@ -1793,7 +2187,7 @@
             dataManager.saveAllData();
             closeModal();
             renderBranchesTable();
-            showNotification(branchId ? 'Branch updated successfully!' : 'Branch added successfully!');
+            showNotification(branchId ? t('branch_updated') : t('branch_added'));
         }
 
         function saveClass(event, classId) {
@@ -1812,7 +2206,7 @@
             dataManager.saveAllData();
             closeModal();
             renderClassesTable();
-            showNotification(classId ? 'Class updated successfully!' : 'Class added successfully!');
+            showNotification(classId ? t('class_updated') : t('class_added'));
         }
 
         // Modal functions
@@ -1841,38 +2235,38 @@
 
         // Delete functions
         function deleteStudent(id) {
-            if (confirm('Are you sure you want to delete this student?')) {
+            if (confirm(t('confirm_delete_student'))) {
                 dataManager.students = dataManager.students.filter(s => s.id !== id);
                 dataManager.saveAllData();
                 renderStudentsTable();
-                showNotification('Student deleted successfully!');
+                showNotification(t('student_deleted'));
             }
         }
 
         function deleteTeacher(id) {
-            if (confirm('Are you sure you want to delete this teacher?')) {
+            if (confirm(t('confirm_delete_teacher'))) {
                 dataManager.teachers = dataManager.teachers.filter(t => t.id !== id);
                 dataManager.saveAllData();
                 renderTeachersTable();
-                showNotification('Teacher deleted successfully!');
+                showNotification(t('teacher_deleted'));
             }
         }
 
         function deleteBranch(id) {
-            if (confirm('Are you sure you want to delete this branch?')) {
+            if (confirm(t('confirm_delete_branch'))) {
                 dataManager.branches = dataManager.branches.filter(b => b.id !== id);
                 dataManager.saveAllData();
                 renderBranchesTable();
-                showNotification('Branch deleted successfully!');
+                showNotification(t('branch_deleted'));
             }
         }
 
         function deleteClass(id) {
-            if (confirm('Are you sure you want to delete this class?')) {
+            if (confirm(t('confirm_delete_class'))) {
                 dataManager.classes = dataManager.classes.filter(c => c.id !== id);
                 dataManager.saveAllData();
                 renderClassesTable();
-                showNotification('Class deleted successfully!');
+                showNotification(t('class_deleted'));
             }
         }
 
@@ -2054,17 +2448,197 @@
             
             // Update UI language
             updateUILanguage(languageCode);
-            showNotification('Language updated successfully!');
+            showNotification(t('language_updated'));
         }
 
         function updateUILanguage(languageCode) {
-            // This is a basic implementation - you can expand this
-            if (languageCode === 'PTB') {
-                document.title = 'Gerenciador de Academia de Jiu-Jitsu';
-                document.querySelector('.sidebar-subtitle').textContent = 'Sistema de Gerenciamento de Jiu-Jitsu';
-            } else {
-                document.title = 'Jiu-Jitsu Academy Manager';
-                document.querySelector('.sidebar-subtitle').textContent = 'Jiu-Jitsu Management System';
+            // Update page title
+            document.title = t('academy_manager');
+            
+            // Update sidebar
+            document.querySelector('.sidebar-subtitle').textContent = t('management_system');
+            
+            // Update sidebar menu items
+            document.querySelectorAll('.menu-item-text').forEach((item, index) => {
+                const menuItems = ['dashboard', 'analytics', 'students', 'teachers', 'branches', 'classes', 'schedule', 'attendance', 'payments', 'events', 'reports', 'exports', 'settings', 'profile'];
+                if (menuItems[index]) {
+                    item.textContent = t(menuItems[index]);
+                }
+            });
+            
+            // Update sidebar section titles
+            const sectionTitles = document.querySelectorAll('.menu-section-title');
+            const sectionKeys = ['main', 'management', 'operations', 'reports_section', 'settings_section'];
+            sectionTitles.forEach((title, index) => {
+                if (sectionKeys[index]) {
+                    title.textContent = t(sectionKeys[index]);
+                }
+            });
+            
+            // Update page titles and content
+            updatePageContent();
+        }
+
+        function updatePageContent() {
+            // Dashboard
+            const dashboardPage = document.getElementById('dashboard');
+            if (dashboardPage) {
+                dashboardPage.querySelector('h1').textContent = `🏠 ${t('dashboard')}`;
+                dashboardPage.querySelector('.page-header p').textContent = t('welcome_message');
+                
+                // Update stat cards
+                const statCards = dashboardPage.querySelectorAll('.stat-card p');
+                const statKeys = ['total_students', 'active_teachers', 'academy_branches', 'weekly_classes'];
+                statCards.forEach((card, index) => {
+                    if (statKeys[index]) {
+                        card.textContent = t(statKeys[index]);
+                    }
+                });
+                
+                // Update feature cards
+                const featureCards = dashboardPage.querySelectorAll('.feature-card h3');
+                const featureKeys = ['student_management', 'teacher_management', 'branch_management', 'class_scheduling'];
+                featureCards.forEach((card, index) => {
+                    if (featureKeys[index]) {
+                        card.textContent = `👥 ${t(featureKeys[index])}`;
+                    }
+                });
+                
+                const featureDescs = dashboardPage.querySelectorAll('.feature-card p');
+                const descKeys = ['student_management_desc', 'teacher_management_desc', 'branch_management_desc', 'class_scheduling_desc'];
+                featureDescs.forEach((desc, index) => {
+                    if (descKeys[index]) {
+                        desc.textContent = t(descKeys[index]);
+                    }
+                });
+                
+                const featureBtns = dashboardPage.querySelectorAll('.feature-card .btn');
+                const btnKeys = ['manage_students', 'manage_teachers', 'manage_branches', 'manage_classes'];
+                featureBtns.forEach((btn, index) => {
+                    if (btnKeys[index]) {
+                        btn.textContent = t(btnKeys[index]);
+                    }
+                });
+            }
+            
+            // Update other pages
+            updateStudentsPage();
+            updateTeachersPage();
+            updateBranchesPage();
+            updateClassesPage();
+            updateSettingsPage();
+        }
+
+        function updateStudentsPage() {
+            const studentsPage = document.getElementById('students');
+            if (studentsPage) {
+                studentsPage.querySelector('h1').textContent = `👥 ${t('student_management_title')}`;
+                studentsPage.querySelector('.page-header p').textContent = t('student_management_subtitle');
+                
+                const h2 = studentsPage.querySelector('h2');
+                if (h2) h2.textContent = t('student_records');
+                
+                const addBtn = studentsPage.querySelector('.btn');
+                if (addBtn) addBtn.textContent = t('add_new_student');
+                
+                const searchInput = studentsPage.querySelector('#studentSearch');
+                if (searchInput) searchInput.placeholder = t('search_students');
+                
+                // Update table headers
+                const tableHeaders = studentsPage.querySelectorAll('th');
+                const headerKeys = ['name', 'belt_level', 'branch', 'join_date', 'status', 'actions'];
+                tableHeaders.forEach((header, index) => {
+                    if (headerKeys[index]) {
+                        header.textContent = t(headerKeys[index]);
+                    }
+                });
+            }
+        }
+
+        function updateTeachersPage() {
+            const teachersPage = document.getElementById('teachers');
+            if (teachersPage) {
+                teachersPage.querySelector('h1').textContent = `👨‍🏫 ${t('teacher_management_title')}`;
+                teachersPage.querySelector('.page-header p').textContent = t('teacher_management_subtitle');
+                
+                const h2 = teachersPage.querySelector('h2');
+                if (h2) h2.textContent = t('instructor_records');
+                
+                const addBtn = teachersPage.querySelector('.btn');
+                if (addBtn) addBtn.textContent = t('add_new_teacher');
+                
+                const searchInput = teachersPage.querySelector('#teacherSearch');
+                if (searchInput) searchInput.placeholder = t('search_teachers');
+                
+                // Update table headers
+                const tableHeaders = teachersPage.querySelectorAll('th');
+                const headerKeys = ['name', 'belt_level', 'specialization', 'branch', 'experience', 'actions'];
+                tableHeaders.forEach((header, index) => {
+                    if (headerKeys[index]) {
+                        header.textContent = t(headerKeys[index]);
+                    }
+                });
+            }
+        }
+
+        function updateBranchesPage() {
+            const branchesPage = document.getElementById('branches');
+            if (branchesPage) {
+                branchesPage.querySelector('h1').textContent = `🏢 ${t('branch_management_title')}`;
+                branchesPage.querySelector('.page-header p').textContent = t('branch_management_subtitle');
+                
+                const h2 = branchesPage.querySelector('h2');
+                if (h2) h2.textContent = t('academy_branches_title');
+                
+                const addBtn = branchesPage.querySelector('.btn');
+                if (addBtn) addBtn.textContent = t('add_new_branch');
+                
+                const searchInput = branchesPage.querySelector('#branchSearch');
+                if (searchInput) searchInput.placeholder = t('search_branches');
+            }
+        }
+
+        function updateClassesPage() {
+            const classesPage = document.getElementById('classes');
+            if (classesPage) {
+                classesPage.querySelector('h1').textContent = `📅 ${t('class_management_title')}`;
+                classesPage.querySelector('.page-header p').textContent = t('class_management_subtitle');
+                
+                const h2 = classesPage.querySelector('h2');
+                if (h2) h2.textContent = t('class_schedule');
+                
+                const addBtn = classesPage.querySelector('.btn');
+                if (addBtn) addBtn.textContent = t('add_new_class');
+                
+                const searchInput = classesPage.querySelector('#classSearch');
+                if (searchInput) searchInput.placeholder = t('search_classes');
+                
+                // Update table headers
+                const tableHeaders = classesPage.querySelectorAll('th');
+                const headerKeys = ['class_name', 'instructor', 'day_time', 'branch', 'level', 'students_count', 'actions'];
+                tableHeaders.forEach((header, index) => {
+                    if (headerKeys[index]) {
+                        header.textContent = t(headerKeys[index]);
+                    }
+                });
+            }
+        }
+
+        function updateSettingsPage() {
+            const settingsPage = document.getElementById('settings');
+            if (settingsPage) {
+                settingsPage.querySelector('h1').textContent = `⚙️ ${t('system_settings')}`;
+                settingsPage.querySelector('.page-header p').textContent = t('system_settings_subtitle');
+                
+                // Update section titles
+                const sectionTitles = settingsPage.querySelectorAll('.settings-section h2');
+                const sectionKeys = ['language_settings', 'company_information', 'company_logo', 'system_preferences', 'actions_title'];
+                sectionTitles.forEach((title, index) => {
+                    if (sectionKeys[index]) {
+                        const icons = ['🌐', '🏢', '🖼️', '🔧', '💾'];
+                        title.textContent = `${icons[index]} ${t(sectionKeys[index])}`;
+                    }
+                });
             }
         }
 
@@ -2081,7 +2655,7 @@
             
             // Validate required fields
             if (!companyData.companyName || !companyData.companyResponsible || !companyData.companyAddress) {
-                showNotification('Please fill in all required fields (Company Name, Responsible, and Address).', 'error');
+                showNotification(t('fill_required_fields'), 'error');
                 return;
             }
             
@@ -2094,7 +2668,7 @@
                 document.querySelector('.sidebar-logo span:last-child').textContent = companyData.companyName;
             }
             
-            showNotification('Company information saved successfully!');
+            showNotification(t('company_info_saved'));
         }
 
         function handleLogoUpload(event) {
@@ -2103,13 +2677,13 @@
             
             // Validate file type
             if (!file.type.startsWith('image/')) {
-                showNotification('Please select a valid image file.', 'error');
+                showNotification(t('select_valid_image'), 'error');
                 return;
             }
             
             // Validate file size (max 2MB)
             if (file.size > 2 * 1024 * 1024) {
-                showNotification('Image size must be less than 2MB.', 'error');
+                showNotification(t('image_size_limit'), 'error');
                 return;
             }
             
@@ -2125,13 +2699,13 @@
                 // Show remove button
                 document.getElementById('removeLogoBtn').style.display = 'inline-block';
                 
-                showNotification('Logo uploaded successfully!');
+                showNotification(t('logo_uploaded'));
             };
             reader.readAsDataURL(file);
         }
 
         function removeLogo() {
-            if (confirm('Are you sure you want to remove the company logo?')) {
+            if (confirm(t('confirm_remove_logo'))) {
                 const logoPreview = document.getElementById('logoPreview');
                 logoPreview.innerHTML = `
                     <div class="logo-placeholder">
@@ -2147,7 +2721,7 @@
                 // Hide remove button
                 document.getElementById('removeLogoBtn').style.display = 'none';
                 
-                showNotification('Logo removed successfully!');
+                showNotification(t('logo_removed'));
             }
         }
 
@@ -2161,17 +2735,17 @@
             Object.assign(dataManager.settings, preferences);
             dataManager.saveAllData();
             
-            showNotification('System preferences saved successfully!');
+            showNotification(t('preferences_saved'));
         }
 
         function saveAllSettings() {
             saveCompanyInfo();
             saveSystemPreferences();
-            showNotification('All settings saved successfully!');
+            showNotification(t('all_settings_saved'));
         }
 
         function resetSettings() {
-            if (confirm('Are you sure you want to reset all settings to default values? This action cannot be undone.')) {
+            if (confirm(t('confirm_reset_settings'))) {
                 dataManager.settings = {
                     languageCode: 'PTB',
                     companyName: '',
@@ -2188,7 +2762,7 @@
                 };
                 dataManager.saveAllData();
                 loadSettings();
-                showNotification('Settings reset to defaults successfully!');
+                showNotification(t('settings_reset'));
             }
         }
 
@@ -2207,7 +2781,7 @@
             link.download = 'academy-settings.json';
             link.click();
             
-            showNotification('Settings exported successfully!');
+            showNotification(t('settings_exported'));
         }
 
         function importSettings() {
@@ -2224,17 +2798,17 @@
                         const importedData = JSON.parse(e.target.result);
                         
                         if (importedData.settings) {
-                            if (confirm('This will replace your current settings. Are you sure you want to continue?')) {
+                            if (confirm(t('confirm_replace_settings'))) {
                                 dataManager.settings = importedData.settings;
                                 dataManager.saveAllData();
                                 loadSettings();
-                                showNotification('Settings imported successfully!');
+                                showNotification(t('settings_imported'));
                             }
                         } else {
-                            showNotification('Invalid settings file format.', 'error');
+                            showNotification(t('invalid_settings_file'), 'error');
                         }
                     } catch (error) {
-                        showNotification('Error reading settings file.', 'error');
+                        showNotification(t('error_reading_file'), 'error');
                     }
                 };
                 reader.readAsText(file);
