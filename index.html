@@ -1532,12 +1532,19 @@
                     
                     <div class="form-group">
                         <label for="register-role">Account Type</label>
-                        <select id="register-role" name="role" required>
+                        <select id="register-role" name="role" required onchange="toggleEntitySelection()">
                             <option value="">Select account type</option>
                             <option value="student">Student / Fighter</option>
                             <option value="teacher">Teacher / Coach</option>
-                            <option value="manager">Academy Manager</option>
-                            <option value="admin">System Administrator</option>
+                            <option value="fight_team_admin">Fight Team Admin</option>
+                            <option value="system_admin">System Administrator</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="entity-selection" style="display: none;">
+                        <label for="register-entity">Fight Team</label>
+                        <select id="register-entity" name="entityId">
+                            <option value="">Select Fight Team</option>
                         </select>
                     </div>
                     
@@ -1662,6 +1669,10 @@
             <!-- Settings Section -->
             <div class="menu-section">
                 <div class="menu-section-title">Settings</div>
+                <a href="#" class="menu-item" data-page="entities" data-tooltip="Fight Team Management">
+                    <span class="menu-item-icon">🏢</span>
+                    <span class="menu-item-text">Fight Teams</span>
+                </a>
                 <a href="#" class="menu-item" data-page="users" data-tooltip="User Management">
                     <span class="menu-item-icon">👥</span>
                     <span class="menu-item-text">User Management</span>
@@ -2029,6 +2040,60 @@
                 <div class="feature-card">
                     <h3>Data Export</h3>
                     <p>This page will contain data export and backup features.</p>
+                </div>
+            </div>
+
+            <!-- Fight Team (Entity) Management Page -->
+            <div id="entities" class="page">
+                <div class="page-header">
+                    <h2>Fight Team Management</h2>
+                    <p>Manage Fight Team entities and their licenses</p>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="showEntityForm()">
+                            <span>➕</span> Add Fight Team
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="page-content">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h3>Fight Team Entities</h3>
+                            <div class="section-actions">
+                                <div class="search-bar">
+                                    <input type="text" id="entity-search" placeholder="Search Fight Teams by name, location, or admin...">
+                                </div>
+                                <div class="filter-controls">
+                                    <select id="status-filter">
+                                        <option value="">All Status</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                        <option value="suspended">Suspended</option>
+                                    </select>
+                                    <button class="btn btn-outline" onclick="refreshEntities()">Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table" id="entities-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fight Team Name</th>
+                                        <th>Location</th>
+                                        <th>Admin</th>
+                                        <th>Students</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="entities-table-body">
+                                    <!-- Entities will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2895,6 +2960,9 @@
                 case 'classes':
                     renderClassesTable();
                     break;
+                case 'entities':
+                    renderEntitiesTable();
+                    break;
                 case 'users':
                     renderUsersTable();
                     break;
@@ -2902,6 +2970,202 @@
                     loadSettings();
                     break;
             }
+        }
+        
+        // Entity Management Functions
+        function renderEntitiesTable() {
+            const tbody = document.getElementById('entities-table-body');
+            if (!tbody) return;
+            
+            const entities = authManager.entities;
+            tbody.innerHTML = '';
+            
+            entities.forEach(entity => {
+                const admin = authManager.users.find(u => u.id === entity.adminId);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entity.name}</td>
+                    <td>${entity.location}</td>
+                    <td>${admin ? admin.name : 'No Admin'}</td>
+                    <td><span class="badge badge-info">${entity.currentStudents}/${entity.maxStudents}</span></td>
+                    <td><span class="badge badge-${getStatusBadgeClass(entity.status)}">${entity.status}</span></td>
+                    <td>${new Date(entity.createdAt).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="editEntity(${entity.id})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteEntity(${entity.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function getStatusBadgeClass(status) {
+            const classes = {
+                active: 'success',
+                inactive: 'warning',
+                suspended: 'danger'
+            };
+            return classes[status] || 'secondary';
+        }
+        
+        function showEntityForm(entityId = null) {
+            const entity = entityId ? authManager.entities.find(e => e.id === entityId) : null;
+            const isEdit = !!entity;
+            
+            const formHtml = `
+                <div class="modal-overlay" onclick="closeModal()">
+                    <div class="modal" onclick="event.stopPropagation()">
+                        <div class="modal-header">
+                            <h3>${isEdit ? 'Edit Fight Team' : 'Add New Fight Team'}</h3>
+                            <button class="btn-close" onclick="closeModal()">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="entity-form" onsubmit="saveEntity(event, ${entityId || 'null'})">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="entity-name">Fight Team Name *</label>
+                                        <input type="text" id="entity-name" name="name" value="${entity?.name || ''}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="entity-location">Location *</label>
+                                        <input type="text" id="entity-location" name="location" value="${entity?.location || ''}" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="entity-address">Address</label>
+                                        <input type="text" id="entity-address" name="address" value="${entity?.address || ''}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="entity-phone">Phone</label>
+                                        <input type="tel" id="entity-phone" name="phone" value="${entity?.phone || ''}">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="entity-email">Email</label>
+                                        <input type="email" id="entity-email" name="email" value="${entity?.email || ''}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="entity-admin">Admin User</label>
+                                        <select id="entity-admin" name="adminId">
+                                            <option value="">Select Admin</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="entity-max-students">Max Students</label>
+                                        <input type="number" id="entity-max-students" name="maxStudents" value="${entity?.maxStudents || 100}" min="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="entity-status">Status</label>
+                                        <select id="entity-status" name="status">
+                                            <option value="active" ${entity?.status === 'active' ? 'selected' : ''}>Active</option>
+                                            <option value="inactive" ${entity?.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+                                            <option value="suspended" ${entity?.status === 'suspended' ? 'selected' : ''}>Suspended</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="entity-license">License Type</label>
+                                        <select id="entity-license" name="licenseType">
+                                            <option value="basic" ${entity?.licenseType === 'basic' ? 'selected' : ''}>Basic</option>
+                                            <option value="premium" ${entity?.licenseType === 'premium' ? 'selected' : ''}>Premium</option>
+                                            <option value="enterprise" ${entity?.licenseType === 'enterprise' ? 'selected' : ''}>Enterprise</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="entity-subscription">Subscription End</label>
+                                        <input type="date" id="entity-subscription" name="subscriptionEnd" value="${entity?.subscriptionEnd ? new Date(entity.subscriptionEnd).toISOString().split('T')[0] : ''}">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                            <button type="submit" form="entity-form" class="btn btn-primary">${isEdit ? 'Update Fight Team' : 'Create Fight Team'}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', formHtml);
+            
+            // Populate admin dropdown
+            const adminSelect = document.getElementById('entity-admin');
+            const fightTeamAdmins = authManager.users.filter(u => u.role === 'fight_team_admin' && !u.entityId);
+            fightTeamAdmins.forEach(admin => {
+                const option = document.createElement('option');
+                option.value = admin.id;
+                option.textContent = admin.name;
+                if (entity && entity.adminId === admin.id) {
+                    option.selected = true;
+                }
+                adminSelect.appendChild(option);
+            });
+        }
+        
+        function saveEntity(event, entityId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const entityData = Object.fromEntries(formData.entries());
+            
+            if (entityId) {
+                // Edit existing entity
+                const entityIndex = authManager.entities.findIndex(e => e.id === entityId);
+                if (entityIndex !== -1) {
+                    const existingEntity = authManager.entities[entityIndex];
+                    authManager.entities[entityIndex] = {
+                        ...existingEntity,
+                        ...entityData,
+                        maxStudents: parseInt(entityData.maxStudents),
+                        adminId: entityData.adminId ? parseInt(entityData.adminId) : null
+                    };
+                    authManager.saveEntities(authManager.entities);
+                    showNotification('Fight Team updated successfully!', 'success');
+                }
+            } else {
+                // Create new entity
+                const newEntity = {
+                    id: Date.now(),
+                    ...entityData,
+                    maxStudents: parseInt(entityData.maxStudents),
+                    currentStudents: 0,
+                    createdAt: new Date().toISOString(),
+                    adminId: entityData.adminId ? parseInt(entityData.adminId) : null
+                };
+                
+                authManager.entities.push(newEntity);
+                authManager.saveEntities(authManager.entities);
+                showNotification('Fight Team created successfully!', 'success');
+            }
+            
+            closeModal();
+            renderEntitiesTable();
+        }
+        
+        function editEntity(entityId) {
+            showEntityForm(entityId);
+        }
+        
+        function deleteEntity(entityId) {
+            if (confirm('Are you sure you want to delete this Fight Team? This will also remove all associated data.')) {
+                authManager.entities = authManager.entities.filter(e => e.id !== entityId);
+                authManager.saveEntities(authManager.entities);
+                showNotification('Fight Team deleted successfully!', 'success');
+                renderEntitiesTable();
+            }
+        }
+        
+        function refreshEntities() {
+            renderEntitiesTable();
+            showNotification('Fight Teams refreshed!', 'success');
         }
         
         // User Management Functions
@@ -2941,8 +3205,8 @@
         
         function getRoleDisplayName(role) {
             const names = {
-                admin: 'System Administrator',
-                manager: 'Academy Manager',
+                system_admin: 'System Administrator',
+                fight_team_admin: 'Fight Team Admin',
                 teacher: 'Teacher / Coach',
                 student: 'Student / Fighter'
             };
@@ -2980,10 +3244,10 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="user-role">Role *</label>
-                                        <select id="user-role" name="role" required>
+                                        <select id="user-role" name="role" required onchange="toggleUserEntitySelection()">
                                             <option value="">Select role</option>
-                                            <option value="admin" ${user?.role === 'admin' ? 'selected' : ''}>System Administrator</option>
-                                            <option value="manager" ${user?.role === 'manager' ? 'selected' : ''}>Academy Manager</option>
+                                            <option value="system_admin" ${user?.role === 'system_admin' ? 'selected' : ''}>System Administrator</option>
+                                            <option value="fight_team_admin" ${user?.role === 'fight_team_admin' ? 'selected' : ''}>Fight Team Admin</option>
                                             <option value="teacher" ${user?.role === 'teacher' ? 'selected' : ''}>Teacher / Coach</option>
                                             <option value="student" ${user?.role === 'student' ? 'selected' : ''}>Student / Fighter</option>
                                         </select>
@@ -2996,6 +3260,12 @@
                                         <select id="user-status" name="status">
                                             <option value="active" ${user?.status === 'active' ? 'selected' : ''}>Active</option>
                                             <option value="inactive" ${user?.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="user-entity-selection" style="display: none;">
+                                        <label for="user-entity">Fight Team</label>
+                                        <select id="user-entity" name="entityId">
+                                            <option value="">Select Fight Team</option>
                                         </select>
                                     </div>
                                 </div>
@@ -3028,6 +3298,7 @@
                         email: userData.email,
                         role: userData.role,
                         status: userData.status,
+                        entityId: userData.entityId ? parseInt(userData.entityId) : null,
                         ...(userData.password && { password: userData.password })
                     };
                     authManager.saveUsers(authManager.users);
@@ -3067,6 +3338,53 @@
         function refreshUsers() {
             renderUsersTable();
             showNotification('Users refreshed!', 'success');
+        }
+        
+        // Toggle entity selection based on role
+        function toggleEntitySelection() {
+            const roleSelect = document.getElementById('register-role');
+            const entitySelection = document.getElementById('entity-selection');
+            const entitySelect = document.getElementById('register-entity');
+            
+            if (roleSelect.value === 'student' || roleSelect.value === 'teacher' || roleSelect.value === 'fight_team_admin') {
+                entitySelection.style.display = 'block';
+                entitySelect.required = true;
+                
+                // Populate entities
+                entitySelect.innerHTML = '<option value="">Select Fight Team</option>';
+                authManager.entities.forEach(entity => {
+                    const option = document.createElement('option');
+                    option.value = entity.id;
+                    option.textContent = entity.name;
+                    entitySelect.appendChild(option);
+                });
+            } else {
+                entitySelection.style.display = 'none';
+                entitySelect.required = false;
+            }
+        }
+        
+        function toggleUserEntitySelection() {
+            const roleSelect = document.getElementById('user-role');
+            const entitySelection = document.getElementById('user-entity-selection');
+            const entitySelect = document.getElementById('user-entity');
+            
+            if (roleSelect.value === 'student' || roleSelect.value === 'teacher' || roleSelect.value === 'fight_team_admin') {
+                entitySelection.style.display = 'block';
+                entitySelect.required = true;
+                
+                // Populate entities
+                entitySelect.innerHTML = '<option value="">Select Fight Team</option>';
+                authManager.entities.forEach(entity => {
+                    const option = document.createElement('option');
+                    option.value = entity.id;
+                    option.textContent = entity.name;
+                    entitySelect.appendChild(option);
+                });
+            } else {
+                entitySelection.style.display = 'none';
+                entitySelect.required = false;
+            }
         }
 
         // Add click event listeners to menu items
@@ -4593,6 +4911,7 @@
             constructor() {
                 this.currentUser = null;
                 this.users = this.loadUsers();
+                this.entities = this.loadEntities();
                 this.initializeAuth();
             }
             
@@ -4602,18 +4921,31 @@
                     return JSON.parse(savedUsers);
                 }
                 
-                // Create default admin user
+                // Create default users
                 const defaultUsers = [
                     {
                         id: 1,
                         name: 'System Administrator',
                         email: 'admin@academy.com',
                         password: 'admin123',
-                        role: 'admin',
+                        role: 'system_admin',
                         status: 'active',
                         lastLogin: null,
                         createdAt: new Date().toISOString(),
-                        permissions: ['all']
+                        permissions: ['all'],
+                        entityId: null
+                    },
+                    {
+                        id: 2,
+                        name: 'Fight Team Admin',
+                        email: 'admin@elitefight.com',
+                        password: 'admin123',
+                        role: 'fight_team_admin',
+                        status: 'active',
+                        lastLogin: null,
+                        createdAt: new Date().toISOString(),
+                        permissions: ['manage_entity', 'manage_students', 'manage_teachers', 'manage_classes', 'view_reports'],
+                        entityId: 1
                     }
                 ];
                 
@@ -4623,6 +4955,39 @@
             
             saveUsers(users) {
                 localStorage.setItem('academy_users', JSON.stringify(users));
+            }
+            
+            loadEntities() {
+                const savedEntities = localStorage.getItem('academy_entities');
+                if (savedEntities) {
+                    return JSON.parse(savedEntities);
+                }
+                
+                // Create default entities for demo
+                const defaultEntities = [
+                    {
+                        id: 1,
+                        name: 'Elite Fight Team',
+                        location: 'São Paulo, Brazil',
+                        address: 'Rua das Artes Marciais, 123',
+                        phone: '+55 11 99999-9999',
+                        email: 'contact@elitefight.com',
+                        adminId: 2,
+                        status: 'active',
+                        maxStudents: 100,
+                        currentStudents: 0,
+                        createdAt: new Date().toISOString(),
+                        licenseType: 'premium',
+                        subscriptionEnd: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+                    }
+                ];
+                
+                this.saveEntities(defaultEntities);
+                return defaultEntities;
+            }
+            
+            saveEntities(entities) {
+                localStorage.setItem('academy_entities', JSON.stringify(entities));
             }
             
             initializeAuth() {
@@ -4671,7 +5036,8 @@
                     status: 'active',
                     lastLogin: null,
                     createdAt: new Date().toISOString(),
-                    permissions: this.getDefaultPermissions(userData.role)
+                    permissions: this.getDefaultPermissions(userData.role),
+                    entityId: userData.entityId ? parseInt(userData.entityId) : null
                 };
                 
                 this.users.push(newUser);
@@ -4681,8 +5047,8 @@
             
             getDefaultPermissions(role) {
                 const permissions = {
-                    admin: ['all'],
-                    manager: ['manage_students', 'manage_teachers', 'manage_classes', 'view_reports', 'manage_branches'],
+                    system_admin: ['all'],
+                    fight_team_admin: ['manage_entity', 'manage_students', 'manage_teachers', 'manage_classes', 'view_reports', 'manage_branches'],
                     teacher: ['manage_classes', 'mark_attendance', 'view_students', 'upload_plans'],
                     student: ['view_schedule', 'check_in', 'view_profile', 'view_plans']
                 };
@@ -4716,16 +5082,17 @@
             
             hasPermission(page) {
                 if (!this.currentUser) return false;
-                if (this.currentUser.role === 'admin') return true;
+                if (this.currentUser.role === 'system_admin') return true;
                 
                 const permissions = {
-                    dashboard: ['admin', 'manager', 'teacher', 'student'],
-                    students: ['admin', 'manager', 'teacher'],
-                    teachers: ['admin', 'manager'],
-                    branches: ['admin', 'manager'],
-                    classes: ['admin', 'manager', 'teacher'],
-                    users: ['admin'],
-                    settings: ['admin', 'manager']
+                    dashboard: ['system_admin', 'fight_team_admin', 'teacher', 'student'],
+                    students: ['system_admin', 'fight_team_admin', 'teacher'],
+                    teachers: ['system_admin', 'fight_team_admin'],
+                    branches: ['system_admin', 'fight_team_admin'],
+                    classes: ['system_admin', 'fight_team_admin', 'teacher'],
+                    entities: ['system_admin'],
+                    users: ['system_admin', 'fight_team_admin'],
+                    settings: ['system_admin', 'fight_team_admin']
                 };
                 
                 return permissions[page]?.includes(this.currentUser.role) || false;
