@@ -13,17 +13,18 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
             display: flex;
+            color: #e0e0e0;
         }
         
         /* Sidebar Styles */
         .sidebar {
             width: 280px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(26, 26, 46, 0.95);
             backdrop-filter: blur(10px);
-            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+            box-shadow: 2px 0 20px rgba(0,0,0,0.3);
             position: fixed;
             height: 100vh;
             left: 0;
@@ -31,6 +32,7 @@
             z-index: 1000;
             transition: transform 0.3s ease;
             overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .sidebar.collapsed {
@@ -39,7 +41,7 @@
         
         .sidebar-header {
             padding: 2rem 1.5rem;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
         }
         
@@ -50,12 +52,12 @@
             gap: 10px;
             font-size: 1.5rem;
             font-weight: bold;
-            color: #333;
+            color: #e0e0e0;
             margin-bottom: 0.5rem;
         }
         
         .sidebar-subtitle {
-            color: #666;
+            color: #a0a0a0;
             font-size: 0.9rem;
         }
         
@@ -71,7 +73,7 @@
             padding: 0.5rem 1.5rem;
             font-size: 0.8rem;
             font-weight: 600;
-            color: #666;
+            color: #a0a0a0;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -79,7 +81,7 @@
         .menu-item {
             display: block;
             padding: 1rem 1.5rem;
-            color: #333;
+            color: #e0e0e0;
             text-decoration: none;
             transition: all 0.3s;
             border-left: 3px solid transparent;
@@ -87,15 +89,15 @@
         }
         
         .menu-item:hover {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            border-left-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
+            color: #7c9eff;
+            border-left-color: #7c9eff;
         }
         
         .menu-item.active {
-            background: rgba(102, 126, 234, 0.15);
-            color: #667eea;
-            border-left-color: #667eea;
+            background: rgba(102, 126, 234, 0.25);
+            color: #7c9eff;
+            border-left-color: #7c9eff;
             font-weight: 600;
         }
         
@@ -111,8 +113,8 @@
         }
         
         .menu-item-badge {
-            background: #667eea;
-            color: white;
+            background: #7c9eff;
+            color: #1a1a2e;
             padding: 0.2rem 0.5rem;
             border-radius: 10px;
             font-size: 0.7rem;
@@ -133,16 +135,17 @@
         }
         
         .top-bar {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(26, 26, 46, 0.95);
             backdrop-filter: blur(10px);
             padding: 1rem 2rem;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .top-bar-left {
@@ -156,20 +159,20 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #333;
+            color: #e0e0e0;
             padding: 0.5rem;
             border-radius: 8px;
             transition: background 0.3s;
         }
         
         .sidebar-toggle:hover {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(102, 126, 234, 0.2);
         }
         
         .page-title {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #333;
+            color: #e0e0e0;
         }
         
         .top-bar-right {
@@ -183,9 +186,9 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.5rem 1rem;
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(102, 126, 234, 0.2);
             border-radius: 25px;
-            color: #667eea;
+            color: #7c9eff;
             font-weight: 500;
         }
         
@@ -197,11 +200,13 @@
         
         .page {
             display: none;
-            background: white;
+            background: rgba(26, 26, 46, 0.8);
             border-radius: 20px;
             padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             min-height: 70vh;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
         
         .page.active {
@@ -214,12 +219,12 @@
         }
         
         .page-header h1 {
-            color: #333;
+            color: #e0e0e0;
             margin-bottom: 0.5rem;
         }
         
         .page-header p {
-            color: #666;
+            color: #a0a0a0;
         }
         
         .stats-grid {
@@ -230,12 +235,13 @@
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: linear-gradient(135deg, #7c9eff, #9b59b6);
+            color: #1a1a2e;
             padding: 1.5rem;
             border-radius: 15px;
             text-align: center;
             transition: transform 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .stat-card:hover {
@@ -259,30 +265,32 @@
         }
         
         .feature-card {
-            background: #f8f9fa;
+            background: rgba(22, 33, 62, 0.6);
             padding: 1.5rem;
             border-radius: 15px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #7c9eff;
             transition: transform 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .feature-card:hover {
             transform: translateY(-5px);
+            background: rgba(22, 33, 62, 0.8);
         }
         
         .feature-card h3 {
-            color: #333;
+            color: #e0e0e0;
             margin-bottom: 1rem;
         }
         
         .feature-card p {
-            color: #666;
+            color: #a0a0a0;
             margin-bottom: 1rem;
         }
         
         .btn {
-            background: #667eea;
-            color: white;
+            background: #7c9eff;
+            color: #1a1a2e;
             padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 25px;
@@ -294,12 +302,14 @@
         }
         
         .btn:hover {
-            background: #5a6fd8;
+            background: #6b8eff;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 158, 255, 0.3);
         }
         
         .btn-secondary {
             background: #6c757d;
+            color: white;
         }
         
         .btn-secondary:hover {
@@ -313,22 +323,29 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #333;
+            color: #e0e0e0;
             font-weight: 500;
         }
         
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 0.75rem;
-            border: 2px solid #e9ecef;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             font-size: 1rem;
             transition: border-color 0.3s;
+            background: rgba(26, 26, 46, 0.8);
+            color: #e0e0e0;
         }
         
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #7c9eff;
+            background: rgba(26, 26, 46, 1);
+        }
+        
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: #a0a0a0;
         }
         
         .form-row {
@@ -350,13 +367,19 @@
         }
         
         .table th {
-            background: #f8f9fa;
+            background: rgba(22, 33, 62, 0.8);
             font-weight: 600;
-            color: #333;
+            color: #e0e0e0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .table tr:hover {
-            background: #f8f9fa;
+            background: rgba(22, 33, 62, 0.4);
+        }
+        
+        .table td {
+            color: #e0e0e0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .badge {
@@ -367,23 +390,23 @@
         }
         
         .badge-success {
-            background: #d4edda;
-            color: #155724;
+            background: #28a745;
+            color: white;
         }
         
         .badge-warning {
-            background: #fff3cd;
-            color: #856404;
+            background: #ffc107;
+            color: #1a1a2e;
         }
         
         .badge-info {
-            background: #d1ecf1;
-            color: #0c5460;
+            background: #17a2b8;
+            color: white;
         }
         
         .badge-danger {
-            background: #f8d7da;
-            color: #721c24;
+            background: #dc3545;
+            color: white;
         }
         
         /* Mobile Responsive */
@@ -449,15 +472,17 @@
         }
         
         .modal-content {
-            background: white;
+            background: rgba(26, 26, 46, 0.95);
             border-radius: 20px;
             padding: 0;
             max-width: 600px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             animation: modalSlideIn 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
         
         @keyframes modalSlideIn {
@@ -473,7 +498,7 @@
         
         .modal-header {
             padding: 2rem 2rem 1rem;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -481,7 +506,7 @@
         
         .modal-header h2 {
             margin: 0;
-            color: #333;
+            color: #e0e0e0;
             font-size: 1.5rem;
         }
         
@@ -490,7 +515,7 @@
             border: none;
             font-size: 2rem;
             cursor: pointer;
-            color: #666;
+            color: #a0a0a0;
             padding: 0;
             width: 30px;
             height: 30px;
@@ -502,8 +527,8 @@
         }
         
         .close-btn:hover {
-            background: #f8f9fa;
-            color: #333;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
         }
         
         .modal-content form {
@@ -516,7 +541,7 @@
             justify-content: flex-end;
             margin-top: 2rem;
             padding-top: 1rem;
-            border-top: 1px solid #e9ecef;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         /* Notification Styles */
@@ -738,7 +763,7 @@
                 
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <input type="text" id="studentSearch" placeholder="Search students by name, email, belt, or branch..." 
-                           onkeyup="searchStudents()" style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 10px;">
+                           onkeyup="searchStudents()" style="width: 100%; padding: 0.75rem; border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 10px; background: rgba(26, 26, 46, 0.8); color: #e0e0e0;">
                 </div>
                 
                 <table class="table">
@@ -791,7 +816,7 @@
                 
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <input type="text" id="teacherSearch" placeholder="Search teachers by name, email, belt, or specialization..." 
-                           onkeyup="searchTeachers()" style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 10px;">
+                           onkeyup="searchTeachers()" style="width: 100%; padding: 0.75rem; border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 10px; background: rgba(26, 26, 46, 0.8); color: #e0e0e0;">
                 </div>
                 
                 <table class="table">
@@ -844,7 +869,7 @@
                 
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <input type="text" id="branchSearch" placeholder="Search branches by name, address, or manager..." 
-                           onkeyup="searchBranches()" style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 10px;">
+                           onkeyup="searchBranches()" style="width: 100%; padding: 0.75rem; border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 10px; background: rgba(26, 26, 46, 0.8); color: #e0e0e0;">
                 </div>
                 
                 <div class="feature-grid">
@@ -881,7 +906,7 @@
                 
                 <div class="form-group" style="margin-bottom: 1rem;">
                     <input type="text" id="classSearch" placeholder="Search classes by name, instructor, branch, or level..." 
-                           onkeyup="searchClasses()" style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 10px;">
+                           onkeyup="searchClasses()" style="width: 100%; padding: 0.75rem; border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 10px; background: rgba(26, 26, 46, 0.8); color: #e0e0e0;">
                 </div>
                 
                 <table class="table">
