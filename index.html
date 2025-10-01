@@ -3240,7 +3240,7 @@
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label for="user-password">Password ${isEdit ? '(leave blank to keep current)' : '*'}</label>
-                                        <input type="password" id="user-password" name="password" ${isEdit ? '' : 'required'}>
+                                        <input type="password" id="user-password" name="password" ${isEdit ? '' : 'required'} placeholder="${isEdit ? 'Enter new password or leave blank' : 'Enter password'}">
                                     </div>
                                     <div class="form-group">
                                         <label for="user-role">Role *</label>
@@ -3287,12 +3287,14 @@
             const formData = new FormData(event.target);
             const userData = Object.fromEntries(formData.entries());
             
+            console.log('Saving user data:', userData);
+            
             if (userId) {
                 // Edit existing user
                 const userIndex = authManager.users.findIndex(u => u.id === userId);
                 if (userIndex !== -1) {
                     const existingUser = authManager.users[userIndex];
-                    authManager.users[userIndex] = {
+                    const updatedUser = {
                         ...existingUser,
                         name: userData.name,
                         email: userData.email,
@@ -3301,18 +3303,25 @@
                         entityId: userData.entityId ? parseInt(userData.entityId) : null,
                         ...(userData.password && { password: userData.password })
                     };
+                    console.log('Updating user:', updatedUser);
+                    authManager.users[userIndex] = updatedUser;
                     authManager.saveUsers(authManager.users);
                     showNotification('User updated successfully!', 'success');
                 }
             } else {
                 // Create new user
-                const result = authManager.register({
+                const newUserData = {
                     ...userData,
                     password: userData.password || 'default123'
-                });
+                };
+                console.log('Creating new user with data:', newUserData);
+                
+                const result = authManager.register(newUserData);
                 if (result.success) {
+                    console.log('User created successfully:', result.user);
                     showNotification('User created successfully!', 'success');
                 } else {
+                    console.log('User creation failed:', result.message);
                     showNotification(result.message, 'error');
                     return;
                 }
@@ -5038,8 +5047,11 @@
             }
             
             register(userData) {
+                console.log('Register function called with:', userData);
+                
                 const existingUser = this.users.find(u => u.email === userData.email);
                 if (existingUser) {
+                    console.log('User already exists:', existingUser);
                     return { success: false, message: 'User with this email already exists' };
                 }
                 
@@ -5053,8 +5065,10 @@
                     entityId: userData.entityId ? parseInt(userData.entityId) : null
                 };
                 
+                console.log('Creating new user:', newUser);
                 this.users.push(newUser);
                 this.saveUsers(this.users);
+                console.log('Users after registration:', this.users);
                 return { success: true, user: newUser };
             }
             
@@ -5180,6 +5194,21 @@
             location.reload();
         }
         
+        // Function to show all users for debugging
+        function showAllUsers() {
+            console.log('All users in system:', authManager.users);
+            const userList = authManager.users.map(u => `${u.name} (${u.email}) - Role: ${u.role} - Status: ${u.status}`).join('\n');
+            alert('All Users:\n' + userList);
+        }
+        
+        // Function to test login with specific user
+        function testLogin(email, password) {
+            console.log('Testing login for:', email);
+            const result = authManager.login(email, password);
+            console.log('Login result:', result);
+            return result;
+        }
+        
         // Force show sidebar after authentication loads
         setTimeout(() => {
             const sidebar = document.getElementById('sidebar');
@@ -5271,6 +5300,15 @@
                 }
             };
             document.body.appendChild(clearBtn);
+            
+            // Show All Users button
+            const usersBtn = document.createElement('button');
+            usersBtn.textContent = 'Show Users';
+            usersBtn.style.cssText = 'position: fixed; top: 40px; right: 10px; z-index: 9999; background: #27ae60; color: white; padding: 5px; border: none; border-radius: 3px;';
+            usersBtn.onclick = () => {
+                showAllUsers();
+            };
+            document.body.appendChild(usersBtn);
         }, 1000);
         
         // Load settings when app starts
