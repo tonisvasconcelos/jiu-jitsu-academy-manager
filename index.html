@@ -576,6 +576,83 @@
         .notification.info {
             background: #17a2b8;
         }
+        
+        /* Settings Page Styles */
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .settings-section {
+            margin-bottom: 3rem;
+        }
+        
+        .settings-section h2 {
+            color: #e0e0e0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #7c9eff;
+            padding-bottom: 0.5rem;
+        }
+        
+        .setting-description {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+        
+        .logo-upload-container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .logo-preview {
+            width: 120px;
+            height: 120px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 26, 46, 0.5);
+            overflow: hidden;
+        }
+        
+        .logo-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .logo-placeholder {
+            text-align: center;
+            color: #a0a0a0;
+        }
+        
+        .logo-placeholder span {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .logo-upload-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .settings-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .settings-actions .btn {
+            width: 100%;
+        }
     </style>
   </head>
   <body>
@@ -1028,12 +1105,133 @@
 
             <div id="settings" class="page">
                 <div class="page-header">
-                    <h1>⚙️ Settings</h1>
-                    <p>Configure your academy management system</p>
+                    <h1>⚙️ System Settings</h1>
+                    <p>Configure your academy management system preferences</p>
                 </div>
-                <div class="feature-card">
-                    <h3>System Settings</h3>
-                    <p>This page will contain system configuration and preferences.</p>
+                
+                <div class="settings-container">
+                    <!-- Language Settings -->
+                    <div class="settings-section">
+                        <h2>🌐 Language Settings</h2>
+                        <div class="feature-card">
+                            <div class="form-group">
+                                <label for="languageCode">Language Code *</label>
+                                <select id="languageCode" onchange="updateLanguage()">
+                                    <option value="PTB">Portuguese (PTB)</option>
+                                    <option value="ENU">English (ENU)</option>
+                                </select>
+                            </div>
+                            <p class="setting-description">Choose the default language for the application interface.</p>
+                        </div>
+                    </div>
+
+                    <!-- Company Information -->
+                    <div class="settings-section">
+                        <h2>🏢 Company Information</h2>
+                        <div class="feature-card">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="companyName">Company Name *</label>
+                                    <input type="text" id="companyName" placeholder="Enter company name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="companyResponsible">Company Responsible *</label>
+                                    <input type="text" id="companyResponsible" placeholder="Enter responsible person name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="companyAddress">Company Address *</label>
+                                <textarea id="companyAddress" rows="3" placeholder="Enter complete company address"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="companyPhone">Phone Number</label>
+                                    <input type="tel" id="companyPhone" placeholder="Enter phone number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="companyEmail">Email Address</label>
+                                    <input type="email" id="companyEmail" placeholder="Enter email address">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="companyWebsite">Website</label>
+                                    <input type="url" id="companyWebsite" placeholder="Enter website URL">
+                                </div>
+                                <div class="form-group">
+                                    <label for="companyTaxId">Tax ID</label>
+                                    <input type="text" id="companyTaxId" placeholder="Enter tax identification number">
+                                </div>
+                            </div>
+                            <button class="btn" onclick="saveCompanyInfo()">Save Company Information</button>
+                        </div>
+                    </div>
+
+                    <!-- Logo Upload -->
+                    <div class="settings-section">
+                        <h2>🖼️ Company Logo</h2>
+                        <div class="feature-card">
+                            <div class="logo-upload-container">
+                                <div class="logo-preview" id="logoPreview">
+                                    <div class="logo-placeholder">
+                                        <span>📷</span>
+                                        <p>No logo uploaded</p>
+                                    </div>
+                                </div>
+                                <div class="logo-upload-controls">
+                                    <input type="file" id="logoUpload" accept="image/*" onchange="handleLogoUpload(event)" style="display: none;">
+                                    <button class="btn" onclick="document.getElementById('logoUpload').click()">Choose Logo</button>
+                                    <button class="btn btn-secondary" onclick="removeLogo()" id="removeLogoBtn" style="display: none;">Remove Logo</button>
+                                </div>
+                            </div>
+                            <p class="setting-description">Upload your company logo. Recommended size: 200x200px. Supported formats: JPG, PNG, GIF.</p>
+                        </div>
+                    </div>
+
+                    <!-- System Preferences -->
+                    <div class="settings-section">
+                        <h2>🔧 System Preferences</h2>
+                        <div class="feature-card">
+                            <div class="form-group">
+                                <label for="dateFormat">Date Format</label>
+                                <select id="dateFormat">
+                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="timeFormat">Time Format</label>
+                                <select id="timeFormat">
+                                    <option value="24h">24 Hour (HH:MM)</option>
+                                    <option value="12h">12 Hour (HH:MM AM/PM)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="currency">Currency</label>
+                                <select id="currency">
+                                    <option value="USD">USD ($)</option>
+                                    <option value="EUR">EUR (€)</option>
+                                    <option value="BRL">BRL (R$)</option>
+                                    <option value="GBP">GBP (£)</option>
+                                </select>
+                            </div>
+                            <button class="btn" onclick="saveSystemPreferences()">Save Preferences</button>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="settings-section">
+                        <h2>💾 Actions</h2>
+                        <div class="feature-card">
+                            <div class="settings-actions">
+                                <button class="btn" onclick="saveAllSettings()">Save All Settings</button>
+                                <button class="btn btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
+                                <button class="btn" onclick="exportSettings()" style="background: #28a745;">Export Settings</button>
+                                <button class="btn" onclick="importSettings()" style="background: #17a2b8;">Import Settings</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1070,6 +1268,20 @@
                     { id: 1, name: 'Beginner Gi Class', instructor: 'Carlos Mendes', day: 'Mon, Wed', time: '18:00', branch: 'Main Academy', level: 'Beginner', students: 12, maxStudents: 20, status: 'Active' },
                     { id: 2, name: 'Kids Class', instructor: 'Ana Costa', day: 'Tue, Thu', time: '16:00', branch: 'Downtown Branch', level: 'Kids', students: 8, maxStudents: 15, status: 'Active' }
                 ];
+                this.settings = this.loadData('settings') || {
+                    languageCode: 'PTB',
+                    companyName: '',
+                    companyResponsible: '',
+                    companyAddress: '',
+                    companyPhone: '',
+                    companyEmail: '',
+                    companyWebsite: '',
+                    companyTaxId: '',
+                    companyLogo: '',
+                    dateFormat: 'DD/MM/YYYY',
+                    timeFormat: '24h',
+                    currency: 'BRL'
+                };
                 this.saveAllData();
             }
 
@@ -1090,6 +1302,7 @@
                 this.saveData('teachers', this.teachers);
                 this.saveData('branches', this.branches);
                 this.saveData('classes', this.classes);
+                this.saveData('settings', this.settings);
                 this.updateBadges();
             }
 
@@ -1203,6 +1416,9 @@
                     break;
                 case 'classes':
                     renderClassesTable();
+                    break;
+                case 'settings':
+                    loadSettings();
                     break;
             }
         }
@@ -1802,8 +2018,254 @@
             return colors[level] || 'info';
         }
 
+        // Settings Functions
+        function loadSettings() {
+            const settings = dataManager.settings;
+            
+            // Load language
+            document.getElementById('languageCode').value = settings.languageCode;
+            
+            // Load company info
+            document.getElementById('companyName').value = settings.companyName || '';
+            document.getElementById('companyResponsible').value = settings.companyResponsible || '';
+            document.getElementById('companyAddress').value = settings.companyAddress || '';
+            document.getElementById('companyPhone').value = settings.companyPhone || '';
+            document.getElementById('companyEmail').value = settings.companyEmail || '';
+            document.getElementById('companyWebsite').value = settings.companyWebsite || '';
+            document.getElementById('companyTaxId').value = settings.companyTaxId || '';
+            
+            // Load system preferences
+            document.getElementById('dateFormat').value = settings.dateFormat || 'DD/MM/YYYY';
+            document.getElementById('timeFormat').value = settings.timeFormat || '24h';
+            document.getElementById('currency').value = settings.currency || 'BRL';
+            
+            // Load logo
+            if (settings.companyLogo) {
+                const logoPreview = document.getElementById('logoPreview');
+                logoPreview.innerHTML = `<img src="${settings.companyLogo}" alt="Company Logo">`;
+                document.getElementById('removeLogoBtn').style.display = 'inline-block';
+            }
+        }
+
+        function updateLanguage() {
+            const languageCode = document.getElementById('languageCode').value;
+            dataManager.settings.languageCode = languageCode;
+            dataManager.saveAllData();
+            
+            // Update UI language
+            updateUILanguage(languageCode);
+            showNotification('Language updated successfully!');
+        }
+
+        function updateUILanguage(languageCode) {
+            // This is a basic implementation - you can expand this
+            if (languageCode === 'PTB') {
+                document.title = 'Gerenciador de Academia de Jiu-Jitsu';
+                document.querySelector('.sidebar-subtitle').textContent = 'Sistema de Gerenciamento de Jiu-Jitsu';
+            } else {
+                document.title = 'Jiu-Jitsu Academy Manager';
+                document.querySelector('.sidebar-subtitle').textContent = 'Jiu-Jitsu Management System';
+            }
+        }
+
+        function saveCompanyInfo() {
+            const companyData = {
+                companyName: document.getElementById('companyName').value,
+                companyResponsible: document.getElementById('companyResponsible').value,
+                companyAddress: document.getElementById('companyAddress').value,
+                companyPhone: document.getElementById('companyPhone').value,
+                companyEmail: document.getElementById('companyEmail').value,
+                companyWebsite: document.getElementById('companyWebsite').value,
+                companyTaxId: document.getElementById('companyTaxId').value
+            };
+            
+            // Validate required fields
+            if (!companyData.companyName || !companyData.companyResponsible || !companyData.companyAddress) {
+                showNotification('Please fill in all required fields (Company Name, Responsible, and Address).', 'error');
+                return;
+            }
+            
+            // Update settings
+            Object.assign(dataManager.settings, companyData);
+            dataManager.saveAllData();
+            
+            // Update sidebar with company name
+            if (companyData.companyName) {
+                document.querySelector('.sidebar-logo span:last-child').textContent = companyData.companyName;
+            }
+            
+            showNotification('Company information saved successfully!');
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showNotification('Please select a valid image file.', 'error');
+                return;
+            }
+            
+            // Validate file size (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                showNotification('Image size must be less than 2MB.', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const logoPreview = document.getElementById('logoPreview');
+                logoPreview.innerHTML = `<img src="${e.target.result}" alt="Company Logo">`;
+                
+                // Save logo to settings
+                dataManager.settings.companyLogo = e.target.result;
+                dataManager.saveAllData();
+                
+                // Show remove button
+                document.getElementById('removeLogoBtn').style.display = 'inline-block';
+                
+                showNotification('Logo uploaded successfully!');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeLogo() {
+            if (confirm('Are you sure you want to remove the company logo?')) {
+                const logoPreview = document.getElementById('logoPreview');
+                logoPreview.innerHTML = `
+                    <div class="logo-placeholder">
+                        <span>📷</span>
+                        <p>No logo uploaded</p>
+                    </div>
+                `;
+                
+                // Remove logo from settings
+                dataManager.settings.companyLogo = '';
+                dataManager.saveAllData();
+                
+                // Hide remove button
+                document.getElementById('removeLogoBtn').style.display = 'none';
+                
+                showNotification('Logo removed successfully!');
+            }
+        }
+
+        function saveSystemPreferences() {
+            const preferences = {
+                dateFormat: document.getElementById('dateFormat').value,
+                timeFormat: document.getElementById('timeFormat').value,
+                currency: document.getElementById('currency').value
+            };
+            
+            Object.assign(dataManager.settings, preferences);
+            dataManager.saveAllData();
+            
+            showNotification('System preferences saved successfully!');
+        }
+
+        function saveAllSettings() {
+            saveCompanyInfo();
+            saveSystemPreferences();
+            showNotification('All settings saved successfully!');
+        }
+
+        function resetSettings() {
+            if (confirm('Are you sure you want to reset all settings to default values? This action cannot be undone.')) {
+                dataManager.settings = {
+                    languageCode: 'PTB',
+                    companyName: '',
+                    companyResponsible: '',
+                    companyAddress: '',
+                    companyPhone: '',
+                    companyEmail: '',
+                    companyWebsite: '',
+                    companyTaxId: '',
+                    companyLogo: '',
+                    dateFormat: 'DD/MM/YYYY',
+                    timeFormat: '24h',
+                    currency: 'BRL'
+                };
+                dataManager.saveAllData();
+                loadSettings();
+                showNotification('Settings reset to defaults successfully!');
+            }
+        }
+
+        function exportSettings() {
+            const settingsData = {
+                settings: dataManager.settings,
+                exportDate: new Date().toISOString(),
+                version: '1.0.0'
+            };
+            
+            const dataStr = JSON.stringify(settingsData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = 'academy-settings.json';
+            link.click();
+            
+            showNotification('Settings exported successfully!');
+        }
+
+        function importSettings() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        
+                        if (importedData.settings) {
+                            if (confirm('This will replace your current settings. Are you sure you want to continue?')) {
+                                dataManager.settings = importedData.settings;
+                                dataManager.saveAllData();
+                                loadSettings();
+                                showNotification('Settings imported successfully!');
+                            }
+                        } else {
+                            showNotification('Invalid settings file format.', 'error');
+                        }
+                    } catch (error) {
+                        showNotification('Error reading settings file.', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Update showNotification to support different types
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
         // Initialize the app
         console.log('Jiu-Jitsu Academy Manager loaded successfully!');
+        
+        // Load settings when app starts
+        setTimeout(() => {
+            loadSettings();
+        }, 100);
     </script>
   </body>
 </html>
