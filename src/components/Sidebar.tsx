@@ -11,20 +11,98 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
 
   const menuItems = [
     {
-      id: 'contacts',
-      title: 'Contacts',
-      icon: '👥',
+      id: 'students',
+      title: 'Students / Alunos',
+      icon: '🥋',
       subItems: [
-        { id: 'students', title: 'Students', path: '/students', icon: '🎓' },
-        { id: 'instructors', title: 'Instructors', path: '/instructors', icon: '👨‍🏫' }
+        { id: 'student-registration', title: 'Student Registration', path: '/students/registration', icon: '📝' },
+        { id: 'student-profiles', title: 'Student Profiles', path: '/students/profiles', icon: '👤' },
+        { id: 'fight-plans', title: 'Fight Plans by Student', path: '/students/fight-plans', icon: '🥊' },
+        { id: 'student-evaluation', title: 'Student Evaluation & Grades', path: '/students/evaluation', icon: '📊' },
+        { id: 'student-attendance', title: 'Student Attendance', path: '/students/attendance', icon: '✅' },
       ]
     },
     {
-      id: 'martial-arts',
-      title: 'Martial Arts Setup',
-      icon: '🥋',
+      id: 'teachers',
+      title: 'Teachers / Professores',
+      icon: '🧑‍🏫',
       subItems: [
-        { id: 'martial-art-types', title: 'Martial Art Types', path: '/martial-art-types', icon: '🏆' }
+        { id: 'teacher-registration', title: 'Teacher Registration', path: '/teachers/registration', icon: '📝' },
+        { id: 'teacher-profiles', title: 'Teacher Profiles', path: '/teachers/profiles', icon: '👤' },
+        { id: 'assign-teachers', title: 'Assign Teachers to Classes', path: '/teachers/assign', icon: '🔗' },
+        { id: 'teacher-evaluations', title: 'Teacher Evaluations', path: '/teachers/evaluations', icon: '📊' },
+      ]
+    },
+    {
+      id: 'championships',
+      title: 'Championships / Campeonatos',
+      icon: '🏟️',
+      subItems: [
+        { id: 'championship-registration', title: 'Championship Registration', path: '/championships/registration', icon: '📝' },
+        { id: 'student-enrollment', title: 'Student Enrollment in Championships', path: '/championships/enrollment', icon: '📋' },
+        { id: 'championship-results', title: 'Championship Results', path: '/championships/results', icon: '🏆' },
+        { id: 'ranking-statistics', title: 'Ranking & Statistics', path: '/championships/ranking', icon: '📈' },
+      ]
+    },
+    {
+      id: 'classes',
+      title: 'Classes / Turmas',
+      icon: '📘',
+      subItems: [
+        { id: 'class-setup', title: 'Class Setup by Modality', path: '/classes/setup', icon: '⚙️' },
+        { id: 'schedule-management', title: 'Schedule Management', path: '/classes/schedule', icon: '📅' },
+        { id: 'check-in-attendance', title: 'Check-In / Attendance Tracking', path: '/classes/attendance', icon: '✅' },
+        { id: 'class-capacity', title: 'Class Capacity & Limits', path: '/classes/capacity', icon: '👥' },
+      ]
+    },
+    {
+      id: 'fight-plans',
+      title: 'Fight Plans / Planos de Luta',
+      icon: '🗂️',
+      subItems: [
+        { id: 'plan-templates', title: 'Plan Templates', path: '/fight-plans/templates', icon: '📋' },
+        { id: 'assign-plans', title: 'Assign Plans to Students', path: '/fight-plans/assign', icon: '🔗' },
+        { id: 'training-phases', title: 'Training Phases & Milestones', path: '/fight-plans/phases', icon: '🎯' },
+      ]
+    },
+    {
+      id: 'quality-evaluation',
+      title: 'Quality & Evaluation / Qualidade & Avaliação',
+      icon: '🧪',
+      subItems: [
+        { id: 'progress-reports', title: 'Student Progress Reports', path: '/quality/progress', icon: '📊' },
+        { id: 'teacher-feedback', title: 'Teacher Feedback', path: '/quality/feedback', icon: '💬' },
+        { id: 'fitness-tests', title: 'Fitness Tests & Metrics', path: '/quality/fitness', icon: '💪' },
+      ]
+    },
+    {
+      id: 'branches',
+      title: 'Branches / Filiais',
+      icon: '🌍',
+      subItems: [
+        { id: 'branch-registration', title: 'Branch Registration', path: '/branches/registration', icon: '📝' },
+        { id: 'branch-details', title: 'Branch Details (location, contact)', path: '/branches/details', icon: '📍' },
+        { id: 'assign-branch', title: 'Assign Students/Teachers per Branch', path: '/branches/assign', icon: '🔗' },
+      ]
+    },
+    {
+      id: 'schedules-checkins',
+      title: 'Schedules & Check-Ins / Agenda & Check-Ins',
+      icon: '📅',
+      subItems: [
+        { id: 'weekly-timetable', title: 'Weekly Timetable', path: '/schedules/timetable', icon: '📅' },
+        { id: 'booking-system', title: 'Student Booking System', path: '/schedules/booking', icon: '📋' },
+        { id: 'attendance-log', title: 'Real-Time Attendance Log', path: '/schedules/attendance', icon: '📊' },
+      ]
+    },
+    {
+      id: 'administration',
+      title: 'Administration',
+      icon: '⚙️',
+      subItems: [
+        { id: 'user-profiles', title: 'User Profiles & Roles', path: '/admin/profiles', icon: '👤' },
+        { id: 'language-selector', title: 'Language Selector (🇧🇷 Portuguese / 🇺🇸 English)', path: '/admin/language', icon: '🌐' },
+        { id: 'app-settings', title: 'App Settings', path: '/admin/settings', icon: '⚙️' },
       ]
     }
   ]
