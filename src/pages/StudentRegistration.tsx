@@ -6,7 +6,7 @@ import * as XLSX from 'xlsx'
 
 const StudentRegistration: React.FC = () => {
   const { t } = useLanguage()
-  const { students, deleteStudent, clearAllStudents } = useStudents()
+  const { students, deleteStudent } = useStudents()
   
   console.log('=== STUDENT REGISTRATION: RENDER ===')
   console.log('StudentRegistration: Current students:', students)
@@ -44,11 +44,6 @@ const StudentRegistration: React.FC = () => {
     }
   }
 
-  const handleClearAllData = () => {
-    if (window.confirm('Are you sure you want to clear ALL student data? This cannot be undone!')) {
-      clearAllStudents()
-    }
-  }
 
   const handleExportToExcel = () => {
     if (students.length === 0) {
@@ -150,13 +145,6 @@ const StudentRegistration: React.FC = () => {
               >
                 <span className="mr-2">📊</span>
                 {t('export-to-excel')}
-              </button>
-              <button
-                onClick={handleClearAllData}
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25 flex items-center"
-              >
-                <span className="mr-2">🗑️</span>
-                Clear All
               </button>
               <Link
                 to="/students/registration/new"
