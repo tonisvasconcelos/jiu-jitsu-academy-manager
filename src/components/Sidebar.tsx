@@ -145,8 +145,8 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
             {/* Main Menu Item */}
             <button
               onClick={() => toggleMenu(menu.id)}
-              className={`w-full flex items-center px-3 py-2 text-left hover:bg-white/10 transition-all duration-300 rounded-lg mx-2 group ${
-                collapsed ? 'justify-center px-0' : 'justify-between'
+              className={`w-full flex items-center py-2 text-left hover:bg-white/10 transition-all duration-300 rounded-lg group ${
+                collapsed ? 'justify-center px-0' : 'justify-between px-3 mx-2'
               } ${isMenuExpanded(menu.id) ? 'bg-white/10' : ''}`}
             >
               <div className="flex items-center">
@@ -191,14 +191,14 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
                   <Link
                     key={subItem.id}
                     to={subItem.path}
-                    className={`block p-1.5 text-center hover:bg-white/10 transition-colors rounded-lg ${
+                    className={`block p-1.5 hover:bg-white/10 transition-colors rounded-lg ${
                       location.pathname === subItem.path 
                         ? 'bg-blue-500/20 text-blue-400' 
                         : 'text-gray-400'
                     }`}
                     title={subItem.title}
                   >
-                    <span className="text-sm">{subItem.icon}</span>
+                    <span className="text-sm flex justify-center">{subItem.icon}</span>
                   </Link>
                 ))}
               </div>
@@ -208,12 +208,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       </nav>
 
       {/* Dashboard Link */}
-      <div className="absolute bottom-2 left-0 right-0 px-3">
+      <div className="absolute bottom-2 left-0 right-0">
         <Link
           to="/"
           className={`flex items-center p-2 rounded-lg hover:bg-white/10 transition-colors ${
             location.pathname === '/' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-300'
-          } ${collapsed ? 'justify-center px-0' : ''}`}
+          } ${collapsed ? 'justify-center px-0' : 'px-3'}`}
         >
           <span className="text-lg">📊</span>
           {!collapsed && (
