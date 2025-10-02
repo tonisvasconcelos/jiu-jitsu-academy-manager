@@ -2,11 +2,13 @@ import React, { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents, Student } from '../contexts/StudentContext'
+import { useBranches } from '../contexts/BranchContext'
 import * as XLSX from 'xlsx'
 
 const StudentRegistration: React.FC = () => {
   const { t } = useLanguage()
   const { students, deleteStudent, addStudent } = useStudents()
+  const { branches } = useBranches()
   const [isImporting, setIsImporting] = useState(false)
   const [importResult, setImportResult] = useState<{ success: number; errors: string[] } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -16,6 +18,7 @@ const StudentRegistration: React.FC = () => {
   const [beltFilter, setBeltFilter] = useState('all')
   const [genderFilter, setGenderFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [branchFilter, setBranchFilter] = useState('all')
   
   console.log('=== STUDENT REGISTRATION: RENDER ===')
   console.log('StudentRegistration: Current students:', students)
@@ -34,6 +37,11 @@ const StudentRegistration: React.FC = () => {
 
   const getGenderIcon = (gender: string) => {
     return gender === 'male' ? '👨' : gender === 'female' ? '👩' : '👤'
+  }
+
+  const getBranchName = (branchId: string) => {
+    const branch = branches.find(b => b.branchId === branchId)
+    return branch ? branch.name : 'Unknown Branch'
   }
 
   const calculateAge = (birthDate: string) => {
@@ -266,13 +274,14 @@ const StudentRegistration: React.FC = () => {
     fileInputRef.current?.click()
   }
 
-  // Filter functions
-  const clearAllFilters = () => {
-    setSearchTerm('')
-    setBeltFilter('all')
-    setGenderFilter('all')
-    setStatusFilter('all')
-  }
+      // Filter functions
+      const clearAllFilters = () => {
+        setSearchTerm('')
+        setBeltFilter('all')
+        setGenderFilter('all')
+        setStatusFilter('all')
+        setBranchFilter('all')
+      }
 
   const filteredStudents = students.filter(student => {
     // Search filter
@@ -288,15 +297,18 @@ const StudentRegistration: React.FC = () => {
     // Gender filter
     const matchesGender = genderFilter === 'all' || (student.gender || '').toLowerCase() === genderFilter.toLowerCase()
 
-    // Status filter
-    const matchesStatus = statusFilter === 'all' || 
-      (statusFilter === 'active' && student.active) ||
-      (statusFilter === 'inactive' && !student.active)
+        // Status filter
+        const matchesStatus = statusFilter === 'all' || 
+          (statusFilter === 'active' && student.active) ||
+          (statusFilter === 'inactive' && !student.active)
 
-    return matchesSearch && matchesBelt && matchesGender && matchesStatus
+        // Branch filter
+        const matchesBranch = branchFilter === 'all' || (student.branchId || '').toLowerCase() === branchFilter.toLowerCase()
+
+        return matchesSearch && matchesBelt && matchesGender && matchesStatus && matchesBranch
   })
 
-  const hasActiveFilters = searchTerm !== '' || beltFilter !== 'all' || genderFilter !== 'all' || statusFilter !== 'all'
+  const hasActiveFilters = searchTerm !== '' || beltFilter !== 'all' || genderFilter !== 'all' || statusFilter !== 'all' || branchFilter !== 'all'
 
   // Calculate belt counts
   const totalStudents = students.length
@@ -488,6 +500,23 @@ const StudentRegistration: React.FC = () => {
 
             {/* Filter Dropdowns */}
             <div className="flex flex-wrap gap-3">
+              {/* Branch Filter */}
+              <div className="relative">
+                <select
+                  value={branchFilter}
+                  onChange={(e) => setBranchFilter(e.target.value)}
+                  className="appearance-none bg-white/10 border border-white/20 rounded-xl text-white px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 min-w-[140px]"
+                >
+                  <option value="all" className="bg-gray-800">All Branches</option>
+                  {branches.filter(branch => branch.active).map(branch => (
+                    <option key={branch.branchId} value={branch.branchId} className="bg-gray-800">{branch.name}</option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <span className="text-gray-400">🏢</span>
+                </div>
+              </div>
+
               {/* Belt Filter */}
               <div className="relative">
                 <select
@@ -566,6 +595,11 @@ const StudentRegistration: React.FC = () => {
                       Search: "{searchTerm}"
                     </span>
                   )}
+                  {branchFilter !== 'all' && (
+                    <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded-lg text-xs">
+                      Branch: {getBranchName(branchFilter)}
+                    </span>
+                  )}
                   {beltFilter !== 'all' && (
                     <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-lg text-xs">
                       Belt: {t((beltFilter || '').toLowerCase())}
@@ -598,6 +632,7 @@ const StudentRegistration: React.FC = () => {
               <thead className="bg-white/5">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Student</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Branch</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Belt Level</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Contact</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
@@ -607,7 +642,7 @@ const StudentRegistration: React.FC = () => {
               <tbody className="divide-y divide-white/10">
                 {filteredStudents.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-4 text-center text-gray-400">
+                    <td colSpan={6} className="px-6 py-4 text-center text-gray-400">
                       {hasActiveFilters ? 'No students match the current filters.' : 'No students registered yet.'}
                     </td>
                   </tr>
@@ -635,6 +670,12 @@ const StudentRegistration: React.FC = () => {
                             {new Date().getFullYear() - new Date(student.birthDate).getFullYear()} years old
                           </div>
                         </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <span className="text-sm text-gray-300">🏢</span>
+                        <span className="ml-2 text-sm text-white">{getBranchName(student.branchId)}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
