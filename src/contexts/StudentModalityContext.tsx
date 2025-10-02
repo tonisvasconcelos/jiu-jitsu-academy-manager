@@ -52,7 +52,20 @@ export const StudentModalityProvider: React.FC<{ children: ReactNode }> = ({ chi
       if (stored) {
         const parsed = JSON.parse(stored)
         console.log('StudentModalityContext: Loaded connections from localStorage:', parsed)
-        return parsed
+        
+        // Migrate old data to include beltLevelAtStart field
+        const migratedConnections = parsed.map((connection: any) => ({
+          ...connection,
+          beltLevelAtStart: connection.beltLevelAtStart || 'white' // Default to white belt if missing
+        }))
+        
+        // Save migrated data back to localStorage
+        if (migratedConnections.some((conn: any, index: number) => !parsed[index].beltLevelAtStart)) {
+          console.log('StudentModalityContext: Migrating data to include beltLevelAtStart field')
+          localStorage.setItem('jiu-jitsu-student-modalities', JSON.stringify(migratedConnections))
+        }
+        
+        return migratedConnections
       }
     } catch (error) {
       console.error('StudentModalityContext: Error loading connections from localStorage:', error)

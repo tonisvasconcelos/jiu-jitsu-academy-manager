@@ -37,16 +37,18 @@ const StudentModalityForm: React.FC = () => {
       }
     } else if (action === 'new') {
       // Generate new connection ID
-      const selectedStudent = students.find(s => s.studentId === (studentId || prev.studentId))
-      setConnection(prev => ({
-        ...prev,
-        connectionId: `CONN${String(Date.now()).slice(-6)}`,
-        assignmentDate: new Date().toISOString().split('T')[0],
-        // Pre-select student if studentId is provided (coming from student creation)
-        studentId: studentId || prev.studentId,
-        // Set belt level to student's current belt level
-        beltLevelAtStart: selectedStudent?.beltLevel || 'white'
-      }))
+      setConnection(prev => {
+        const selectedStudent = students.find(s => s.studentId === (studentId || prev.studentId))
+        return {
+          ...prev,
+          connectionId: `CONN${String(Date.now()).slice(-6)}`,
+          assignmentDate: new Date().toISOString().split('T')[0],
+          // Pre-select student if studentId is provided (coming from student creation)
+          studentId: studentId || prev.studentId,
+          // Set belt level to student's current belt level
+          beltLevelAtStart: selectedStudent?.beltLevel || 'white'
+        }
+      })
     }
   }, [action, id, studentId, getConnection, navigate, students])
 
