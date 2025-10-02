@@ -43,7 +43,7 @@ function App() {
                   : sidebarCollapsed 
                     ? 'ml-16' 
                     : 'ml-64'
-              } min-h-screen ${isMobile && !sidebarCollapsed ? 'relative z-10' : ''}`}>
+              } min-h-screen`}>
             <Header onToggleSidebar={toggleSidebar} />
             <main className="relative">
               <Routes>

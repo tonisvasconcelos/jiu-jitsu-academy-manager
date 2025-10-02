@@ -144,7 +144,9 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       
       {/* Sidebar */}
       <div className={`fixed left-0 top-0 h-full bg-white/5 backdrop-blur-md border-r border-white/10 transition-all duration-300 z-50 ${
-        collapsed ? 'w-16' : 'w-64'
+        isMobile 
+          ? (collapsed ? '-translate-x-full w-64' : 'translate-x-0 w-64')
+          : (collapsed ? 'w-16' : 'w-64')
       }`}>
       {/* Logo */}
       <div className="p-3 border-b border-white/10">
@@ -167,10 +169,10 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
           to="/"
           className={`flex items-center rounded-lg hover:bg-white/10 transition-colors ${
             location.pathname === '/' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-300'
-          } ${collapsed ? 'justify-center px-0 py-3 h-12' : 'px-3 p-2'}`}
+          } ${(collapsed && !isMobile) ? 'justify-center px-0 py-3 h-12' : 'px-3 p-2'}`}
         >
           <span className="text-lg">📊</span>
-          {!collapsed && (
+          {(!collapsed || isMobile) && (
             <span className="ml-2 text-sm text-white font-medium">{t('dashboard')}</span>
           )}
         </Link>
@@ -184,16 +186,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
             <button
               onClick={() => toggleMenu(menu.id)}
               className={`w-full flex items-center text-left hover:bg-white/10 transition-all duration-300 rounded-lg group ${
-                collapsed ? 'justify-center px-0 py-3 h-12' : 'justify-between px-3 mx-2 py-2'
+                (collapsed && !isMobile) ? 'justify-center px-0 py-3 h-12' : 'justify-between px-3 mx-2 py-2'
               } ${isMenuExpanded(menu.id) ? 'bg-white/10' : ''}`}
             >
               <div className="flex items-center">
                 <span className="text-lg group-hover:scale-110 transition-transform">{menu.icon}</span>
-                {!collapsed && (
+                {(!collapsed || isMobile) && (
                   <span className="ml-2 text-sm text-white font-medium group-hover:text-blue-400 transition-colors">{menu.title}</span>
                 )}
               </div>
-              {!collapsed && (
+              {(!collapsed || isMobile) && (
                 <span className={`transform transition-all duration-300 group-hover:text-blue-400 text-xs ${
                   isMenuExpanded(menu.id) ? 'rotate-180' : ''
                 }`}>
@@ -203,7 +205,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
             </button>
 
             {/* Sub Menu Items */}
-            {!collapsed && isMenuExpanded(menu.id) && (
+            {(!collapsed || isMobile) && isMenuExpanded(menu.id) && (
               <div className="bg-white/5 mx-2 rounded-lg mt-1 overflow-hidden">
                 {menu.subItems.map((subItem) => (
                   <Link
@@ -223,7 +225,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
             )}
 
             {/* Collapsed Sub Items */}
-            {collapsed && (
+            {collapsed && !isMobile && (
               <div>
                 {menu.subItems.map((subItem) => (
                   <Link
