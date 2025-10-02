@@ -5,7 +5,7 @@ import { useStudents, Student } from '../contexts/StudentContext'
 
 const StudentRegistration: React.FC = () => {
   const { t } = useLanguage()
-  const { students, deleteStudent } = useStudents()
+  const { students, deleteStudent, clearAllStudents } = useStudents()
   
   console.log('StudentRegistration: Current students:', students)
 
@@ -30,6 +30,12 @@ const StudentRegistration: React.FC = () => {
     }
   }
 
+  const handleClearAllData = () => {
+    if (window.confirm('Are you sure you want to clear ALL student data? This cannot be undone!')) {
+      clearAllStudents()
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -44,13 +50,22 @@ const StudentRegistration: React.FC = () => {
                 Manage student registrations and information
               </p>
             </div>
-            <Link
-              to="/students/registration/new"
-              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 flex items-center"
-            >
-              <span className="mr-2">➕</span>
-              New Student
-            </Link>
+            <div className="flex space-x-3">
+              <button
+                onClick={handleClearAllData}
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25 flex items-center"
+              >
+                <span className="mr-2">🗑️</span>
+                Clear All
+              </button>
+              <Link
+                to="/students/registration/new"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 flex items-center"
+              >
+                <span className="mr-2">➕</span>
+                New Student
+              </Link>
+            </div>
           </div>
         </div>
 

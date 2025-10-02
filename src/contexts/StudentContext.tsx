@@ -27,39 +27,8 @@ interface StudentContextType {
 
 const StudentContext = createContext<StudentContextType | undefined>(undefined)
 
-// Sample initial data
-const initialStudents: Student[] = [
-  {
-    studentId: 'STU001',
-    firstName: 'João',
-    lastName: 'Silva',
-    displayName: 'João Silva',
-    birthDate: '1995-03-15',
-    gender: 'male',
-    beltLevel: 'blue',
-    documentId: '12345678901',
-    email: 'joao.silva@email.com',
-    phone: '+55 11 99999-9999',
-    branchId: 'BR001',
-    active: true,
-    photoUrl: ''
-  },
-  {
-    studentId: 'STU002',
-    firstName: 'Maria',
-    lastName: 'Santos',
-    displayName: 'Maria Santos',
-    birthDate: '1998-07-22',
-    gender: 'female',
-    beltLevel: 'purple',
-    documentId: '98765432100',
-    email: 'maria.santos@email.com',
-    phone: '+55 11 88888-8888',
-    branchId: 'BR001',
-    active: true,
-    photoUrl: ''
-  }
-]
+// Start with empty array - no sample data
+const initialStudents: Student[] = []
 
 export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Load students from localStorage or use initial data
@@ -74,7 +43,7 @@ export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children })
     } catch (error) {
       console.error('StudentContext: Error loading students from localStorage:', error)
     }
-    console.log('StudentContext: Using initial students data')
+    console.log('StudentContext: No saved data found, starting with empty student list')
     return initialStudents
   }
 
