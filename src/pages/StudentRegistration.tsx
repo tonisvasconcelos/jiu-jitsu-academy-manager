@@ -27,6 +27,17 @@ const StudentRegistration: React.FC = () => {
     return gender === 'male' ? '👨' : gender === 'female' ? '👩' : '👤'
   }
 
+  const calculateAge = (birthDate: string) => {
+    const today = new Date()
+    const dob = new Date(birthDate)
+    let age = today.getFullYear() - dob.getFullYear()
+    const m = today.getMonth() - dob.getMonth()
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+      age--
+    }
+    return age
+  }
+
   const handleDeleteStudent = (studentId: string) => {
     if (window.confirm('Are you sure you want to delete this student?')) {
       deleteStudent(studentId)
