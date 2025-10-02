@@ -9,7 +9,6 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const location = useLocation()
-  const [expandedMenus, setExpandedMenus] = useState<string[]>([])
   const [isMobile, setIsMobile] = useState(false)
   const { t } = useLanguage()
 
@@ -25,112 +24,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   }, [])
 
   const menuItems = [
-    {
-      id: 'students',
-      title: t('students'),
-      icon: '🥋',
-      subItems: [
-        { id: 'student-registration', title: t('student-registration'), path: '/students/registration', icon: '📝' },
-        { id: 'student-profiles', title: t('student-profiles'), path: '/students/profiles', icon: '👤' },
-        { id: 'fight-plans', title: t('fight-plans-by-student'), path: '/students/fight-plans', icon: '🥊' },
-        { id: 'student-evaluation', title: t('student-evaluation'), path: '/students/evaluation', icon: '📊' },
-        { id: 'student-attendance', title: t('student-attendance'), path: '/students/attendance', icon: '✅' },
-      ]
-    },
-    {
-      id: 'teachers',
-      title: t('teachers'),
-      icon: '🧑‍🏫',
-      subItems: [
-        { id: 'teacher-registration', title: t('teacher-registration'), path: '/teachers/registration', icon: '📝' },
-        { id: 'teacher-profiles', title: t('teacher-profiles'), path: '/teachers/profiles', icon: '👤' },
-        { id: 'assign-teachers', title: t('assign-teachers'), path: '/teachers/assign', icon: '🔗' },
-        { id: 'teacher-evaluations', title: t('teacher-evaluations'), path: '/teachers/evaluations', icon: '📊' },
-      ]
-    },
-    {
-      id: 'championships',
-      title: t('championships'),
-      icon: '🏟️',
-      subItems: [
-        { id: 'championship-registration', title: t('championship-registration'), path: '/championships/registration', icon: '📝' },
-        { id: 'student-enrollment', title: t('student-enrollment'), path: '/championships/enrollment', icon: '📋' },
-        { id: 'championship-results', title: t('championship-results'), path: '/championships/results', icon: '🏆' },
-        { id: 'ranking-statistics', title: t('ranking-statistics'), path: '/championships/ranking', icon: '📈' },
-      ]
-    },
-    {
-      id: 'classes',
-      title: t('classes'),
-      icon: '📘',
-      subItems: [
-        { id: 'class-setup', title: t('class-setup'), path: '/classes/setup', icon: '⚙️' },
-        { id: 'schedule-management', title: t('schedule-management'), path: '/classes/schedule', icon: '📅' },
-        { id: 'check-in-attendance', title: t('check-in-attendance'), path: '/classes/attendance', icon: '✅' },
-        { id: 'class-capacity', title: t('class-capacity'), path: '/classes/capacity', icon: '👥' },
-      ]
-    },
-    {
-      id: 'fight-plans',
-      title: t('fight-plans'),
-      icon: '🗂️',
-      subItems: [
-        { id: 'plan-templates', title: t('plan-templates'), path: '/fight-plans/templates', icon: '📋' },
-        { id: 'assign-plans', title: t('assign-plans'), path: '/fight-plans/assign', icon: '🔗' },
-        { id: 'training-phases', title: t('training-phases'), path: '/fight-plans/phases', icon: '🎯' },
-      ]
-    },
-    {
-      id: 'quality-evaluation',
-      title: t('quality-evaluation'),
-      icon: '🧪',
-      subItems: [
-        { id: 'progress-reports', title: t('progress-reports'), path: '/quality/progress', icon: '📊' },
-        { id: 'teacher-feedback', title: t('teacher-feedback'), path: '/quality/feedback', icon: '💬' },
-        { id: 'fitness-tests', title: t('fitness-tests'), path: '/quality/fitness', icon: '💪' },
-      ]
-    },
-    {
-      id: 'branches',
-      title: t('branches'),
-      icon: '🌍',
-      subItems: [
-        { id: 'branch-registration', title: t('branch-registration'), path: '/branches/registration', icon: '📝' },
-        { id: 'branch-details', title: t('branch-details'), path: '/branches/details', icon: '📍' },
-        { id: 'assign-branch', title: t('assign-branch'), path: '/branches/assign', icon: '🔗' },
-      ]
-    },
-    {
-      id: 'schedules-checkins',
-      title: t('schedules-checkins'),
-      icon: '📅',
-      subItems: [
-        { id: 'weekly-timetable', title: t('weekly-timetable'), path: '/schedules/timetable', icon: '📅' },
-        { id: 'booking-system', title: t('booking-system'), path: '/schedules/booking', icon: '📋' },
-        { id: 'attendance-log', title: t('attendance-log'), path: '/schedules/attendance', icon: '📊' },
-      ]
-    },
-    {
-      id: 'administration',
-      title: t('administration'),
-      icon: '⚙️',
-      subItems: [
-        { id: 'user-profiles', title: t('user-profiles'), path: '/admin/profiles', icon: '👤' },
-        { id: 'language-selector', title: t('language-selector'), path: '/admin/language', icon: '🌐' },
-        { id: 'app-settings', title: t('app-settings'), path: '/admin/settings', icon: '⚙️' },
-      ]
-    }
+    { id: 'students', title: t('students'), icon: '🥋', path: '/students' },
+    { id: 'teachers', title: t('teachers'), icon: '🧑‍🏫', path: '/teachers' },
+    { id: 'championships', title: t('championships'), icon: '🏟️', path: '/championships' },
+    { id: 'classes', title: t('classes'), icon: '📘', path: '/classes' },
+    { id: 'fight-plans', title: t('fight-plans'), icon: '🗂️', path: '/fight-plans' },
+    { id: 'quality-evaluation', title: t('quality-evaluation'), icon: '🧪', path: '/quality' },
+    { id: 'branches', title: t('branches'), icon: '🌍', path: '/branches' },
+    { id: 'schedules-checkins', title: t('schedules-checkins'), icon: '📅', path: '/schedules' },
+    { id: 'administration', title: t('administration'), icon: '⚙️', path: '/admin' }
   ]
-
-  const toggleMenu = (menuId: string) => {
-    setExpandedMenus(prev => 
-      prev.includes(menuId) 
-        ? prev.filter(id => id !== menuId)
-        : [...prev, menuId]
-    )
-  }
-
-  const isMenuExpanded = (menuId: string) => expandedMenus.includes(menuId)
 
   return (
     <>
@@ -148,106 +51,57 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
           ? (collapsed ? '-translate-x-full w-64' : 'translate-x-0 w-64')
           : (collapsed ? 'w-16' : 'w-64')
       }`}>
-      {/* Logo */}
-      <div className="p-3 border-b border-white/10">
-        <div className="flex items-center justify-center">
-          <div className={`${collapsed ? 'text-sm p-1' : 'text-lg p-1.5'} bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg`}>🥋</div>
-          {!collapsed && (
-            <div className="ml-2">
-              <span className="text-sm font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                {t('academy-manager')}
-              </span>
-              <p className="text-xs text-gray-400">{t('management-system')}</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Dashboard Link - First Item */}
-      <div className="mt-3 px-3 mb-2">
-        <Link
-          to="/"
-          className={`flex items-center rounded-lg hover:bg-white/10 transition-colors ${
-            location.pathname === '/' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-300'
-          } ${(collapsed && !isMobile) ? 'justify-center px-0 py-4 h-14' : 'px-3 py-3'}`}
-        >
-          <span className="text-lg">📊</span>
-          {(!collapsed || isMobile) && (
-            <span className="ml-2 text-sm text-white font-medium">{t('dashboard')}</span>
-          )}
-        </Link>
-      </div>
-
-      {/* Menu Items */}
-      <nav className="mt-3 overflow-y-auto flex-1">
-        {menuItems.map((menu) => (
-          <div key={menu.id} className="mb-2">
-            {/* Main Menu Item */}
-            <button
-              onClick={() => toggleMenu(menu.id)}
-              className={`w-full flex items-center text-left hover:bg-white/10 transition-all duration-300 rounded-lg group ${
-                (collapsed && !isMobile) ? 'justify-center px-0 py-4 h-14' : 'justify-between px-3 mx-2 py-3'
-              } ${isMenuExpanded(menu.id) ? 'bg-white/10' : ''}`}
-            >
-              <div className="flex items-center">
-                <span className="text-lg group-hover:scale-110 transition-transform">{menu.icon}</span>
-                {(!collapsed || isMobile) && (
-                  <span className="ml-2 text-sm text-white font-medium group-hover:text-blue-400 transition-colors">{menu.title}</span>
-                )}
-              </div>
-              {(!collapsed || isMobile) && (
-                <span className={`transform transition-all duration-300 group-hover:text-blue-400 text-xs ${
-                  isMenuExpanded(menu.id) ? 'rotate-180' : ''
-                }`}>
-                  ▼
+        {/* Logo */}
+        <div className="p-3 border-b border-white/10">
+          <div className="flex items-center justify-center">
+            <div className={`${collapsed ? 'text-sm p-1' : 'text-lg p-1.5'} bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg`}>🥋</div>
+            {(!collapsed || isMobile) && (
+              <div className="ml-2">
+                <span className="text-sm font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                  {t('academy-manager')}
                 </span>
-              )}
-            </button>
-
-            {/* Sub Menu Items */}
-            {(!collapsed || isMobile) && isMenuExpanded(menu.id) && (
-              <div className="bg-white/5 mx-2 rounded-lg mt-2 overflow-hidden">
-                {menu.subItems.map((subItem) => (
-                  <Link
-                    key={subItem.id}
-                    to={subItem.path}
-                    className={`flex items-center px-4 py-3 text-xs hover:bg-white/10 transition-all duration-300 group ${
-                      location.pathname === subItem.path 
-                        ? 'bg-blue-500/20 text-blue-400 border-l-2 border-blue-400' 
-                        : 'text-gray-300 hover:text-blue-400'
-                    }`}
-                  >
-                    <span className="text-sm mr-2 group-hover:scale-110 transition-transform">{subItem.icon}</span>
-                    {subItem.title}
-                  </Link>
-                ))}
-              </div>
-            )}
-
-            {/* Collapsed Sub Items */}
-            {collapsed && !isMobile && (
-              <div className="mt-1">
-                {menu.subItems.map((subItem) => (
-                  <Link
-                    key={subItem.id}
-                    to={subItem.path}
-                    className={`w-full flex items-center justify-center hover:bg-white/10 transition-colors rounded-lg h-10 mb-1 ${
-                      location.pathname === subItem.path 
-                        ? 'bg-blue-500/20 text-blue-400' 
-                        : 'text-gray-400'
-                    }`}
-                    title={subItem.title}
-                  >
-                    <span className="text-sm">{subItem.icon}</span>
-                  </Link>
-                ))}
+                <p className="text-xs text-gray-400">{t('management-system')}</p>
               </div>
             )}
           </div>
-        ))}
-      </nav>
+        </div>
 
-    </div>
+        {/* Dashboard Link - First Item */}
+        <div className="mt-3 px-3 mb-2">
+          <Link
+            to="/"
+            className={`flex items-center rounded-lg hover:bg-white/10 transition-colors ${
+              location.pathname === '/' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-300'
+            } ${(collapsed && !isMobile) ? 'justify-center px-0 py-4 h-14' : 'px-3 py-3'}`}
+          >
+            <span className="text-lg">📊</span>
+            {(!collapsed || isMobile) && (
+              <span className="ml-2 text-sm text-white font-medium">{t('dashboard')}</span>
+            )}
+          </Link>
+        </div>
+
+        {/* Menu Items */}
+        <nav className="mt-3 overflow-y-auto flex-1">
+          {menuItems.map((menu) => (
+            <div key={menu.id} className="mb-2">
+              <Link
+                to={menu.path}
+                className={`w-full flex items-center text-left hover:bg-white/10 transition-all duration-300 rounded-lg group ${
+                  (collapsed && !isMobile) ? 'justify-center px-0 py-4 h-14' : 'px-3 mx-2 py-3'
+                } ${location.pathname.startsWith(menu.path) ? 'bg-white/10' : ''}`}
+              >
+                <div className="flex items-center">
+                  <span className="text-lg group-hover:scale-110 transition-transform">{menu.icon}</span>
+                  {(!collapsed || isMobile) && (
+                    <span className="ml-2 text-sm text-white font-medium group-hover:text-blue-400 transition-colors">{menu.title}</span>
+                  )}
+                </div>
+              </Link>
+            </div>
+          ))}
+        </nav>
+      </div>
     </>
   )
 }
