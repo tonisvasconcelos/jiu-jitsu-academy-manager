@@ -295,35 +295,35 @@ const StudentRegistration: React.FC = () => {
                 Manage student registrations and information
               </p>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               <button
                 onClick={handleDownloadTemplate}
-                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gray-500/25 flex items-center"
+                title={t('download-template')}
+                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white p-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gray-500/25 flex items-center justify-center"
               >
-                <span className="mr-2">📋</span>
-                {t('download-template')}
+                <span className="text-lg">📋</span>
               </button>
               <button
                 onClick={handleImportClick}
                 disabled={isImporting}
-                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                title={isImporting ? 'Importing...' : t('import-from-excel')}
+                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white p-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span className="mr-2">{isImporting ? '⏳' : '📥'}</span>
-                {isImporting ? 'Importing...' : t('import-from-excel')}
+                <span className="text-lg">{isImporting ? '⏳' : '📥'}</span>
               </button>
               <button
                 onClick={handleExportToExcel}
-                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25 flex items-center"
+                title={t('export-to-excel')}
+                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white p-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25 flex items-center justify-center"
               >
-                <span className="mr-2">📊</span>
-                {t('export-to-excel')}
+                <span className="text-lg">📊</span>
               </button>
               <Link
                 to="/students/registration/new"
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 flex items-center"
+                title="New Student"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white p-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 flex items-center justify-center"
               >
-                <span className="mr-2">➕</span>
-                New Student
+                <span className="text-lg">➕</span>
               </Link>
             </div>
           </div>
