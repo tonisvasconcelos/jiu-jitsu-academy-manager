@@ -11,6 +11,12 @@ const StudentRegistration: React.FC = () => {
   const [importResult, setImportResult] = useState<{ success: number; errors: string[] } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState('')
+  const [beltFilter, setBeltFilter] = useState('all')
+  const [genderFilter, setGenderFilter] = useState('all')
+  const [statusFilter, setStatusFilter] = useState('all')
+  
   console.log('=== STUDENT REGISTRATION: RENDER ===')
   console.log('StudentRegistration: Current students:', students)
   console.log('StudentRegistration: Students count:', students.length)
@@ -260,6 +266,38 @@ const StudentRegistration: React.FC = () => {
     fileInputRef.current?.click()
   }
 
+  // Filter functions
+  const clearAllFilters = () => {
+    setSearchTerm('')
+    setBeltFilter('all')
+    setGenderFilter('all')
+    setStatusFilter('all')
+  }
+
+  const filteredStudents = students.filter(student => {
+    // Search filter
+    const matchesSearch = searchTerm === '' || 
+      student.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchTerm.toLowerCase())
+
+    // Belt filter
+    const matchesBelt = beltFilter === 'all' || student.beltLevel.toLowerCase() === beltFilter.toLowerCase()
+
+    // Gender filter
+    const matchesGender = genderFilter === 'all' || student.gender.toLowerCase() === genderFilter.toLowerCase()
+
+    // Status filter
+    const matchesStatus = statusFilter === 'all' || 
+      (statusFilter === 'active' && student.active) ||
+      (statusFilter === 'inactive' && !student.active)
+
+    return matchesSearch && matchesBelt && matchesGender && matchesStatus
+  })
+
+  const hasActiveFilters = searchTerm !== '' || beltFilter !== 'all' || genderFilter !== 'all' || statusFilter !== 'all'
+
   // Calculate belt counts
   const totalStudents = students.length
   const activeStudents = students.filter(s => s.active).length
@@ -429,6 +467,126 @@ const StudentRegistration: React.FC = () => {
           </div>
         </div>
 
+        {/* Modern Filter Bar */}
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 mb-6">
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* Search Bar */}
+            <div className="flex-1">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-400 text-lg">🔍</span>
+                </div>
+                <input
+                  type="text"
+                  placeholder={t('search-students')}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                />
+              </div>
+            </div>
+
+            {/* Filter Dropdowns */}
+            <div className="flex flex-wrap gap-3">
+              {/* Belt Filter */}
+              <div className="relative">
+                <select
+                  value={beltFilter}
+                  onChange={(e) => setBeltFilter(e.target.value)}
+                  className="appearance-none bg-white/10 border border-white/20 rounded-xl text-white px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 min-w-[140px]"
+                >
+                  <option value="all" className="bg-gray-800">{t('all-belts')}</option>
+                  <option value="white" className="bg-gray-800">{t('white')}</option>
+                  <option value="blue" className="bg-gray-800">{t('blue')}</option>
+                  <option value="purple" className="bg-gray-800">{t('purple')}</option>
+                  <option value="brown" className="bg-gray-800">{t('brown')}</option>
+                  <option value="black" className="bg-gray-800">{t('black')}</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <span className="text-gray-400">🥋</span>
+                </div>
+              </div>
+
+              {/* Gender Filter */}
+              <div className="relative">
+                <select
+                  value={genderFilter}
+                  onChange={(e) => setGenderFilter(e.target.value)}
+                  className="appearance-none bg-white/10 border border-white/20 rounded-xl text-white px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 min-w-[140px]"
+                >
+                  <option value="all" className="bg-gray-800">{t('all-genders')}</option>
+                  <option value="male" className="bg-gray-800">{t('male')}</option>
+                  <option value="female" className="bg-gray-800">{t('female')}</option>
+                  <option value="other" className="bg-gray-800">{t('other')}</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <span className="text-gray-400">👤</span>
+                </div>
+              </div>
+
+              {/* Status Filter */}
+              <div className="relative">
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="appearance-none bg-white/10 border border-white/20 rounded-xl text-white px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 min-w-[140px]"
+                >
+                  <option value="all" className="bg-gray-800">{t('all-status')}</option>
+                  <option value="active" className="bg-gray-800">{t('active-only')}</option>
+                  <option value="inactive" className="bg-gray-800">{t('inactive-only')}</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <span className="text-gray-400">✅</span>
+                </div>
+              </div>
+
+              {/* Clear Filters Button */}
+              {hasActiveFilters && (
+                <button
+                  onClick={clearAllFilters}
+                  className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25 flex items-center"
+                >
+                  <span className="mr-2">🗑️</span>
+                  {t('clear-filters')}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Filter Results Summary */}
+          {hasActiveFilters && (
+            <div className="mt-4 pt-4 border-t border-white/10">
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-300">
+                  Showing {filteredStudents.length} of {students.length} students
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {searchTerm && (
+                    <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-xs">
+                      Search: "{searchTerm}"
+                    </span>
+                  )}
+                  {beltFilter !== 'all' && (
+                    <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-lg text-xs">
+                      Belt: {t(beltFilter.toLowerCase())}
+                    </span>
+                  )}
+                  {genderFilter !== 'all' && (
+                    <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded-lg text-xs">
+                      Gender: {t(genderFilter.toLowerCase())}
+                    </span>
+                  )}
+                  {statusFilter !== 'all' && (
+                    <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded-lg text-xs">
+                      Status: {t(statusFilter.toLowerCase())}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Students Table */}
         <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
           <div className="p-6 border-b border-white/10">
@@ -447,7 +605,14 @@ const StudentRegistration: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/10">
-                {students.map((student) => (
+                {filteredStudents.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-4 text-center text-gray-400">
+                      {hasActiveFilters ? 'No students match the current filters.' : 'No students registered yet.'}
+                    </td>
+                  </tr>
+                ) : (
+                  filteredStudents.map((student) => (
                   <tr key={student.studentId} className="hover:bg-white/5 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -513,7 +678,8 @@ const StudentRegistration: React.FC = () => {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  ))
+                )}
               </tbody>
             </table>
           </div>
