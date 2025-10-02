@@ -47,6 +47,18 @@ const StudentRegistration: React.FC = () => {
   const purpleBelts = students.filter(s => s.beltLevel.toLowerCase() === 'purple').length
   const brownBelts = students.filter(s => s.beltLevel.toLowerCase() === 'brown').length
 
+  // Calculate percentages
+  const getPercentage = (count: number) => {
+    if (totalStudents === 0) return '0%'
+    return `${Math.round((count / totalStudents) * 100)}%`
+  }
+
+  const blackBeltsPercentage = getPercentage(blackBelts)
+  const whiteBeltsPercentage = getPercentage(whiteBelts)
+  const blueBeltsPercentage = getPercentage(blueBelts)
+  const purpleBeltsPercentage = getPercentage(purpleBelts)
+  const brownBeltsPercentage = getPercentage(brownBelts)
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -109,6 +121,7 @@ const StudentRegistration: React.FC = () => {
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Black Belts</p>
                 <p className="text-3xl font-bold text-white">{blackBelts}</p>
+                <p className="text-xs text-gray-500 mt-1">{blackBeltsPercentage} of total</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg">
                 <span className="text-2xl">🥋</span>
@@ -127,6 +140,7 @@ const StudentRegistration: React.FC = () => {
                 <div>
                   <p className="text-xs font-medium text-gray-400 mb-1">{t('white-belts')}</p>
                   <p className="text-2xl font-bold text-white">{whiteBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{whiteBeltsPercentage}</p>
                 </div>
                 <div className="p-2 bg-gray-200/20 rounded-lg shadow-md">
                   <span className="text-xl text-gray-200">🥋</span>
@@ -140,6 +154,7 @@ const StudentRegistration: React.FC = () => {
                 <div>
                   <p className="text-xs font-medium text-gray-400 mb-1">{t('blue-belts')}</p>
                   <p className="text-2xl font-bold text-white">{blueBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{blueBeltsPercentage}</p>
                 </div>
                 <div className="p-2 bg-blue-500/20 rounded-lg shadow-md">
                   <span className="text-xl text-blue-400">🥋</span>
@@ -153,6 +168,7 @@ const StudentRegistration: React.FC = () => {
                 <div>
                   <p className="text-xs font-medium text-gray-400 mb-1">{t('purple-belts')}</p>
                   <p className="text-2xl font-bold text-white">{purpleBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{purpleBeltsPercentage}</p>
                 </div>
                 <div className="p-2 bg-purple-500/20 rounded-lg shadow-md">
                   <span className="text-xl text-purple-400">🥋</span>
@@ -166,6 +182,7 @@ const StudentRegistration: React.FC = () => {
                 <div>
                   <p className="text-xs font-medium text-gray-400 mb-1">{t('brown-belts')}</p>
                   <p className="text-2xl font-bold text-white">{brownBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{brownBeltsPercentage}</p>
                 </div>
                 <div className="p-2 bg-amber-700/20 rounded-lg shadow-md">
                   <span className="text-xl text-amber-600">🥋</span>
