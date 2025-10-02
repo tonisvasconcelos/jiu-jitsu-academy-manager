@@ -15,7 +15,7 @@ function App() {
   }
 
   return (
-    <Router>
+    <Router basename="/jiu-jitsu-academy-manager">
       <div className="min-h-screen bg-gray-900 text-white">
         <Sidebar collapsed={sidebarCollapsed} />
         <div className={`transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`}>

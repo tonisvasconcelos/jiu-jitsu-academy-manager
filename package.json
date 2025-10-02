@@ -2,6 +2,7 @@
   "name": "jiu-jitsu-team-app",
   "version": "1.0.0",
   "description": "Jiu-Jitsu International Team Management System",
+  "homepage": "https://tonisvasconcelos.github.io/jiu-jitsu-academy-manager/",
   "type": "module",
   "scripts": {
     "dev": "vite",
