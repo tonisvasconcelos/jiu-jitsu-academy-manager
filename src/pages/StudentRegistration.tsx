@@ -38,6 +38,15 @@ const StudentRegistration: React.FC = () => {
     }
   }
 
+  // Calculate belt counts
+  const totalStudents = students.length
+  const activeStudents = students.filter(s => s.active).length
+  const blackBelts = students.filter(s => s.beltLevel.toLowerCase() === 'black').length
+  const whiteBelts = students.filter(s => s.beltLevel.toLowerCase() === 'white').length
+  const blueBelts = students.filter(s => s.beltLevel.toLowerCase() === 'blue').length
+  const purpleBelts = students.filter(s => s.beltLevel.toLowerCase() === 'purple').length
+  const brownBelts = students.filter(s => s.beltLevel.toLowerCase() === 'brown').length
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -77,7 +86,7 @@ const StudentRegistration: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Total Students</p>
-                <p className="text-3xl font-bold text-white">{students.length}</p>
+                <p className="text-3xl font-bold text-white">{totalStudents}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
                 <span className="text-2xl">👥</span>
@@ -88,7 +97,7 @@ const StudentRegistration: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Active Students</p>
-                <p className="text-3xl font-bold text-white">{students.filter(s => s.active).length}</p>
+                <p className="text-3xl font-bold text-white">{activeStudents}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
                 <span className="text-2xl">✅</span>
@@ -99,10 +108,68 @@ const StudentRegistration: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Black Belts</p>
-                <p className="text-3xl font-bold text-white">{students.filter(s => s.beltLevel === 'black').length}</p>
+                <p className="text-3xl font-bold text-white">{blackBelts}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg">
                 <span className="text-2xl">🥋</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Other Belt Counts (Smaller) */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-white mb-4">{t('belt-level-counts')}</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {/* White Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-500/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">{t('white-belts')}</p>
+                  <p className="text-2xl font-bold text-white">{whiteBelts}</p>
+                </div>
+                <div className="p-2 bg-gray-200/20 rounded-lg shadow-md">
+                  <span className="text-xl text-gray-200">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Blue Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">{t('blue-belts')}</p>
+                  <p className="text-2xl font-bold text-white">{blueBelts}</p>
+                </div>
+                <div className="p-2 bg-blue-500/20 rounded-lg shadow-md">
+                  <span className="text-xl text-blue-400">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Purple Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">{t('purple-belts')}</p>
+                  <p className="text-2xl font-bold text-white">{purpleBelts}</p>
+                </div>
+                <div className="p-2 bg-purple-500/20 rounded-lg shadow-md">
+                  <span className="text-xl text-purple-400">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Brown Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-amber-700/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">{t('brown-belts')}</p>
+                  <p className="text-2xl font-bold text-white">{brownBelts}</p>
+                </div>
+                <div className="p-2 bg-amber-700/20 rounded-lg shadow-md">
+                  <span className="text-xl text-amber-600">🥋</span>
+                </div>
               </div>
             </div>
           </div>
