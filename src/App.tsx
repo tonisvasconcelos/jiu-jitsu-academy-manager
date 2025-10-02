@@ -18,6 +18,7 @@ import FightPlans from './pages/FightPlans'
 import FightModalities from './pages/FightModalities'
 import FightModalityForm from './pages/FightModalityForm'
 import StudentModality from './pages/StudentModality'
+import StudentModalityForm from './pages/StudentModalityForm'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -74,8 +75,8 @@ function App() {
                       <Route path="/students/registration/:action/:id" element={<StudentForm />} />
                       <Route path="/students/profiles" element={<div className="p-6">Student Profiles</div>} />
                       <Route path="/students/modality" element={<StudentModality />} />
-                      <Route path="/students/modality/:action" element={<div className="p-6">Student Modality Form</div>} />
-                      <Route path="/students/modality/:action/:id" element={<div className="p-6">Student Modality Form</div>} />
+                      <Route path="/students/modality/:action" element={<StudentModalityForm />} />
+                      <Route path="/students/modality/:action/:id" element={<StudentModalityForm />} />
                       <Route path="/students/evaluation" element={<div className="p-6">Student Evaluation & Grades</div>} />
                       <Route path="/students/attendance" element={<div className="p-6">Student Attendance</div>} />
                     
