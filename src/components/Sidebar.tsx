@@ -30,8 +30,9 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const checkScrollPosition = () => {
     if (navRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = navRef.current
-      setCanScrollUp(scrollTop > 0)
-      setCanScrollDown(scrollTop < scrollHeight - clientHeight - 1)
+      const isScrollable = scrollHeight > clientHeight
+      setCanScrollUp(isScrollable && scrollTop > 5)
+      setCanScrollDown(isScrollable && scrollTop < scrollHeight - clientHeight - 5)
     }
   }
 
@@ -48,13 +49,30 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   }
 
   useEffect(() => {
-    checkScrollPosition()
+    // Check scroll position after a short delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      checkScrollPosition()
+    }, 100)
+    
     const nav = navRef.current
     if (nav) {
       nav.addEventListener('scroll', checkScrollPosition)
-      return () => nav.removeEventListener('scroll', checkScrollPosition)
+      return () => {
+        nav.removeEventListener('scroll', checkScrollPosition)
+        clearTimeout(timer)
+      }
     }
+    
+    return () => clearTimeout(timer)
   }, [collapsed])
+
+  // Also check scroll position when menu items change
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      checkScrollPosition()
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [menuItems.length])
 
   const menuItems = [
     {
@@ -271,25 +289,6 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
               </div>
             )}
 
-            {/* Collapsed Sub Items */}
-            {collapsed && !isMobile && (
-              <div className="mt-1">
-                {menu.subItems.map((subItem) => (
-                  <Link
-                    key={subItem.id}
-                    to={subItem.path}
-                    className={`w-full flex items-center justify-center hover:bg-white/10 transition-colors rounded-lg h-10 mb-1 ${
-                      location.pathname === subItem.path 
-                        ? 'bg-blue-500/20 text-blue-400' 
-                        : 'text-gray-400'
-                    }`}
-                    title={subItem.title}
-                  >
-                    <span className="text-sm">{subItem.icon}</span>
-                  </Link>
-                ))}
-              </div>
-            )}
           </div>
         ))}
       </nav>
