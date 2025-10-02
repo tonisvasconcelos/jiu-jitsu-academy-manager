@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useLanguage } from '../contexts/LanguageContext'
 
 interface SidebarProps {
   collapsed: boolean
@@ -8,101 +9,102 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   const location = useLocation()
   const [expandedMenus, setExpandedMenus] = useState<string[]>([])
+  const { t } = useLanguage()
 
   const menuItems = [
     {
       id: 'students',
-      title: 'Students / Alunos',
+      title: t('students'),
       icon: '🥋',
       subItems: [
-        { id: 'student-registration', title: 'Student Registration', path: '/students/registration', icon: '📝' },
-        { id: 'student-profiles', title: 'Student Profiles', path: '/students/profiles', icon: '👤' },
-        { id: 'fight-plans', title: 'Fight Plans by Student', path: '/students/fight-plans', icon: '🥊' },
-        { id: 'student-evaluation', title: 'Student Evaluation & Grades', path: '/students/evaluation', icon: '📊' },
-        { id: 'student-attendance', title: 'Student Attendance', path: '/students/attendance', icon: '✅' },
+        { id: 'student-registration', title: t('student-registration'), path: '/students/registration', icon: '📝' },
+        { id: 'student-profiles', title: t('student-profiles'), path: '/students/profiles', icon: '👤' },
+        { id: 'fight-plans', title: t('fight-plans-by-student'), path: '/students/fight-plans', icon: '🥊' },
+        { id: 'student-evaluation', title: t('student-evaluation'), path: '/students/evaluation', icon: '📊' },
+        { id: 'student-attendance', title: t('student-attendance'), path: '/students/attendance', icon: '✅' },
       ]
     },
     {
       id: 'teachers',
-      title: 'Teachers / Professores',
+      title: t('teachers'),
       icon: '🧑‍🏫',
       subItems: [
-        { id: 'teacher-registration', title: 'Teacher Registration', path: '/teachers/registration', icon: '📝' },
-        { id: 'teacher-profiles', title: 'Teacher Profiles', path: '/teachers/profiles', icon: '👤' },
-        { id: 'assign-teachers', title: 'Assign Teachers to Classes', path: '/teachers/assign', icon: '🔗' },
-        { id: 'teacher-evaluations', title: 'Teacher Evaluations', path: '/teachers/evaluations', icon: '📊' },
+        { id: 'teacher-registration', title: t('teacher-registration'), path: '/teachers/registration', icon: '📝' },
+        { id: 'teacher-profiles', title: t('teacher-profiles'), path: '/teachers/profiles', icon: '👤' },
+        { id: 'assign-teachers', title: t('assign-teachers'), path: '/teachers/assign', icon: '🔗' },
+        { id: 'teacher-evaluations', title: t('teacher-evaluations'), path: '/teachers/evaluations', icon: '📊' },
       ]
     },
     {
       id: 'championships',
-      title: 'Championships / Campeonatos',
+      title: t('championships'),
       icon: '🏟️',
       subItems: [
-        { id: 'championship-registration', title: 'Championship Registration', path: '/championships/registration', icon: '📝' },
-        { id: 'student-enrollment', title: 'Student Enrollment in Championships', path: '/championships/enrollment', icon: '📋' },
-        { id: 'championship-results', title: 'Championship Results', path: '/championships/results', icon: '🏆' },
-        { id: 'ranking-statistics', title: 'Ranking & Statistics', path: '/championships/ranking', icon: '📈' },
+        { id: 'championship-registration', title: t('championship-registration'), path: '/championships/registration', icon: '📝' },
+        { id: 'student-enrollment', title: t('student-enrollment'), path: '/championships/enrollment', icon: '📋' },
+        { id: 'championship-results', title: t('championship-results'), path: '/championships/results', icon: '🏆' },
+        { id: 'ranking-statistics', title: t('ranking-statistics'), path: '/championships/ranking', icon: '📈' },
       ]
     },
     {
       id: 'classes',
-      title: 'Classes / Turmas',
+      title: t('classes'),
       icon: '📘',
       subItems: [
-        { id: 'class-setup', title: 'Class Setup by Modality', path: '/classes/setup', icon: '⚙️' },
-        { id: 'schedule-management', title: 'Schedule Management', path: '/classes/schedule', icon: '📅' },
-        { id: 'check-in-attendance', title: 'Check-In / Attendance Tracking', path: '/classes/attendance', icon: '✅' },
-        { id: 'class-capacity', title: 'Class Capacity & Limits', path: '/classes/capacity', icon: '👥' },
+        { id: 'class-setup', title: t('class-setup'), path: '/classes/setup', icon: '⚙️' },
+        { id: 'schedule-management', title: t('schedule-management'), path: '/classes/schedule', icon: '📅' },
+        { id: 'check-in-attendance', title: t('check-in-attendance'), path: '/classes/attendance', icon: '✅' },
+        { id: 'class-capacity', title: t('class-capacity'), path: '/classes/capacity', icon: '👥' },
       ]
     },
     {
       id: 'fight-plans',
-      title: 'Fight Plans / Planos de Luta',
+      title: t('fight-plans'),
       icon: '🗂️',
       subItems: [
-        { id: 'plan-templates', title: 'Plan Templates', path: '/fight-plans/templates', icon: '📋' },
-        { id: 'assign-plans', title: 'Assign Plans to Students', path: '/fight-plans/assign', icon: '🔗' },
-        { id: 'training-phases', title: 'Training Phases & Milestones', path: '/fight-plans/phases', icon: '🎯' },
+        { id: 'plan-templates', title: t('plan-templates'), path: '/fight-plans/templates', icon: '📋' },
+        { id: 'assign-plans', title: t('assign-plans'), path: '/fight-plans/assign', icon: '🔗' },
+        { id: 'training-phases', title: t('training-phases'), path: '/fight-plans/phases', icon: '🎯' },
       ]
     },
     {
       id: 'quality-evaluation',
-      title: 'Quality & Evaluation / Qualidade & Avaliação',
+      title: t('quality-evaluation'),
       icon: '🧪',
       subItems: [
-        { id: 'progress-reports', title: 'Student Progress Reports', path: '/quality/progress', icon: '📊' },
-        { id: 'teacher-feedback', title: 'Teacher Feedback', path: '/quality/feedback', icon: '💬' },
-        { id: 'fitness-tests', title: 'Fitness Tests & Metrics', path: '/quality/fitness', icon: '💪' },
+        { id: 'progress-reports', title: t('progress-reports'), path: '/quality/progress', icon: '📊' },
+        { id: 'teacher-feedback', title: t('teacher-feedback'), path: '/quality/feedback', icon: '💬' },
+        { id: 'fitness-tests', title: t('fitness-tests'), path: '/quality/fitness', icon: '💪' },
       ]
     },
     {
       id: 'branches',
-      title: 'Branches / Filiais',
+      title: t('branches'),
       icon: '🌍',
       subItems: [
-        { id: 'branch-registration', title: 'Branch Registration', path: '/branches/registration', icon: '📝' },
-        { id: 'branch-details', title: 'Branch Details (location, contact)', path: '/branches/details', icon: '📍' },
-        { id: 'assign-branch', title: 'Assign Students/Teachers per Branch', path: '/branches/assign', icon: '🔗' },
+        { id: 'branch-registration', title: t('branch-registration'), path: '/branches/registration', icon: '📝' },
+        { id: 'branch-details', title: t('branch-details'), path: '/branches/details', icon: '📍' },
+        { id: 'assign-branch', title: t('assign-branch'), path: '/branches/assign', icon: '🔗' },
       ]
     },
     {
       id: 'schedules-checkins',
-      title: 'Schedules & Check-Ins / Agenda & Check-Ins',
+      title: t('schedules-checkins'),
       icon: '📅',
       subItems: [
-        { id: 'weekly-timetable', title: 'Weekly Timetable', path: '/schedules/timetable', icon: '📅' },
-        { id: 'booking-system', title: 'Student Booking System', path: '/schedules/booking', icon: '📋' },
-        { id: 'attendance-log', title: 'Real-Time Attendance Log', path: '/schedules/attendance', icon: '📊' },
+        { id: 'weekly-timetable', title: t('weekly-timetable'), path: '/schedules/timetable', icon: '📅' },
+        { id: 'booking-system', title: t('booking-system'), path: '/schedules/booking', icon: '📋' },
+        { id: 'attendance-log', title: t('attendance-log'), path: '/schedules/attendance', icon: '📊' },
       ]
     },
     {
       id: 'administration',
-      title: 'Administration',
+      title: t('administration'),
       icon: '⚙️',
       subItems: [
-        { id: 'user-profiles', title: 'User Profiles & Roles', path: '/admin/profiles', icon: '👤' },
-        { id: 'language-selector', title: 'Language Selector (🇧🇷 Portuguese / 🇺🇸 English)', path: '/admin/language', icon: '🌐' },
-        { id: 'app-settings', title: 'App Settings', path: '/admin/settings', icon: '⚙️' },
+        { id: 'user-profiles', title: t('user-profiles'), path: '/admin/profiles', icon: '👤' },
+        { id: 'language-selector', title: t('language-selector'), path: '/admin/language', icon: '🌐' },
+        { id: 'app-settings', title: t('app-settings'), path: '/admin/settings', icon: '⚙️' },
       ]
     }
   ]
@@ -128,9 +130,9 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
           {!collapsed && (
             <div className="ml-3">
               <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                Academy Manager
+                {t('academy-manager')}
               </span>
-              <p className="text-xs text-gray-400">Management System</p>
+              <p className="text-xs text-gray-400">{t('management-system')}</p>
             </div>
           )}
         </div>

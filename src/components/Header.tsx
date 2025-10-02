@@ -1,10 +1,13 @@
 import React from 'react'
+import { useLanguage } from '../contexts/LanguageContext'
 
 interface HeaderProps {
   onToggleSidebar: () => void
 }
 
 const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
+  const { t } = useLanguage()
+  
   return (
     <header className="bg-white/5 backdrop-blur-md border-b border-white/10 px-4 sm:px-6 lg:px-8 py-4 sticky top-0 z-40">
       <div className="flex items-center justify-between">
@@ -30,15 +33,15 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           </button>
           <div className="ml-4">
             <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              Academy Manager
+              {t('academy-manager')}
             </h1>
-            <p className="text-xs text-gray-400 hidden sm:block">Jiu-Jitsu Management System</p>
+            <p className="text-xs text-gray-400 hidden sm:block">{t('management-system')}</p>
           </div>
         </div>
         
         <div className="flex items-center space-x-3 sm:space-x-4">
           <div className="hidden sm:block text-sm text-gray-300">
-            Welcome back, <span className="text-blue-400 font-medium">Admin</span>
+            {t('welcome-admin')}
           </div>
           <div className="relative group">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 cursor-pointer">
