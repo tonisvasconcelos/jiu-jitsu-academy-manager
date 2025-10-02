@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { LanguageProvider } from './contexts/LanguageContext'
 import { StudentProvider } from './contexts/StudentContext'
+import { FightModalityProvider } from './contexts/FightModalityContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -12,6 +13,9 @@ import Championships from './pages/Championships'
 import Administration from './pages/Administration'
 import StudentRegistration from './pages/StudentRegistration'
 import StudentForm from './pages/StudentForm'
+import FightPlans from './pages/FightPlans'
+import FightModalities from './pages/FightModalities'
+import FightModalityForm from './pages/FightModalityForm'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -36,10 +40,11 @@ function App() {
     setSidebarCollapsed(!sidebarCollapsed)
   }
 
-  return (
-    <LanguageProvider>
-      <StudentProvider>
-        <Router basename="/jiu-jitsu-academy-manager">
+      return (
+        <LanguageProvider>
+          <StudentProvider>
+            <FightModalityProvider>
+              <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
               <div className={`transition-all duration-300 ${
@@ -88,7 +93,16 @@ function App() {
                     
                     {/* Placeholder Routes for other main pages */}
                     <Route path="/classes" element={<div className="p-6">Classes Management</div>} />
-                    <Route path="/fight-plans" element={<div className="p-6">Fight Plans Management</div>} />
+                    <Route path="/fight-plans" element={<FightPlans />} />
+                    
+                    {/* Sub-menu Routes - Fight Plans */}
+                    <Route path="/fight-plans/modalities" element={<FightModalities />} />
+                    <Route path="/fight-plans/modalities/:action" element={<FightModalityForm />} />
+                    <Route path="/fight-plans/modalities/:action/:id" element={<FightModalityForm />} />
+                    <Route path="/fight-plans/plan-templates" element={<div className="p-6">Plan Templates</div>} />
+                    <Route path="/fight-plans/assign-plans" element={<div className="p-6">Assign Plans to Students</div>} />
+                    <Route path="/fight-plans/training-phases" element={<div className="p-6">Training Phases & Milestones</div>} />
+                    
                     <Route path="/quality" element={<div className="p-6">Quality & Evaluation</div>} />
                     <Route path="/branches" element={<div className="p-6">Branches Management</div>} />
                     <Route path="/schedules" element={<div className="p-6">Schedules & Check-Ins</div>} />
@@ -97,8 +111,9 @@ function App() {
           </div>
         </div>
         </Router>
-      </StudentProvider>
-    </LanguageProvider>
+            </FightModalityProvider>
+          </StudentProvider>
+        </LanguageProvider>
   )
 }
 
