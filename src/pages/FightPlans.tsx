@@ -7,8 +7,6 @@ const FightPlans: React.FC = () => {
 
   const fightPlanMenuItems = [
     { id: 'modalities', title: t('fight-modalities'), description: t('modality-management'), icon: '🥋', path: '/fight-plans/modalities' },
-    { id: 'plan-templates', title: t('plan-templates'), description: 'Create and manage training plan templates.', icon: '📋', path: '/fight-plans/plan-templates' },
-    { id: 'assign-plans', title: t('assign-plans'), description: 'Assign training plans to students.', icon: '🔗', path: '/fight-plans/assign-plans' },
     { id: 'training-phases', title: t('training-phases'), description: 'Manage training phases and milestones.', icon: '📈', path: '/fight-plans/training-phases' },
   ]
 

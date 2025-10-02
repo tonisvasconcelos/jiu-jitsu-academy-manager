@@ -104,8 +104,6 @@ function App() {
                     <Route path="/fight-plans/modalities" element={<FightModalities />} />
                     <Route path="/fight-plans/modalities/:action" element={<FightModalityForm />} />
                     <Route path="/fight-plans/modalities/:action/:id" element={<FightModalityForm />} />
-                    <Route path="/fight-plans/plan-templates" element={<div className="p-6">Plan Templates</div>} />
-                    <Route path="/fight-plans/assign-plans" element={<div className="p-6">Assign Plans to Students</div>} />
                     <Route path="/fight-plans/training-phases" element={<div className="p-6">Training Phases & Milestones</div>} />
                     
                     <Route path="/quality" element={<div className="p-6">Quality & Evaluation</div>} />
