@@ -11,7 +11,10 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const location = useLocation()
   const [expandedMenus, setExpandedMenus] = useState<string[]>([])
   const [isMobile, setIsMobile] = useState(false)
+  const [canScrollUp, setCanScrollUp] = useState(false)
+  const [canScrollDown, setCanScrollDown] = useState(false)
   const { t } = useLanguage()
+  const navRef = React.useRef<HTMLElement>(null)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -23,6 +26,35 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
+
+  const checkScrollPosition = () => {
+    if (navRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = navRef.current
+      setCanScrollUp(scrollTop > 0)
+      setCanScrollDown(scrollTop < scrollHeight - clientHeight - 1)
+    }
+  }
+
+  const scrollUp = () => {
+    if (navRef.current) {
+      navRef.current.scrollBy({ top: -60, behavior: 'smooth' })
+    }
+  }
+
+  const scrollDown = () => {
+    if (navRef.current) {
+      navRef.current.scrollBy({ top: 60, behavior: 'smooth' })
+    }
+  }
+
+  useEffect(() => {
+    checkScrollPosition()
+    const nav = navRef.current
+    if (nav) {
+      nav.addEventListener('scroll', checkScrollPosition)
+      return () => nav.removeEventListener('scroll', checkScrollPosition)
+    }
+  }, [collapsed])
 
   const menuItems = [
     {
@@ -178,8 +210,23 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         </Link>
       </div>
 
+      {/* Scroll Up Arrow - Only show when collapsed and can scroll up */}
+      {collapsed && !isMobile && canScrollUp && (
+        <div className="flex justify-center py-2">
+          <button
+            onClick={scrollUp}
+            className="p-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            title="Scroll up"
+          >
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+            </svg>
+          </button>
+        </div>
+      )}
+
       {/* Menu Items */}
-      <nav className="mt-3 overflow-y-auto flex-1">
+      <nav ref={navRef} className="mt-3 overflow-y-auto flex-1">
         {menuItems.map((menu) => (
           <div key={menu.id} className="mb-2">
             {/* Main Menu Item */}
@@ -246,6 +293,21 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
           </div>
         ))}
       </nav>
+
+      {/* Scroll Down Arrow - Only show when collapsed and can scroll down */}
+      {collapsed && !isMobile && canScrollDown && (
+        <div className="flex justify-center py-2">
+          <button
+            onClick={scrollDown}
+            className="p-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            title="Scroll down"
+          >
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+      )}
 
     </div>
     </>
