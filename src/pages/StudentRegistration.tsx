@@ -7,7 +7,9 @@ const StudentRegistration: React.FC = () => {
   const { t } = useLanguage()
   const { students, deleteStudent, clearAllStudents } = useStudents()
   
+  console.log('=== STUDENT REGISTRATION: RENDER ===')
   console.log('StudentRegistration: Current students:', students)
+  console.log('StudentRegistration: Students count:', students.length)
 
   const getBeltColor = (beltLevel: string) => {
     const colors = {

@@ -66,6 +66,24 @@ const StudentForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('=== FORM SUBMISSION STARTED ===')
+    console.log('Action:', action)
+    console.log('Student data before submission:', student)
+    
+    // Check if required fields are filled
+    if (!student.firstName || !student.lastName || !student.birthDate || !student.documentId || !student.email || !student.phone) {
+      console.error('Missing required fields:', {
+        firstName: student.firstName,
+        lastName: student.lastName,
+        birthDate: student.birthDate,
+        documentId: student.documentId,
+        email: student.email,
+        phone: student.phone
+      })
+      alert('Please fill in all required fields')
+      return
+    }
+    
     setIsLoading(true)
     
     // Simulate API call

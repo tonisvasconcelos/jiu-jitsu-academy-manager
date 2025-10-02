@@ -60,11 +60,15 @@ export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children })
   }
 
   const addStudent = (student: Student) => {
+    console.log('=== STUDENT CONTEXT: ADD STUDENT CALLED ===')
     console.log('StudentContext: Adding student:', student)
     setStudents(prev => {
       const newStudents = [...prev, student]
+      console.log('StudentContext: Previous students count:', prev.length)
       console.log('StudentContext: New students array:', newStudents)
+      console.log('StudentContext: New students count:', newStudents.length)
       saveStudentsToStorage(newStudents)
+      console.log('StudentContext: Students saved to localStorage')
       return newStudents
     })
   }
