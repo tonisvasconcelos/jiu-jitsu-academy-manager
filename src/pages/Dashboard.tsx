@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents } from '../contexts/StudentContext'
 
@@ -114,18 +115,27 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
             <div className="space-y-4">
-              <button className="w-full group relative bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 flex items-center justify-center">
+              <Link
+                to="/students/registration/new"
+                className="w-full group relative bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 flex items-center justify-center"
+              >
                 <span className="mr-2">👤</span>
                 <span className="font-medium">{t('add-new-student')}</span>
-              </button>
-              <button className="w-full group relative bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25 flex items-center justify-center">
+              </Link>
+              <Link
+                to="/teachers/registration"
+                className="w-full group relative bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25 flex items-center justify-center"
+              >
                 <span className="mr-2">👨‍🏫</span>
                 <span className="font-medium">{t('add-new-instructor')}</span>
-              </button>
-              <button className="w-full group relative bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25 flex items-center justify-center">
+              </Link>
+              <Link
+                to="/classes"
+                className="w-full group relative bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25 flex items-center justify-center"
+              >
                 <span className="mr-2">🥋</span>
                 <span className="font-medium">{t('add-martial-art-type')}</span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>
