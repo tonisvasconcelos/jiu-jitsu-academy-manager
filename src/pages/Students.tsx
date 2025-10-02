@@ -7,6 +7,7 @@ const Students: React.FC = () => {
 
   const subMenuItems = [
     { id: 'student-registration', title: t('student-registration'), path: '/students/registration', icon: '📝', description: 'Register new students' },
+    { id: 'modality', title: t('modality-by-student'), path: '/students/modality', icon: '🥊', description: t('student-modality-management') },
     { id: 'student-evaluation', title: t('student-evaluation'), path: '/students/evaluation', icon: '📊', description: 'Evaluate student progress and grades' },
     { id: 'student-attendance', title: t('student-attendance'), path: '/students/attendance', icon: '✅', description: 'Track student attendance' },
   ]
