@@ -42,11 +42,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   return (
     <div className={`fixed left-0 top-0 h-full bg-white/5 backdrop-blur-md border-r border-white/10 transition-all duration-300 z-50 ${
       collapsed ? 'w-16' : 'w-64'
-    }`}>
+    } lg:block md:block sm:${collapsed ? 'hidden' : 'block'}`}>
       {/* Logo */}
       <div className="p-4 border-b border-white/10">
-        <div className="flex items-center">
-          <div className="text-2xl p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">🥋</div>
+        <div className="flex items-center justify-center">
+          <div className={`${collapsed ? 'text-lg p-1' : 'text-2xl p-2'} bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg`}>🥋</div>
           {!collapsed && (
             <div className="ml-3">
               <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
