@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { LanguageProvider } from './contexts/LanguageContext'
+import { StudentProvider } from './contexts/StudentContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -37,7 +38,8 @@ function App() {
 
   return (
     <LanguageProvider>
-      <Router basename="/jiu-jitsu-academy-manager">
+      <StudentProvider>
+        <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
               <div className={`transition-all duration-300 ${
@@ -95,7 +97,8 @@ function App() {
                 </main>
           </div>
         </div>
-      </Router>
+        </Router>
+      </StudentProvider>
     </LanguageProvider>
   )
 }

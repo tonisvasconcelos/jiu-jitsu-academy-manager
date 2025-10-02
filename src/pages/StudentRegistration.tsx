@@ -1,58 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
-
-interface Student {
-  studentId: string
-  firstName: string
-  lastName: string
-  displayName: string
-  birthDate: string
-  gender: 'male' | 'female' | 'other'
-  beltLevel: 'white' | 'blue' | 'purple' | 'brown' | 'black'
-  documentId: string
-  email: string
-  phone: string
-  branchId: string
-  active: boolean
-  photoUrl?: string
-}
+import { useStudents, Student } from '../contexts/StudentContext'
 
 const StudentRegistration: React.FC = () => {
   const { t } = useLanguage()
-  const [students, setStudents] = useState<Student[]>([
-    // Sample data
-    {
-      studentId: 'STU001',
-      firstName: 'João',
-      lastName: 'Silva',
-      displayName: 'João Silva',
-      birthDate: '1995-03-15',
-      gender: 'male',
-      beltLevel: 'blue',
-      documentId: '12345678901',
-      email: 'joao.silva@email.com',
-      phone: '+55 11 99999-9999',
-      branchId: 'BR001',
-      active: true,
-      photoUrl: ''
-    },
-    {
-      studentId: 'STU002',
-      firstName: 'Maria',
-      lastName: 'Santos',
-      displayName: 'Maria Santos',
-      birthDate: '1998-07-22',
-      gender: 'female',
-      beltLevel: 'purple',
-      documentId: '98765432100',
-      email: 'maria.santos@email.com',
-      phone: '+55 11 88888-8888',
-      branchId: 'BR001',
-      active: true,
-      photoUrl: ''
-    }
-  ])
+  const { students, deleteStudent } = useStudents()
 
   const getBeltColor = (beltLevel: string) => {
     const colors = {
@@ -67,6 +20,12 @@ const StudentRegistration: React.FC = () => {
 
   const getGenderIcon = (gender: string) => {
     return gender === 'male' ? '👨' : gender === 'female' ? '👩' : '👤'
+  }
+
+  const handleDeleteStudent = (studentId: string) => {
+    if (window.confirm('Are you sure you want to delete this student?')) {
+      deleteStudent(studentId)
+    }
   }
 
   return (
@@ -205,7 +164,10 @@ const StudentRegistration: React.FC = () => {
                         >
                           ✏️ Edit
                         </Link>
-                        <button className="text-red-400 hover:text-red-300 transition-colors">
+                        <button 
+                          onClick={() => handleDeleteStudent(student.studentId)}
+                          className="text-red-400 hover:text-red-300 transition-colors"
+                        >
                           🗑️ Delete
                         </button>
                       </div>

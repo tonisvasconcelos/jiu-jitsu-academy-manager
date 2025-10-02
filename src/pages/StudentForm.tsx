@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
-
-interface Student {
-  studentId: string
-  firstName: string
-  lastName: string
-  displayName: string
-  birthDate: string
-  gender: 'male' | 'female' | 'other'
-  beltLevel: 'white' | 'blue' | 'purple' | 'brown' | 'black'
-  documentId: string
-  email: string
-  phone: string
-  branchId: string
-  active: boolean
-  photoUrl?: string
-}
+import { useStudents, Student } from '../contexts/StudentContext'
 
 const StudentForm: React.FC = () => {
   const { t } = useLanguage()
   const { action, id } = useParams<{ action: string; id?: string }>()
   const navigate = useNavigate()
+  const { addStudent, updateStudent, getStudent } = useStudents()
   
   const [student, setStudent] = useState<Student>({
     studentId: '',
@@ -51,22 +37,11 @@ const StudentForm: React.FC = () => {
 
   useEffect(() => {
     if (action === 'edit' || action === 'view') {
-      // Load student data (in real app, this would be an API call)
-      setStudent({
-        studentId: id || 'STU001',
-        firstName: 'João',
-        lastName: 'Silva',
-        displayName: 'João Silva',
-        birthDate: '1995-03-15',
-        gender: 'male',
-        beltLevel: 'blue',
-        documentId: '12345678901',
-        email: 'joao.silva@email.com',
-        phone: '+55 11 99999-9999',
-        branchId: 'BR001',
-        active: true,
-        photoUrl: ''
-      })
+      // Load student data from context
+      const existingStudent = getStudent(id || '')
+      if (existingStudent) {
+        setStudent(existingStudent)
+      }
     } else if (action === 'new') {
       // Generate new student ID
       setStudent(prev => ({
@@ -74,7 +49,7 @@ const StudentForm: React.FC = () => {
         studentId: `STU${String(Date.now()).slice(-6)}`
       }))
     }
-  }, [action, id])
+  }, [action, id, getStudent])
 
   const handleInputChange = (field: keyof Student, value: string | boolean) => {
     setStudent(prev => {
@@ -96,7 +71,12 @@ const StudentForm: React.FC = () => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000))
     
-    console.log('Student data:', student)
+    if (action === 'new') {
+      addStudent(student)
+    } else if (action === 'edit') {
+      updateStudent(student.studentId, student)
+    }
+    
     setIsLoading(false)
     
     // Navigate back to list
