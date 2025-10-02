@@ -71,9 +71,15 @@ const StudentForm: React.FC = () => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000))
     
+    console.log('Form submitted with action:', action)
+    console.log('Student data:', student)
+    
     if (action === 'new') {
+      console.log('Adding new student...')
       addStudent(student)
+      console.log('Student added to context')
     } else if (action === 'edit') {
+      console.log('Updating student...')
       updateStudent(student.studentId, student)
     }
     

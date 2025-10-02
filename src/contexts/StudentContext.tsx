@@ -64,7 +64,12 @@ export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [students, setStudents] = useState<Student[]>(initialStudents)
 
   const addStudent = (student: Student) => {
-    setStudents(prev => [...prev, student])
+    console.log('StudentContext: Adding student:', student)
+    setStudents(prev => {
+      const newStudents = [...prev, student]
+      console.log('StudentContext: New students array:', newStudents)
+      return newStudents
+    })
   }
 
   const updateStudent = (studentId: string, updatedStudent: Student) => {

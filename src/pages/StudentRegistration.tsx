@@ -6,6 +6,8 @@ import { useStudents, Student } from '../contexts/StudentContext'
 const StudentRegistration: React.FC = () => {
   const { t } = useLanguage()
   const { students, deleteStudent } = useStudents()
+  
+  console.log('StudentRegistration: Current students:', students)
 
   const getBeltColor = (beltLevel: string) => {
     const colors = {
