@@ -1,8 +1,18 @@
 import React from 'react'
 import { useLanguage } from '../contexts/LanguageContext'
+import { useStudents } from '../contexts/StudentContext'
 
 const Dashboard: React.FC = () => {
   const { t } = useLanguage()
+  const { students } = useStudents()
+  
+  // Calculate real statistics
+  const totalStudents = students.length
+  const activeStudents = students.filter(s => s.active).length
+  const blackBelts = students.filter(s => s.beltLevel.toLowerCase() === 'black').length
+  
+  console.log('Dashboard: Current students:', students)
+  console.log('Dashboard: Total students:', totalStudents)
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
@@ -23,7 +33,7 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">{t('total-students')}</p>
-                <p className="text-3xl font-bold text-white">0</p>
+                <p className="text-3xl font-bold text-white">{totalStudents}</p>
                 <p className="text-xs text-green-400 mt-1">+0% from last month</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
