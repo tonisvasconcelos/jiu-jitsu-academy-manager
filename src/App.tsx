@@ -9,6 +9,8 @@ import Students from './pages/Students'
 import Teachers from './pages/Teachers'
 import Championships from './pages/Championships'
 import Administration from './pages/Administration'
+import StudentRegistration from './pages/StudentRegistration'
+import StudentForm from './pages/StudentForm'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -57,7 +59,10 @@ function App() {
                     <Route path="/administration" element={<Administration />} />
                     
                     {/* Sub-menu Routes - Students */}
-                    <Route path="/students/registration" element={<div className="p-6">Student Registration</div>} />
+                    <Route path="/students/registration" element={<StudentRegistration />} />
+                    <Route path="/students/registration/new" element={<StudentForm />} />
+                    <Route path="/students/registration/edit/:id" element={<StudentForm />} />
+                    <Route path="/students/registration/view/:id" element={<StudentForm />} />
                     <Route path="/students/profiles" element={<div className="p-6">Student Profiles</div>} />
                     <Route path="/students/fight-plans" element={<div className="p-6">Fight Plans by Student</div>} />
                     <Route path="/students/evaluation" element={<div className="p-6">Student Evaluation & Grades</div>} />
