@@ -72,6 +72,9 @@ const translations = {
     'branch-registration': 'Branch Registration',
     'branch-details': 'Branch Details (location, contact)',
     'assign-branch': 'Assign Students/Teachers per Branch',
+    'branch-schedules': 'Branch Schedules',
+    'branch-facilities': 'Branch Facilities',
+    'branch-reports': 'Branch Reports',
     
     // Schedules & Check-Ins Sub-items
     'weekly-timetable': 'Weekly Timetable',
@@ -203,6 +206,9 @@ const translations = {
     'branch-registration': 'Cadastro de Filiais',
     'branch-details': 'Detalhes da Filial (localização, contato)',
     'assign-branch': 'Atribuir Alunos/Professores por Filial',
+    'branch-schedules': 'Horários da Filial',
+    'branch-facilities': 'Instalações da Filial',
+    'branch-reports': 'Relatórios da Filial',
     
     // Schedules & Check-Ins Sub-items
     'weekly-timetable': 'Cronograma Semanal',

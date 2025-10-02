@@ -4,6 +4,7 @@ import { LanguageProvider } from './contexts/LanguageContext'
 import { StudentProvider } from './contexts/StudentContext'
 import { FightModalityProvider } from './contexts/FightModalityContext'
 import { StudentModalityProvider } from './contexts/StudentModalityContext'
+import { BranchProvider } from './contexts/BranchContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -19,6 +20,8 @@ import FightModalities from './pages/FightModalities'
 import FightModalityForm from './pages/FightModalityForm'
 import StudentModality from './pages/StudentModality'
 import StudentModalityForm from './pages/StudentModalityForm'
+import Branches from './pages/Branches'
+import BranchRegistration from './pages/BranchRegistration'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -44,10 +47,11 @@ function App() {
   }
 
       return (
-        <LanguageProvider>
-          <StudentProvider>
-            <FightModalityProvider>
-              <StudentModalityProvider>
+            <LanguageProvider>
+              <StudentProvider>
+                <FightModalityProvider>
+                  <StudentModalityProvider>
+                    <BranchProvider>
                 <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
@@ -107,18 +111,29 @@ function App() {
                     <Route path="/fight-plans/modalities/:action/:id" element={<FightModalityForm />} />
                     <Route path="/fight-plans/training-phases" element={<div className="p-6">Training Phases & Milestones</div>} />
                     
-                    <Route path="/quality" element={<div className="p-6">Quality & Evaluation</div>} />
-                    <Route path="/branches" element={<div className="p-6">Branches Management</div>} />
-                    <Route path="/schedules" element={<div className="p-6">Schedules & Check-Ins</div>} />
+                            <Route path="/quality" element={<div className="p-6">Quality & Evaluation</div>} />
+                            <Route path="/branches" element={<Branches />} />
+                            <Route path="/schedules" element={<div className="p-6">Schedules & Check-Ins</div>} />
+                            
+                            {/* Sub-menu Routes - Branches */}
+                            <Route path="/branches/registration" element={<BranchRegistration />} />
+                            <Route path="/branches/registration/:action" element={<div className="p-6">Branch Form</div>} />
+                            <Route path="/branches/registration/:action/:id" element={<div className="p-6">Branch Form</div>} />
+                            <Route path="/branches/details" element={<div className="p-6">Branch Details</div>} />
+                            <Route path="/branches/assign" element={<div className="p-6">Assign Branch</div>} />
+                            <Route path="/branches/schedules" element={<div className="p-6">Branch Schedules</div>} />
+                            <Route path="/branches/facilities" element={<div className="p-6">Branch Facilities</div>} />
+                            <Route path="/branches/reports" element={<div className="p-6">Branch Reports</div>} />
                   </Routes>
                 </main>
           </div>
         </div>
         </Router>
-              </StudentModalityProvider>
-            </FightModalityProvider>
-          </StudentProvider>
-        </LanguageProvider>
+                    </BranchProvider>
+                  </StudentModalityProvider>
+                </FightModalityProvider>
+              </StudentProvider>
+            </LanguageProvider>
   )
 }
 
