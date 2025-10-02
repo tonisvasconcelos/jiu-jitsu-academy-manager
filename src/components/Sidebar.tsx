@@ -164,12 +164,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       </div>
 
       {/* Dashboard Link - First Item */}
-      <div className="mt-3 px-3">
+      <div className="mt-3 px-3 mb-2">
         <Link
           to="/"
           className={`flex items-center rounded-lg hover:bg-white/10 transition-colors ${
             location.pathname === '/' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-300'
-          } ${(collapsed && !isMobile) ? 'justify-center px-0 py-3 h-12' : 'px-3 p-2'}`}
+          } ${(collapsed && !isMobile) ? 'justify-center px-0 py-4 h-14' : 'px-3 py-3'}`}
         >
           <span className="text-lg">📊</span>
           {(!collapsed || isMobile) && (
@@ -181,12 +181,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       {/* Menu Items */}
       <nav className="mt-3 overflow-y-auto flex-1">
         {menuItems.map((menu) => (
-          <div key={menu.id}>
+          <div key={menu.id} className="mb-2">
             {/* Main Menu Item */}
             <button
               onClick={() => toggleMenu(menu.id)}
               className={`w-full flex items-center text-left hover:bg-white/10 transition-all duration-300 rounded-lg group ${
-                (collapsed && !isMobile) ? 'justify-center px-0 py-3 h-12' : 'justify-between px-3 mx-2 py-2'
+                (collapsed && !isMobile) ? 'justify-center px-0 py-4 h-14' : 'justify-between px-3 mx-2 py-3'
               } ${isMenuExpanded(menu.id) ? 'bg-white/10' : ''}`}
             >
               <div className="flex items-center">
@@ -206,12 +206,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
             {/* Sub Menu Items */}
             {(!collapsed || isMobile) && isMenuExpanded(menu.id) && (
-              <div className="bg-white/5 mx-2 rounded-lg mt-1 overflow-hidden">
+              <div className="bg-white/5 mx-2 rounded-lg mt-2 overflow-hidden">
                 {menu.subItems.map((subItem) => (
                   <Link
                     key={subItem.id}
                     to={subItem.path}
-                    className={`flex items-center px-4 py-2 text-xs hover:bg-white/10 transition-all duration-300 group ${
+                    className={`flex items-center px-4 py-3 text-xs hover:bg-white/10 transition-all duration-300 group ${
                       location.pathname === subItem.path 
                         ? 'bg-blue-500/20 text-blue-400 border-l-2 border-blue-400' 
                         : 'text-gray-300 hover:text-blue-400'
@@ -226,12 +226,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
             {/* Collapsed Sub Items */}
             {collapsed && !isMobile && (
-              <div>
+              <div className="mt-1">
                 {menu.subItems.map((subItem) => (
                   <Link
                     key={subItem.id}
                     to={subItem.path}
-                    className={`w-full flex items-center justify-center hover:bg-white/10 transition-colors rounded-lg h-8 ${
+                    className={`w-full flex items-center justify-center hover:bg-white/10 transition-colors rounded-lg h-10 mb-1 ${
                       location.pathname === subItem.path 
                         ? 'bg-blue-500/20 text-blue-400' 
                         : 'text-gray-400'
