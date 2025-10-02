@@ -158,8 +158,10 @@ const StudentForm: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Student ID */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Student ID</label>
+                <label htmlFor="studentId" className="block text-sm font-medium text-gray-300 mb-2">Student ID</label>
                 <input
+                  id="studentId"
+                  name="studentId"
                   type="text"
                   value={student.studentId}
                   readOnly
@@ -169,8 +171,10 @@ const StudentForm: React.FC = () => {
 
               {/* Display Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Display Name</label>
+                <label htmlFor="displayName" className="block text-sm font-medium text-gray-300 mb-2">Display Name</label>
                 <input
+                  id="displayName"
+                  name="displayName"
                   type="text"
                   value={student.displayName}
                   readOnly
@@ -180,8 +184,10 @@ const StudentForm: React.FC = () => {
 
               {/* First Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">First Name *</label>
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">First Name *</label>
                 <input
+                  id="firstName"
+                  name="firstName"
                   type="text"
                   value={student.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
@@ -193,8 +199,10 @@ const StudentForm: React.FC = () => {
 
               {/* Last Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Last Name *</label>
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-2">Last Name *</label>
                 <input
+                  id="lastName"
+                  name="lastName"
                   type="text"
                   value={student.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}

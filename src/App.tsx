@@ -62,9 +62,8 @@ function App() {
                     
                     {/* Sub-menu Routes - Students */}
                     <Route path="/students/registration" element={<StudentRegistration />} />
-                    <Route path="/students/registration/new" element={<StudentForm />} />
-                    <Route path="/students/registration/edit/:id" element={<StudentForm />} />
-                    <Route path="/students/registration/view/:id" element={<StudentForm />} />
+                    <Route path="/students/registration/:action" element={<StudentForm />} />
+                    <Route path="/students/registration/:action/:id" element={<StudentForm />} />
                     <Route path="/students/profiles" element={<div className="p-6">Student Profiles</div>} />
                     <Route path="/students/fight-plans" element={<div className="p-6">Fight Plans by Student</div>} />
                     <Route path="/students/evaluation" element={<div className="p-6">Student Evaluation & Grades</div>} />
