@@ -10,7 +10,7 @@ const Dashboard: React.FC = () => {
             Dashboard
           </h1>
           <p className="text-lg text-gray-300 max-w-2xl">
-            Welcome to your Jiu-Jitsu Academy Management System - Auto Deployed!
+            Welcome to your Jiu-Jitsu Academy Management System - Modern UI Deployed! 🚀
           </p>
         </div>
 
