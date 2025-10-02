@@ -110,6 +110,7 @@ const StudentModality: React.FC = () => {
         'Student Name': student ? student.displayName : 'Unknown',
         'Student ID': connection.studentId,
         'Modalities': modalityNames,
+        'Belt Level at Start': connection.beltLevelAtStart.charAt(0).toUpperCase() + connection.beltLevelAtStart.slice(1) + ' Belt',
         'Assignment Date': connection.assignmentDate,
         'Active': connection.active ? 'Yes' : 'No',
         'Notes': connection.notes || ''
@@ -126,6 +127,7 @@ const StudentModality: React.FC = () => {
       { wch: 20 }, // Student Name
       { wch: 12 }, // Student ID
       { wch: 30 }, // Modalities
+      { wch: 18 }, // Belt Level at Start
       { wch: 15 }, // Assignment Date
       { wch: 10 }, // Active
       { wch: 30 }  // Notes
@@ -361,6 +363,7 @@ const StudentModality: React.FC = () => {
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Student</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Modalities</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Belt at Start</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Assignment Date</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Notes</th>
@@ -370,7 +373,7 @@ const StudentModality: React.FC = () => {
               <tbody className="divide-y divide-white/10">
                 {filteredConnections.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-4 text-center text-gray-400">
+                    <td colSpan={7} className="px-6 py-4 text-center text-gray-400">
                       {hasActiveFilters ? 'No connections match the current filters.' : 'No student modality connections yet.'}
                     </td>
                   </tr>
@@ -412,6 +415,11 @@ const StudentModality: React.FC = () => {
                           <div className="text-xs text-gray-400">
                             {connection.modalityIds.length} modality{connection.modalityIds.length !== 1 ? 'ies' : 'y'}
                           </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getBeltColor(connection.beltLevelAtStart)}`}>
+                            {connection.beltLevelAtStart.charAt(0).toUpperCase() + connection.beltLevelAtStart.slice(1)} Belt
+                          </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                           {new Date(connection.assignmentDate).toLocaleDateString()}

@@ -5,6 +5,7 @@ export interface StudentModalityConnection {
   studentId: string
   modalityIds: string[]
   assignmentDate: string
+  beltLevelAtStart: 'white' | 'blue' | 'purple' | 'brown' | 'black'
   active: boolean
   notes?: string
 }
@@ -28,6 +29,7 @@ const initialConnections: StudentModalityConnection[] = [
     studentId: 'STU001',
     modalityIds: ['MOD001', 'MOD002'],
     assignmentDate: '2024-01-15',
+    beltLevelAtStart: 'white',
     active: true,
     notes: 'Primary training modalities'
   },
@@ -36,6 +38,7 @@ const initialConnections: StudentModalityConnection[] = [
     studentId: 'STU002',
     modalityIds: ['MOD001'],
     assignmentDate: '2024-01-20',
+    beltLevelAtStart: 'blue',
     active: true,
     notes: 'Focus on Brazilian Jiu-Jitsu'
   }

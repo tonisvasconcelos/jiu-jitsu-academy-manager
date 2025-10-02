@@ -18,6 +18,7 @@ const StudentModalityForm: React.FC = () => {
     studentId: '',
     modalityIds: [],
     assignmentDate: new Date().toISOString().split('T')[0],
+    beltLevelAtStart: 'white',
     active: true,
     notes: ''
   })
@@ -36,21 +37,31 @@ const StudentModalityForm: React.FC = () => {
       }
     } else if (action === 'new') {
       // Generate new connection ID
+      const selectedStudent = students.find(s => s.studentId === (studentId || prev.studentId))
       setConnection(prev => ({
         ...prev,
         connectionId: `CONN${String(Date.now()).slice(-6)}`,
         assignmentDate: new Date().toISOString().split('T')[0],
         // Pre-select student if studentId is provided (coming from student creation)
-        studentId: studentId || prev.studentId
+        studentId: studentId || prev.studentId,
+        // Set belt level to student's current belt level
+        beltLevelAtStart: selectedStudent?.beltLevel || 'white'
       }))
     }
-  }, [action, id, studentId, getConnection, navigate])
+  }, [action, id, studentId, getConnection, navigate, students])
 
   const handleInputChange = (field: keyof StudentModalityConnection, value: string | string[] | boolean) => {
-    setConnection(prev => ({
-      ...prev,
-      [field]: value
-    }))
+    setConnection(prev => {
+      const updated = { ...prev, [field]: value }
+      
+      // If student changes, update belt level to student's current belt level
+      if (field === 'studentId' && typeof value === 'string') {
+        const selectedStudent = students.find(s => s.studentId === value)
+        updated.beltLevelAtStart = selectedStudent?.beltLevel || 'white'
+      }
+      
+      return updated
+    })
   }
 
   const handleModalityToggle = (modalityId: string) => {
@@ -175,6 +186,27 @@ const StudentModalityForm: React.FC = () => {
                   required
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
+              </div>
+
+              {/* Belt Level at Start */}
+              <div>
+                <label htmlFor="beltLevelAtStart" className="block text-sm font-medium text-gray-300 mb-2">Belt Level at Start *</label>
+                <select
+                  id="beltLevelAtStart"
+                  name="beltLevelAtStart"
+                  value={connection.beltLevelAtStart}
+                  onChange={(e) => handleInputChange('beltLevelAtStart', e.target.value)}
+                  required
+                  disabled={isViewMode}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="white">White Belt</option>
+                  <option value="blue">Blue Belt</option>
+                  <option value="purple">Purple Belt</option>
+                  <option value="brown">Brown Belt</option>
+                  <option value="black">Black Belt</option>
+                </select>
+                <p className="text-xs text-gray-400 mt-1">The student's belt level when starting this modality</p>
               </div>
             </div>
 
