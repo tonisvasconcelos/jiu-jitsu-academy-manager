@@ -138,8 +138,23 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         </div>
       </div>
 
+      {/* Dashboard Link - First Item */}
+      <div className="mt-3 px-3">
+        <Link
+          to="/"
+          className={`flex items-center rounded-lg hover:bg-white/10 transition-colors ${
+            location.pathname === '/' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-300'
+          } ${collapsed ? 'justify-center px-0 py-3 h-12' : 'px-3 p-2'}`}
+        >
+          <span className="text-lg">📊</span>
+          {!collapsed && (
+            <span className="ml-2 text-sm text-white font-medium">{t('dashboard')}</span>
+          )}
+        </Link>
+      </div>
+
       {/* Menu Items */}
-      <nav className="mt-3 overflow-y-auto flex-1 pb-4">
+      <nav className="mt-3 overflow-y-auto flex-1">
         {menuItems.map((menu) => (
           <div key={menu.id}>
             {/* Main Menu Item */}
@@ -207,20 +222,6 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
         ))}
       </nav>
 
-      {/* Dashboard Link */}
-      <div className="absolute bottom-2 left-0 right-0">
-        <Link
-          to="/"
-          className={`flex items-center rounded-lg hover:bg-white/10 transition-colors ${
-            location.pathname === '/' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-300'
-          } ${collapsed ? 'justify-center px-0 py-3 h-12' : 'px-3 p-2'}`}
-        >
-          <span className="text-lg">📊</span>
-          {!collapsed && (
-            <span className="ml-2 text-sm text-white font-medium">{t('dashboard')}</span>
-          )}
-        </Link>
-      </div>
     </div>
   )
 }

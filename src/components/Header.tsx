@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 
 interface HeaderProps {
@@ -7,6 +8,29 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   const { t } = useLanguage()
+  const location = useLocation()
+
+  const getCurrentPageTitle = () => {
+    const path = location.pathname
+    
+    if (path === '/') return t('dashboard')
+    if (path.startsWith('/students/')) return t('students')
+    if (path.startsWith('/teachers/')) return t('teachers')
+    if (path.startsWith('/championships/')) return t('championships')
+    if (path.startsWith('/classes/')) return t('classes')
+    if (path.startsWith('/fight-plans/')) return t('fight-plans')
+    if (path.startsWith('/quality/')) return t('quality-evaluation')
+    if (path.startsWith('/branches/')) return t('branches')
+    if (path.startsWith('/schedules/')) return t('schedules-checkins')
+    if (path.startsWith('/admin/')) return t('administration')
+    
+    // Legacy routes
+    if (path === '/students') return t('students')
+    if (path === '/instructors') return t('instructors')
+    if (path === '/martial-art-types') return t('martial-arts')
+    
+    return t('dashboard')
+  }
   
   return (
     <header className="bg-white/5 backdrop-blur-md border-b border-white/10 px-4 sm:px-6 lg:px-8 py-4 sticky top-0 z-40">
@@ -31,12 +55,12 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
               />
             </svg>
           </button>
-          <div className="ml-4">
-            <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              {t('academy-manager')}
-            </h1>
-            <p className="text-xs text-gray-400 hidden sm:block">{t('management-system')}</p>
-          </div>
+              <div className="ml-4">
+                <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                  {getCurrentPageTitle()}
+                </h1>
+                <p className="text-xs text-gray-400 hidden sm:block">{t('management-system')}</p>
+              </div>
         </div>
         
         <div className="flex items-center space-x-3 sm:space-x-4">
