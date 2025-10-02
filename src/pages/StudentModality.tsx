@@ -34,7 +34,9 @@ const StudentModality: React.FC = () => {
     }).join(', ')
   }
 
-  const getBeltColor = (beltLevel: string) => {
+  const getBeltColor = (beltLevel: string | undefined) => {
+    if (!beltLevel) return 'bg-gray-200 text-gray-800'
+    
     const colors = {
       white: 'bg-gray-200 text-gray-800',
       blue: 'bg-blue-500 text-white',
@@ -66,11 +68,11 @@ const StudentModality: React.FC = () => {
     // Search filter
     const matchesSearch = searchTerm === '' || 
       (student && (
-        student.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.displayName.toLowerCase().includes(searchTerm.toLowerCase())
+        (student.firstName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (student.lastName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (student.displayName || '').toLowerCase().includes(searchTerm.toLowerCase())
       )) ||
-      modalityNames.toLowerCase().includes(searchTerm.toLowerCase())
+      (modalityNames || '').toLowerCase().includes(searchTerm.toLowerCase())
 
     // Student filter
     const matchesStudent = studentFilter === 'all' || connection.studentId === studentFilter
@@ -400,7 +402,7 @@ const StudentModality: React.FC = () => {
                                 {student ? student.displayName : 'Unknown Student'}
                               </div>
                               <div className="text-xs text-gray-400">ID: {connection.studentId}</div>
-                              {student && (
+                              {student && student.beltLevel && (
                                 <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getBeltColor(student.beltLevel)}`}>
                                   {t(student.beltLevel.toLowerCase())}
                                 </span>
@@ -418,7 +420,7 @@ const StudentModality: React.FC = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getBeltColor(connection.beltLevelAtStart)}`}>
-                            {connection.beltLevelAtStart.charAt(0).toUpperCase() + connection.beltLevelAtStart.slice(1)} Belt
+                            {connection.beltLevelAtStart ? connection.beltLevelAtStart.charAt(0).toUpperCase() + connection.beltLevelAtStart.slice(1) + ' Belt' : 'Unknown Belt'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">

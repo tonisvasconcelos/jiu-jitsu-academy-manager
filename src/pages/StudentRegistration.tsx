@@ -68,8 +68,8 @@ const StudentRegistration: React.FC = () => {
       'Display Name': student.displayName,
       'Birth Date': student.birthDate,
       'Age': calculateAge(student.birthDate),
-      'Gender': t(student.gender.toLowerCase()),
-      'Belt Level': t(student.beltLevel.toLowerCase()),
+          'Gender': t((student.gender || '').toLowerCase()),
+          'Belt Level': t((student.beltLevel || '').toLowerCase()),
       'Document ID': student.documentId,
       'Email': student.email,
       'Phone': student.phone,
@@ -277,16 +277,16 @@ const StudentRegistration: React.FC = () => {
   const filteredStudents = students.filter(student => {
     // Search filter
     const matchesSearch = searchTerm === '' || 
-      student.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.email.toLowerCase().includes(searchTerm.toLowerCase())
+      (student.firstName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (student.lastName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (student.displayName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (student.email || '').toLowerCase().includes(searchTerm.toLowerCase())
 
     // Belt filter
-    const matchesBelt = beltFilter === 'all' || student.beltLevel.toLowerCase() === beltFilter.toLowerCase()
+    const matchesBelt = beltFilter === 'all' || (student.beltLevel || '').toLowerCase() === beltFilter.toLowerCase()
 
     // Gender filter
-    const matchesGender = genderFilter === 'all' || student.gender.toLowerCase() === genderFilter.toLowerCase()
+    const matchesGender = genderFilter === 'all' || (student.gender || '').toLowerCase() === genderFilter.toLowerCase()
 
     // Status filter
     const matchesStatus = statusFilter === 'all' || 
@@ -301,11 +301,11 @@ const StudentRegistration: React.FC = () => {
   // Calculate belt counts
   const totalStudents = students.length
   const activeStudents = students.filter(s => s.active).length
-  const blackBelts = students.filter(s => s.beltLevel.toLowerCase() === 'black').length
-  const whiteBelts = students.filter(s => s.beltLevel.toLowerCase() === 'white').length
-  const blueBelts = students.filter(s => s.beltLevel.toLowerCase() === 'blue').length
-  const purpleBelts = students.filter(s => s.beltLevel.toLowerCase() === 'purple').length
-  const brownBelts = students.filter(s => s.beltLevel.toLowerCase() === 'brown').length
+  const blackBelts = students.filter(s => (s.beltLevel || '').toLowerCase() === 'black').length
+  const whiteBelts = students.filter(s => (s.beltLevel || '').toLowerCase() === 'white').length
+  const blueBelts = students.filter(s => (s.beltLevel || '').toLowerCase() === 'blue').length
+  const purpleBelts = students.filter(s => (s.beltLevel || '').toLowerCase() === 'purple').length
+  const brownBelts = students.filter(s => (s.beltLevel || '').toLowerCase() === 'brown').length
 
   // Calculate percentages
   const getPercentage = (count: number) => {
@@ -568,17 +568,17 @@ const StudentRegistration: React.FC = () => {
                   )}
                   {beltFilter !== 'all' && (
                     <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-lg text-xs">
-                      Belt: {t(beltFilter.toLowerCase())}
+                      Belt: {t((beltFilter || '').toLowerCase())}
                     </span>
                   )}
                   {genderFilter !== 'all' && (
                     <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded-lg text-xs">
-                      Gender: {t(genderFilter.toLowerCase())}
+                      Gender: {t((genderFilter || '').toLowerCase())}
                     </span>
                   )}
                   {statusFilter !== 'all' && (
                     <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded-lg text-xs">
-                      Status: {t(statusFilter.toLowerCase())}
+                      Status: {t((statusFilter || '').toLowerCase())}
                     </span>
                   )}
                 </div>
