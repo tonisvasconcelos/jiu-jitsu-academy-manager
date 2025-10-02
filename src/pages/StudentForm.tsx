@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents, Student } from '../contexts/StudentContext'
+import { useBranches } from '../contexts/BranchContext'
 
 const StudentForm: React.FC = () => {
   const { t } = useLanguage()
   const { action, id } = useParams<{ action: string; id?: string }>()
   const navigate = useNavigate()
   const { addStudent, updateStudent, getStudent } = useStudents()
+  const { branches } = useBranches()
   
   const [student, setStudent] = useState<Student>({
     studentId: '',
@@ -20,7 +22,7 @@ const StudentForm: React.FC = () => {
     documentId: '',
     email: '',
     phone: '',
-    branchId: 'BR001',
+    branchId: '',
     active: true,
     photoUrl: ''
   })
@@ -28,12 +30,8 @@ const StudentForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isReadOnly, setIsReadOnly] = useState(action === 'view')
 
-  // Sample branches data
-  const branches = [
-    { id: 'BR001', name: 'Main Branch - São Paulo' },
-    { id: 'BR002', name: 'Branch - Rio de Janeiro' },
-    { id: 'BR003', name: 'Branch - Belo Horizonte' }
-  ]
+  // Get active branches for selection
+  const activeBranches = branches.filter(branch => branch.active)
 
   useEffect(() => {
     if (action === 'edit' || action === 'view') {
@@ -43,13 +41,14 @@ const StudentForm: React.FC = () => {
         setStudent(existingStudent)
       }
     } else if (action === 'new') {
-      // Generate new student ID
+      // Generate new student ID and set default branch
       setStudent(prev => ({
         ...prev,
-        studentId: `STU${String(Date.now()).slice(-6)}`
+        studentId: `STU${String(Date.now()).slice(-6)}`,
+        branchId: activeBranches.length > 0 ? activeBranches[0].branchId : ''
       }))
     }
-  }, [action, id, getStudent])
+  }, [action, id, getStudent, activeBranches])
 
   const handleInputChange = (field: keyof Student, value: string | boolean) => {
     setStudent(prev => {
@@ -284,9 +283,13 @@ const StudentForm: React.FC = () => {
                   disabled={isReadOnly}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
                 >
-                  {branches.map(branch => (
-                    <option key={branch.id} value={branch.id}>{branch.name}</option>
-                  ))}
+                  {activeBranches.length === 0 ? (
+                    <option value="" disabled>No branches available</option>
+                  ) : (
+                    activeBranches.map(branch => (
+                      <option key={branch.branchId} value={branch.branchId}>{branch.name}</option>
+                    ))
+                  )}
                 </select>
               </div>
             </div>
