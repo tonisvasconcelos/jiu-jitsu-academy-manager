@@ -1,0 +1,12 @@
+{
+  "appId": "975d6ab6-8ccd-451e-849d-ab7371359889",
+  "appDisplayName": "Jiu-Jitsu Academy Manager",
+  "description": "Jiu-Jitsu Academy Management System for Multi-User Access",
+  "environmentId": "Default-85c8c826-909c-45f3-a4b8-b27c546fda9f",
+  "buildPath": "./dist",
+  "buildEntryPoint": "index.html",
+  "logoPath": "Default",
+  "localAppUrl": "http://localhost:3000/",
+  "connectionReferences": {},
+  "databaseReferences": {}
+}
