@@ -124,12 +124,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       collapsed ? 'w-16' : 'w-64'
     }`}>
       {/* Logo */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-3 border-b border-white/10">
         <div className="flex items-center justify-center">
-          <div className={`${collapsed ? 'text-lg p-1' : 'text-2xl p-2'} bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg`}>🥋</div>
+          <div className={`${collapsed ? 'text-sm p-1' : 'text-lg p-1.5'} bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg`}>🥋</div>
           {!collapsed && (
-            <div className="ml-3">
-              <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            <div className="ml-2">
+              <span className="text-sm font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                 {t('academy-manager')}
               </span>
               <p className="text-xs text-gray-400">{t('management-system')}</p>
@@ -139,24 +139,24 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       </div>
 
       {/* Menu Items */}
-      <nav className="mt-6">
+      <nav className="mt-3 overflow-y-auto flex-1 pb-4">
         {menuItems.map((menu) => (
           <div key={menu.id}>
             {/* Main Menu Item */}
             <button
               onClick={() => toggleMenu(menu.id)}
-              className={`w-full flex items-center px-4 py-3 text-left hover:bg-white/10 transition-all duration-300 rounded-xl mx-2 group ${
+              className={`w-full flex items-center px-3 py-2 text-left hover:bg-white/10 transition-all duration-300 rounded-lg mx-2 group ${
                 collapsed ? 'justify-center' : 'justify-between'
               } ${isMenuExpanded(menu.id) ? 'bg-white/10' : ''}`}
             >
               <div className="flex items-center">
-                <span className="text-xl group-hover:scale-110 transition-transform">{menu.icon}</span>
+                <span className="text-lg group-hover:scale-110 transition-transform">{menu.icon}</span>
                 {!collapsed && (
-                  <span className="ml-3 text-white font-medium group-hover:text-blue-400 transition-colors">{menu.title}</span>
+                  <span className="ml-2 text-sm text-white font-medium group-hover:text-blue-400 transition-colors">{menu.title}</span>
                 )}
               </div>
               {!collapsed && (
-                <span className={`transform transition-all duration-300 group-hover:text-blue-400 ${
+                <span className={`transform transition-all duration-300 group-hover:text-blue-400 text-xs ${
                   isMenuExpanded(menu.id) ? 'rotate-180' : ''
                 }`}>
                   ▼
@@ -166,18 +166,18 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
 
             {/* Sub Menu Items */}
             {!collapsed && isMenuExpanded(menu.id) && (
-              <div className="bg-white/5 mx-2 rounded-xl mt-1 overflow-hidden">
+              <div className="bg-white/5 mx-2 rounded-lg mt-1 overflow-hidden">
                 {menu.subItems.map((subItem) => (
                   <Link
                     key={subItem.id}
                     to={subItem.path}
-                    className={`flex items-center px-6 py-3 text-sm hover:bg-white/10 transition-all duration-300 group ${
+                    className={`flex items-center px-4 py-2 text-xs hover:bg-white/10 transition-all duration-300 group ${
                       location.pathname === subItem.path 
                         ? 'bg-blue-500/20 text-blue-400 border-l-2 border-blue-400' 
                         : 'text-gray-300 hover:text-blue-400'
                     }`}
                   >
-                    <span className="text-lg mr-3 group-hover:scale-110 transition-transform">{subItem.icon}</span>
+                    <span className="text-sm mr-2 group-hover:scale-110 transition-transform">{subItem.icon}</span>
                     {subItem.title}
                   </Link>
                 ))}
@@ -186,19 +186,19 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
 
             {/* Collapsed Sub Items */}
             {collapsed && (
-              <div className="ml-2">
+              <div className="ml-1">
                 {menu.subItems.map((subItem) => (
                   <Link
                     key={subItem.id}
                     to={subItem.path}
-                    className={`block p-2 text-center hover:bg-gray-700 transition-colors rounded ${
+                    className={`block p-1.5 text-center hover:bg-white/10 transition-colors rounded-lg ${
                       location.pathname === subItem.path 
-                        ? 'bg-gray-700' 
-                        : ''
+                        ? 'bg-blue-500/20 text-blue-400' 
+                        : 'text-gray-400'
                     }`}
                     title={subItem.title}
                   >
-                    <span className="text-lg">{subItem.icon}</span>
+                    <span className="text-sm">{subItem.icon}</span>
                   </Link>
                 ))}
               </div>
@@ -208,16 +208,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       </nav>
 
       {/* Dashboard Link */}
-      <div className="absolute bottom-4 left-0 right-0 px-4">
+      <div className="absolute bottom-2 left-0 right-0 px-3">
         <Link
           to="/"
-          className={`flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors ${
-            location.pathname === '/' ? 'bg-gray-700' : ''
+          className={`flex items-center p-2 rounded-lg hover:bg-white/10 transition-colors ${
+            location.pathname === '/' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-300'
           } ${collapsed ? 'justify-center' : ''}`}
         >
-          <span className="text-xl">📊</span>
+          <span className="text-lg">📊</span>
           {!collapsed && (
-            <span className="ml-3 text-white font-medium">Dashboard</span>
+            <span className="ml-2 text-sm text-white font-medium">{t('dashboard')}</span>
           )}
         </Link>
       </div>
