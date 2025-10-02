@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents, Student } from '../contexts/StudentContext'
@@ -6,7 +6,10 @@ import * as XLSX from 'xlsx'
 
 const StudentRegistration: React.FC = () => {
   const { t } = useLanguage()
-  const { students, deleteStudent } = useStudents()
+  const { students, deleteStudent, addStudent } = useStudents()
+  const [isImporting, setIsImporting] = useState(false)
+  const [importResult, setImportResult] = useState<{ success: number; errors: string[] } | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   
   console.log('=== STUDENT REGISTRATION: RENDER ===')
   console.log('StudentRegistration: Current students:', students)
@@ -103,6 +106,160 @@ const StudentRegistration: React.FC = () => {
     XLSX.writeFile(wb, filename)
   }
 
+  const handleDownloadTemplate = () => {
+    // Create template data
+    const templateData = [
+      {
+        'First Name': 'João',
+        'Last Name': 'Silva',
+        'Birth Date': '1990-01-15',
+        'Gender': 'male',
+        'Belt Level': 'blue',
+        'Document ID': '12345678901',
+        'Email': 'joao.silva@email.com',
+        'Phone': '+55 11 99999-9999',
+        'Branch ID': 'BR001',
+        'Active': 'true',
+        'Photo URL': 'https://example.com/photo.jpg'
+      },
+      {
+        'First Name': 'Maria',
+        'Last Name': 'Santos',
+        'Birth Date': '1995-05-20',
+        'Gender': 'female',
+        'Belt Level': 'purple',
+        'Document ID': '98765432100',
+        'Email': 'maria.santos@email.com',
+        'Phone': '+55 11 88888-8888',
+        'Branch ID': 'BR001',
+        'Active': 'true',
+        'Photo URL': ''
+      }
+    ]
+
+    // Create workbook and worksheet
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.json_to_sheet(templateData)
+
+    // Set column widths
+    const colWidths = [
+      { wch: 15 }, // First Name
+      { wch: 15 }, // Last Name
+      { wch: 12 }, // Birth Date
+      { wch: 10 }, // Gender
+      { wch: 12 }, // Belt Level
+      { wch: 15 }, // Document ID
+      { wch: 25 }, // Email
+      { wch: 15 }, // Phone
+      { wch: 12 }, // Branch ID
+      { wch: 10 }, // Active
+      { wch: 30 }  // Photo URL
+    ]
+    ws['!cols'] = colWidths
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Students Template')
+
+    // Save file
+    XLSX.writeFile(wb, 'students_import_template.xlsx')
+  }
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target?.result as ArrayBuffer)
+        const workbook = XLSX.read(data, { type: 'array' })
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]]
+        const jsonData = XLSX.utils.sheet_to_json(worksheet)
+
+        processImportData(jsonData)
+      } catch (error) {
+        console.error('Error reading Excel file:', error)
+        setImportResult({ success: 0, errors: ['Error reading Excel file. Please check the file format.'] })
+      }
+    }
+    reader.readAsArrayBuffer(file)
+  }
+
+  const processImportData = (data: any[]) => {
+    setIsImporting(true)
+    setImportResult(null)
+
+    let successCount = 0
+    const errors: string[] = []
+
+    data.forEach((row, index) => {
+      try {
+        // Validate required fields
+        if (!row['First Name'] || !row['Last Name'] || !row['Birth Date']) {
+          errors.push(`Row ${index + 2}: Missing required fields (First Name, Last Name, Birth Date)`)
+          return
+        }
+
+        // Generate unique student ID
+        const studentId = `STU${String(Date.now() + index).slice(-6)}`
+
+        // Create student object
+        const newStudent: Student = {
+          studentId,
+          firstName: String(row['First Name']).trim(),
+          lastName: String(row['Last Name']).trim(),
+          displayName: `${String(row['First Name']).trim()} ${String(row['Last Name']).trim()}`,
+          birthDate: String(row['Birth Date']).trim(),
+          gender: (row['Gender'] || 'other').toLowerCase() as 'male' | 'female' | 'other',
+          beltLevel: (row['Belt Level'] || 'white').toLowerCase() as 'white' | 'blue' | 'purple' | 'brown' | 'black',
+          documentId: String(row['Document ID'] || '').trim(),
+          email: String(row['Email'] || '').trim(),
+          phone: String(row['Phone'] || '').trim(),
+          branchId: String(row['Branch ID'] || 'BR001').trim(),
+          active: String(row['Active'] || 'true').toLowerCase() === 'true',
+          photoUrl: String(row['Photo URL'] || '').trim() || undefined
+        }
+
+        // Validate data types
+        if (!['male', 'female', 'other'].includes(newStudent.gender)) {
+          errors.push(`Row ${index + 2}: Invalid gender. Must be 'male', 'female', or 'other'`)
+          return
+        }
+
+        if (!['white', 'blue', 'purple', 'brown', 'black'].includes(newStudent.beltLevel)) {
+          errors.push(`Row ${index + 2}: Invalid belt level. Must be 'white', 'blue', 'purple', 'brown', or 'black'`)
+          return
+        }
+
+        // Validate date format
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+        if (!dateRegex.test(newStudent.birthDate)) {
+          errors.push(`Row ${index + 2}: Invalid birth date format. Use YYYY-MM-DD`)
+          return
+        }
+
+        // Add student
+        addStudent(newStudent)
+        successCount++
+
+      } catch (error) {
+        errors.push(`Row ${index + 2}: ${error}`)
+      }
+    })
+
+    setIsImporting(false)
+    setImportResult({ success: successCount, errors })
+
+    // Clear file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click()
+  }
+
   // Calculate belt counts
   const totalStudents = students.length
   const activeStudents = students.filter(s => s.active).length
@@ -138,7 +295,22 @@ const StudentRegistration: React.FC = () => {
                 Manage student registrations and information
               </p>
             </div>
-            <div className="flex space-x-3">
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={handleDownloadTemplate}
+                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-gray-500/25 flex items-center"
+              >
+                <span className="mr-2">📋</span>
+                {t('download-template')}
+              </button>
+              <button
+                onClick={handleImportClick}
+                disabled={isImporting}
+                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span className="mr-2">{isImporting ? '⏳' : '📥'}</span>
+                {isImporting ? 'Importing...' : t('import-from-excel')}
+              </button>
               <button
                 onClick={handleExportToExcel}
                 className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25 flex items-center"
@@ -346,6 +518,68 @@ const StudentRegistration: React.FC = () => {
             </table>
           </div>
         </div>
+
+        {/* Hidden file input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".xlsx,.xls"
+          onChange={handleFileSelect}
+          style={{ display: 'none' }}
+        />
+
+        {/* Import Result Modal */}
+        {importResult && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 max-w-md w-full">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold text-white">
+                  {importResult.success > 0 ? t('import-success') : t('import-error')}
+                </h3>
+                <button
+                  onClick={() => setImportResult(null)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className={`text-4xl mb-2 ${importResult.success > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    {importResult.success > 0 ? '✅' : '❌'}
+                  </div>
+                  <p className="text-white">
+                    {importResult.success > 0 
+                      ? `${importResult.success} students imported successfully!`
+                      : 'No students were imported due to errors.'
+                    }
+                  </p>
+                </div>
+
+                {importResult.errors.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-300 mb-2">Errors:</h4>
+                    <div className="max-h-32 overflow-y-auto bg-black/20 rounded-lg p-3">
+                      {importResult.errors.map((error, index) => (
+                        <p key={index} className="text-red-400 text-xs mb-1">{error}</p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => setImportResult(null)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+                  >
+                    OK
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
