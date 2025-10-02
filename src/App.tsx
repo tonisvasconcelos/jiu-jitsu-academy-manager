@@ -76,6 +76,7 @@ function App() {
                       <Route path="/students/modality" element={<StudentModality />} />
                       <Route path="/students/modality/:action" element={<StudentModalityForm />} />
                       <Route path="/students/modality/:action/:id" element={<StudentModalityForm />} />
+                      <Route path="/students/modality/:action/:id/:studentId" element={<StudentModalityForm />} />
                       <Route path="/students/evaluation" element={<div className="p-6">Student Evaluation & Grades</div>} />
                       <Route path="/students/attendance" element={<div className="p-6">Student Attendance</div>} />
                     

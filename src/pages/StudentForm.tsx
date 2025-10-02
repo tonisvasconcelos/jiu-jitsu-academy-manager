@@ -96,15 +96,30 @@ const StudentForm: React.FC = () => {
       console.log('Adding new student...')
       addStudent(student)
       console.log('Student added to context')
+      
+      setIsLoading(false)
+      
+      // Show confirmation dialog for creating modality assignment
+      const createModality = window.confirm(
+        'Student created successfully!\n\nWould you like to create a Modality by Student register for this student?'
+      )
+      
+      if (createModality) {
+        // Navigate to Student Modality form for this student
+        navigate(`/students/modality/new/${student.studentId}`)
+      } else {
+        // Navigate back to list
+        navigate('/students/registration')
+      }
     } else if (action === 'edit') {
       console.log('Updating student...')
       updateStudent(student.studentId, student)
+      
+      setIsLoading(false)
+      
+      // Navigate back to list
+      navigate('/students/registration')
     }
-    
-    setIsLoading(false)
-    
-    // Navigate back to list
-    navigate('/students/registration')
   }
 
   const getPageTitle = () => {

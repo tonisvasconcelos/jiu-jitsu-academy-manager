@@ -7,7 +7,7 @@ import { useStudentModalities, StudentModalityConnection } from '../contexts/Stu
 
 const StudentModalityForm: React.FC = () => {
   const { t } = useLanguage()
-  const { action, id } = useParams<{ action: string; id?: string }>()
+  const { action, id, studentId } = useParams<{ action: string; id?: string; studentId?: string }>()
   const navigate = useNavigate()
   const { students } = useStudents()
   const { modalities } = useFightModalities()
@@ -39,10 +39,12 @@ const StudentModalityForm: React.FC = () => {
       setConnection(prev => ({
         ...prev,
         connectionId: `CONN${String(Date.now()).slice(-6)}`,
-        assignmentDate: new Date().toISOString().split('T')[0]
+        assignmentDate: new Date().toISOString().split('T')[0],
+        // Pre-select student if studentId is provided (coming from student creation)
+        studentId: studentId || prev.studentId
       }))
     }
-  }, [action, id, getConnection, navigate])
+  }, [action, id, studentId, getConnection, navigate])
 
   const handleInputChange = (field: keyof StudentModalityConnection, value: string | string[] | boolean) => {
     setConnection(prev => ({
