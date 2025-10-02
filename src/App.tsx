@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { LanguageProvider } from './contexts/LanguageContext'
 import { StudentProvider } from './contexts/StudentContext'
 import { FightModalityProvider } from './contexts/FightModalityContext'
+import { StudentModalityProvider } from './contexts/StudentModalityContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -16,6 +17,7 @@ import StudentForm from './pages/StudentForm'
 import FightPlans from './pages/FightPlans'
 import FightModalities from './pages/FightModalities'
 import FightModalityForm from './pages/FightModalityForm'
+import StudentModality from './pages/StudentModality'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -44,7 +46,8 @@ function App() {
         <LanguageProvider>
           <StudentProvider>
             <FightModalityProvider>
-              <Router basename="/jiu-jitsu-academy-manager">
+              <StudentModalityProvider>
+                <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
               <div className={`transition-all duration-300 ${
@@ -65,14 +68,16 @@ function App() {
                     <Route path="/championships" element={<Championships />} />
                     <Route path="/administration" element={<Administration />} />
                     
-                    {/* Sub-menu Routes - Students */}
-                    <Route path="/students/registration" element={<StudentRegistration />} />
-                    <Route path="/students/registration/:action" element={<StudentForm />} />
-                    <Route path="/students/registration/:action/:id" element={<StudentForm />} />
-                    <Route path="/students/profiles" element={<div className="p-6">Student Profiles</div>} />
-                    <Route path="/students/fight-plans" element={<div className="p-6">Fight Plans by Student</div>} />
-                    <Route path="/students/evaluation" element={<div className="p-6">Student Evaluation & Grades</div>} />
-                    <Route path="/students/attendance" element={<div className="p-6">Student Attendance</div>} />
+                      {/* Sub-menu Routes - Students */}
+                      <Route path="/students/registration" element={<StudentRegistration />} />
+                      <Route path="/students/registration/:action" element={<StudentForm />} />
+                      <Route path="/students/registration/:action/:id" element={<StudentForm />} />
+                      <Route path="/students/profiles" element={<div className="p-6">Student Profiles</div>} />
+                      <Route path="/students/modality" element={<StudentModality />} />
+                      <Route path="/students/modality/:action" element={<div className="p-6">Student Modality Form</div>} />
+                      <Route path="/students/modality/:action/:id" element={<div className="p-6">Student Modality Form</div>} />
+                      <Route path="/students/evaluation" element={<div className="p-6">Student Evaluation & Grades</div>} />
+                      <Route path="/students/attendance" element={<div className="p-6">Student Attendance</div>} />
                     
                     {/* Sub-menu Routes - Teachers */}
                     <Route path="/teachers/registration" element={<div className="p-6">Teacher Registration</div>} />
@@ -111,6 +116,7 @@ function App() {
           </div>
         </div>
         </Router>
+              </StudentModalityProvider>
             </FightModalityProvider>
           </StudentProvider>
         </LanguageProvider>
