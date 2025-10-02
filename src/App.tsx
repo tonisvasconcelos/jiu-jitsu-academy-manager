@@ -16,11 +16,11 @@ function App() {
 
   return (
     <Router basename="/jiu-jitsu-academy-manager">
-      <div className="min-h-screen bg-gray-900 text-white">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
         <Sidebar collapsed={sidebarCollapsed} />
-        <div className={`transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
+        <div className={`transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'} min-h-screen lg:ml-64 md:ml-16 sm:ml-0`}>
           <Header onToggleSidebar={toggleSidebar} />
-          <main className="p-6">
+          <main className="relative">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/students" element={<Students />} />

@@ -40,17 +40,20 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   const isMenuExpanded = (menuId: string) => expandedMenus.includes(menuId)
 
   return (
-    <div className={`fixed left-0 top-0 h-full bg-gray-800 transition-all duration-300 z-50 ${
+    <div className={`fixed left-0 top-0 h-full bg-white/5 backdrop-blur-md border-r border-white/10 transition-all duration-300 z-50 ${
       collapsed ? 'w-16' : 'w-64'
     }`}>
       {/* Logo */}
-      <div className="p-4 border-b border-gray-700">
+      <div className="p-4 border-b border-white/10">
         <div className="flex items-center">
-          <div className="text-2xl">🥋</div>
+          <div className="text-2xl p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">🥋</div>
           {!collapsed && (
-            <span className="ml-3 text-xl font-bold text-white">
-              Academy Manager
-            </span>
+            <div className="ml-3">
+              <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                Academy Manager
+              </span>
+              <p className="text-xs text-gray-400">Management System</p>
+            </div>
           )}
         </div>
       </div>
@@ -62,18 +65,18 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
             {/* Main Menu Item */}
             <button
               onClick={() => toggleMenu(menu.id)}
-              className={`w-full flex items-center px-4 py-3 text-left hover:bg-gray-700 transition-colors ${
+              className={`w-full flex items-center px-4 py-3 text-left hover:bg-white/10 transition-all duration-300 rounded-xl mx-2 group ${
                 collapsed ? 'justify-center' : 'justify-between'
-              }`}
+              } ${isMenuExpanded(menu.id) ? 'bg-white/10' : ''}`}
             >
               <div className="flex items-center">
-                <span className="text-xl">{menu.icon}</span>
+                <span className="text-xl group-hover:scale-110 transition-transform">{menu.icon}</span>
                 {!collapsed && (
-                  <span className="ml-3 text-white font-medium">{menu.title}</span>
+                  <span className="ml-3 text-white font-medium group-hover:text-blue-400 transition-colors">{menu.title}</span>
                 )}
               </div>
               {!collapsed && (
-                <span className={`transform transition-transform ${
+                <span className={`transform transition-all duration-300 group-hover:text-blue-400 ${
                   isMenuExpanded(menu.id) ? 'rotate-180' : ''
                 }`}>
                   ▼
@@ -83,18 +86,18 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
 
             {/* Sub Menu Items */}
             {!collapsed && isMenuExpanded(menu.id) && (
-              <div className="bg-gray-750">
+              <div className="bg-white/5 mx-2 rounded-xl mt-1 overflow-hidden">
                 {menu.subItems.map((subItem) => (
                   <Link
                     key={subItem.id}
                     to={subItem.path}
-                    className={`flex items-center px-8 py-2 text-sm hover:bg-gray-700 transition-colors ${
+                    className={`flex items-center px-6 py-3 text-sm hover:bg-white/10 transition-all duration-300 group ${
                       location.pathname === subItem.path 
-                        ? 'bg-gray-700 text-blue-400' 
-                        : 'text-gray-300'
+                        ? 'bg-blue-500/20 text-blue-400 border-l-2 border-blue-400' 
+                        : 'text-gray-300 hover:text-blue-400'
                     }`}
                   >
-                    <span className="text-lg mr-3">{subItem.icon}</span>
+                    <span className="text-lg mr-3 group-hover:scale-110 transition-transform">{subItem.icon}</span>
                     {subItem.title}
                   </Link>
                 ))}
