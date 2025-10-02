@@ -186,19 +186,19 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
 
             {/* Collapsed Sub Items */}
             {collapsed && (
-              <div className="flex justify-center">
+              <div>
                 {menu.subItems.map((subItem) => (
                   <Link
                     key={subItem.id}
                     to={subItem.path}
-                    className={`block hover:bg-white/10 transition-colors rounded-lg ${
+                    className={`w-full flex items-center justify-center hover:bg-white/10 transition-colors rounded-lg h-8 ${
                       location.pathname === subItem.path 
                         ? 'bg-blue-500/20 text-blue-400' 
                         : 'text-gray-400'
                     }`}
                     title={subItem.title}
                   >
-                    <span className="text-sm flex justify-center items-center w-12 h-8">{subItem.icon}</span>
+                    <span className="text-sm">{subItem.icon}</span>
                   </Link>
                 ))}
               </div>
