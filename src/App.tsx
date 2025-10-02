@@ -16,6 +16,10 @@ function App() {
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
+      // On mobile, always start with collapsed sidebar
+      if (window.innerWidth < 768) {
+        setSidebarCollapsed(true)
+      }
     }
     
     checkMobile()
@@ -32,14 +36,14 @@ function App() {
     <LanguageProvider>
       <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-          <Sidebar collapsed={sidebarCollapsed} />
-          <div className={`transition-all duration-300 ${
-            isMobile 
-              ? 'ml-0' 
-              : sidebarCollapsed 
-                ? 'ml-16' 
-                : 'ml-64'
-          } min-h-screen`}>
+          <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
+              <div className={`transition-all duration-300 ${
+                isMobile 
+                  ? 'ml-0' 
+                  : sidebarCollapsed 
+                    ? 'ml-16' 
+                    : 'ml-64'
+              } min-h-screen ${isMobile && !sidebarCollapsed ? 'relative z-10' : ''}`}>
             <Header onToggleSidebar={toggleSidebar} />
             <main className="relative">
               <Routes>

@@ -1,15 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 
 interface SidebarProps {
   collapsed: boolean
+  onToggle: () => void
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
+const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const location = useLocation()
   const [expandedMenus, setExpandedMenus] = useState<string[]>([])
+  const [isMobile, setIsMobile] = useState(false)
   const { t } = useLanguage()
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const menuItems = [
     {
@@ -120,9 +133,19 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   const isMenuExpanded = (menuId: string) => expandedMenus.includes(menuId)
 
   return (
-    <div className={`fixed left-0 top-0 h-full bg-white/5 backdrop-blur-md border-r border-white/10 transition-all duration-300 z-50 ${
-      collapsed ? 'w-16' : 'w-64'
-    }`}>
+    <>
+      {/* Mobile Overlay */}
+      {isMobile && !collapsed && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={onToggle}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`fixed left-0 top-0 h-full bg-white/5 backdrop-blur-md border-r border-white/10 transition-all duration-300 z-50 ${
+        collapsed ? 'w-16' : 'w-64'
+      }`}>
       {/* Logo */}
       <div className="p-3 border-b border-white/10">
         <div className="flex items-center justify-center">
@@ -223,6 +246,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       </nav>
 
     </div>
+    </>
   )
 }
 
