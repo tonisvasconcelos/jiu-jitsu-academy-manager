@@ -1,89 +1,56 @@
-# 🥋 Jiu-Jitsu International Team Management System
+# 🥋 Jiu-Jitsu Academy Manager
 
-A modern, responsive web application for managing a Jiu-Jitsu academy with full bilingual support (Portuguese/English).
+A fresh start for your Jiu-Jitsu Academy Management System.
+
+## 🚀 Getting Started
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Start Development Server**
+   ```bash
+   npm run dev
+   ```
+
+3. **Build for Production**
+   ```bash
+   npm run build
+   ```
+
+4. **Deploy to GitHub Pages**
+   ```bash
+   npm run deploy
+   ```
+
+## 🛠️ Tech Stack
+
+- **React 18** with TypeScript
+- **Vite** for fast development and building
+- **Tailwind CSS** for styling
+- **GitHub Pages** for deployment
+
+## 📁 Project Structure
+
+```
+src/
+├── App.tsx          # Main application component
+├── main.tsx         # Application entry point
+└── index.css        # Global styles with Tailwind
+```
+
+## 🎯 Next Steps
+
+1. Add your first component
+2. Set up routing (if needed)
+3. Add state management (if needed)
+4. Build your features step by step
 
 ## 🌐 Live Demo
 
-**Access the app:** [Your GitHub Pages URL will appear here after deployment]
-
-## ✨ Features
-
-- 👥 **Student Management** - Complete CRUD operations with belt tracking
-- 👨‍🏫 **Teacher Management** - Manage instructors and qualifications  
-- 🏢 **Branch Management** - Handle multiple academy locations
-- 🌍 **Bilingual Support** - Full Portuguese/English internationalization
-- 📱 **Responsive Design** - Works on all devices
-- 🎨 **Modern UI** - Beautiful, professional interface
-
-## 🚀 Quick Start
-
-1. **Access the App**
-   - Open the GitHub Pages URL
-   - No installation required
-   - Works in any modern browser
-
-2. **For Developers**
-   ```bash
-   # Clone the repository
-   git clone https://github.com/yourusername/jiu-jitsu-academy-manager.git
-   
-   # Open index.html in your browser
-   open index.html
-   ```
-
-## 🛠️ Technology Stack
-
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Styling**: Modern CSS with Flexbox/Grid
-- **Hosting**: GitHub Pages
-- **Deployment**: Automatic via GitHub
-
-## 📋 Roadmap
-
-### ✅ Phase 1 (Current)
-- [x] Basic app structure
-- [x] Responsive design
-- [x] Feature overview
-- [x] GitHub Pages deployment
-
-### 🚧 Phase 2 (Planned)
-- [ ] Student CRUD operations
-- [ ] Teacher management
-- [ ] Branch management
-- [ ] Data persistence
-
-### 📋 Phase 3 (Future)
-- [ ] Authentication system
-- [ ] Advanced reporting
-- [ ] Mobile app
-- [ ] API integration
-
-## 👥 Multi-User Access
-
-This app is designed for multi-user access:
-- ✅ **No login required** (initially)
-- ✅ **Accessible from anywhere**
-- ✅ **Works on all devices**
-- ✅ **Easy to share** with team members
-
-## 🔧 Customization
-
-To customize the app:
-1. Edit `index.html` for content changes
-2. Modify CSS styles for design updates
-3. Push changes to GitHub for automatic deployment
-
-## 📞 Support
-
-For support and questions:
-- Create an issue in this repository
-- Contact the development team
-- Check the documentation
-
-## 📄 License
-
-This project is licensed under the MIT License.
+Your app will be available at: `https://tonisvasconcelos.github.io/jiu-jitsu-academy-manager/`
 
 ---
 
-**Built with ❤️ for the Jiu-Jitsu community**
+**Ready to build something amazing!** 🚀
