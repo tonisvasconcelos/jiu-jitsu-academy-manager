@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents, Student } from '../contexts/StudentContext'
+import * as XLSX from 'xlsx'
 
 const StudentRegistration: React.FC = () => {
   const { t } = useLanguage()
@@ -36,6 +37,64 @@ const StudentRegistration: React.FC = () => {
     if (window.confirm('Are you sure you want to clear ALL student data? This cannot be undone!')) {
       clearAllStudents()
     }
+  }
+
+  const handleExportToExcel = () => {
+    if (students.length === 0) {
+      alert('No students to export!')
+      return
+    }
+
+    // Prepare data for Excel export
+    const exportData = students.map(student => ({
+      'Student ID': student.studentId,
+      'First Name': student.firstName,
+      'Last Name': student.lastName,
+      'Display Name': student.displayName,
+      'Birth Date': student.birthDate,
+      'Age': calculateAge(student.birthDate),
+      'Gender': t(student.gender.toLowerCase()),
+      'Belt Level': t(student.beltLevel.toLowerCase()),
+      'Document ID': student.documentId,
+      'Email': student.email,
+      'Phone': student.phone,
+      'Branch ID': student.branchId,
+      'Active': student.active ? t('active') : 'Inactive',
+      'Photo URL': student.photoUrl || ''
+    }))
+
+    // Create workbook and worksheet
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.json_to_sheet(exportData)
+
+    // Set column widths
+    const colWidths = [
+      { wch: 12 }, // Student ID
+      { wch: 15 }, // First Name
+      { wch: 15 }, // Last Name
+      { wch: 20 }, // Display Name
+      { wch: 12 }, // Birth Date
+      { wch: 8 },  // Age
+      { wch: 10 }, // Gender
+      { wch: 12 }, // Belt Level
+      { wch: 15 }, // Document ID
+      { wch: 25 }, // Email
+      { wch: 15 }, // Phone
+      { wch: 12 }, // Branch ID
+      { wch: 10 }, // Active
+      { wch: 30 }  // Photo URL
+    ]
+    ws['!cols'] = colWidths
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Students')
+
+    // Generate filename with current date
+    const currentDate = new Date().toISOString().split('T')[0]
+    const filename = `students_export_${currentDate}.xlsx`
+
+    // Save file
+    XLSX.writeFile(wb, filename)
   }
 
   // Calculate belt counts
@@ -74,6 +133,13 @@ const StudentRegistration: React.FC = () => {
               </p>
             </div>
             <div className="flex space-x-3">
+              <button
+                onClick={handleExportToExcel}
+                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25 flex items-center"
+              >
+                <span className="mr-2">📊</span>
+                {t('export-to-excel')}
+              </button>
               <button
                 onClick={handleClearAllData}
                 className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25 flex items-center"
