@@ -47,16 +47,30 @@ const StudentForm: React.FC = () => {
         setStudent(existingStudent)
       }
     } else if (action === 'new') {
-      // Generate new student ID and set default branch
+      // Generate new student ID
       setStudent(prev => ({
         ...prev,
-        studentId: `STU${String(Date.now()).slice(-6)}`,
-        branchId: activeBranches.length > 0 ? activeBranches[0].branchId : ''
+        studentId: `STU${String(Date.now()).slice(-6)}`
       }))
     }
-  }, [action, id, getStudent, activeBranches])
+  }, [action, id, getStudent])
+
+  // Separate useEffect to set default branch when branches are loaded
+  useEffect(() => {
+    if (action === 'new' && activeBranches.length > 0 && !student.branchId) {
+      setStudent(prev => ({
+        ...prev,
+        branchId: activeBranches[0].branchId
+      }))
+    }
+  }, [activeBranches, action, student.branchId])
 
   const handleInputChange = (field: keyof Student, value: string | boolean) => {
+    console.log('StudentForm: handleInputChange called with field:', field, 'value:', value)
+    if (field === 'branchId') {
+      console.log('StudentForm: Branch selection changed to:', value)
+      console.log('StudentForm: Available branches:', activeBranches.map(b => ({ id: b.branchId, name: b.name })))
+    }
     setStudent(prev => {
       const updated = { ...prev, [field]: value }
       
@@ -290,7 +304,7 @@ const StudentForm: React.FC = () => {
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
                 >
                   {activeBranches.length === 0 ? (
-                    <option value="" disabled>No branches available</option>
+                    <option value="" disabled>No branches available - Please create a branch first</option>
                   ) : (
                     activeBranches.map(branch => (
                       <option key={branch.branchId} value={branch.branchId}>{branch.name}</option>
