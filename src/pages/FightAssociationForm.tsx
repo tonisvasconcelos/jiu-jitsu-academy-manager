@@ -90,7 +90,9 @@ const FightAssociationForm: React.FC = () => {
   
   // Debug logging
   console.log('FightAssociationForm: fightModalities:', fightModalities)
+  console.log('FightAssociationForm: fightModalities length:', fightModalities?.length || 0)
   console.log('FightAssociationForm: activeFightModalities:', activeFightModalities)
+  console.log('FightAssociationForm: activeFightModalities length:', activeFightModalities.length)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">

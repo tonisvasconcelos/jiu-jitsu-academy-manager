@@ -42,6 +42,26 @@ const initialModalities: FightModality[] = [
     duration: 60,
     active: true,
     createdAt: new Date().toISOString()
+  },
+  {
+    modalityId: 'MOD0938592',
+    name: 'Karate',
+    description: 'Karate',
+    type: 'striking',
+    level: 'beginner',
+    duration: 60,
+    active: true,
+    createdAt: new Date().toISOString()
+  },
+  {
+    modalityId: 'MOD004',
+    name: 'Brazilian Jiu-Jitsu (Iniciante)',
+    description: 'Brazilian Jiu-Jitsu (Iniciante)',
+    type: 'grappling',
+    level: 'beginner',
+    duration: 60,
+    active: true,
+    createdAt: new Date().toISOString()
   }
 ]
 
