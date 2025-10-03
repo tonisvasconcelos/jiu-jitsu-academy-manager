@@ -39,6 +39,7 @@ import FightAssociationForm from './pages/FightAssociationForm'
 import ClassSchedules from './pages/ClassSchedules'
 import ClassScheduleRegistration from './pages/ClassScheduleRegistration'
 import ClassScheduleForm from './pages/ClassScheduleForm'
+import ClassCalendar from './pages/ClassCalendar'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -137,7 +138,7 @@ function App() {
                     <Route path="/classes/registration" element={<ClassScheduleRegistration />} />
                     <Route path="/classes/registration/:action" element={<ClassScheduleForm />} />
                     <Route path="/classes/registration/:action/:id" element={<ClassScheduleForm />} />
-                    <Route path="/classes/calendar" element={<div className="p-6">Class Calendar View</div>} />
+                    <Route path="/classes/calendar" element={<ClassCalendar />} />
                     <Route path="/classes/attendance" element={<div className="p-6">Class Attendance Tracking</div>} />
                     <Route path="/classes/evaluation" element={<div className="p-6">Class Evaluation & Feedback</div>} />
                     
