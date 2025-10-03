@@ -7,7 +7,7 @@ const FightAssociationForm: React.FC = () => {
   const { action, id } = useParams<{ action: string; id?: string }>()
   const navigate = useNavigate()
   const { addFightAssociation, updateFightAssociation, getFightAssociation } = useFightAssociations()
-  const { fightModalities } = useFightModalities()
+  const { modalities: fightModalities } = useFightModalities()
   
   const [association, setAssociation] = useState<FightAssociation>({
     associationId: '',
@@ -28,7 +28,7 @@ const FightAssociationForm: React.FC = () => {
   })
 
   const [isLoading, setIsLoading] = useState(false)
-  const [isReadOnly, setIsReadOnly] = useState(action === 'view')
+  const isReadOnly = action === 'view'
 
   useEffect(() => {
     if (action === 'edit' || action === 'view') {
@@ -114,7 +114,7 @@ const FightAssociationForm: React.FC = () => {
     }
   }
 
-  const activeFightModalities = (fightModalities || []).filter(modality => modality.active)
+  const activeFightModalities = (fightModalities || []).filter((modality: any) => modality.active)
   
   // Debug logging
   console.log('FightAssociationForm: fightModalities:', fightModalities)
@@ -201,7 +201,7 @@ const FightAssociationForm: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Fight Modalities *</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {activeFightModalities.map(modality => {
+                  {activeFightModalities.map((modality: any) => {
                     const isSelected = association.fightModalities?.includes(modality.modalityId) || false
                     return (
                       <div
@@ -295,7 +295,7 @@ const FightAssociationForm: React.FC = () => {
                   min="1800"
                   max="2024"
                   value={association.establishedYear || ''}
-                  onChange={(e) => handleInputChange('establishedYear', parseInt(e.target.value) || undefined)}
+                  onChange={(e) => handleInputChange('establishedYear', parseInt(e.target.value) || 0)}
                   disabled={isReadOnly}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent disabled:opacity-50"
                   placeholder="1994"

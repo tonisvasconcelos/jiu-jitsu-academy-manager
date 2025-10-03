@@ -232,7 +232,21 @@ export const FightAssociationProvider: React.FC<{ children: ReactNode }> = ({ ch
       if (stored) {
         const parsed = JSON.parse(stored)
         console.log('FightAssociationContext: Loaded fight associations from localStorage:', parsed)
-        return parsed
+        
+        // Migration: Convert old fightModality to fightModalities array
+        const migratedAssociations = parsed.map((association: any) => {
+          if (association.fightModality && !association.fightModalities) {
+            console.log('FightAssociationContext: Migrating association', association.associationId, 'from fightModality to fightModalities')
+            return {
+              ...association,
+              fightModalities: [association.fightModality],
+              fightModality: undefined // Remove old field
+            }
+          }
+          return association
+        })
+        
+        return migratedAssociations
       }
     } catch (error) {
       console.error('FightAssociationContext: Error loading fight associations from localStorage:', error)
