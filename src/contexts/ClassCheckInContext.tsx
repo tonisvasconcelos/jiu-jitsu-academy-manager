@@ -3,6 +3,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 export interface ClassCheckIn {
   id: string;
   classId: string;
+  studentId: string;
+  studentName: string;
   checkInDate: string; // YYYY-MM-DD format
   checkInTime: string; // HH:MM format
   teacherName: string;
