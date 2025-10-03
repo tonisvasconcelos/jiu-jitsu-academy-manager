@@ -32,6 +32,12 @@ const StudentForm: React.FC = () => {
 
   // Get active branches for selection
   const activeBranches = branches.filter(branch => branch.active)
+  
+  console.log('=== STUDENT FORM DEBUG ===')
+  console.log('All branches:', branches)
+  console.log('Active branches:', activeBranches)
+  console.log('Branches length:', branches.length)
+  console.log('Active branches length:', activeBranches.length)
 
   useEffect(() => {
     if (action === 'edit' || action === 'view') {
