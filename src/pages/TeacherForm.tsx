@@ -8,7 +8,7 @@ import { useWeightDivisions } from '../contexts/WeightDivisionContext'
 const TeacherForm: React.FC = () => {
   const { action, id } = useParams<{ action: string; id?: string }>()
   const navigate = useNavigate()
-  const { teachers, addTeacher, updateTeacher, getTeacher } = useTeachers()
+  const { addTeacher, updateTeacher, getTeacher } = useTeachers()
   const { branches } = useBranches()
   const { modalities } = useFightModalities()
   const { weightDivisions } = useWeightDivisions()
@@ -51,17 +51,13 @@ const TeacherForm: React.FC = () => {
   const [certificationInput, setCertificationInput] = useState('')
 
   useEffect(() => {
-    console.log('TeacherForm useEffect:', { action, id })
     if (action === 'edit' || action === 'view') {
       const existingTeacher = getTeacher(id || '')
-      console.log('TeacherForm: Looking for teacher with ID:', id)
-      console.log('TeacherForm: Found teacher:', existingTeacher)
       if (existingTeacher) {
         setTeacher(existingTeacher)
         setIsReadOnly(action === 'view')
       } else {
-        console.log('TeacherForm: Teacher not found, navigating back to teachers list')
-        navigate('/teachers')
+        navigate('/teachers/registration')
       }
     } else if (action === 'new') {
       // Generate new teacher ID
@@ -166,45 +162,6 @@ const TeacherForm: React.FC = () => {
     }
   }
 
-  const getBeltColor = (beltLevel: string) => {
-    const colors = {
-      white: 'bg-gray-200 text-gray-800',
-      blue: 'bg-blue-500 text-white',
-      purple: 'bg-purple-500 text-white',
-      brown: 'bg-amber-600 text-white',
-      black: 'bg-gray-800 text-white',
-      'kids-white': 'bg-gray-200 text-gray-800',
-      'kids-gray-white': 'bg-gray-300 text-gray-800',
-      'kids-gray': 'bg-gray-400 text-white',
-      'kids-gray-black': 'bg-gray-500 text-white',
-      'kids-yellow-white': 'bg-yellow-200 text-gray-800',
-      'kids-yellow': 'bg-yellow-400 text-white',
-      'kids-yellow-black': 'bg-yellow-600 text-white',
-      'kids-orange-white': 'bg-orange-200 text-gray-800',
-      'kids-orange': 'bg-orange-400 text-white',
-      'kids-orange-black': 'bg-orange-600 text-white',
-      'kids-green-white': 'bg-green-200 text-gray-800',
-      'kids-green': 'bg-green-400 text-white',
-      'kids-green-black': 'bg-green-600 text-white',
-      'judo-kids-white': 'bg-gray-200 text-gray-800',
-      'judo-kids-white-yellow': 'bg-yellow-200 text-gray-800',
-      'judo-kids-yellow': 'bg-yellow-400 text-white',
-      'judo-kids-yellow-orange': 'bg-orange-300 text-white',
-      'judo-kids-orange': 'bg-orange-400 text-white',
-      'judo-kids-orange-green': 'bg-green-300 text-white',
-      'judo-kids-green': 'bg-green-400 text-white'
-    }
-    return colors[beltLevel as keyof typeof colors] || 'bg-gray-200 text-gray-800'
-  }
-
-  const getTeacherTypeColor = (teacherType: string) => {
-    const colors = {
-      professor: 'bg-purple-500/20 text-purple-400',
-      instructor: 'bg-blue-500/20 text-blue-400',
-      trainee: 'bg-green-500/20 text-green-400'
-    }
-    return colors[teacherType as keyof typeof colors] || 'bg-gray-500/20 text-gray-400'
-  }
 
   const activeFightModalities = modalities.filter(modality => modality.active)
 

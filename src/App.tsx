@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { LanguageProvider } from './contexts/LanguageContext'
 import { StudentProvider } from './contexts/StudentContext'
 import { TeacherProvider } from './contexts/TeacherContext'
@@ -101,6 +101,10 @@ function App() {
                     <Route path="/teachers/registration" element={<TeacherRegistration />} />
                     <Route path="/teachers/registration/:action" element={<TeacherForm />} />
                     <Route path="/teachers/registration/:action/:id" element={<TeacherForm />} />
+                    {/* Redirect old routes to new structure */}
+                    <Route path="/teachers/new" element={<Navigate to="/teachers/registration/new" replace />} />
+                    <Route path="/teachers/edit/:id" element={<Navigate to="/teachers/registration/edit/:id" replace />} />
+                    <Route path="/teachers/view/:id" element={<Navigate to="/teachers/registration/view/:id" replace />} />
                     <Route path="/teachers/profiles" element={<div className="p-6">Teacher Profiles</div>} />
                     <Route path="/teachers/assign" element={<div className="p-6">Assign Teachers to Classes</div>} />
                     <Route path="/teachers/evaluations" element={<div className="p-6">Teacher Evaluations</div>} />

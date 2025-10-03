@@ -201,11 +201,7 @@ export const TeacherProvider: React.FC<{ children: ReactNode }> = ({ children })
   }
 
   const getTeacher = (teacherId: string) => {
-    console.log('TeacherContext: getTeacher called with ID:', teacherId)
-    console.log('TeacherContext: Available teachers:', teachers)
-    const foundTeacher = teachers.find(teacher => teacher.teacherId === teacherId)
-    console.log('TeacherContext: Found teacher:', foundTeacher)
-    return foundTeacher
+    return teachers.find(teacher => teacher.teacherId === teacherId)
   }
 
   const getTeachersByBranch = (branchId: string) => {
