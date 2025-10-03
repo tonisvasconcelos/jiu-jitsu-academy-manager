@@ -19,6 +19,7 @@ const StudentRegistration: React.FC = () => {
   const [genderFilter, setGenderFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
   const [branchFilter, setBranchFilter] = useState('all')
+  const [kidsFilter, setKidsFilter] = useState('all') // Added kids filter state
   
   console.log('=== STUDENT REGISTRATION: RENDER ===')
   console.log('StudentRegistration: Current students:', students)
@@ -91,45 +92,47 @@ const StudentRegistration: React.FC = () => {
       return
     }
 
-    // Prepare data for Excel export
-    const exportData = students.map(student => ({
-      'Student ID': student.studentId,
-      'First Name': student.firstName,
-      'Last Name': student.lastName,
-      'Display Name': student.displayName,
-      'Birth Date': student.birthDate,
-      'Age': calculateAge(student.birthDate),
+        // Prepare data for Excel export
+        const exportData = students.map(student => ({
+          'Student ID': student.studentId,
+          'First Name': student.firstName,
+          'Last Name': student.lastName,
+          'Display Name': student.displayName,
+          'Birth Date': student.birthDate,
+          'Age': calculateAge(student.birthDate),
           'Gender': t((student.gender || '').toLowerCase()),
           'Belt Level': t((student.beltLevel || '').toLowerCase()),
-      'Document ID': student.documentId,
-      'Email': student.email,
-      'Phone': student.phone,
-      'Branch ID': student.branchId,
-      'Active': student.active ? t('active') : 'Inactive',
-      'Photo URL': student.photoUrl || ''
-    }))
+          'Is Kids Student': student.isKidsStudent ? 'Yes' : 'No',
+          'Document ID': student.documentId,
+          'Email': student.email,
+          'Phone': student.phone,
+          'Branch ID': student.branchId,
+          'Active': student.active ? t('active') : 'Inactive',
+          'Photo URL': student.photoUrl || ''
+        }))
 
     // Create workbook and worksheet
     const wb = XLSX.utils.book_new()
     const ws = XLSX.utils.json_to_sheet(exportData)
 
-    // Set column widths
-    const colWidths = [
-      { wch: 12 }, // Student ID
-      { wch: 15 }, // First Name
-      { wch: 15 }, // Last Name
-      { wch: 20 }, // Display Name
-      { wch: 12 }, // Birth Date
-      { wch: 8 },  // Age
-      { wch: 10 }, // Gender
-      { wch: 12 }, // Belt Level
-      { wch: 15 }, // Document ID
-      { wch: 25 }, // Email
-      { wch: 15 }, // Phone
-      { wch: 12 }, // Branch ID
-      { wch: 10 }, // Active
-      { wch: 30 }  // Photo URL
-    ]
+        // Set column widths
+        const colWidths = [
+          { wch: 12 }, // Student ID
+          { wch: 15 }, // First Name
+          { wch: 15 }, // Last Name
+          { wch: 20 }, // Display Name
+          { wch: 12 }, // Birth Date
+          { wch: 8 },  // Age
+          { wch: 10 }, // Gender
+          { wch: 12 }, // Belt Level
+          { wch: 15 }, // Is Kids Student
+          { wch: 15 }, // Document ID
+          { wch: 25 }, // Email
+          { wch: 15 }, // Phone
+          { wch: 12 }, // Branch ID
+          { wch: 10 }, // Active
+          { wch: 30 }  // Photo URL
+        ]
     ws['!cols'] = colWidths
 
     // Add worksheet to workbook
@@ -144,54 +147,57 @@ const StudentRegistration: React.FC = () => {
   }
 
   const handleDownloadTemplate = () => {
-    // Create template data
-    const templateData = [
-      {
-        'First Name': 'João',
-        'Last Name': 'Silva',
-        'Birth Date': '1990-01-15',
-        'Gender': 'male',
-        'Belt Level': 'blue',
-        'Document ID': '12345678901',
-        'Email': 'joao.silva@email.com',
-        'Phone': '+55 11 99999-9999',
-        'Branch ID': 'BR001',
-        'Active': 'true',
-        'Photo URL': 'https://example.com/photo.jpg'
-      },
-      {
-        'First Name': 'Maria',
-        'Last Name': 'Santos',
-        'Birth Date': '1995-05-20',
-        'Gender': 'female',
-        'Belt Level': 'purple',
-        'Document ID': '98765432100',
-        'Email': 'maria.santos@email.com',
-        'Phone': '+55 11 88888-8888',
-        'Branch ID': 'BR001',
-        'Active': 'true',
-        'Photo URL': ''
-      }
-    ]
+        // Create template data
+        const templateData = [
+          {
+            'First Name': 'João',
+            'Last Name': 'Silva',
+            'Birth Date': '1990-01-15',
+            'Gender': 'male',
+            'Belt Level': 'blue',
+            'Is Kids Student': 'No',
+            'Document ID': '12345678901',
+            'Email': 'joao.silva@email.com',
+            'Phone': '+55 11 99999-9999',
+            'Branch ID': 'BR001',
+            'Active': 'true',
+            'Photo URL': 'https://example.com/photo.jpg'
+          },
+          {
+            'First Name': 'Maria',
+            'Last Name': 'Santos',
+            'Birth Date': '2010-05-20',
+            'Gender': 'female',
+            'Belt Level': 'kids-yellow',
+            'Is Kids Student': 'Yes',
+            'Document ID': '98765432100',
+            'Email': 'maria.santos@email.com',
+            'Phone': '+55 11 88888-8888',
+            'Branch ID': 'BR001',
+            'Active': 'true',
+            'Photo URL': ''
+          }
+        ]
 
     // Create workbook and worksheet
     const wb = XLSX.utils.book_new()
     const ws = XLSX.utils.json_to_sheet(templateData)
 
-    // Set column widths
-    const colWidths = [
-      { wch: 15 }, // First Name
-      { wch: 15 }, // Last Name
-      { wch: 12 }, // Birth Date
-      { wch: 10 }, // Gender
-      { wch: 12 }, // Belt Level
-      { wch: 15 }, // Document ID
-      { wch: 25 }, // Email
-      { wch: 15 }, // Phone
-      { wch: 12 }, // Branch ID
-      { wch: 10 }, // Active
-      { wch: 30 }  // Photo URL
-    ]
+        // Set column widths
+        const colWidths = [
+          { wch: 15 }, // First Name
+          { wch: 15 }, // Last Name
+          { wch: 12 }, // Birth Date
+          { wch: 10 }, // Gender
+          { wch: 12 }, // Belt Level
+          { wch: 15 }, // Is Kids Student
+          { wch: 15 }, // Document ID
+          { wch: 25 }, // Email
+          { wch: 15 }, // Phone
+          { wch: 12 }, // Branch ID
+          { wch: 10 }, // Active
+          { wch: 30 }  // Photo URL
+        ]
     ws['!cols'] = colWidths
 
     // Add worksheet to workbook
@@ -248,12 +254,13 @@ const StudentRegistration: React.FC = () => {
           displayName: `${String(row['First Name']).trim()} ${String(row['Last Name']).trim()}`,
           birthDate: String(row['Birth Date']).trim(),
           gender: (row['Gender'] || 'other').toLowerCase() as 'male' | 'female' | 'other',
-          beltLevel: (row['Belt Level'] || 'white').toLowerCase() as 'white' | 'blue' | 'purple' | 'brown' | 'black',
+          beltLevel: (row['Belt Level'] || 'white').toLowerCase() as 'white' | 'blue' | 'purple' | 'brown' | 'black' | 'kids-white' | 'kids-gray-white' | 'kids-gray' | 'kids-gray-black' | 'kids-yellow-white' | 'kids-yellow' | 'kids-yellow-black' | 'kids-orange-white' | 'kids-orange' | 'kids-orange-black' | 'kids-green-white' | 'kids-green' | 'kids-green-black' | 'judo-kids-white' | 'judo-kids-white-yellow' | 'judo-kids-yellow' | 'judo-kids-yellow-orange' | 'judo-kids-orange' | 'judo-kids-orange-green' | 'judo-kids-green',
           documentId: String(row['Document ID'] || '').trim(),
           email: String(row['Email'] || '').trim(),
           phone: String(row['Phone'] || '').trim(),
           branchId: String(row['Branch ID'] || 'BR001').trim(),
           active: String(row['Active'] || 'true').toLowerCase() === 'true',
+          isKidsStudent: String(row['Is Kids Student'] || 'false').toLowerCase() === 'yes' || String(row['Is Kids Student'] || 'false').toLowerCase() === 'true',
           photoUrl: String(row['Photo URL'] || '').trim() || undefined
         }
 
@@ -306,14 +313,15 @@ const StudentRegistration: React.FC = () => {
     fileInputRef.current?.click()
   }
 
-      // Filter functions
-      const clearAllFilters = () => {
-        setSearchTerm('')
-        setBeltFilter('all')
-        setGenderFilter('all')
-        setStatusFilter('all')
-        setBranchFilter('all')
-      }
+  // Filter functions
+  const clearAllFilters = () => {
+    setSearchTerm('')
+    setBeltFilter('all')
+    setGenderFilter('all')
+    setStatusFilter('all')
+    setBranchFilter('all')
+    setKidsFilter('all')
+  }
 
   const filteredStudents = students.filter(student => {
     // Search filter
@@ -329,18 +337,23 @@ const StudentRegistration: React.FC = () => {
     // Gender filter
     const matchesGender = genderFilter === 'all' || (student.gender || '').toLowerCase() === genderFilter.toLowerCase()
 
-        // Status filter
-        const matchesStatus = statusFilter === 'all' || 
-          (statusFilter === 'active' && student.active) ||
-          (statusFilter === 'inactive' && !student.active)
+    // Status filter
+    const matchesStatus = statusFilter === 'all' || 
+      (statusFilter === 'active' && student.active) ||
+      (statusFilter === 'inactive' && !student.active)
 
-        // Branch filter
-        const matchesBranch = branchFilter === 'all' || (student.branchId || '').toLowerCase() === branchFilter.toLowerCase()
+    // Branch filter
+    const matchesBranch = branchFilter === 'all' || (student.branchId || '').toLowerCase() === branchFilter.toLowerCase()
 
-        return matchesSearch && matchesBelt && matchesGender && matchesStatus && matchesBranch
+    // Kids filter
+    const matchesKids = kidsFilter === 'all' || 
+      (kidsFilter === 'kids' && student.isKidsStudent) ||
+      (kidsFilter === 'adults' && !student.isKidsStudent)
+
+    return matchesSearch && matchesBelt && matchesGender && matchesStatus && matchesBranch && matchesKids
   })
 
-  const hasActiveFilters = searchTerm !== '' || beltFilter !== 'all' || genderFilter !== 'all' || statusFilter !== 'all' || branchFilter !== 'all'
+  const hasActiveFilters = searchTerm !== '' || beltFilter !== 'all' || genderFilter !== 'all' || statusFilter !== 'all' || branchFilter !== 'all' || kidsFilter !== 'all'
 
   // Calculate belt counts (using filtered students for dynamic counts)
   const totalStudents = students.length
@@ -983,6 +996,22 @@ const StudentRegistration: React.FC = () => {
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <span className="text-gray-400">✅</span>
+                </div>
+              </div>
+
+              {/* Kids Filter */}
+              <div className="relative">
+                <select
+                  value={kidsFilter}
+                  onChange={(e) => setKidsFilter(e.target.value)}
+                  className="appearance-none bg-white/10 border border-white/20 rounded-xl text-white px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 min-w-[140px]"
+                >
+                  <option value="all" className="bg-gray-800">All Students</option>
+                  <option value="kids" className="bg-gray-800">Kids Only</option>
+                  <option value="adults" className="bg-gray-800">Adults Only</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <span className="text-gray-400">👶</span>
                 </div>
               </div>
 

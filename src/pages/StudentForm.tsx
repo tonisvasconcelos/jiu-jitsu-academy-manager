@@ -24,12 +24,31 @@ const StudentForm: React.FC = () => {
     phone: '',
     branchId: '',
     active: true,
+    isKidsStudent: false,
     photoUrl: ''
   })
 
   const [isLoading, setIsLoading] = useState(false)
   const [isReadOnly, setIsReadOnly] = useState(action === 'view')
   const [defaultBranchSet, setDefaultBranchSet] = useState(false)
+
+  // Function to calculate age from birth date
+  const calculateAge = (birthDate: string) => {
+    if (!birthDate) return 0
+    const today = new Date()
+    const dob = new Date(birthDate)
+    let age = today.getFullYear() - dob.getFullYear()
+    const m = today.getMonth() - dob.getMonth()
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+      age--
+    }
+    return age
+  }
+
+  // Function to check if student is under 18
+  const isUnder18 = (birthDate: string) => {
+    return calculateAge(birthDate) < 18
+  }
 
   // Get active branches for selection
   const activeBranches = branches.filter(branch => branch.active)
@@ -89,6 +108,12 @@ const StudentForm: React.FC = () => {
       // Auto-generate displayName
       if (field === 'firstName' || field === 'lastName') {
         updated.displayName = `${updated.firstName} ${updated.lastName}`.trim()
+      }
+      
+      // Auto-set isKidsStudent based on birth date
+      if (field === 'birthDate' && typeof value === 'string') {
+        updated.isKidsStudent = isUnder18(value)
+        console.log('StudentForm: Auto-set isKidsStudent to:', updated.isKidsStudent, 'based on age:', calculateAge(value))
       }
       
       return updated
@@ -269,6 +294,25 @@ const StudentForm: React.FC = () => {
                   disabled={isReadOnly}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
                 />
+              </div>
+
+              {/* Is Kids Student */}
+              <div>
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={student.isKidsStudent}
+                    onChange={(e) => handleInputChange('isKidsStudent', e.target.checked)}
+                    disabled={isReadOnly}
+                    className="w-5 h-5 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 focus:ring-2 disabled:opacity-50"
+                  />
+                  <span className="text-sm font-medium text-gray-300">
+                    Is Kids Student (Under 18 years old)
+                  </span>
+                </label>
+                <p className="text-xs text-gray-400 mt-1">
+                  Mark this for students under 18 years old for better data classification
+                </p>
               </div>
 
               {/* Gender */}

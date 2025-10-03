@@ -19,6 +19,7 @@ export interface Student {
   phone: string
   branchId: string
   active: boolean
+  isKidsStudent: boolean
   photoUrl?: string
 }
 
@@ -44,7 +45,28 @@ export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children })
       if (stored) {
         const parsed = JSON.parse(stored)
         console.log('StudentContext: Loaded students from localStorage:', parsed)
-        return parsed
+        
+        // Migrate existing students to include isKidsStudent field
+        const migratedStudents = parsed.map((student: any) => {
+          if (student.isKidsStudent === undefined) {
+            // Calculate age and set isKidsStudent based on birth date
+            const today = new Date()
+            const dob = new Date(student.birthDate)
+            let age = today.getFullYear() - dob.getFullYear()
+            const m = today.getMonth() - dob.getMonth()
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+              age--
+            }
+            student.isKidsStudent = age < 18
+            console.log(`StudentContext: Migrated student ${student.firstName} ${student.lastName} - Age: ${age}, isKidsStudent: ${student.isKidsStudent}`)
+          }
+          return student
+        })
+        
+        // Save migrated data back to localStorage
+        localStorage.setItem('jiu-jitsu-students', JSON.stringify(migratedStudents))
+        
+        return migratedStudents
       }
     } catch (error) {
       console.error('StudentContext: Error loading students from localStorage:', error)
