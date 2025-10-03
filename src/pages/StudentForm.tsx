@@ -29,6 +29,7 @@ const StudentForm: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [isReadOnly, setIsReadOnly] = useState(action === 'view')
+  const [defaultBranchSet, setDefaultBranchSet] = useState(false)
 
   // Get active branches for selection
   const activeBranches = branches.filter(branch => branch.active)
@@ -55,24 +56,35 @@ const StudentForm: React.FC = () => {
     }
   }, [action, id, getStudent])
 
-  // Separate useEffect to set default branch when branches are loaded
+  // Separate useEffect to set default branch when branches are loaded (only once)
   useEffect(() => {
-    if (action === 'new' && activeBranches.length > 0 && !student.branchId) {
+    if (action === 'new' && activeBranches.length > 0 && !defaultBranchSet) {
+      console.log('StudentForm: Setting default branch to:', activeBranches[0].branchId)
       setStudent(prev => ({
         ...prev,
         branchId: activeBranches[0].branchId
       }))
+      setDefaultBranchSet(true)
     }
-  }, [activeBranches, action, student.branchId])
+  }, [activeBranches, action, defaultBranchSet])
+
+  // Debug useEffect to track student state changes
+  useEffect(() => {
+    console.log('StudentForm: Student state changed, branchId is now:', student.branchId)
+  }, [student.branchId])
 
   const handleInputChange = (field: keyof Student, value: string | boolean) => {
     console.log('StudentForm: handleInputChange called with field:', field, 'value:', value)
     if (field === 'branchId') {
       console.log('StudentForm: Branch selection changed to:', value)
+      console.log('StudentForm: Previous branchId was:', student.branchId)
       console.log('StudentForm: Available branches:', activeBranches.map(b => ({ id: b.branchId, name: b.name })))
     }
     setStudent(prev => {
       const updated = { ...prev, [field]: value }
+      if (field === 'branchId') {
+        console.log('StudentForm: Updated student with new branchId:', updated.branchId)
+      }
       
       // Auto-generate displayName
       if (field === 'firstName' || field === 'lastName') {
