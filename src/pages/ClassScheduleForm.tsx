@@ -28,7 +28,7 @@ const ClassScheduleForm: React.FC = () => {
     endDate: '',
     startTime: '',
     endTime: '',
-    dayOfWeek: 'monday',
+    daysOfWeek: ['monday'],
     duration: 60,
     maxCapacity: 20,
     currentEnrollment: 0,
@@ -79,6 +79,7 @@ const ClassScheduleForm: React.FC = () => {
     if (!formData.startTime) newErrors.startTime = 'Start time is required'
     if (!formData.endTime) newErrors.endTime = 'End time is required'
     if (!formData.maxCapacity || formData.maxCapacity < 1) newErrors.maxCapacity = 'Max capacity must be at least 1'
+    if (!formData.daysOfWeek || formData.daysOfWeek.length === 0) newErrors.daysOfWeek = 'Please select at least one day'
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -104,7 +105,7 @@ const ClassScheduleForm: React.FC = () => {
         endDate: formData.endDate!,
         startTime: formData.startTime!,
         endTime: formData.endTime!,
-        dayOfWeek: formData.dayOfWeek!,
+        daysOfWeek: formData.daysOfWeek!,
         duration: formData.duration!,
         maxCapacity: formData.maxCapacity!,
         currentEnrollment: formData.currentEnrollment || 0,
@@ -237,7 +238,7 @@ const ClassScheduleForm: React.FC = () => {
                   <option value="">Select Branch</option>
                   {branches.map(branch => (
                     <option key={branch.branchId} value={branch.branchId}>
-                      {branch.branchName}
+                      {branch.name}
                     </option>
                   ))}
                 </select>
@@ -320,22 +321,40 @@ const ClassScheduleForm: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Day of Week *
+                  Days of Week *
                 </label>
-                <select
-                  value={formData.dayOfWeek || 'monday'}
-                  onChange={(e) => setFormData({ ...formData, dayOfWeek: e.target.value as any })}
-                  disabled={isViewMode}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="monday">Monday</option>
-                  <option value="tuesday">Tuesday</option>
-                  <option value="wednesday">Wednesday</option>
-                  <option value="thursday">Thursday</option>
-                  <option value="friday">Friday</option>
-                  <option value="saturday">Saturday</option>
-                  <option value="sunday">Sunday</option>
-                </select>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { value: 'monday', label: 'Monday' },
+                    { value: 'tuesday', label: 'Tuesday' },
+                    { value: 'wednesday', label: 'Wednesday' },
+                    { value: 'thursday', label: 'Thursday' },
+                    { value: 'friday', label: 'Friday' },
+                    { value: 'saturday', label: 'Saturday' },
+                    { value: 'sunday', label: 'Sunday' }
+                  ].map(day => (
+                    <label key={day.value} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.daysOfWeek?.includes(day.value as any) || false}
+                        onChange={(e) => {
+                          const currentDays = formData.daysOfWeek || []
+                          if (e.target.checked) {
+                            setFormData({ ...formData, daysOfWeek: [...currentDays, day.value as any] })
+                          } else {
+                            setFormData({ ...formData, daysOfWeek: currentDays.filter(d => d !== day.value) })
+                          }
+                        }}
+                        disabled={isViewMode}
+                        className="w-4 h-4 text-blue-600 bg-white/5 border-white/10 rounded focus:ring-blue-500 focus:ring-2"
+                      />
+                      <span className="text-sm text-gray-300">{day.label}</span>
+                    </label>
+                  ))}
+                </div>
+                {formData.daysOfWeek?.length === 0 && (
+                  <p className="text-red-400 text-sm mt-1">Please select at least one day</p>
+                )}
               </div>
 
               <div>

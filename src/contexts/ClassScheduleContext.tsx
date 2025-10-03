@@ -12,7 +12,7 @@ export interface ClassSchedule {
   endDate: string
   startTime: string
   endTime: string
-  dayOfWeek: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
+  daysOfWeek: ('monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday')[]
   duration: number // in minutes
   maxCapacity: number
   currentEnrollment: number
@@ -59,7 +59,7 @@ const initialClasses: ClassSchedule[] = [
     endDate: '2024-12-31',
     startTime: '18:00',
     endTime: '19:30',
-    dayOfWeek: 'monday',
+    daysOfWeek: ['monday'],
     duration: 90,
     maxCapacity: 20,
     currentEnrollment: 15,
@@ -87,7 +87,7 @@ const initialClasses: ClassSchedule[] = [
     endDate: '2024-12-31',
     startTime: '19:30',
     endTime: '21:00',
-    dayOfWeek: 'monday',
+    daysOfWeek: ['monday'],
     duration: 90,
     maxCapacity: 15,
     currentEnrollment: 12,
@@ -115,7 +115,7 @@ const initialClasses: ClassSchedule[] = [
     endDate: '2024-12-31',
     startTime: '17:00',
     endTime: '18:00',
-    dayOfWeek: 'tuesday',
+    daysOfWeek: ['tuesday'],
     duration: 60,
     maxCapacity: 25,
     currentEnrollment: 18,
@@ -143,7 +143,7 @@ const initialClasses: ClassSchedule[] = [
     endDate: '2024-12-31',
     startTime: '16:00',
     endTime: '17:00',
-    dayOfWeek: 'wednesday',
+    daysOfWeek: ['wednesday'],
     duration: 60,
     maxCapacity: 20,
     currentEnrollment: 16,
@@ -171,7 +171,7 @@ const initialClasses: ClassSchedule[] = [
     endDate: '2024-01-18',
     startTime: '14:00',
     endTime: '15:00',
-    dayOfWeek: 'thursday',
+    daysOfWeek: ['thursday'],
     duration: 60,
     maxCapacity: 1,
     currentEnrollment: 1,
@@ -198,7 +198,7 @@ const initialClasses: ClassSchedule[] = [
     endDate: '2024-12-31',
     startTime: '18:30',
     endTime: '19:30',
-    dayOfWeek: 'friday',
+    daysOfWeek: ['friday'],
     duration: 60,
     maxCapacity: 20,
     currentEnrollment: 14,
@@ -226,7 +226,7 @@ const initialClasses: ClassSchedule[] = [
     endDate: '2024-01-20',
     startTime: '10:00',
     endTime: '12:00',
-    dayOfWeek: 'saturday',
+    daysOfWeek: ['saturday'],
     duration: 120,
     maxCapacity: 30,
     currentEnrollment: 25,
@@ -253,7 +253,7 @@ const initialClasses: ClassSchedule[] = [
     endDate: '2024-12-31',
     startTime: '09:00',
     endTime: '11:00',
-    dayOfWeek: 'sunday',
+    daysOfWeek: ['sunday'],
     duration: 120,
     maxCapacity: 15,
     currentEnrollment: 10,
@@ -347,7 +347,7 @@ export const ClassScheduleProvider: React.FC<{ children: ReactNode }> = ({ child
   }
 
   const getClassesByDay = (dayOfWeek: string) => {
-    return classes.filter(classSchedule => classSchedule.dayOfWeek === dayOfWeek)
+    return classes.filter(classSchedule => classSchedule.daysOfWeek.includes(dayOfWeek as any))
   }
 
   const value: ClassScheduleContextType = {

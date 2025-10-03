@@ -138,7 +138,7 @@ const ClassScheduleRegistration: React.FC = () => {
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-sm text-gray-300">
                   <span className="mr-2">📅</span>
-                  <span>{classItem.dayOfWeek} • {classItem.startTime} - {classItem.endTime}</span>
+                  <span>{classItem.daysOfWeek.map(day => day.charAt(0).toUpperCase() + day.slice(1)).join(', ')} • {classItem.startTime} - {classItem.endTime}</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-300">
                   <span className="mr-2">👥</span>
