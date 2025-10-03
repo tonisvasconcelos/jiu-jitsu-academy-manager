@@ -18,6 +18,8 @@ export interface ClassSchedule {
   currentEnrollment: number
   status: 'active' | 'inactive' | 'cancelled' | 'completed'
   classType: 'regular' | 'private' | 'seminar' | 'workshop' | 'competition'
+  genderCategory: 'unisex' | 'womens'
+  ageCategory: 'adult' | 'master' | 'kids1' | 'kids2'
   price?: number
   recurring: boolean
   recurringPattern?: 'weekly' | 'bi-weekly' | 'monthly'
@@ -64,6 +66,8 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 15,
     status: 'active',
     classType: 'regular',
+    genderCategory: 'unisex',
+    ageCategory: 'adult',
     price: 50,
     recurring: true,
     recurringPattern: 'weekly',
@@ -118,6 +122,8 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 18,
     status: 'active',
     classType: 'regular',
+    genderCategory: 'unisex',
+    ageCategory: 'adult',
     price: 45,
     recurring: true,
     recurringPattern: 'weekly',
@@ -145,6 +151,8 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 16,
     status: 'active',
     classType: 'regular',
+    genderCategory: 'unisex',
+    ageCategory: 'kids1',
     price: 40,
     recurring: true,
     recurringPattern: 'weekly',
@@ -172,6 +180,8 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 1,
     status: 'active',
     classType: 'private',
+    genderCategory: 'unisex',
+    ageCategory: 'adult',
     price: 100,
     recurring: false,
     requirements: ['Gi'],
@@ -198,6 +208,8 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 14,
     status: 'active',
     classType: 'regular',
+    genderCategory: 'unisex',
+    ageCategory: 'adult',
     price: 50,
     recurring: true,
     recurringPattern: 'weekly',
@@ -225,6 +237,8 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 25,
     status: 'active',
     classType: 'workshop',
+    genderCategory: 'unisex',
+    ageCategory: 'adult',
     price: 80,
     recurring: false,
     requirements: ['Gi', 'Notebook'],
@@ -251,6 +265,8 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 10,
     status: 'active',
     classType: 'competition',
+    genderCategory: 'unisex',
+    ageCategory: 'adult',
     price: 70,
     recurring: true,
     recurringPattern: 'weekly',

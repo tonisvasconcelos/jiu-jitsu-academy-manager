@@ -190,6 +190,14 @@ const ClassScheduleRegistration: React.FC = () => {
                   <span className="mr-2">🏟️</span>
                   <span>{getFacilityName(classItem.facilityId)}</span>
                 </div>
+                <div className="flex items-center text-sm text-gray-300">
+                  <span className="mr-2">👥</span>
+                  <span className="capitalize">{classItem.genderCategory === 'womens' ? "Women's Only" : 'Unisex'}</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-300">
+                  <span className="mr-2">🎯</span>
+                  <span className="capitalize">{classItem.ageCategory}</span>
+                </div>
               </div>
 
               <div className="flex gap-2">

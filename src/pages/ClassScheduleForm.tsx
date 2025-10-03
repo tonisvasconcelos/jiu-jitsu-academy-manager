@@ -34,6 +34,8 @@ const ClassScheduleForm: React.FC = () => {
     currentEnrollment: 0,
     status: 'active',
     classType: 'regular',
+    genderCategory: 'unisex',
+    ageCategory: 'adult',
     price: 0,
     recurring: true,
     recurringPattern: 'weekly',
@@ -119,7 +121,8 @@ const ClassScheduleForm: React.FC = () => {
         currentEnrollment: formData.currentEnrollment || 0,
         status: formData.status!,
         classType: formData.classType!,
-        difficulty: formData.difficulty!,
+        genderCategory: formData.genderCategory!,
+        ageCategory: formData.ageCategory!,
         price: formData.price || 0,
         recurring: formData.recurring!,
         recurringPattern: formData.recurringPattern,
@@ -208,6 +211,38 @@ const ClassScheduleForm: React.FC = () => {
                   <option value="seminar">Seminar</option>
                   <option value="workshop">Workshop</option>
                   <option value="competition">Competition</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Gender Category *
+                </label>
+                <select
+                  value={formData.genderCategory || 'unisex'}
+                  onChange={(e) => setFormData({ ...formData, genderCategory: e.target.value as any })}
+                  disabled={isViewMode}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="unisex">Unisex</option>
+                  <option value="womens">Women's Only</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Age Category *
+                </label>
+                <select
+                  value={formData.ageCategory || 'adult'}
+                  onChange={(e) => setFormData({ ...formData, ageCategory: e.target.value as any })}
+                  disabled={isViewMode}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="adult">Adult</option>
+                  <option value="master">Master</option>
+                  <option value="kids1">Kids 1</option>
+                  <option value="kids2">Kids 2</option>
                 </select>
               </div>
 
