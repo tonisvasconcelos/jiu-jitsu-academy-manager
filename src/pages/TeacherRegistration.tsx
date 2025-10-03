@@ -654,7 +654,7 @@ const TeacherRegistration: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-2">
                           <Link
-                            to={`/teachers/view/${teacher.teacherId}`}
+                            to={`/teachers/registration/view/${teacher.teacherId}`}
                             className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
                             title="View Teacher"
                           >
@@ -664,7 +664,7 @@ const TeacherRegistration: React.FC = () => {
                             </svg>
                           </Link>
                           <Link
-                            to={`/teachers/edit/${teacher.teacherId}`}
+                            to={`/teachers/registration/edit/${teacher.teacherId}`}
                             className="text-yellow-400 hover:text-yellow-300 transition-colors duration-200"
                             title="Edit Teacher"
                           >
