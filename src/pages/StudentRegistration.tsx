@@ -310,19 +310,22 @@ const StudentRegistration: React.FC = () => {
 
   const hasActiveFilters = searchTerm !== '' || beltFilter !== 'all' || genderFilter !== 'all' || statusFilter !== 'all' || branchFilter !== 'all'
 
-  // Calculate belt counts
+  // Calculate belt counts (using filtered students for dynamic counts)
   const totalStudents = students.length
   const activeStudents = students.filter(s => s.active).length
-  const blackBelts = students.filter(s => (s.beltLevel || '').toLowerCase() === 'black').length
-  const whiteBelts = students.filter(s => (s.beltLevel || '').toLowerCase() === 'white').length
-  const blueBelts = students.filter(s => (s.beltLevel || '').toLowerCase() === 'blue').length
-  const purpleBelts = students.filter(s => (s.beltLevel || '').toLowerCase() === 'purple').length
-  const brownBelts = students.filter(s => (s.beltLevel || '').toLowerCase() === 'brown').length
+  const filteredTotalStudents = filteredStudents.length
+  
+  // Belt counts based on filtered students (dynamic)
+  const blackBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'black').length
+  const whiteBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'white').length
+  const blueBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'blue').length
+  const purpleBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'purple').length
+  const brownBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'brown').length
 
-  // Calculate percentages
+  // Calculate percentages (using filtered total for dynamic percentages)
   const getPercentage = (count: number) => {
-    if (totalStudents === 0) return '0%'
-    return `${Math.round((count / totalStudents) * 100)}%`
+    if (filteredTotalStudents === 0) return '0%'
+    return `${Math.round((count / filteredTotalStudents) * 100)}%`
   }
 
   const blackBeltsPercentage = getPercentage(blackBelts)
@@ -403,24 +406,12 @@ const StudentRegistration: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Black Belts</p>
-                <p className="text-3xl font-bold text-white">{blackBelts}</p>
-                <p className="text-xs text-gray-500 mt-1">{blackBeltsPercentage} of total</p>
-              </div>
-              <div className="p-3 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg">
-                <span className="text-2xl">🥋</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Other Belt Counts (Smaller) */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-white mb-4">{t('belt-level-counts')}</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {/* White Belts */}
             <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-500/20">
               <div className="flex items-center justify-between">
@@ -473,6 +464,20 @@ const StudentRegistration: React.FC = () => {
                 </div>
                 <div className="p-2 bg-amber-700/20 rounded-lg shadow-md">
                   <span className="text-xl text-amber-600">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Black Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-800/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">{t('black-belts')}</p>
+                  <p className="text-2xl font-bold text-white">{blackBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{blackBeltsPercentage}</p>
+                </div>
+                <div className="p-2 bg-gray-800/20 rounded-lg shadow-md">
+                  <span className="text-xl text-gray-800">🥋</span>
                 </div>
               </div>
             </div>
