@@ -448,35 +448,45 @@ const StudentRegistration: React.FC = () => {
     return `${Math.round((count / filteredTotalStudents) * 100)}%`
   }
 
-  const blackBeltsPercentage = getPercentage(blackBelts)
-  const whiteBeltsPercentage = getPercentage(whiteBelts)
-  const blueBeltsPercentage = getPercentage(blueBelts)
-  const purpleBeltsPercentage = getPercentage(purpleBelts)
-  const brownBeltsPercentage = getPercentage(brownBelts)
+  // Create belt data arrays for efficient rendering
+  const adultBelts = [
+    { name: t('white-belts'), count: whiteBelts, percentage: getPercentage(whiteBelts), color: 'gray-200', icon: '🥋' },
+    { name: t('blue-belts'), count: blueBelts, percentage: getPercentage(blueBelts), color: 'blue-500', icon: '🥋' },
+    { name: t('purple-belts'), count: purpleBelts, percentage: getPercentage(purpleBelts), color: 'purple-500', icon: '🥋' },
+    { name: t('brown-belts'), count: brownBelts, percentage: getPercentage(brownBelts), color: 'amber-700', icon: '🥋' },
+    { name: t('black-belts'), count: blackBelts, percentage: getPercentage(blackBelts), color: 'gray-800', icon: '🥋' }
+  ]
 
-  // BJJ Kids belt percentages
-  const kidsWhiteBeltsPercentage = getPercentage(kidsWhiteBelts)
-  const kidsGrayWhiteBeltsPercentage = getPercentage(kidsGrayWhiteBelts)
-  const kidsGrayBeltsPercentage = getPercentage(kidsGrayBelts)
-  const kidsGrayBlackBeltsPercentage = getPercentage(kidsGrayBlackBelts)
-  const kidsYellowWhiteBeltsPercentage = getPercentage(kidsYellowWhiteBelts)
-  const kidsYellowBeltsPercentage = getPercentage(kidsYellowBelts)
-  const kidsYellowBlackBeltsPercentage = getPercentage(kidsYellowBlackBelts)
-  const kidsOrangeWhiteBeltsPercentage = getPercentage(kidsOrangeWhiteBelts)
-  const kidsOrangeBeltsPercentage = getPercentage(kidsOrangeBelts)
-  const kidsOrangeBlackBeltsPercentage = getPercentage(kidsOrangeBlackBelts)
-  const kidsGreenWhiteBeltsPercentage = getPercentage(kidsGreenWhiteBelts)
-  const kidsGreenBeltsPercentage = getPercentage(kidsGreenBelts)
-  const kidsGreenBlackBeltsPercentage = getPercentage(kidsGreenBlackBelts)
+  const bjjKidsBelts = [
+    { name: 'White', count: kidsWhiteBelts, percentage: getPercentage(kidsWhiteBelts), color: 'gray-200', icon: '🥋' },
+    { name: 'Gray/White', count: kidsGrayWhiteBelts, percentage: getPercentage(kidsGrayWhiteBelts), color: 'gray-300', icon: '🥋' },
+    { name: 'Gray', count: kidsGrayBelts, percentage: getPercentage(kidsGrayBelts), color: 'gray-400', icon: '🥋' },
+    { name: 'Gray/Black', count: kidsGrayBlackBelts, percentage: getPercentage(kidsGrayBlackBelts), color: 'gray-500', icon: '🥋' },
+    { name: 'Yellow/White', count: kidsYellowWhiteBelts, percentage: getPercentage(kidsYellowWhiteBelts), color: 'yellow-200', icon: '🥋' },
+    { name: 'Yellow', count: kidsYellowBelts, percentage: getPercentage(kidsYellowBelts), color: 'yellow-400', icon: '🥋' },
+    { name: 'Yellow/Black', count: kidsYellowBlackBelts, percentage: getPercentage(kidsYellowBlackBelts), color: 'yellow-600', icon: '🥋' },
+    { name: 'Orange/White', count: kidsOrangeWhiteBelts, percentage: getPercentage(kidsOrangeWhiteBelts), color: 'orange-200', icon: '🥋' },
+    { name: 'Orange', count: kidsOrangeBelts, percentage: getPercentage(kidsOrangeBelts), color: 'orange-400', icon: '🥋' },
+    { name: 'Orange/Black', count: kidsOrangeBlackBelts, percentage: getPercentage(kidsOrangeBlackBelts), color: 'orange-600', icon: '🥋' },
+    { name: 'Green/White', count: kidsGreenWhiteBelts, percentage: getPercentage(kidsGreenWhiteBelts), color: 'green-200', icon: '🥋' },
+    { name: 'Green', count: kidsGreenBelts, percentage: getPercentage(kidsGreenBelts), color: 'green-400', icon: '🥋' },
+    { name: 'Green/Black', count: kidsGreenBlackBelts, percentage: getPercentage(kidsGreenBlackBelts), color: 'green-600', icon: '🥋' }
+  ]
 
-  // Judo Kids belt percentages
-  const judoKidsWhiteBeltsPercentage = getPercentage(judoKidsWhiteBelts)
-  const judoKidsWhiteYellowBeltsPercentage = getPercentage(judoKidsWhiteYellowBelts)
-  const judoKidsYellowBeltsPercentage = getPercentage(judoKidsYellowBelts)
-  const judoKidsYellowOrangeBeltsPercentage = getPercentage(judoKidsYellowOrangeBelts)
-  const judoKidsOrangeBeltsPercentage = getPercentage(judoKidsOrangeBelts)
-  const judoKidsOrangeGreenBeltsPercentage = getPercentage(judoKidsOrangeGreenBelts)
-  const judoKidsGreenBeltsPercentage = getPercentage(judoKidsGreenBelts)
+  const judoKidsBelts = [
+    { name: 'White', count: judoKidsWhiteBelts, percentage: getPercentage(judoKidsWhiteBelts), color: 'gray-200', icon: '🥋' },
+    { name: 'White/Yellow', count: judoKidsWhiteYellowBelts, percentage: getPercentage(judoKidsWhiteYellowBelts), color: 'yellow-200', icon: '🥋' },
+    { name: 'Yellow', count: judoKidsYellowBelts, percentage: getPercentage(judoKidsYellowBelts), color: 'yellow-400', icon: '🥋' },
+    { name: 'Yellow/Orange', count: judoKidsYellowOrangeBelts, percentage: getPercentage(judoKidsYellowOrangeBelts), color: 'orange-300', icon: '🥋' },
+    { name: 'Orange', count: judoKidsOrangeBelts, percentage: getPercentage(judoKidsOrangeBelts), color: 'orange-400', icon: '🥋' },
+    { name: 'Orange/Green', count: judoKidsOrangeGreenBelts, percentage: getPercentage(judoKidsOrangeGreenBelts), color: 'green-300', icon: '🥋' },
+    { name: 'Green', count: judoKidsGreenBelts, percentage: getPercentage(judoKidsGreenBelts), color: 'green-400', icon: '🥋' }
+  ]
+
+  // Filter to only show belts with count > 0
+  const activeAdultBelts = adultBelts.filter(belt => belt.count > 0)
+  const activeBjjKidsBelts = bjjKidsBelts.filter(belt => belt.count > 0)
+  const activeJudoKidsBelts = judoKidsBelts.filter(belt => belt.count > 0)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
@@ -552,386 +562,96 @@ const StudentRegistration: React.FC = () => {
           </div>
         </div>
 
-        {/* Belt Level Counts - Organized by ADULTS and KIDS */}
+        {/* Belt Level Counts - Only show belts with count > 0 */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-white mb-6">{t('belt-level-counts')}</h2>
           
-          {/* Adult Belts Section */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-              <span className="mr-2">👨‍💼</span>
-              ADULTS
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {/* White Belts */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-500/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">{t('white-belts')}</p>
-                  <p className="text-2xl font-bold text-white">{whiteBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{whiteBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-gray-200/20 rounded-lg shadow-md">
-                  <span className="text-xl text-gray-200">🥋</span>
-                </div>
+          {/* Adult Belts Section - Only show if there are active adult belts */}
+          {activeAdultBelts.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                <span className="mr-2">👨‍💼</span>
+                ADULTS
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                {activeAdultBelts.map((belt, index) => (
+                  <div key={index} className={`group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-${belt.color}/20`}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-medium text-gray-400 mb-1">{belt.name}</p>
+                        <p className="text-2xl font-bold text-white">{belt.count}</p>
+                        <p className="text-xs text-gray-500 mt-1">{belt.percentage}</p>
+                      </div>
+                      <div className={`p-2 bg-${belt.color}/20 rounded-lg shadow-md`}>
+                        <span className={`text-xl text-${belt.color}`}>{belt.icon}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
+          )}
 
-            {/* Blue Belts */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">{t('blue-belts')}</p>
-                  <p className="text-2xl font-bold text-white">{blueBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{blueBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-blue-500/20 rounded-lg shadow-md">
-                  <span className="text-xl text-blue-400">🥋</span>
-                </div>
+          {/* BJJ Kids Belts Section - Only show if there are active BJJ kids belts */}
+          {activeBjjKidsBelts.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                <span className="mr-2">🥋</span>
+                BJJ KIDS (Under 16)
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+                {activeBjjKidsBelts.map((belt, index) => (
+                  <div key={index} className={`group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-${belt.color}/20`}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-medium text-gray-400 mb-1">{belt.name}</p>
+                        <p className="text-2xl font-bold text-white">{belt.count}</p>
+                        <p className="text-xs text-gray-500 mt-1">{belt.percentage}</p>
+                      </div>
+                      <div className={`p-2 bg-${belt.color}/20 rounded-lg shadow-md`}>
+                        <span className={`text-xl text-${belt.color}`}>{belt.icon}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
+          )}
 
-            {/* Purple Belts */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">{t('purple-belts')}</p>
-                  <p className="text-2xl font-bold text-white">{purpleBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{purpleBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-purple-500/20 rounded-lg shadow-md">
-                  <span className="text-xl text-purple-400">🥋</span>
-                </div>
+          {/* Judo Kids Belts Section - Only show if there are active Judo kids belts */}
+          {activeJudoKidsBelts.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                <span className="mr-2">🥋</span>
+                JUDO KIDS (Under 15)
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+                {activeJudoKidsBelts.map((belt, index) => (
+                  <div key={index} className={`group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-${belt.color}/20`}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-medium text-gray-400 mb-1">{belt.name}</p>
+                        <p className="text-2xl font-bold text-white">{belt.count}</p>
+                        <p className="text-xs text-gray-500 mt-1">{belt.percentage}</p>
+                      </div>
+                      <div className={`p-2 bg-${belt.color}/20 rounded-lg shadow-md`}>
+                        <span className={`text-xl text-${belt.color}`}>{belt.icon}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
+          )}
 
-            {/* Brown Belts */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-amber-700/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">{t('brown-belts')}</p>
-                  <p className="text-2xl font-bold text-white">{brownBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{brownBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-amber-700/20 rounded-lg shadow-md">
-                  <span className="text-xl text-amber-600">🥋</span>
-                </div>
-              </div>
+          {/* Show message if no belts have students */}
+          {activeAdultBelts.length === 0 && activeBjjKidsBelts.length === 0 && activeJudoKidsBelts.length === 0 && (
+            <div className="text-center py-8">
+              <div className="text-6xl mb-4">🥋</div>
+              <h3 className="text-xl font-semibold text-white mb-2">No Belt Data Available</h3>
+              <p className="text-gray-400">No students have been assigned belt levels yet.</p>
             </div>
-
-            {/* Black Belts */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-800/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">{t('black-belts')}</p>
-                  <p className="text-2xl font-bold text-white">{blackBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{blackBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-gray-800/20 rounded-lg shadow-md">
-                  <span className="text-xl text-gray-800">🥋</span>
-                </div>
-              </div>
-            </div>
-            </div>
-          </div>
-
-          {/* BJJ Kids Belts Section */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-              <span className="mr-2">🥋</span>
-              BJJ KIDS (Under 16)
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-            {/* BJJ Kids White */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-200/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">White</p>
-                  <p className="text-2xl font-bold text-white">{kidsWhiteBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsWhiteBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-gray-200/20 rounded-lg shadow-md">
-                  <span className="text-xl text-gray-200">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Gray/White */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-300/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Gray/White</p>
-                  <p className="text-2xl font-bold text-white">{kidsGrayWhiteBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsGrayWhiteBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-gray-300/20 rounded-lg shadow-md">
-                  <span className="text-xl text-gray-300">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Gray */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-400/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Gray</p>
-                  <p className="text-2xl font-bold text-white">{kidsGrayBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsGrayBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-gray-400/20 rounded-lg shadow-md">
-                  <span className="text-xl text-gray-400">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Gray/Black */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-600/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Gray/Black</p>
-                  <p className="text-2xl font-bold text-white">{kidsGrayBlackBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsGrayBlackBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-gray-600/20 rounded-lg shadow-md">
-                  <span className="text-xl text-gray-600">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Yellow/White */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-yellow-200/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Yellow/White</p>
-                  <p className="text-2xl font-bold text-white">{kidsYellowWhiteBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsYellowWhiteBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-yellow-200/20 rounded-lg shadow-md">
-                  <span className="text-xl text-yellow-200">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Yellow */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-yellow-500/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Yellow</p>
-                  <p className="text-2xl font-bold text-white">{kidsYellowBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsYellowBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-yellow-500/20 rounded-lg shadow-md">
-                  <span className="text-xl text-yellow-500">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Yellow/Black */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-yellow-700/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Yellow/Black</p>
-                  <p className="text-2xl font-bold text-white">{kidsYellowBlackBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsYellowBlackBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-yellow-700/20 rounded-lg shadow-md">
-                  <span className="text-xl text-yellow-700">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Orange/White */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-200/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Orange/White</p>
-                  <p className="text-2xl font-bold text-white">{kidsOrangeWhiteBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsOrangeWhiteBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-orange-200/20 rounded-lg shadow-md">
-                  <span className="text-xl text-orange-200">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Orange */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-500/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Orange</p>
-                  <p className="text-2xl font-bold text-white">{kidsOrangeBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsOrangeBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-orange-500/20 rounded-lg shadow-md">
-                  <span className="text-xl text-orange-500">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Orange/Black */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-700/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Orange/Black</p>
-                  <p className="text-2xl font-bold text-white">{kidsOrangeBlackBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsOrangeBlackBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-orange-700/20 rounded-lg shadow-md">
-                  <span className="text-xl text-orange-700">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Green/White */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-green-200/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Green/White</p>
-                  <p className="text-2xl font-bold text-white">{kidsGreenWhiteBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsGreenWhiteBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-green-200/20 rounded-lg shadow-md">
-                  <span className="text-xl text-green-200">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Green */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-green-500/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Green</p>
-                  <p className="text-2xl font-bold text-white">{kidsGreenBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsGreenBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-green-500/20 rounded-lg shadow-md">
-                  <span className="text-xl text-green-500">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* BJJ Kids Green/Black */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-green-700/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Green/Black</p>
-                  <p className="text-2xl font-bold text-white">{kidsGreenBlackBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{kidsGreenBlackBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-green-700/20 rounded-lg shadow-md">
-                  <span className="text-xl text-green-700">🥋</span>
-                </div>
-              </div>
-            </div>
-            </div>
-          </div>
-
-          {/* Judo Kids Belts Section */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-              <span className="mr-2">🥋</span>
-              JUDO KIDS (Under 15)
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-            {/* Judo Kids White */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-200/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">White</p>
-                  <p className="text-2xl font-bold text-white">{judoKidsWhiteBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{judoKidsWhiteBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-gray-200/20 rounded-lg shadow-md">
-                  <span className="text-xl text-gray-200">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Judo Kids White/Yellow */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-yellow-100/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">White/Yellow</p>
-                  <p className="text-2xl font-bold text-white">{judoKidsWhiteYellowBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{judoKidsWhiteYellowBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-yellow-100/20 rounded-lg shadow-md">
-                  <span className="text-xl text-yellow-100">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Judo Kids Yellow */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-yellow-500/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Yellow</p>
-                  <p className="text-2xl font-bold text-white">{judoKidsYellowBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{judoKidsYellowBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-yellow-500/20 rounded-lg shadow-md">
-                  <span className="text-xl text-yellow-500">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Judo Kids Yellow/Orange */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-300/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Yellow/Orange</p>
-                  <p className="text-2xl font-bold text-white">{judoKidsYellowOrangeBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{judoKidsYellowOrangeBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-orange-300/20 rounded-lg shadow-md">
-                  <span className="text-xl text-orange-300">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Judo Kids Orange */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-500/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Orange</p>
-                  <p className="text-2xl font-bold text-white">{judoKidsOrangeBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{judoKidsOrangeBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-orange-500/20 rounded-lg shadow-md">
-                  <span className="text-xl text-orange-500">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Judo Kids Orange/Green */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-green-300/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Orange/Green</p>
-                  <p className="text-2xl font-bold text-white">{judoKidsOrangeGreenBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{judoKidsOrangeGreenBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-green-300/20 rounded-lg shadow-md">
-                  <span className="text-xl text-green-300">🥋</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Judo Kids Green */}
-            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-green-500/20">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-400 mb-1">Green</p>
-                  <p className="text-2xl font-bold text-white">{judoKidsGreenBelts}</p>
-                  <p className="text-xs text-gray-500 mt-1">{judoKidsGreenBeltsPercentage}</p>
-                </div>
-                <div className="p-2 bg-green-500/20 rounded-lg shadow-md">
-                  <span className="text-xl text-green-500">🥋</span>
-                </div>
-              </div>
-            </div>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Modern Filter Bar */}
