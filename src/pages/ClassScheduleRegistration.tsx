@@ -5,7 +5,7 @@ import { useClassSchedules } from '../contexts/ClassScheduleContext'
 
 const ClassScheduleRegistration: React.FC = () => {
   const { t } = useLanguage()
-  const { classes, deleteClass } = useClassSchedules()
+  const { classes = [], deleteClass } = useClassSchedules()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [typeFilter, setTypeFilter] = useState('all')

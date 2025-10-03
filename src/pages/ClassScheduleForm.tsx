@@ -12,10 +12,10 @@ const ClassScheduleForm: React.FC = () => {
   const navigate = useNavigate()
   const { t } = useLanguage()
   const { classes, addClass, updateClass, getClass } = useClassSchedules()
-  const { branches } = useBranches()
-  const { facilities } = useBranchFacilities()
-  const { teachers } = useTeachers()
-  const { fightModalities } = useFightModalities()
+  const { branches = [] } = useBranches()
+  const { facilities = [] } = useBranchFacilities()
+  const { teachers = [] } = useTeachers()
+  const { fightModalities = [] } = useFightModalities()
 
   const [formData, setFormData] = useState<Partial<ClassSchedule>>({
     className: '',
@@ -45,20 +45,26 @@ const ClassScheduleForm: React.FC = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (action === 'edit' && id) {
-      const existingClass = getClass(id)
-      if (existingClass) {
-        setFormData(existingClass)
-      }
-    } else if (action === 'view' && id) {
-      const existingClass = getClass(id)
-      if (existingClass) {
-        setFormData(existingClass)
+    // Wait for all context data to be loaded
+    if (branches.length > 0 && facilities.length > 0 && teachers.length > 0 && fightModalities.length > 0) {
+      setIsLoading(false)
+      
+      if (action === 'edit' && id) {
+        const existingClass = getClass(id)
+        if (existingClass) {
+          setFormData(existingClass)
+        }
+      } else if (action === 'view' && id) {
+        const existingClass = getClass(id)
+        if (existingClass) {
+          setFormData(existingClass)
+        }
       }
     }
-  }, [action, id, getClass])
+  }, [action, id, getClass, branches, facilities, teachers, fightModalities])
 
   const generateClassId = () => {
     const existingIds = classes.map(c => parseInt(c.classId.replace('CLS', '')))
@@ -137,6 +143,21 @@ const ClassScheduleForm: React.FC = () => {
   }
 
   const isViewMode = action === 'view'
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-300">Loading class data...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
