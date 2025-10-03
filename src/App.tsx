@@ -144,11 +144,7 @@ function App() {
                             <Route path="/branches/registration" element={<BranchRegistration />} />
                             <Route path="/branches/registration/:action" element={<BranchForm />} />
                             <Route path="/branches/registration/:action/:id" element={<BranchForm />} />
-                            <Route path="/branches/details" element={<div className="p-6">Branch Details</div>} />
-                            <Route path="/branches/assign" element={<div className="p-6">Assign Branch</div>} />
-                            <Route path="/branches/schedules" element={<div className="p-6">Branch Schedules</div>} />
                             <Route path="/branches/facilities" element={<div className="p-6">Branch Facilities</div>} />
-                            <Route path="/branches/reports" element={<div className="p-6">Branch Reports</div>} />
                   </Routes>
                 </main>
           </div>
