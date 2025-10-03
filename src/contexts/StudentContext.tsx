@@ -7,7 +7,13 @@ export interface Student {
   displayName: string
   birthDate: string
   gender: 'male' | 'female' | 'other'
-  beltLevel: 'white' | 'blue' | 'purple' | 'brown' | 'black'
+  beltLevel: 'white' | 'blue' | 'purple' | 'brown' | 'black' | 
+    'kids-white' | 'kids-gray-white' | 'kids-gray' | 'kids-gray-black' | 
+    'kids-yellow-white' | 'kids-yellow' | 'kids-yellow-black' | 
+    'kids-orange-white' | 'kids-orange' | 'kids-orange-black' | 
+    'kids-green-white' | 'kids-green' | 'kids-green-black' |
+    'judo-kids-white' | 'judo-kids-white-yellow' | 'judo-kids-yellow' | 
+    'judo-kids-yellow-orange' | 'judo-kids-orange' | 'judo-kids-orange-green' | 'judo-kids-green'
   documentId: string
   email: string
   phone: string

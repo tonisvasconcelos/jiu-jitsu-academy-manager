@@ -304,15 +304,29 @@ const StudentForm: React.FC = () => {
                     <option value="brown">Brown Belt</option>
                     <option value="black">Black Belt</option>
                   </optgroup>
-                  <optgroup label="Kids Belts">
-                    <option value="kids-white">Kids White Belt</option>
-                    <option value="kids-yellow">Kids Yellow Belt</option>
-                    <option value="kids-orange">Kids Orange Belt</option>
-                    <option value="kids-green">Kids Green Belt</option>
-                    <option value="kids-blue">Kids Blue Belt</option>
-                    <option value="kids-purple">Kids Purple Belt</option>
-                    <option value="kids-brown">Kids Brown Belt</option>
-                    <option value="kids-black">Kids Black Belt</option>
+                  <optgroup label="Kids Belts (BJJ - Under 16)">
+                    <option value="kids-white">White</option>
+                    <option value="kids-gray-white">Gray/White</option>
+                    <option value="kids-gray">Solid Gray</option>
+                    <option value="kids-gray-black">Gray/Black</option>
+                    <option value="kids-yellow-white">Yellow/White</option>
+                    <option value="kids-yellow">Solid Yellow</option>
+                    <option value="kids-yellow-black">Yellow/Black</option>
+                    <option value="kids-orange-white">Orange/White</option>
+                    <option value="kids-orange">Solid Orange</option>
+                    <option value="kids-orange-black">Orange/Black</option>
+                    <option value="kids-green-white">Green/White</option>
+                    <option value="kids-green">Solid Green</option>
+                    <option value="kids-green-black">Green/Black</option>
+                  </optgroup>
+                  <optgroup label="Kids Belts (Judo - Under 15)">
+                    <option value="judo-kids-white">White</option>
+                    <option value="judo-kids-white-yellow">White/Yellow</option>
+                    <option value="judo-kids-yellow">Yellow</option>
+                    <option value="judo-kids-yellow-orange">Yellow/Orange</option>
+                    <option value="judo-kids-orange">Orange</option>
+                    <option value="judo-kids-orange-green">Orange/Green</option>
+                    <option value="judo-kids-green">Green</option>
                   </optgroup>
                 </select>
               </div>
