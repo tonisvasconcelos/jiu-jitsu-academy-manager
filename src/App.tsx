@@ -6,6 +6,7 @@ import { FightModalityProvider } from './contexts/FightModalityContext'
 import { StudentModalityProvider } from './contexts/StudentModalityContext'
 import { BranchProvider } from './contexts/BranchContext'
 import { WeightDivisionProvider } from './contexts/WeightDivisionContext'
+import { FightAssociationProvider } from './contexts/FightAssociationContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -26,6 +27,8 @@ import BranchRegistration from './pages/BranchRegistration'
 import BranchForm from './pages/BranchForm'
 import WeightDivisions from './pages/WeightDivisions'
 import WeightDivisionForm from './pages/WeightDivisionForm'
+import FightAssociations from './pages/FightAssociations'
+import FightAssociationForm from './pages/FightAssociationForm'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -57,6 +60,7 @@ function App() {
                   <StudentModalityProvider>
                     <BranchProvider>
                       <WeightDivisionProvider>
+                        <FightAssociationProvider>
                 <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
@@ -100,6 +104,9 @@ function App() {
                     <Route path="/championships/enrollment" element={<div className="p-6">Student Enrollment in Championships</div>} />
                     <Route path="/championships/results" element={<div className="p-6">Championship Results</div>} />
                     <Route path="/championships/ranking" element={<div className="p-6">Ranking & Statistics</div>} />
+                    <Route path="/championships/fight-associations" element={<FightAssociations />} />
+                    <Route path="/championships/fight-associations/:action" element={<FightAssociationForm />} />
+                    <Route path="/championships/fight-associations/:action/:id" element={<FightAssociationForm />} />
                     
                     {/* Sub-menu Routes - Administration */}
                     <Route path="/admin/profiles" element={<div className="p-6">User Profiles & Roles</div>} />
@@ -137,6 +144,7 @@ function App() {
           </div>
         </div>
                 </Router>
+                        </FightAssociationProvider>
                       </WeightDivisionProvider>
                     </BranchProvider>
                       </StudentModalityProvider>

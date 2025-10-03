@@ -10,6 +10,7 @@ const Championships: React.FC = () => {
     { id: 'student-enrollment', title: t('student-enrollment'), path: '/championships/enrollment', icon: '📋', description: 'Enroll students in championships' },
     { id: 'championship-results', title: t('championship-results'), path: '/championships/results', icon: '🏆', description: 'Record and view championship results' },
     { id: 'ranking-statistics', title: t('ranking-statistics'), path: '/championships/ranking', icon: '📈', description: 'View rankings and statistics' },
+    { id: 'fight-associations', title: 'Fight Associations', path: '/championships/fight-associations', icon: '🏛️', description: 'Manage fight associations and federations' },
   ]
 
   return (
