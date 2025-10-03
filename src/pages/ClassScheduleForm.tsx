@@ -15,7 +15,7 @@ const ClassScheduleForm: React.FC = () => {
   const { branches = [] } = useBranches()
   const { facilities = [] } = useBranchFacilities()
   const { teachers = [] } = useTeachers()
-  const { fightModalities = [] } = useFightModalities()
+  const { modalities: fightModalities = [] } = useFightModalities()
 
   const [formData, setFormData] = useState<Partial<ClassSchedule>>({
     className: '',
@@ -318,7 +318,7 @@ const ClassScheduleForm: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium">{modality.modalityName}</div>
+                      <div className="font-medium">{modality.name}</div>
                       <div className="text-xs text-gray-400 mt-1">{modality.description}</div>
                       <div className="flex items-center mt-2 space-x-2">
                         <span className="px-2 py-1 bg-white/10 rounded text-xs">
@@ -346,7 +346,7 @@ const ClassScheduleForm: React.FC = () => {
                     const modality = fightModalities.find(m => m.modalityId === modalityId)
                     return modality ? (
                       <span key={modalityId} className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm">
-                        {modality.modalityName}
+                        {modality.name}
                       </span>
                     ) : null
                   })}

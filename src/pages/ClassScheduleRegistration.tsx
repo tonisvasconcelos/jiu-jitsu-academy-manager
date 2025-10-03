@@ -7,7 +7,7 @@ import { useFightModalities } from '../contexts/FightModalityContext'
 const ClassScheduleRegistration: React.FC = () => {
   const { t } = useLanguage()
   const { classes = [], deleteClass } = useClassSchedules()
-  const { fightModalities = [] } = useFightModalities()
+  const { modalities: fightModalities = [] } = useFightModalities()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [typeFilter, setTypeFilter] = useState('all')
@@ -45,7 +45,7 @@ const ClassScheduleRegistration: React.FC = () => {
   const getModalityNames = (modalityIds: string[]) => {
     return modalityIds.map(id => {
       const modality = fightModalities.find(m => m.modalityId === id)
-      return modality ? modality.modalityName : id
+      return modality ? modality.name : id
     }).join(', ')
   }
 
