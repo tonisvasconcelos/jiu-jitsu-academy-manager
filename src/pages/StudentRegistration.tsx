@@ -438,10 +438,17 @@ const StudentRegistration: React.FC = () => {
           </div>
         </div>
 
-        {/* Other Belt Counts (Smaller) */}
+        {/* Belt Level Counts - Organized by ADULTS and KIDS */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">{t('belt-level-counts')}</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-4">
+          <h2 className="text-2xl font-bold text-white mb-6">{t('belt-level-counts')}</h2>
+          
+          {/* Adult Belts Section */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <span className="mr-2">👨‍💼</span>
+              ADULTS
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {/* White Belts */}
             <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-500/20">
               <div className="flex items-center justify-between">
@@ -511,7 +518,16 @@ const StudentRegistration: React.FC = () => {
                 </div>
               </div>
             </div>
+            </div>
+          </div>
 
+          {/* Kids Belts Section */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <span className="mr-2">👶</span>
+              KIDS
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
             {/* Kids White Belts */}
             <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-200/20">
               <div className="flex items-center justify-between">
@@ -622,6 +638,7 @@ const StudentRegistration: React.FC = () => {
                   <span className="text-xl text-gray-800">🥋</span>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </div>
