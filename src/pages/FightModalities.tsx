@@ -226,3 +226,4 @@ const FightModalities: React.FC = () => {
 }
 
 export default FightModalities
+

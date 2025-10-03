@@ -9,6 +9,7 @@ import { BranchProvider } from './contexts/BranchContext'
 import { BranchFacilityProvider } from './contexts/BranchFacilityContext'
 import { WeightDivisionProvider } from './contexts/WeightDivisionContext'
 import { FightAssociationProvider } from './contexts/FightAssociationContext'
+import { ClassScheduleProvider } from './contexts/ClassScheduleContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -35,6 +36,9 @@ import WeightDivisions from './pages/WeightDivisions'
 import WeightDivisionForm from './pages/WeightDivisionForm'
 import FightAssociations from './pages/FightAssociations'
 import FightAssociationForm from './pages/FightAssociationForm'
+import ClassSchedules from './pages/ClassSchedules'
+import ClassScheduleRegistration from './pages/ClassScheduleRegistration'
+import ClassScheduleForm from './pages/ClassScheduleForm'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -69,6 +73,7 @@ function App() {
                     <BranchFacilityProvider>
                       <WeightDivisionProvider>
                         <FightAssociationProvider>
+                          <ClassScheduleProvider>
                 <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
@@ -127,8 +132,16 @@ function App() {
                     <Route path="/admin/language" element={<LanguageSelector />} />
                     <Route path="/admin/settings" element={<div className="p-6">App Settings</div>} />
                     
+                    {/* Class Schedule Routes */}
+                    <Route path="/classes" element={<ClassSchedules />} />
+                    <Route path="/classes/registration" element={<ClassScheduleRegistration />} />
+                    <Route path="/classes/registration/:action" element={<ClassScheduleForm />} />
+                    <Route path="/classes/registration/:action/:id" element={<ClassScheduleForm />} />
+                    <Route path="/classes/calendar" element={<div className="p-6">Class Calendar View</div>} />
+                    <Route path="/classes/attendance" element={<div className="p-6">Class Attendance Tracking</div>} />
+                    <Route path="/classes/evaluation" element={<div className="p-6">Class Evaluation & Feedback</div>} />
+                    
                     {/* Placeholder Routes for other main pages */}
-                    <Route path="/classes" element={<div className="p-6">Classes Management</div>} />
                     <Route path="/fight-plans" element={<FightPlans />} />
                     
                     {/* Sub-menu Routes - Fight Plans */}
@@ -156,6 +169,7 @@ function App() {
           </div>
         </div>
                 </Router>
+                          </ClassScheduleProvider>
                         </FightAssociationProvider>
                       </WeightDivisionProvider>
                     </BranchFacilityProvider>

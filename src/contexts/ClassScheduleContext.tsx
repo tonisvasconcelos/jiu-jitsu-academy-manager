@@ -1,0 +1,380 @@
+import React, { createContext, useContext, useState, ReactNode } from 'react'
+
+export interface ClassSchedule {
+  classId: string
+  className: string
+  classDescription?: string
+  branchId: string
+  facilityId: string
+  teacherId: string
+  modalityId: string
+  startDate: string
+  endDate: string
+  startTime: string
+  endTime: string
+  dayOfWeek: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
+  duration: number // in minutes
+  maxCapacity: number
+  currentEnrollment: number
+  status: 'active' | 'inactive' | 'cancelled' | 'completed'
+  classType: 'regular' | 'private' | 'seminar' | 'workshop' | 'competition'
+  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'all-levels'
+  price?: number
+  recurring: boolean
+  recurringPattern?: 'weekly' | 'bi-weekly' | 'monthly'
+  recurringEndDate?: string
+  requirements?: string[]
+  equipment?: string[]
+  notes?: string
+  createdDate: string
+  lastModified: string
+}
+
+interface ClassScheduleContextType {
+  classes: ClassSchedule[]
+  addClass: (classSchedule: ClassSchedule) => void
+  updateClass: (classSchedule: ClassSchedule) => void
+  deleteClass: (classId: string) => void
+  getClass: (classId: string) => ClassSchedule | undefined
+  getClassesByBranch: (branchId: string) => ClassSchedule[]
+  getClassesByTeacher: (teacherId: string) => ClassSchedule[]
+  getClassesByModality: (modalityId: string) => ClassSchedule[]
+  getActiveClasses: () => ClassSchedule[]
+  getClassesByDay: (dayOfWeek: string) => ClassSchedule[]
+}
+
+const ClassScheduleContext = createContext<ClassScheduleContextType | undefined>(undefined)
+
+// Sample data
+const initialClasses: ClassSchedule[] = [
+  {
+    classId: 'CLS001',
+    className: 'BJJ Fundamentals',
+    classDescription: 'Basic Brazilian Jiu-Jitsu techniques for beginners',
+    branchId: 'BR001',
+    facilityId: 'FAC002',
+    teacherId: 'TCH001',
+    modalityId: 'MOD001',
+    startDate: '2024-01-15',
+    endDate: '2024-12-31',
+    startTime: '18:00',
+    endTime: '19:30',
+    dayOfWeek: 'monday',
+    duration: 90,
+    maxCapacity: 20,
+    currentEnrollment: 15,
+    status: 'active',
+    classType: 'regular',
+    difficulty: 'beginner',
+    price: 50,
+    recurring: true,
+    recurringPattern: 'weekly',
+    requirements: ['Gi', 'Water Bottle'],
+    equipment: ['Mats', 'Timer'],
+    notes: 'Focus on basic positions and submissions',
+    createdDate: '2024-01-01',
+    lastModified: '2024-01-15'
+  },
+  {
+    classId: 'CLS002',
+    className: 'Advanced BJJ',
+    classDescription: 'Advanced techniques and competition preparation',
+    branchId: 'BR001',
+    facilityId: 'FAC002',
+    teacherId: 'TCH001',
+    modalityId: 'MOD001',
+    startDate: '2024-01-15',
+    endDate: '2024-12-31',
+    startTime: '19:30',
+    endTime: '21:00',
+    dayOfWeek: 'monday',
+    duration: 90,
+    maxCapacity: 15,
+    currentEnrollment: 12,
+    status: 'active',
+    classType: 'regular',
+    difficulty: 'advanced',
+    price: 60,
+    recurring: true,
+    recurringPattern: 'weekly',
+    requirements: ['Blue Belt or Higher', 'Gi'],
+    equipment: ['Mats', 'Timer', 'Grappling Dummies'],
+    notes: 'Competition-focused training',
+    createdDate: '2024-01-01',
+    lastModified: '2024-01-15'
+  },
+  {
+    classId: 'CLS003',
+    className: 'Boxing Basics',
+    classDescription: 'Introduction to boxing fundamentals',
+    branchId: 'BR001',
+    facilityId: 'FAC001',
+    teacherId: 'TCH002',
+    modalityId: 'MOD002',
+    startDate: '2024-01-16',
+    endDate: '2024-12-31',
+    startTime: '17:00',
+    endTime: '18:00',
+    dayOfWeek: 'tuesday',
+    duration: 60,
+    maxCapacity: 25,
+    currentEnrollment: 18,
+    status: 'active',
+    classType: 'regular',
+    difficulty: 'beginner',
+    price: 45,
+    recurring: true,
+    recurringPattern: 'weekly',
+    requirements: ['Hand Wraps', 'Boxing Gloves'],
+    equipment: ['Heavy Bags', 'Focus Mitts', 'Timer'],
+    notes: 'Great for fitness and self-defense',
+    createdDate: '2024-01-01',
+    lastModified: '2024-01-16'
+  },
+  {
+    classId: 'CLS004',
+    className: 'Kids BJJ (Ages 6-12)',
+    classDescription: 'Fun and safe BJJ training for children',
+    branchId: 'BR001',
+    facilityId: 'FAC008',
+    teacherId: 'TCH001',
+    modalityId: 'MOD001',
+    startDate: '2024-01-17',
+    endDate: '2024-12-31',
+    startTime: '16:00',
+    endTime: '17:00',
+    dayOfWeek: 'wednesday',
+    duration: 60,
+    maxCapacity: 20,
+    currentEnrollment: 16,
+    status: 'active',
+    classType: 'regular',
+    difficulty: 'beginner',
+    price: 40,
+    recurring: true,
+    recurringPattern: 'weekly',
+    requirements: ['Kids Gi', 'Water Bottle'],
+    equipment: ['Soft Mats', 'Colorful Equipment'],
+    notes: 'Focus on fun, discipline, and basic techniques',
+    createdDate: '2024-01-01',
+    lastModified: '2024-01-17'
+  },
+  {
+    classId: 'CLS005',
+    className: 'Private Training Session',
+    classDescription: 'One-on-one personalized training',
+    branchId: 'BR001',
+    facilityId: 'FAC002',
+    teacherId: 'TCH001',
+    modalityId: 'MOD001',
+    startDate: '2024-01-18',
+    endDate: '2024-01-18',
+    startTime: '14:00',
+    endTime: '15:00',
+    dayOfWeek: 'thursday',
+    duration: 60,
+    maxCapacity: 1,
+    currentEnrollment: 1,
+    status: 'active',
+    classType: 'private',
+    difficulty: 'all-levels',
+    price: 100,
+    recurring: false,
+    requirements: ['Gi'],
+    equipment: ['Mats'],
+    notes: 'Personalized technique development',
+    createdDate: '2024-01-01',
+    lastModified: '2024-01-18'
+  },
+  {
+    classId: 'CLS006',
+    className: 'Karate Fundamentals',
+    classDescription: 'Traditional karate techniques and forms',
+    branchId: 'BR002',
+    facilityId: 'FAC001',
+    teacherId: 'TCH002',
+    modalityId: 'MOD003',
+    startDate: '2024-01-19',
+    endDate: '2024-12-31',
+    startTime: '18:30',
+    endTime: '19:30',
+    dayOfWeek: 'friday',
+    duration: 60,
+    maxCapacity: 20,
+    currentEnrollment: 14,
+    status: 'active',
+    classType: 'regular',
+    difficulty: 'beginner',
+    price: 50,
+    recurring: true,
+    recurringPattern: 'weekly',
+    requirements: ['Karate Gi', 'Belt'],
+    equipment: ['Mats', 'Mirrors'],
+    notes: 'Traditional karate training',
+    createdDate: '2024-01-01',
+    lastModified: '2024-01-19'
+  },
+  {
+    classId: 'CLS007',
+    className: 'BJJ Workshop - Guard Passing',
+    classDescription: 'Intensive workshop on guard passing techniques',
+    branchId: 'BR001',
+    facilityId: 'FAC002',
+    teacherId: 'TCH001',
+    modalityId: 'MOD001',
+    startDate: '2024-01-20',
+    endDate: '2024-01-20',
+    startTime: '10:00',
+    endTime: '12:00',
+    dayOfWeek: 'saturday',
+    duration: 120,
+    maxCapacity: 30,
+    currentEnrollment: 25,
+    status: 'active',
+    classType: 'workshop',
+    difficulty: 'intermediate',
+    price: 80,
+    recurring: false,
+    requirements: ['Gi', 'Notebook'],
+    equipment: ['Mats', 'Grappling Dummies', 'Timer'],
+    notes: 'Specialized workshop for intermediate students',
+    createdDate: '2024-01-01',
+    lastModified: '2024-01-20'
+  },
+  {
+    classId: 'CLS008',
+    className: 'Competition Training',
+    classDescription: 'Intensive training for upcoming competitions',
+    branchId: 'BR001',
+    facilityId: 'FAC002',
+    teacherId: 'TCH001',
+    modalityId: 'MOD001',
+    startDate: '2024-01-21',
+    endDate: '2024-12-31',
+    startTime: '09:00',
+    endTime: '11:00',
+    dayOfWeek: 'sunday',
+    duration: 120,
+    maxCapacity: 15,
+    currentEnrollment: 10,
+    status: 'active',
+    classType: 'competition',
+    difficulty: 'advanced',
+    price: 70,
+    recurring: true,
+    recurringPattern: 'weekly',
+    requirements: ['Competition Gi', 'Mouth Guard'],
+    equipment: ['Mats', 'Timer', 'Scoreboard'],
+    notes: 'High-intensity competition preparation',
+    createdDate: '2024-01-01',
+    lastModified: '2024-01-21'
+  }
+]
+
+const loadClassesFromStorage = (): ClassSchedule[] => {
+  try {
+    const stored = localStorage.getItem('jiu-jitsu-class-schedules')
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      console.log('ClassScheduleContext: Loaded classes from localStorage:', parsed)
+      return parsed
+    }
+  } catch (error) {
+    console.error('ClassScheduleContext: Error loading classes from localStorage:', error)
+  }
+  console.log('ClassScheduleContext: No saved data found, using default classes')
+  // Save default classes to localStorage for future use
+  try {
+    localStorage.setItem('jiu-jitsu-class-schedules', JSON.stringify(initialClasses))
+    console.log('ClassScheduleContext: Saved default classes to localStorage')
+  } catch (error) {
+    console.error('ClassScheduleContext: Error saving default classes to localStorage:', error)
+  }
+  return initialClasses
+}
+
+const saveClassesToStorage = (classes: ClassSchedule[]) => {
+  try {
+    localStorage.setItem('jiu-jitsu-class-schedules', JSON.stringify(classes))
+    console.log('ClassScheduleContext: Saved classes to localStorage:', classes)
+  } catch (error) {
+    console.error('ClassScheduleContext: Error saving classes to localStorage:', error)
+  }
+}
+
+export const ClassScheduleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [classes, setClasses] = useState<ClassSchedule[]>(loadClassesFromStorage)
+
+  const addClass = (classSchedule: ClassSchedule) => {
+    console.log('ClassScheduleContext: Adding class:', classSchedule)
+    const newClasses = [...classes, classSchedule]
+    setClasses(newClasses)
+    saveClassesToStorage(newClasses)
+  }
+
+  const updateClass = (classSchedule: ClassSchedule) => {
+    console.log('ClassScheduleContext: Updating class:', classSchedule)
+    const newClasses = classes.map(c => c.classId === classSchedule.classId ? classSchedule : c)
+    setClasses(newClasses)
+    saveClassesToStorage(newClasses)
+  }
+
+  const deleteClass = (classId: string) => {
+    console.log('ClassScheduleContext: Deleting class:', classId)
+    const newClasses = classes.filter(c => c.classId !== classId)
+    setClasses(newClasses)
+    saveClassesToStorage(newClasses)
+  }
+
+  const getClass = (classId: string) => {
+    return classes.find(classSchedule => classSchedule.classId === classId)
+  }
+
+  const getClassesByBranch = (branchId: string) => {
+    return classes.filter(classSchedule => classSchedule.branchId === branchId)
+  }
+
+  const getClassesByTeacher = (teacherId: string) => {
+    return classes.filter(classSchedule => classSchedule.teacherId === teacherId)
+  }
+
+  const getClassesByModality = (modalityId: string) => {
+    return classes.filter(classSchedule => classSchedule.modalityId === modalityId)
+  }
+
+  const getActiveClasses = () => {
+    return classes.filter(classSchedule => classSchedule.status === 'active')
+  }
+
+  const getClassesByDay = (dayOfWeek: string) => {
+    return classes.filter(classSchedule => classSchedule.dayOfWeek === dayOfWeek)
+  }
+
+  const value: ClassScheduleContextType = {
+    classes,
+    addClass,
+    updateClass,
+    deleteClass,
+    getClass,
+    getClassesByBranch,
+    getClassesByTeacher,
+    getClassesByModality,
+    getActiveClasses,
+    getClassesByDay
+  }
+
+  return (
+    <ClassScheduleContext.Provider value={value}>
+      {children}
+    </ClassScheduleContext.Provider>
+  )
+}
+
+export const useClassSchedules = () => {
+  const context = useContext(ClassScheduleContext)
+  if (context === undefined) {
+    throw new Error('useClassSchedules must be used within a ClassScheduleProvider')
+  }
+  return context
+}
+
