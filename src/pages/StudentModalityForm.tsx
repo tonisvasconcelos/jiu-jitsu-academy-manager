@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents } from '../contexts/StudentContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
 import { useStudentModalities, StudentModalityConnection } from '../contexts/StudentModalityContext'
 
 const StudentModalityForm: React.FC = () => {
-  const { t } = useLanguage()
   const { action, id, studentId } = useParams<{ action: string; id?: string; studentId?: string }>()
   const navigate = useNavigate()
   const { students } = useStudents()
@@ -232,11 +230,42 @@ const StudentModalityForm: React.FC = () => {
                   disabled={isViewMode}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="white">White Belt</option>
-                  <option value="blue">Blue Belt</option>
-                  <option value="purple">Purple Belt</option>
-                  <option value="brown">Brown Belt</option>
-                  <option value="black">Black Belt</option>
+                  {/* Adult Belts */}
+                  <optgroup label="Adult Belts">
+                    <option value="white">White Belt</option>
+                    <option value="blue">Blue Belt</option>
+                    <option value="purple">Purple Belt</option>
+                    <option value="brown">Brown Belt</option>
+                    <option value="black">Black Belt</option>
+                  </optgroup>
+                  
+                  {/* BJJ Kids Belts */}
+                  <optgroup label="BJJ Kids Belts">
+                    <option value="kids-white">White</option>
+                    <option value="kids-gray-white">Gray/White</option>
+                    <option value="kids-gray">Gray</option>
+                    <option value="kids-gray-black">Gray/Black</option>
+                    <option value="kids-yellow-white">Yellow/White</option>
+                    <option value="kids-yellow">Yellow</option>
+                    <option value="kids-yellow-black">Yellow/Black</option>
+                    <option value="kids-orange-white">Orange/White</option>
+                    <option value="kids-orange">Orange</option>
+                    <option value="kids-orange-black">Orange/Black</option>
+                    <option value="kids-green-white">Green/White</option>
+                    <option value="kids-green">Green</option>
+                    <option value="kids-green-black">Green/Black</option>
+                  </optgroup>
+                  
+                  {/* Judo Kids Belts */}
+                  <optgroup label="Judo Kids Belts">
+                    <option value="judo-kids-white">White</option>
+                    <option value="judo-kids-white-yellow">White/Yellow</option>
+                    <option value="judo-kids-yellow">Yellow</option>
+                    <option value="judo-kids-yellow-orange">Yellow/Orange</option>
+                    <option value="judo-kids-orange">Orange</option>
+                    <option value="judo-kids-orange-green">Orange/Green</option>
+                    <option value="judo-kids-green">Green</option>
+                  </optgroup>
                 </select>
                 <p className="text-xs text-gray-400 mt-1">The student's belt level when starting this modality</p>
               </div>

@@ -38,13 +38,76 @@ const StudentModality: React.FC = () => {
     if (!beltLevel) return 'bg-gray-200 text-gray-800'
     
     const colors = {
+      // Adult belts
       white: 'bg-gray-200 text-gray-800',
       blue: 'bg-blue-500 text-white',
       purple: 'bg-purple-500 text-white',
       brown: 'bg-amber-600 text-white',
-      black: 'bg-gray-800 text-white'
+      black: 'bg-gray-800 text-white',
+      
+      // BJJ Kids belts
+      'kids-white': 'bg-gray-200 text-gray-800',
+      'kids-gray-white': 'bg-gray-300 text-gray-800',
+      'kids-gray': 'bg-gray-400 text-white',
+      'kids-gray-black': 'bg-gray-500 text-white',
+      'kids-yellow-white': 'bg-yellow-200 text-gray-800',
+      'kids-yellow': 'bg-yellow-400 text-white',
+      'kids-yellow-black': 'bg-yellow-600 text-white',
+      'kids-orange-white': 'bg-orange-200 text-gray-800',
+      'kids-orange': 'bg-orange-400 text-white',
+      'kids-orange-black': 'bg-orange-600 text-white',
+      'kids-green-white': 'bg-green-200 text-gray-800',
+      'kids-green': 'bg-green-400 text-white',
+      'kids-green-black': 'bg-green-600 text-white',
+      
+      // Judo Kids belts
+      'judo-kids-white': 'bg-gray-200 text-gray-800',
+      'judo-kids-white-yellow': 'bg-yellow-200 text-gray-800',
+      'judo-kids-yellow': 'bg-yellow-400 text-white',
+      'judo-kids-yellow-orange': 'bg-orange-300 text-white',
+      'judo-kids-orange': 'bg-orange-400 text-white',
+      'judo-kids-orange-green': 'bg-green-300 text-white',
+      'judo-kids-green': 'bg-green-400 text-white'
     }
     return colors[beltLevel.toLowerCase() as keyof typeof colors] || 'bg-gray-200 text-gray-800'
+  }
+
+  const getBeltDisplayName = (beltLevel: string | undefined) => {
+    if (!beltLevel) return 'Unknown Belt'
+    
+    const beltNames = {
+      // Adult belts
+      white: 'White Belt',
+      blue: 'Blue Belt',
+      purple: 'Purple Belt',
+      brown: 'Brown Belt',
+      black: 'Black Belt',
+      
+      // BJJ Kids belts
+      'kids-white': 'White (BJJ Kids)',
+      'kids-gray-white': 'Gray/White (BJJ Kids)',
+      'kids-gray': 'Gray (BJJ Kids)',
+      'kids-gray-black': 'Gray/Black (BJJ Kids)',
+      'kids-yellow-white': 'Yellow/White (BJJ Kids)',
+      'kids-yellow': 'Yellow (BJJ Kids)',
+      'kids-yellow-black': 'Yellow/Black (BJJ Kids)',
+      'kids-orange-white': 'Orange/White (BJJ Kids)',
+      'kids-orange': 'Orange (BJJ Kids)',
+      'kids-orange-black': 'Orange/Black (BJJ Kids)',
+      'kids-green-white': 'Green/White (BJJ Kids)',
+      'kids-green': 'Green (BJJ Kids)',
+      'kids-green-black': 'Green/Black (BJJ Kids)',
+      
+      // Judo Kids belts
+      'judo-kids-white': 'White (Judo Kids)',
+      'judo-kids-white-yellow': 'White/Yellow (Judo Kids)',
+      'judo-kids-yellow': 'Yellow (Judo Kids)',
+      'judo-kids-yellow-orange': 'Yellow/Orange (Judo Kids)',
+      'judo-kids-orange': 'Orange (Judo Kids)',
+      'judo-kids-orange-green': 'Orange/Green (Judo Kids)',
+      'judo-kids-green': 'Green (Judo Kids)'
+    }
+    return beltNames[beltLevel.toLowerCase() as keyof typeof beltNames] || 'Unknown Belt'
   }
 
   const handleDeleteConnection = (connectionId: string) => {
@@ -112,7 +175,7 @@ const StudentModality: React.FC = () => {
         'Student Name': student ? student.displayName : 'Unknown',
         'Student ID': connection.studentId,
         'Modalities': modalityNames,
-        'Belt Level at Start': connection.beltLevelAtStart.charAt(0).toUpperCase() + connection.beltLevelAtStart.slice(1) + ' Belt',
+        'Belt Level at Start': getBeltDisplayName(connection.beltLevelAtStart),
         'Assignment Date': connection.assignmentDate,
         'Closing Date': connection.closingDate || '',
         'Expected Closing Date': connection.expectedClosingDate || '',
@@ -426,7 +489,7 @@ const StudentModality: React.FC = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getBeltColor(connection.beltLevelAtStart)}`}>
-                            {connection.beltLevelAtStart ? connection.beltLevelAtStart.charAt(0).toUpperCase() + connection.beltLevelAtStart.slice(1) + ' Belt' : 'Unknown Belt'}
+                            {getBeltDisplayName(connection.beltLevelAtStart)}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
