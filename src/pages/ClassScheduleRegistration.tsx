@@ -3,11 +3,17 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useClassSchedules } from '../contexts/ClassScheduleContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
+import { useBranches } from '../contexts/BranchContext'
+import { useBranchFacilities } from '../contexts/BranchFacilityContext'
+import { useTeachers } from '../contexts/TeacherContext'
 
 const ClassScheduleRegistration: React.FC = () => {
   const { t } = useLanguage()
   const { classes = [], deleteClass } = useClassSchedules()
   const { modalities: fightModalities = [] } = useFightModalities()
+  const { branches = [] } = useBranches()
+  const { facilities = [] } = useBranchFacilities()
+  const { teachers = [] } = useTeachers()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [typeFilter, setTypeFilter] = useState('all')
@@ -47,6 +53,21 @@ const ClassScheduleRegistration: React.FC = () => {
       const modality = fightModalities.find(m => m.modalityId === id)
       return modality ? modality.name : id
     }).join(', ')
+  }
+
+  const getTeacherName = (teacherId: string) => {
+    const teacher = teachers.find(t => t.teacherId === teacherId)
+    return teacher ? `${teacher.firstName} ${teacher.lastName}` : teacherId
+  }
+
+  const getBranchName = (branchId: string) => {
+    const branch = branches.find(b => b.branchId === branchId)
+    return branch ? branch.name : branchId
+  }
+
+  const getFacilityName = (facilityId: string) => {
+    const facility = facilities.find(f => f.facilityId === facilityId)
+    return facility ? facility.facilityName : facilityId
   }
 
   return (
@@ -158,8 +179,16 @@ const ClassScheduleRegistration: React.FC = () => {
                   <span>{classItem.duration} minutes</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-300">
-                  <span className="mr-2">🥊</span>
-                  <span>{getModalityNames(classItem.modalityIds)}</span>
+                  <span className="mr-2">👨‍🏫</span>
+                  <span>{getTeacherName(classItem.teacherId)}</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-300">
+                  <span className="mr-2">🏢</span>
+                  <span>{getBranchName(classItem.branchId)}</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-300">
+                  <span className="mr-2">🏟️</span>
+                  <span>{getFacilityName(classItem.facilityId)}</span>
                 </div>
               </div>
 
