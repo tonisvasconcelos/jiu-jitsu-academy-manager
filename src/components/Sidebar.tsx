@@ -27,7 +27,19 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     { id: 'students', title: t('students'), icon: '🥋', path: '/students' },
     { id: 'teachers', title: 'Teachers & Instructors', icon: '🧑‍🏫', path: '/teachers' },
     { id: 'championships', title: t('championships'), icon: '🏟️', path: '/championships' },
-    { id: 'classes', title: 'Class Schedules', icon: '📅', path: '/classes' },
+    { 
+      id: 'classes', 
+      title: 'Class Schedules', 
+      icon: '📅', 
+      path: '/classes',
+      subItems: [
+        { title: 'Class Registration', path: '/classes/registration' },
+        { title: 'Class Calendar', path: '/classes/calendar' },
+        { title: 'Class Check-In', path: '/classes/check-in' },
+        { title: 'Class Attendance', path: '/classes/attendance' },
+        { title: 'Class Evaluation', path: '/classes/evaluation' }
+      ]
+    },
     { id: 'fight-plans', title: t('fight-plans'), icon: '🗂️', path: '/fight-plans' },
     { id: 'quality-evaluation', title: t('quality-evaluation'), icon: '🧪', path: '/quality' },
     { id: 'branches', title: t('branches'), icon: '🌍', path: '/branches' },
@@ -121,6 +133,23 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                   )}
                 </div>
               </Link>
+              
+              {/* Sub-menu items */}
+              {menu.subItems && (!collapsed || isMobile) && location.pathname.startsWith(menu.path) && (
+                <div className="ml-6 mt-1 space-y-1">
+                  {menu.subItems.map((subItem, index) => (
+                    <Link
+                      key={index}
+                      to={subItem.path}
+                      className={`block px-3 py-2 text-sm rounded-lg hover:bg-white/5 transition-colors ${
+                        location.pathname === subItem.path ? 'text-blue-400 bg-blue-500/10' : 'text-gray-300'
+                      }`}
+                    >
+                      {subItem.title}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </nav>
