@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents, Student } from '../contexts/StudentContext'
 import { useBranches } from '../contexts/BranchContext'
+import { useWeightDivisions } from '../contexts/WeightDivisionContext'
 
 const StudentForm: React.FC = () => {
   const { t } = useLanguage()
@@ -10,6 +11,7 @@ const StudentForm: React.FC = () => {
   const navigate = useNavigate()
   const { addStudent, updateStudent, getStudent } = useStudents()
   const { branches } = useBranches()
+  const { weightDivisions, getWeightDivisionByWeight } = useWeightDivisions()
   
   const [student, setStudent] = useState<Student>({
     studentId: '',
@@ -48,6 +50,13 @@ const StudentForm: React.FC = () => {
   // Function to check if student is under 18
   const isUnder18 = (birthDate: string) => {
     return calculateAge(birthDate) < 18
+  }
+
+  // Function to get weight division name by ID
+  const getWeightDivisionName = (divisionId?: string) => {
+    if (!divisionId) return null
+    const division = weightDivisions.find(d => d.divisionId === divisionId)
+    return division ? division.name : null
   }
 
   // Get active branches for selection
@@ -114,6 +123,22 @@ const StudentForm: React.FC = () => {
       if (field === 'birthDate' && typeof value === 'string') {
         updated.isKidsStudent = isUnder18(value)
         console.log('StudentForm: Auto-set isKidsStudent to:', updated.isKidsStudent, 'based on age:', calculateAge(value))
+      }
+
+      // Auto-calculate weight division when weight changes
+      if (field === 'weight' && typeof value === 'number' && value > 0) {
+        const weightDivision = getWeightDivisionByWeight(value, updated.gender, updated.isKidsStudent)
+        updated.weightDivisionId = weightDivision?.divisionId
+        console.log('StudentForm: Auto-calculated weight division:', weightDivision?.name, 'for weight:', value)
+      } else if (field === 'weight' && (typeof value !== 'number' || value <= 0)) {
+        updated.weightDivisionId = undefined
+      }
+
+      // Recalculate weight division when gender or isKidsStudent changes
+      if ((field === 'gender' || field === 'isKidsStudent') && updated.weight && updated.weight > 0) {
+        const weightDivision = getWeightDivisionByWeight(updated.weight, updated.gender, updated.isKidsStudent)
+        updated.weightDivisionId = weightDivision?.divisionId
+        console.log('StudentForm: Recalculated weight division:', weightDivision?.name, 'for updated criteria')
       }
       
       return updated
@@ -312,6 +337,37 @@ const StudentForm: React.FC = () => {
                 </label>
                 <p className="text-xs text-gray-400 mt-1">
                   Mark this for students under 18 years old for better data classification
+                </p>
+              </div>
+
+              {/* Weight */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Weight (kg)</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={student.weight || ''}
+                  onChange={(e) => handleInputChange('weight', parseFloat(e.target.value) || undefined)}
+                  disabled={isReadOnly}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+                  placeholder="70.5"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Weight will automatically determine the weight division
+                </p>
+              </div>
+
+              {/* Weight Division */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Weight Division</label>
+                <input
+                  type="text"
+                  value={getWeightDivisionName(student.weightDivisionId) || 'Not assigned'}
+                  readOnly
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Automatically calculated based on weight, gender, and age
                 </p>
               </div>
 

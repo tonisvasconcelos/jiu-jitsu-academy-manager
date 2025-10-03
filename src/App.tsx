@@ -5,6 +5,7 @@ import { StudentProvider } from './contexts/StudentContext'
 import { FightModalityProvider } from './contexts/FightModalityContext'
 import { StudentModalityProvider } from './contexts/StudentModalityContext'
 import { BranchProvider } from './contexts/BranchContext'
+import { WeightDivisionProvider } from './contexts/WeightDivisionContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -23,6 +24,8 @@ import StudentModalityForm from './pages/StudentModalityForm'
 import Branches from './pages/Branches'
 import BranchRegistration from './pages/BranchRegistration'
 import BranchForm from './pages/BranchForm'
+import WeightDivisions from './pages/WeightDivisions'
+import WeightDivisionForm from './pages/WeightDivisionForm'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -47,12 +50,13 @@ function App() {
     setSidebarCollapsed(!sidebarCollapsed)
   }
 
-      return (
+          return (
             <LanguageProvider>
               <StudentProvider>
                 <FightModalityProvider>
                   <StudentModalityProvider>
                     <BranchProvider>
+                      <WeightDivisionProvider>
                 <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
@@ -110,6 +114,9 @@ function App() {
                     <Route path="/fight-plans/modalities" element={<FightModalities />} />
                     <Route path="/fight-plans/modalities/:action" element={<FightModalityForm />} />
                     <Route path="/fight-plans/modalities/:action/:id" element={<FightModalityForm />} />
+                    <Route path="/fight-plans/weight-divisions" element={<WeightDivisions />} />
+                    <Route path="/fight-plans/weight-divisions/:action" element={<WeightDivisionForm />} />
+                    <Route path="/fight-plans/weight-divisions/:action/:id" element={<WeightDivisionForm />} />
                     <Route path="/fight-plans/training-phases" element={<div className="p-6">Training Phases & Milestones</div>} />
                     
                             <Route path="/quality" element={<div className="p-6">Quality & Evaluation</div>} />
@@ -129,12 +136,13 @@ function App() {
                 </main>
           </div>
         </div>
-        </Router>
+                </Router>
+                      </WeightDivisionProvider>
                     </BranchProvider>
-                  </StudentModalityProvider>
-                </FightModalityProvider>
-              </StudentProvider>
-            </LanguageProvider>
+                      </StudentModalityProvider>
+                    </FightModalityProvider>
+                  </StudentProvider>
+                </LanguageProvider>
   )
 }
 

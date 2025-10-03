@@ -20,6 +20,8 @@ export interface Student {
   branchId: string
   active: boolean
   isKidsStudent: boolean
+  weight?: number
+  weightDivisionId?: string
   photoUrl?: string
 }
 

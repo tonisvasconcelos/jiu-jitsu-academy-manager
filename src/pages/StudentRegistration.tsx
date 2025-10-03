@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents, Student } from '../contexts/StudentContext'
 import { useBranches } from '../contexts/BranchContext'
+import { useWeightDivisions } from '../contexts/WeightDivisionContext'
 import * as XLSX from 'xlsx'
 
 const StudentRegistration: React.FC = () => {
   const { t } = useLanguage()
   const { students, deleteStudent, addStudent } = useStudents()
   const { branches } = useBranches()
+  const { weightDivisions } = useWeightDivisions()
   const [isImporting, setIsImporting] = useState(false)
   const [importResult, setImportResult] = useState<{ success: number; errors: string[] } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -20,6 +22,7 @@ const StudentRegistration: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all')
   const [branchFilter, setBranchFilter] = useState('all')
   const [kidsFilter, setKidsFilter] = useState('all') // Added kids filter state
+  const [weightDivisionFilter, setWeightDivisionFilter] = useState('all') // Added weight division filter state
   
   console.log('=== STUDENT REGISTRATION: RENDER ===')
   console.log('StudentRegistration: Current students:', students)
@@ -68,6 +71,25 @@ const StudentRegistration: React.FC = () => {
     return branch ? branch.name : 'Unknown Branch'
   }
 
+  const getWeightDivisionName = (divisionId?: string) => {
+    if (!divisionId) return 'Not assigned'
+    const division = weightDivisions.find(d => d.divisionId === divisionId)
+    return division ? division.name : 'Unknown Division'
+  }
+
+  const getWeightDivisionByWeight = (weight: number, gender: 'male' | 'female' | 'other', isKidsStudent: boolean) => {
+    const ageGroup = isKidsStudent ? 'kids' : 'adult'
+    const genderFilter = gender === 'other' ? 'both' : gender
+    
+    return weightDivisions.find(division => 
+      division.active &&
+      weight >= division.minWeight && 
+      weight < division.maxWeight &&
+      (division.gender === genderFilter || division.gender === 'both') &&
+      (division.ageGroup === ageGroup || division.ageGroup === 'both')
+    )
+  }
+
   const calculateAge = (birthDate: string) => {
     const today = new Date()
     const dob = new Date(birthDate)
@@ -103,6 +125,8 @@ const StudentRegistration: React.FC = () => {
           'Gender': t((student.gender || '').toLowerCase()),
           'Belt Level': t((student.beltLevel || '').toLowerCase()),
           'Is Kids Student': student.isKidsStudent ? 'Yes' : 'No',
+          'Weight (kg)': student.weight || '',
+          'Weight Division': getWeightDivisionName(student.weightDivisionId),
           'Document ID': student.documentId,
           'Email': student.email,
           'Phone': student.phone,
@@ -126,6 +150,8 @@ const StudentRegistration: React.FC = () => {
           { wch: 10 }, // Gender
           { wch: 12 }, // Belt Level
           { wch: 15 }, // Is Kids Student
+          { wch: 12 }, // Weight (kg)
+          { wch: 15 }, // Weight Division
           { wch: 15 }, // Document ID
           { wch: 25 }, // Email
           { wch: 15 }, // Phone
@@ -156,6 +182,8 @@ const StudentRegistration: React.FC = () => {
             'Gender': 'male',
             'Belt Level': 'blue',
             'Is Kids Student': 'No',
+            'Weight (kg)': '75.5',
+            'Weight Division': 'Light',
             'Document ID': '12345678901',
             'Email': 'joao.silva@email.com',
             'Phone': '+55 11 99999-9999',
@@ -170,6 +198,8 @@ const StudentRegistration: React.FC = () => {
             'Gender': 'female',
             'Belt Level': 'kids-yellow',
             'Is Kids Student': 'Yes',
+            'Weight (kg)': '25.0',
+            'Weight Division': 'Light',
             'Document ID': '98765432100',
             'Email': 'maria.santos@email.com',
             'Phone': '+55 11 88888-8888',
@@ -191,6 +221,8 @@ const StudentRegistration: React.FC = () => {
           { wch: 10 }, // Gender
           { wch: 12 }, // Belt Level
           { wch: 15 }, // Is Kids Student
+          { wch: 12 }, // Weight (kg)
+          { wch: 15 }, // Weight Division
           { wch: 15 }, // Document ID
           { wch: 25 }, // Email
           { wch: 15 }, // Phone
@@ -259,9 +291,11 @@ const StudentRegistration: React.FC = () => {
           email: String(row['Email'] || '').trim(),
           phone: String(row['Phone'] || '').trim(),
           branchId: String(row['Branch ID'] || 'BR001').trim(),
-          active: String(row['Active'] || 'true').toLowerCase() === 'true',
-          isKidsStudent: String(row['Is Kids Student'] || 'false').toLowerCase() === 'yes' || String(row['Is Kids Student'] || 'false').toLowerCase() === 'true',
-          photoUrl: String(row['Photo URL'] || '').trim() || undefined
+              active: String(row['Active'] || 'true').toLowerCase() === 'true',
+              isKidsStudent: String(row['Is Kids Student'] || 'false').toLowerCase() === 'yes' || String(row['Is Kids Student'] || 'false').toLowerCase() === 'true',
+              weight: row['Weight (kg)'] ? parseFloat(String(row['Weight (kg)'])) : undefined,
+              weightDivisionId: undefined, // Will be calculated automatically based on weight
+              photoUrl: String(row['Photo URL'] || '').trim() || undefined
         }
 
         // Validate data types
@@ -289,6 +323,15 @@ const StudentRegistration: React.FC = () => {
         if (!dateRegex.test(newStudent.birthDate)) {
           errors.push(`Row ${index + 2}: Invalid birth date format. Use YYYY-MM-DD`)
           return
+        }
+
+        // Auto-calculate weight division if weight is provided
+        if (newStudent.weight && newStudent.weight > 0) {
+          const weightDivision = getWeightDivisionByWeight(newStudent.weight, newStudent.gender, newStudent.isKidsStudent)
+          if (weightDivision) {
+            newStudent.weightDivisionId = weightDivision.divisionId
+            console.log(`Auto-assigned weight division: ${weightDivision.name} for student ${newStudent.firstName} ${newStudent.lastName}`)
+          }
         }
 
         // Add student
@@ -321,6 +364,7 @@ const StudentRegistration: React.FC = () => {
     setStatusFilter('all')
     setBranchFilter('all')
     setKidsFilter('all')
+    setWeightDivisionFilter('all')
   }
 
   const filteredStudents = students.filter(student => {
@@ -350,10 +394,16 @@ const StudentRegistration: React.FC = () => {
       (kidsFilter === 'kids' && student.isKidsStudent) ||
       (kidsFilter === 'adults' && !student.isKidsStudent)
 
-    return matchesSearch && matchesBelt && matchesGender && matchesStatus && matchesBranch && matchesKids
+    // Weight division filter
+    const matchesWeightDivision = weightDivisionFilter === 'all' || 
+      (weightDivisionFilter === 'assigned' && student.weightDivisionId) ||
+      (weightDivisionFilter === 'unassigned' && !student.weightDivisionId) ||
+      (student.weightDivisionId === weightDivisionFilter)
+
+    return matchesSearch && matchesBelt && matchesGender && matchesStatus && matchesBranch && matchesKids && matchesWeightDivision
   })
 
-  const hasActiveFilters = searchTerm !== '' || beltFilter !== 'all' || genderFilter !== 'all' || statusFilter !== 'all' || branchFilter !== 'all' || kidsFilter !== 'all'
+  const hasActiveFilters = searchTerm !== '' || beltFilter !== 'all' || genderFilter !== 'all' || statusFilter !== 'all' || branchFilter !== 'all' || kidsFilter !== 'all' || weightDivisionFilter !== 'all'
 
   // Calculate belt counts (using filtered students for dynamic counts)
   const totalStudents = students.length
@@ -1015,6 +1065,27 @@ const StudentRegistration: React.FC = () => {
                 </div>
               </div>
 
+              {/* Weight Division Filter */}
+              <div className="relative">
+                <select
+                  value={weightDivisionFilter}
+                  onChange={(e) => setWeightDivisionFilter(e.target.value)}
+                  className="appearance-none bg-white/10 border border-white/20 rounded-xl text-white px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 min-w-[140px]"
+                >
+                  <option value="all" className="bg-gray-800">All Divisions</option>
+                  <option value="assigned" className="bg-gray-800">Assigned Only</option>
+                  <option value="unassigned" className="bg-gray-800">Unassigned Only</option>
+                  {weightDivisions.filter(d => d.active).map(division => (
+                    <option key={division.divisionId} value={division.divisionId} className="bg-gray-800">
+                      {division.name} ({division.gender === 'both' ? 'All' : division.gender})
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <span className="text-gray-400">⚖️</span>
+                </div>
+              </div>
+
               {/* Clear Filters Button */}
               {hasActiveFilters && (
                 <button
@@ -1080,6 +1151,7 @@ const StudentRegistration: React.FC = () => {
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Student</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Branch</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Belt Level</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Weight</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Contact</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
@@ -1088,7 +1160,7 @@ const StudentRegistration: React.FC = () => {
               <tbody className="divide-y divide-white/10">
                 {filteredStudents.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-4 text-center text-gray-400">
+                    <td colSpan={7} className="px-6 py-4 text-center text-gray-400">
                       {hasActiveFilters ? 'No students match the current filters.' : 'No students registered yet.'}
                     </td>
                   </tr>
@@ -1133,6 +1205,14 @@ const StudentRegistration: React.FC = () => {
                           : `${student.beltLevel.charAt(0).toUpperCase() + student.beltLevel.slice(1)} Belt`
                         }
                       </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-white">
+                        {student.weight ? `${student.weight} kg` : 'Not set'}
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {getWeightDivisionName(student.weightDivisionId)}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-white">{student.email}</div>
