@@ -72,27 +72,27 @@ const ClassCheckInForm: React.FC = () => {
     }
 
     // Get teacher name
-    const teacher = teachers.find(t => t.id === selectedClass.teacherId);
-    const teacherName = teacher ? teacher.name : 'Unknown Teacher';
+    const teacher = teachers.find(t => t.teacherId === selectedClass.teacherId);
+    const teacherName = teacher ? `${teacher.firstName} ${teacher.lastName}` : 'Unknown Teacher';
 
     // Get branch name
-    const branch = branches.find(b => b.id === selectedClass.branchId);
+    const branch = branches.find(b => b.branchId === selectedClass.branchId);
     const branchName = branch ? branch.name : 'Unknown Branch';
 
     // Get facility name
-    const facility = facilities.find(f => f.id === selectedClass.facilityId);
-    const facilityName = facility ? facility.name : 'Unknown Facility';
+    const facility = facilities.find(f => f.facilityId === selectedClass.facilityId);
+    const facilityName = facility ? facility.facilityName : 'Unknown Facility';
 
     // Get fight modality names
     const modalityNames = selectedClass.modalityIds
       .map((modalityId: string) => {
-        const modality = fightModalities.find(m => m.id === modalityId);
+        const modality = fightModalities.find(m => m.modalityId === modalityId);
         return modality ? modality.name : 'Unknown Modality';
       });
 
     // Get student name
-    const student = students.find(s => s.id === formData.studentId);
-    const studentName = student ? `${student.name} ${student.lastName}` : 'Unknown Student';
+    const student = students.find(s => s.studentId === formData.studentId);
+    const studentName = student ? `${student.firstName} ${student.lastName}` : 'Unknown Student';
 
     // Create check-in record
     addCheckIn({
@@ -199,8 +199,8 @@ const ClassCheckInForm: React.FC = () => {
               >
                 <option value="">Choose a student...</option>
                 {students.map((student) => (
-                  <option key={student.id} value={student.id} className="bg-gray-800 text-white">
-                    {student.name} {student.lastName}
+                  <option key={student.studentId} value={student.studentId} className="bg-gray-800 text-white">
+                    {student.firstName} {student.lastName}
                   </option>
                 ))}
               </select>
@@ -222,19 +222,22 @@ const ClassCheckInForm: React.FC = () => {
                   <div>
                     <span className="text-sm font-medium text-gray-300">Teacher:</span>
                     <p className="text-sm text-white">
-                      {teachers.find(t => t.id === selectedClass.teacherId)?.name || 'Unknown'}
+                      {(() => {
+                        const teacher = teachers.find(t => t.teacherId === selectedClass.teacherId);
+                        return teacher ? `${teacher.firstName} ${teacher.lastName}` : 'Unknown';
+                      })()}
                     </p>
                   </div>
                   <div>
                     <span className="text-sm font-medium text-gray-300">Branch:</span>
                     <p className="text-sm text-white">
-                      {branches.find(b => b.id === selectedClass.branchId)?.name || 'Unknown'}
+                      {branches.find(b => b.branchId === selectedClass.branchId)?.name || 'Unknown'}
                     </p>
                   </div>
                   <div>
                     <span className="text-sm font-medium text-gray-300">Facility:</span>
                     <p className="text-sm text-white">
-                      {facilities.find(f => f.id === selectedClass.facilityId)?.name || 'Unknown'}
+                      {facilities.find(f => f.facilityId === selectedClass.facilityId)?.facilityName || 'Unknown'}
                     </p>
                   </div>
                   <div>
@@ -242,7 +245,7 @@ const ClassCheckInForm: React.FC = () => {
                     <p className="text-sm text-white">
                       {selectedClass.modalityIds
                         .map((modalityId: string) => {
-                          const modality = fightModalities.find(m => m.id === modalityId);
+                          const modality = fightModalities.find(m => m.modalityId === modalityId);
                           return modality ? modality.name : 'Unknown';
                         })
                         .join(', ')}
