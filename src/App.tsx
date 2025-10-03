@@ -6,6 +6,7 @@ import { TeacherProvider } from './contexts/TeacherContext'
 import { FightModalityProvider } from './contexts/FightModalityContext'
 import { StudentModalityProvider } from './contexts/StudentModalityContext'
 import { BranchProvider } from './contexts/BranchContext'
+import { BranchFacilityProvider } from './contexts/BranchFacilityContext'
 import { WeightDivisionProvider } from './contexts/WeightDivisionContext'
 import { FightAssociationProvider } from './contexts/FightAssociationContext'
 import Sidebar from './components/Sidebar'
@@ -20,6 +21,8 @@ import StudentRegistration from './pages/StudentRegistration'
 import StudentForm from './pages/StudentForm'
 import TeacherRegistration from './pages/TeacherRegistration'
 import TeacherForm from './pages/TeacherForm'
+import BranchFacilityRegistration from './pages/BranchFacilityRegistration'
+import BranchFacilityForm from './pages/BranchFacilityForm'
 import FightPlans from './pages/FightPlans'
 import FightModalities from './pages/FightModalities'
 import FightModalityForm from './pages/FightModalityForm'
@@ -57,14 +60,15 @@ function App() {
   }
 
           return (
-            <LanguageProvider>
-              <StudentProvider>
-                <TeacherProvider>
-                  <FightModalityProvider>
-                    <StudentModalityProvider>
-                      <BranchProvider>
-                        <WeightDivisionProvider>
-                          <FightAssociationProvider>
+        <LanguageProvider>
+          <StudentProvider>
+            <TeacherProvider>
+              <FightModalityProvider>
+                <StudentModalityProvider>
+                  <BranchProvider>
+                    <BranchFacilityProvider>
+                      <WeightDivisionProvider>
+                        <FightAssociationProvider>
                 <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
@@ -144,7 +148,9 @@ function App() {
                             <Route path="/branches/registration" element={<BranchRegistration />} />
                             <Route path="/branches/registration/:action" element={<BranchForm />} />
                             <Route path="/branches/registration/:action/:id" element={<BranchForm />} />
-                            <Route path="/branches/facilities" element={<div className="p-6">Branch Facilities</div>} />
+                            <Route path="/branches/facilities" element={<BranchFacilityRegistration />} />
+                            <Route path="/branches/facilities/:action" element={<BranchFacilityForm />} />
+                            <Route path="/branches/facilities/:action/:id" element={<BranchFacilityForm />} />
                   </Routes>
                 </main>
           </div>
@@ -152,12 +158,13 @@ function App() {
                 </Router>
                         </FightAssociationProvider>
                       </WeightDivisionProvider>
-                    </BranchProvider>
-                  </StudentModalityProvider>
-                </FightModalityProvider>
-              </TeacherProvider>
-            </StudentProvider>
-                </LanguageProvider>
+                    </BranchFacilityProvider>
+                  </BranchProvider>
+                </StudentModalityProvider>
+              </FightModalityProvider>
+            </TeacherProvider>
+          </StudentProvider>
+        </LanguageProvider>
   )
 }
 
