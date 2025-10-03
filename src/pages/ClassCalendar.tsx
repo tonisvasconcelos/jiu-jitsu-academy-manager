@@ -5,6 +5,7 @@ import { useClassSchedules } from '../contexts/ClassScheduleContext'
 import { useBranches } from '../contexts/BranchContext'
 import { useBranchFacilities } from '../contexts/BranchFacilityContext'
 import { useTeachers } from '../contexts/TeacherContext'
+import { useFightModalities } from '../contexts/FightModalityContext'
 
 const ClassCalendar: React.FC = () => {
   const { t } = useLanguage()
@@ -12,9 +13,18 @@ const ClassCalendar: React.FC = () => {
   const { branches = [] } = useBranches()
   const { facilities = [] } = useBranchFacilities()
   const { teachers = [] } = useTeachers()
+  const { modalities: fightModalities = [] } = useFightModalities()
 
   const [currentWeek, setCurrentWeek] = useState(new Date())
   const [weekStart, setWeekStart] = useState<Date>(new Date())
+  
+  // Filter states
+  const [teacherFilter, setTeacherFilter] = useState('all')
+  const [branchFilter, setBranchFilter] = useState('all')
+  const [facilityFilter, setFacilityFilter] = useState('all')
+  const [modalityFilter, setModalityFilter] = useState('all')
+  const [genderFilter, setGenderFilter] = useState('all')
+  const [ageCategoryFilter, setAgeCategoryFilter] = useState('all')
 
   // Calculate the start of the current week (Monday)
   useEffect(() => {
@@ -26,7 +36,7 @@ const ClassCalendar: React.FC = () => {
     setWeekStart(monday)
   }, [currentWeek])
 
-  // Get classes for the current week
+  // Get classes for the current week with filters applied
   const getClassesForWeek = () => {
     const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
     const weekClasses: { [key: string]: any[] } = {}
@@ -36,14 +46,24 @@ const ClassCalendar: React.FC = () => {
       weekClasses[day] = []
     })
 
-    // Filter classes that occur during this week
+    // Filter classes that occur during this week and match filter criteria
     classes.forEach(classItem => {
       if (classItem.status === 'active') {
-        classItem.daysOfWeek.forEach(day => {
-          if (weekClasses[day]) {
-            weekClasses[day].push(classItem)
-          }
-        })
+        // Apply filters
+        const matchesTeacher = teacherFilter === 'all' || classItem.teacherId === teacherFilter
+        const matchesBranch = branchFilter === 'all' || classItem.branchId === branchFilter
+        const matchesFacility = facilityFilter === 'all' || classItem.facilityId === facilityFilter
+        const matchesModality = modalityFilter === 'all' || classItem.modalityIds.includes(modalityFilter)
+        const matchesGender = genderFilter === 'all' || classItem.genderCategory === genderFilter
+        const matchesAgeCategory = ageCategoryFilter === 'all' || classItem.ageCategory === ageCategoryFilter
+
+        if (matchesTeacher && matchesBranch && matchesFacility && matchesModality && matchesGender && matchesAgeCategory) {
+          classItem.daysOfWeek.forEach(day => {
+            if (weekClasses[day]) {
+              weekClasses[day].push(classItem)
+            }
+          })
+        }
       }
     })
 
@@ -91,6 +111,20 @@ const ClassCalendar: React.FC = () => {
       case 'kids2': return 'text-yellow-400'
       default: return 'text-gray-400'
     }
+  }
+
+  const clearAllFilters = () => {
+    setTeacherFilter('all')
+    setBranchFilter('all')
+    setFacilityFilter('all')
+    setModalityFilter('all')
+    setGenderFilter('all')
+    setAgeCategoryFilter('all')
+  }
+
+  const hasActiveFilters = () => {
+    return teacherFilter !== 'all' || branchFilter !== 'all' || facilityFilter !== 'all' || 
+           modalityFilter !== 'all' || genderFilter !== 'all' || ageCategoryFilter !== 'all'
   }
 
   // Navigation functions
@@ -147,6 +181,127 @@ const ClassCalendar: React.FC = () => {
                 <span className="mr-2">➕</span>
                 Add New Class
               </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="mb-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-white">Filters</h3>
+            {hasActiveFilters() && (
+              <button
+                onClick={clearAllFilters}
+                className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 rounded-lg text-sm transition-all duration-300"
+              >
+                Clear All Filters
+              </button>
+            )}
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            {/* Teacher Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Teacher</label>
+              <select
+                value={teacherFilter}
+                onChange={(e) => setTeacherFilter(e.target.value)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All Teachers</option>
+                {teachers.map(teacher => (
+                  <option key={teacher.teacherId} value={teacher.teacherId}>
+                    {teacher.firstName} {teacher.lastName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Branch Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Branch</label>
+              <select
+                value={branchFilter}
+                onChange={(e) => {
+                  setBranchFilter(e.target.value)
+                  setFacilityFilter('all') // Reset facility when branch changes
+                }}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All Branches</option>
+                {branches.map(branch => (
+                  <option key={branch.branchId} value={branch.branchId}>
+                    {branch.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Facility Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Facility</label>
+              <select
+                value={facilityFilter}
+                onChange={(e) => setFacilityFilter(e.target.value)}
+                disabled={branchFilter === 'all'}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <option value="all">All Facilities</option>
+                {facilities
+                  .filter(facility => branchFilter === 'all' || facility.branchId === branchFilter)
+                  .map(facility => (
+                    <option key={facility.facilityId} value={facility.facilityId}>
+                      {facility.facilityName}
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            {/* Modality Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Fight Modality</label>
+              <select
+                value={modalityFilter}
+                onChange={(e) => setModalityFilter(e.target.value)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All Modalities</option>
+                {fightModalities.map(modality => (
+                  <option key={modality.modalityId} value={modality.modalityId}>
+                    {modality.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Gender Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Gender</label>
+              <select
+                value={genderFilter}
+                onChange={(e) => setGenderFilter(e.target.value)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All Genders</option>
+                <option value="unisex">Unisex</option>
+                <option value="womens">Women's Only</option>
+              </select>
+            </div>
+
+            {/* Age Category Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Age Category</label>
+              <select
+                value={ageCategoryFilter}
+                onChange={(e) => setAgeCategoryFilter(e.target.value)}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All Ages</option>
+                <option value="adult">Adult</option>
+                <option value="master">Master</option>
+                <option value="kids1">Kids 1</option>
+                <option value="kids2">Kids 2</option>
+              </select>
             </div>
           </div>
         </div>
