@@ -275,11 +275,11 @@ export const FightAssociationProvider: React.FC<{ children: ReactNode }> = ({ ch
   }
 
   const getFightAssociation = (associationId: string) => {
-    return fightAssociations.find(association => association.associationId === associationId)
+    return (fightAssociations || []).find(association => association.associationId === associationId)
   }
 
   const getAssociationsByModality = (modalityId: string) => {
-    return fightAssociations.filter(association => 
+    return (fightAssociations || []).filter(association => 
       association.active && association.fightModality === modalityId
     )
   }

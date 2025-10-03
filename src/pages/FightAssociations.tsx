@@ -14,13 +14,17 @@ const FightAssociations: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all')
   const [countryFilter, setCountryFilter] = useState('all')
 
+  // Add safety checks to prevent undefined errors
+  const safeFightAssociations = fightAssociations || []
+  const safeFightModalities = fightModalities || []
+
   const handleDeleteFightAssociation = (associationId: string) => {
     if (window.confirm('Are you sure you want to delete this fight association?')) {
       deleteFightAssociation(associationId)
     }
   }
 
-  const filteredAssociations = fightAssociations.filter(association => {
+  const filteredAssociations = safeFightAssociations.filter(association => {
     const matchesSearch = searchTerm === '' || 
       association.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       association.acronym.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -57,17 +61,17 @@ const FightAssociations: React.FC = () => {
   }
 
   const getFightModalityName = (modalityId: string) => {
-    const modality = fightModalities.find(m => m.modalityId === modalityId)
+    const modality = safeFightModalities.find(m => m.modalityId === modalityId)
     return modality ? modality.name : 'Unknown Modality'
   }
 
   const getFightModalityIcon = (modalityId: string) => {
-    const modality = fightModalities.find(m => m.modalityId === modalityId)
+    const modality = safeFightModalities.find(m => m.modalityId === modalityId)
     return modality ? modality.icon : '🥋'
   }
 
   // Get unique countries for filter
-  const countries = Array.from(new Set(fightAssociations.map(a => a.country).filter(Boolean)))
+  const countries = Array.from(new Set(safeFightAssociations.map(a => a.country).filter(Boolean)))
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
@@ -99,7 +103,7 @@ const FightAssociations: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Total Associations</p>
-                <p className="text-3xl font-bold text-white">{fightAssociations.length}</p>
+                <p className="text-3xl font-bold text-white">{safeFightAssociations.length}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl shadow-lg">
                 <span className="text-2xl">🏆</span>
@@ -111,7 +115,7 @@ const FightAssociations: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Active Associations</p>
-                <p className="text-3xl font-bold text-white">{fightAssociations.filter(a => a.active).length}</p>
+                <p className="text-3xl font-bold text-white">{safeFightAssociations.filter(a => a.active).length}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
                 <span className="text-2xl">✅</span>
@@ -123,7 +127,7 @@ const FightAssociations: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">International</p>
-                <p className="text-3xl font-bold text-white">{fightAssociations.filter(a => a.type === 'international').length}</p>
+                <p className="text-3xl font-bold text-white">{safeFightAssociations.filter(a => a.type === 'international').length}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
                 <span className="text-2xl">🌍</span>
@@ -135,7 +139,7 @@ const FightAssociations: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Main Associations</p>
-                <p className="text-3xl font-bold text-white">{fightAssociations.filter(a => a.isMainAssociation).length}</p>
+                <p className="text-3xl font-bold text-white">{safeFightAssociations.filter(a => a.isMainAssociation).length}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
                 <span className="text-2xl">⭐</span>
@@ -191,7 +195,7 @@ const FightAssociations: React.FC = () => {
                   className="appearance-none bg-white/10 border border-white/20 rounded-xl text-white px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 min-w-[140px]"
                 >
                   <option value="all" className="bg-gray-800">All Modalities</option>
-                  {fightModalities.filter(m => m.active).map(modality => (
+                  {safeFightModalities.filter(m => m.active).map(modality => (
                     <option key={modality.modalityId} value={modality.modalityId} className="bg-gray-800">
                       {modality.name}
                     </option>
