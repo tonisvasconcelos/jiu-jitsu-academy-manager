@@ -77,6 +77,7 @@ const StudentRegistration: React.FC = () => {
     return division ? division.name : 'Unknown Division'
   }
 
+
   const getWeightDivisionByWeight = (weight: number, gender: 'male' | 'female' | 'other', isKidsStudent: boolean) => {
     const ageGroup = isKidsStudent ? 'kids' : 'adult'
     const genderFilter = gender === 'other' ? 'both' : gender
