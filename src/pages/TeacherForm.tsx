@@ -51,12 +51,16 @@ const TeacherForm: React.FC = () => {
   const [certificationInput, setCertificationInput] = useState('')
 
   useEffect(() => {
+    console.log('TeacherForm useEffect:', { action, id })
     if (action === 'edit' || action === 'view') {
       const existingTeacher = getTeacher(id || '')
+      console.log('TeacherForm: Looking for teacher with ID:', id)
+      console.log('TeacherForm: Found teacher:', existingTeacher)
       if (existingTeacher) {
         setTeacher(existingTeacher)
         setIsReadOnly(action === 'view')
       } else {
+        console.log('TeacherForm: Teacher not found, navigating back to teachers list')
         navigate('/teachers')
       }
     } else if (action === 'new') {
