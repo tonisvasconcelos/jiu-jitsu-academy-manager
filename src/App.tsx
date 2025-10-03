@@ -10,6 +10,7 @@ import { BranchFacilityProvider } from './contexts/BranchFacilityContext'
 import { WeightDivisionProvider } from './contexts/WeightDivisionContext'
 import { FightAssociationProvider } from './contexts/FightAssociationContext'
 import { ClassScheduleProvider } from './contexts/ClassScheduleContext'
+import { ClassCheckInProvider } from './contexts/ClassCheckInContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -40,6 +41,9 @@ import ClassSchedules from './pages/ClassSchedules'
 import ClassScheduleRegistration from './pages/ClassScheduleRegistration'
 import ClassScheduleForm from './pages/ClassScheduleForm'
 import ClassCalendar from './pages/ClassCalendar'
+import ClassCheckIn from './pages/ClassCheckIn'
+import ClassCheckInForm from './pages/ClassCheckInForm'
+import ArchivedCheckIns from './pages/ArchivedCheckIns'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -75,6 +79,7 @@ function App() {
                       <WeightDivisionProvider>
                         <FightAssociationProvider>
                           <ClassScheduleProvider>
+                            <ClassCheckInProvider>
                 <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
@@ -139,6 +144,9 @@ function App() {
                     <Route path="/classes/registration/:action" element={<ClassScheduleForm />} />
                     <Route path="/classes/registration/:action/:id" element={<ClassScheduleForm />} />
                     <Route path="/classes/calendar" element={<ClassCalendar />} />
+                    <Route path="/classes/check-in" element={<ClassCheckIn />} />
+                    <Route path="/classes/check-in/new" element={<ClassCheckInForm />} />
+                    <Route path="/classes/check-in/archived" element={<ArchivedCheckIns />} />
                     <Route path="/classes/attendance" element={<div className="p-6">Class Attendance Tracking</div>} />
                     <Route path="/classes/evaluation" element={<div className="p-6">Class Evaluation & Feedback</div>} />
                     
@@ -170,6 +178,7 @@ function App() {
           </div>
         </div>
                 </Router>
+                            </ClassCheckInProvider>
                           </ClassScheduleProvider>
                         </FightAssociationProvider>
                       </WeightDivisionProvider>
