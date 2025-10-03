@@ -297,11 +297,23 @@ const StudentForm: React.FC = () => {
                   disabled={isReadOnly}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
                 >
-                  <option value="white">White Belt</option>
-                  <option value="blue">Blue Belt</option>
-                  <option value="purple">Purple Belt</option>
-                  <option value="brown">Brown Belt</option>
-                  <option value="black">Black Belt</option>
+                  <optgroup label="Adult Belts">
+                    <option value="white">White Belt</option>
+                    <option value="blue">Blue Belt</option>
+                    <option value="purple">Purple Belt</option>
+                    <option value="brown">Brown Belt</option>
+                    <option value="black">Black Belt</option>
+                  </optgroup>
+                  <optgroup label="Kids Belts">
+                    <option value="kids-white">Kids White Belt</option>
+                    <option value="kids-yellow">Kids Yellow Belt</option>
+                    <option value="kids-orange">Kids Orange Belt</option>
+                    <option value="kids-green">Kids Green Belt</option>
+                    <option value="kids-blue">Kids Blue Belt</option>
+                    <option value="kids-purple">Kids Purple Belt</option>
+                    <option value="kids-brown">Kids Brown Belt</option>
+                    <option value="kids-black">Kids Black Belt</option>
+                  </optgroup>
                 </select>
               </div>
 

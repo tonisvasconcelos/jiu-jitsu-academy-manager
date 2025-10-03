@@ -26,11 +26,21 @@ const StudentRegistration: React.FC = () => {
 
   const getBeltColor = (beltLevel: string) => {
     const colors = {
+      // Adult belts
       white: 'bg-gray-200 text-gray-800',
       blue: 'bg-blue-500 text-white',
       purple: 'bg-purple-500 text-white',
       brown: 'bg-amber-600 text-white',
-      black: 'bg-gray-800 text-white'
+      black: 'bg-gray-800 text-white',
+      // Kids belts
+      'kids-white': 'bg-gray-200 text-gray-800',
+      'kids-yellow': 'bg-yellow-500 text-white',
+      'kids-orange': 'bg-orange-500 text-white',
+      'kids-green': 'bg-green-500 text-white',
+      'kids-blue': 'bg-blue-500 text-white',
+      'kids-purple': 'bg-purple-500 text-white',
+      'kids-brown': 'bg-amber-600 text-white',
+      'kids-black': 'bg-gray-800 text-white'
     }
     return colors[beltLevel as keyof typeof colors] || 'bg-gray-200 text-gray-800'
   }
@@ -315,12 +325,22 @@ const StudentRegistration: React.FC = () => {
   const activeStudents = students.filter(s => s.active).length
   const filteredTotalStudents = filteredStudents.length
   
-  // Belt counts based on filtered students (dynamic)
+  // Adult belt counts based on filtered students (dynamic)
   const blackBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'black').length
   const whiteBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'white').length
   const blueBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'blue').length
   const purpleBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'purple').length
   const brownBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'brown').length
+
+  // Kids belt counts based on filtered students (dynamic)
+  const kidsWhiteBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'kids-white').length
+  const kidsYellowBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'kids-yellow').length
+  const kidsOrangeBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'kids-orange').length
+  const kidsGreenBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'kids-green').length
+  const kidsBlueBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'kids-blue').length
+  const kidsPurpleBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'kids-purple').length
+  const kidsBrownBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'kids-brown').length
+  const kidsBlackBelts = filteredStudents.filter(s => (s.beltLevel || '').toLowerCase() === 'kids-black').length
 
   // Calculate percentages (using filtered total for dynamic percentages)
   const getPercentage = (count: number) => {
@@ -333,6 +353,16 @@ const StudentRegistration: React.FC = () => {
   const blueBeltsPercentage = getPercentage(blueBelts)
   const purpleBeltsPercentage = getPercentage(purpleBelts)
   const brownBeltsPercentage = getPercentage(brownBelts)
+
+  // Kids belt percentages
+  const kidsWhiteBeltsPercentage = getPercentage(kidsWhiteBelts)
+  const kidsYellowBeltsPercentage = getPercentage(kidsYellowBelts)
+  const kidsOrangeBeltsPercentage = getPercentage(kidsOrangeBelts)
+  const kidsGreenBeltsPercentage = getPercentage(kidsGreenBelts)
+  const kidsBlueBeltsPercentage = getPercentage(kidsBlueBelts)
+  const kidsPurpleBeltsPercentage = getPercentage(kidsPurpleBelts)
+  const kidsBrownBeltsPercentage = getPercentage(kidsBrownBelts)
+  const kidsBlackBeltsPercentage = getPercentage(kidsBlackBelts)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
@@ -411,7 +441,7 @@ const StudentRegistration: React.FC = () => {
         {/* Other Belt Counts (Smaller) */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-white mb-4">{t('belt-level-counts')}</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-4">
             {/* White Belts */}
             <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-500/20">
               <div className="flex items-center justify-between">
@@ -481,6 +511,118 @@ const StudentRegistration: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Kids White Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-200/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">Kids White</p>
+                  <p className="text-2xl font-bold text-white">{kidsWhiteBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{kidsWhiteBeltsPercentage}</p>
+                </div>
+                <div className="p-2 bg-gray-200/20 rounded-lg shadow-md">
+                  <span className="text-xl text-gray-200">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Kids Yellow Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-yellow-500/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">Kids Yellow</p>
+                  <p className="text-2xl font-bold text-white">{kidsYellowBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{kidsYellowBeltsPercentage}</p>
+                </div>
+                <div className="p-2 bg-yellow-500/20 rounded-lg shadow-md">
+                  <span className="text-xl text-yellow-500">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Kids Orange Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-500/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">Kids Orange</p>
+                  <p className="text-2xl font-bold text-white">{kidsOrangeBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{kidsOrangeBeltsPercentage}</p>
+                </div>
+                <div className="p-2 bg-orange-500/20 rounded-lg shadow-md">
+                  <span className="text-xl text-orange-500">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Kids Green Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-green-500/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">Kids Green</p>
+                  <p className="text-2xl font-bold text-white">{kidsGreenBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{kidsGreenBeltsPercentage}</p>
+                </div>
+                <div className="p-2 bg-green-500/20 rounded-lg shadow-md">
+                  <span className="text-xl text-green-500">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Kids Blue Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">Kids Blue</p>
+                  <p className="text-2xl font-bold text-white">{kidsBlueBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{kidsBlueBeltsPercentage}</p>
+                </div>
+                <div className="p-2 bg-blue-500/20 rounded-lg shadow-md">
+                  <span className="text-xl text-blue-500">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Kids Purple Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">Kids Purple</p>
+                  <p className="text-2xl font-bold text-white">{kidsPurpleBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{kidsPurpleBeltsPercentage}</p>
+                </div>
+                <div className="p-2 bg-purple-500/20 rounded-lg shadow-md">
+                  <span className="text-xl text-purple-500">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Kids Brown Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-amber-700/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">Kids Brown</p>
+                  <p className="text-2xl font-bold text-white">{kidsBrownBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{kidsBrownBeltsPercentage}</p>
+                </div>
+                <div className="p-2 bg-amber-700/20 rounded-lg shadow-md">
+                  <span className="text-xl text-amber-600">🥋</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Kids Black Belts */}
+            <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-gray-800/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-400 mb-1">Kids Black</p>
+                  <p className="text-2xl font-bold text-white">{kidsBlackBelts}</p>
+                  <p className="text-xs text-gray-500 mt-1">{kidsBlackBeltsPercentage}</p>
+                </div>
+                <div className="p-2 bg-gray-800/20 rounded-lg shadow-md">
+                  <span className="text-xl text-gray-800">🥋</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -530,11 +672,23 @@ const StudentRegistration: React.FC = () => {
                   className="appearance-none bg-white/10 border border-white/20 rounded-xl text-white px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 min-w-[140px]"
                 >
                   <option value="all" className="bg-gray-800">{t('all-belts')}</option>
-                  <option value="white" className="bg-gray-800">{t('white')}</option>
-                  <option value="blue" className="bg-gray-800">{t('blue')}</option>
-                  <option value="purple" className="bg-gray-800">{t('purple')}</option>
-                  <option value="brown" className="bg-gray-800">{t('brown')}</option>
-                  <option value="black" className="bg-gray-800">{t('black')}</option>
+                  <optgroup label="Adult Belts" className="bg-gray-800">
+                    <option value="white" className="bg-gray-800">{t('white')}</option>
+                    <option value="blue" className="bg-gray-800">{t('blue')}</option>
+                    <option value="purple" className="bg-gray-800">{t('purple')}</option>
+                    <option value="brown" className="bg-gray-800">{t('brown')}</option>
+                    <option value="black" className="bg-gray-800">{t('black')}</option>
+                  </optgroup>
+                  <optgroup label="Kids Belts" className="bg-gray-800">
+                    <option value="kids-white" className="bg-gray-800">Kids White</option>
+                    <option value="kids-yellow" className="bg-gray-800">Kids Yellow</option>
+                    <option value="kids-orange" className="bg-gray-800">Kids Orange</option>
+                    <option value="kids-green" className="bg-gray-800">Kids Green</option>
+                    <option value="kids-blue" className="bg-gray-800">Kids Blue</option>
+                    <option value="kids-purple" className="bg-gray-800">Kids Purple</option>
+                    <option value="kids-brown" className="bg-gray-800">Kids Brown</option>
+                    <option value="kids-black" className="bg-gray-800">Kids Black</option>
+                  </optgroup>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <span className="text-gray-400">🥋</span>
@@ -685,7 +839,10 @@ const StudentRegistration: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getBeltColor(student.beltLevel)}`}>
-                        {student.beltLevel.charAt(0).toUpperCase() + student.beltLevel.slice(1)} Belt
+                        {student.beltLevel.startsWith('kids-') 
+                          ? `Kids ${student.beltLevel.replace('kids-', '').charAt(0).toUpperCase() + student.beltLevel.replace('kids-', '').slice(1)} Belt`
+                          : `${student.beltLevel.charAt(0).toUpperCase() + student.beltLevel.slice(1)} Belt`
+                        }
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
