@@ -27,6 +27,10 @@ const ClassScheduleRegistration: React.FC = () => {
     return matchesSearch && matchesStatus && matchesType
   })
 
+  // Debug logging
+  console.log('ClassScheduleRegistration: Classes data:', classes)
+  console.log('ClassScheduleRegistration: Filtered classes:', filteredClasses)
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'bg-green-500/20 text-green-400 border-green-500/30'
@@ -196,7 +200,7 @@ const ClassScheduleRegistration: React.FC = () => {
                 </div>
                 <div className="flex items-center text-sm text-gray-300">
                   <span className="mr-2">🎯</span>
-                  <span className="capitalize">{classItem.ageCategory}</span>
+                  <span className="capitalize">{classItem.ageCategory || 'Adult'}</span>
                 </div>
               </div>
 
