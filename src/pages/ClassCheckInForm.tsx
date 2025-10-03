@@ -27,17 +27,11 @@ const ClassCheckInForm: React.FC = () => {
 
   const [selectedClass, setSelectedClass] = useState<any>(null);
 
-  // Get available classes for the selected date
+  // Get available classes for check-in (show all active classes)
   const getAvailableClasses = () => {
-    if (!formData.checkInDate) return [];
-    
-    const selectedDate = new Date(formData.checkInDate);
-    const dayOfWeek = selectedDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-    
-    return classes.filter(cls => 
-      cls.daysOfWeek.includes(dayOfWeek as any) && 
-      cls.status === 'active'
-    );
+    // Show all active classes for check-in, regardless of day of week
+    // Users should be able to check in for any class that exists
+    return classes.filter(cls => cls.status === 'active');
   };
 
   // Update selected class when classId changes
@@ -177,9 +171,9 @@ const ClassCheckInForm: React.FC = () => {
                   </option>
                 ))}
               </select>
-              {formData.checkInDate && availableClasses.length === 0 && (
+              {availableClasses.length === 0 && (
                 <p className="mt-1 text-sm text-gray-400">
-                  No classes available for the selected date.
+                  No active classes available for check-in.
                 </p>
               )}
             </div>
