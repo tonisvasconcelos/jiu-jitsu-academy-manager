@@ -155,6 +155,13 @@ const loadTeachersFromStorage = (): Teacher[] => {
     console.error('TeacherContext: Error loading teachers from localStorage:', error)
   }
   console.log('TeacherContext: No saved data found, using default teachers')
+  // Save default teachers to localStorage for future use
+  try {
+    localStorage.setItem('jiu-jitsu-teachers', JSON.stringify(initialTeachers))
+    console.log('TeacherContext: Saved default teachers to localStorage')
+  } catch (error) {
+    console.error('TeacherContext: Error saving default teachers to localStorage:', error)
+  }
   return initialTeachers
 }
 
