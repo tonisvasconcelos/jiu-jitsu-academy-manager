@@ -7,7 +7,7 @@ import { useFightModalities } from '../contexts/FightModalityContext'
 const FightAssociations: React.FC = () => {
   const { t } = useLanguage()
   const { fightAssociations, deleteFightAssociation } = useFightAssociations()
-  const { fightModalities } = useFightModalities()
+  const { modalities: fightModalities, getModality } = useFightModalities()
   const [searchTerm, setSearchTerm] = useState('')
   const [typeFilter, setTypeFilter] = useState('all')
   const [modalityFilter, setModalityFilter] = useState('all')
@@ -67,7 +67,15 @@ const FightAssociations: React.FC = () => {
 
   const getFightModalityIcon = (modalityId: string) => {
     const modality = safeFightModalities.find(m => m.modalityId === modalityId)
-    return modality ? modality.icon : '🥋'
+    if (!modality) return '🥋'
+    
+    // Return appropriate icon based on modality type
+    switch (modality.type) {
+      case 'striking': return '👊'
+      case 'grappling': return '🥋'
+      case 'mixed': return '⚔️'
+      default: return '🥋'
+    }
   }
 
   // Get unique countries for filter
@@ -308,7 +316,7 @@ const FightAssociations: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-wrap gap-1">
                           {association.fightModalities?.map(modalityId => {
-                            const modality = getFightModality(modalityId)
+                            const modality = getModality(modalityId)
                             return modality ? (
                               <span
                                 key={modalityId}
