@@ -31,7 +31,7 @@ const FightAssociations: React.FC = () => {
       association.description?.toLowerCase().includes(searchTerm.toLowerCase())
 
     const matchesType = typeFilter === 'all' || association.type === typeFilter
-    const matchesModality = modalityFilter === 'all' || association.fightModality === modalityFilter
+    const matchesModality = modalityFilter === 'all' || association.fightModalities?.includes(modalityFilter)
     const matchesStatus = statusFilter === 'all' || 
       (statusFilter === 'active' && association.active) ||
       (statusFilter === 'inactive' && !association.active)
@@ -306,9 +306,19 @@ const FightAssociations: React.FC = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <span className="mr-2">{getFightModalityIcon(association.fightModality)}</span>
-                          <span className="text-sm text-white">{getFightModalityName(association.fightModality)}</span>
+                        <div className="flex flex-wrap gap-1">
+                          {association.fightModalities?.map(modalityId => {
+                            const modality = getFightModality(modalityId)
+                            return modality ? (
+                              <span
+                                key={modalityId}
+                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-300"
+                              >
+                                <span className="mr-1">{getFightModalityIcon(modalityId)}</span>
+                                {modality.name}
+                              </span>
+                            ) : null
+                          }) || <span className="text-gray-400 text-sm">No modalities</span>}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

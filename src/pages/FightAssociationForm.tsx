@@ -14,7 +14,7 @@ const FightAssociationForm: React.FC = () => {
     name: '',
     acronym: '',
     type: 'national',
-    fightModality: '',
+    fightModalities: [],
     country: '',
     region: '',
     website: '',
@@ -52,8 +52,36 @@ const FightAssociationForm: React.FC = () => {
     setAssociation(prev => ({ ...prev, [field]: value }))
   }
 
+  const handleModalityToggle = (modalityId: string) => {
+    setAssociation(prev => {
+      const currentModalities = prev.fightModalities || []
+      const isSelected = currentModalities.includes(modalityId)
+      
+      if (isSelected) {
+        // Remove modality
+        return {
+          ...prev,
+          fightModalities: currentModalities.filter(id => id !== modalityId)
+        }
+      } else {
+        // Add modality
+        return {
+          ...prev,
+          fightModalities: [...currentModalities, modalityId]
+        }
+      }
+    })
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validate that at least one modality is selected
+    if (!association.fightModalities || association.fightModalities.length === 0) {
+      alert('Please select at least one fight modality')
+      return
+    }
+    
     setIsLoading(true)
 
     try {
@@ -169,23 +197,68 @@ const FightAssociationForm: React.FC = () => {
                 </select>
               </div>
 
-              {/* Fight Modality */}
+              {/* Fight Modalities */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Fight Modality *</label>
-                <select
-                  value={association.fightModality}
-                  onChange={(e) => handleInputChange('fightModality', e.target.value)}
-                  required
-                  disabled={isReadOnly}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent disabled:opacity-50"
-                >
-                  <option value="" className="bg-gray-800">Select Fight Modality</option>
-                  {activeFightModalities.map(modality => (
-                    <option key={modality.modalityId} value={modality.modalityId} className="bg-gray-800">
-                      {modality.name}
-                    </option>
-                  ))}
-                </select>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Fight Modalities *</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {activeFightModalities.map(modality => {
+                    const isSelected = association.fightModalities?.includes(modality.modalityId) || false
+                    return (
+                      <div
+                        key={modality.modalityId}
+                        className={`p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+                          isSelected
+                            ? 'border-purple-500 bg-purple-500/20'
+                            : 'border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10'
+                        } ${isReadOnly ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        onClick={() => !isReadOnly && handleModalityToggle(modality.modalityId)}
+                      >
+                        <div className="flex items-start space-x-3">
+                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 ${
+                            isSelected
+                              ? 'border-purple-500 bg-purple-500'
+                              : 'border-white/40'
+                          }`}>
+                            {isSelected && (
+                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-white font-medium text-sm mb-1">{modality.name}</h3>
+                            <p className="text-gray-400 text-xs mb-2">{modality.description}</p>
+                            <div className="flex flex-wrap gap-2">
+                              <span className={`px-2 py-1 text-xs rounded-full ${
+                                modality.type === 'striking' 
+                                  ? 'bg-red-500/20 text-red-300' 
+                                  : modality.type === 'grappling'
+                                  ? 'bg-blue-500/20 text-blue-300'
+                                  : 'bg-gray-500/20 text-gray-300'
+                              }`}>
+                                {modality.type}
+                              </span>
+                              <span className={`px-2 py-1 text-xs rounded-full ${
+                                modality.level === 'beginner' 
+                                  ? 'bg-green-500/20 text-green-300'
+                                  : modality.level === 'intermediate'
+                                  ? 'bg-orange-500/20 text-orange-300'
+                                  : modality.level === 'advanced'
+                                  ? 'bg-red-500/20 text-red-300'
+                                  : 'bg-purple-500/20 text-purple-300'
+                              }`}>
+                                {modality.level}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                {association.fightModalities?.length === 0 && (
+                  <p className="text-red-400 text-sm mt-2">Please select at least one fight modality</p>
+                )}
               </div>
 
               {/* Country */}

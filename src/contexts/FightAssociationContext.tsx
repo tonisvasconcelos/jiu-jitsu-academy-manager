@@ -5,7 +5,7 @@ export interface FightAssociation {
   name: string
   acronym: string
   type: 'international' | 'national' | 'regional' | 'affiliate_network'
-  fightModality: string // References fight modality ID
+  fightModalities: string[] // References fight modality IDs (multiple)
   country?: string
   region?: string
   website?: string
@@ -38,7 +38,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'International Brazilian Jiu-Jitsu Federation',
     acronym: 'IBJJF',
     type: 'international',
-    fightModality: 'brazilian-jiu-jitsu',
+    fightModalities: ['MOD001'], // Brazilian Jiu-Jitsu
     country: 'Brazil',
     website: 'https://ibjjf.com',
     description: 'The most influential organization, establishes the global standard for belt rankings, competition rules, and major tournaments like the World Jiu-Jitsu Championship.',
@@ -53,7 +53,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'Abu Dhabi Combat Club',
     acronym: 'ADCC',
     type: 'international',
-    fightModality: 'brazilian-jiu-jitsu',
+    fightModalities: ['MOD001'], // Brazilian Jiu-Jitsu
     country: 'UAE',
     website: 'https://adcombatclub.com',
     description: 'Known for its prestigious grappling tournament, the ADCC World Submission Fighting Championship, which differs from IBJJF-style competitions.',
@@ -68,7 +68,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'United Arab Emirates Jiu-Jitsu Federation',
     acronym: 'UAEJJF',
     type: 'international',
-    fightModality: 'brazilian-jiu-jitsu',
+    fightModalities: ['MOD001'], // Brazilian Jiu-Jitsu
     country: 'UAE',
     website: 'https://uaejjf.com',
     description: 'A prominent federation, particularly in the Middle East, that promotes jiu-jitsu and hosts major events.',
@@ -85,7 +85,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'Gracie Barra',
     acronym: 'GB',
     type: 'affiliate_network',
-    fightModality: 'brazilian-jiu-jitsu',
+    fightModalities: ['MOD001'], // Brazilian Jiu-Jitsu
     country: 'Brazil',
     website: 'https://graciebarra.com',
     description: 'A large and well-known affiliate network with hundreds of schools worldwide, led by Carlos Gracie Jr., who founded the IBJJF.',
@@ -100,7 +100,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'BJJ Globetrotters',
     acronym: 'BJJGT',
     type: 'affiliate_network',
-    fightModality: 'brazilian-jiu-jitsu',
+    fightModalities: ['MOD001'], // Brazilian Jiu-Jitsu
     country: 'Denmark',
     website: 'https://bjjglobetrotters.com',
     description: 'One of the largest affiliations, focused on community and training opportunities worldwide.',
@@ -117,7 +117,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'Confederação Brasileira de Jiu-Jitsu',
     acronym: 'CBJJ',
     type: 'national',
-    fightModality: 'brazilian-jiu-jitsu',
+    fightModalities: ['MOD001'], // Brazilian Jiu-Jitsu
     country: 'Brazil',
     website: 'https://cbjj.com.br',
     description: 'The sister organization to the IBJJF in Brazil, setting the rules for the sport in Brazil.',
@@ -132,7 +132,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'Federação Paulista de Jiu Jitsu',
     acronym: 'FPJJ',
     type: 'regional',
-    fightModality: 'brazilian-jiu-jitsu',
+    fightModalities: ['MOD001'], // Brazilian Jiu-Jitsu
     country: 'Brazil',
     region: 'São Paulo',
     website: 'https://fpjj.com.br',
@@ -148,7 +148,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'Confédération Française de Jiu-Jitsu Brésilien',
     acronym: 'CFJJB',
     type: 'national',
-    fightModality: 'brazilian-jiu-jitsu',
+    fightModalities: ['MOD001'], // Brazilian Jiu-Jitsu
     country: 'France',
     website: 'https://cfjjb.fr',
     description: 'National federation for Brazilian Jiu-Jitsu in France.',
@@ -163,7 +163,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'Ukrainian Federation Brazilian Jiu Jitsu',
     acronym: 'UFBJJ',
     type: 'national',
-    fightModality: 'brazilian-jiu-jitsu',
+    fightModalities: ['MOD001'], // Brazilian Jiu-Jitsu
     country: 'Ukraine',
     website: 'https://ufbjj.org',
     description: 'National federation for Brazilian Jiu-Jitsu in Ukraine.',
@@ -180,7 +180,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'World Boxing Council',
     acronym: 'WBC',
     type: 'international',
-    fightModality: 'boxing',
+    fightModalities: ['MOD002'], // Boxing
     country: 'Mexico',
     website: 'https://wbcboxing.com',
     description: 'One of the major international boxing organizations.',
@@ -195,7 +195,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'World Boxing Association',
     acronym: 'WBA',
     type: 'international',
-    fightModality: 'boxing',
+    fightModalities: ['MOD002'], // Boxing
     country: 'Panama',
     website: 'https://wbaboxing.com',
     description: 'The oldest of the four major international boxing organizations.',
@@ -212,7 +212,7 @@ const defaultFightAssociations: FightAssociation[] = [
     name: 'International Judo Federation',
     acronym: 'IJF',
     type: 'international',
-    fightModality: 'judo',
+    fightModalities: ['MOD005'], // Judo (assuming we'll add this)
     country: 'Switzerland',
     website: 'https://ijf.org',
     description: 'The international governing body for judo.',
@@ -280,7 +280,7 @@ export const FightAssociationProvider: React.FC<{ children: ReactNode }> = ({ ch
 
   const getAssociationsByModality = (modalityId: string) => {
     return (fightAssociations || []).filter(association => 
-      association.active && association.fightModality === modalityId
+      association.active && association.fightModalities.includes(modalityId)
     )
   }
 
