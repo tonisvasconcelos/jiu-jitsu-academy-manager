@@ -10,7 +10,6 @@ const FightAssociations: React.FC = () => {
   const { modalities: fightModalities, getModality } = useFightModalities()
   const [searchTerm, setSearchTerm] = useState('')
   const [typeFilter, setTypeFilter] = useState('all')
-  const [modalityFilter, setModalityFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
   const [countryFilter, setCountryFilter] = useState('all')
 
@@ -31,13 +30,12 @@ const FightAssociations: React.FC = () => {
       association.description?.toLowerCase().includes(searchTerm.toLowerCase())
 
     const matchesType = typeFilter === 'all' || association.type === typeFilter
-    const matchesModality = modalityFilter === 'all' || association.fightModalities?.includes(modalityFilter)
     const matchesStatus = statusFilter === 'all' || 
       (statusFilter === 'active' && association.active) ||
       (statusFilter === 'inactive' && !association.active)
     const matchesCountry = countryFilter === 'all' || association.country === countryFilter
 
-    return matchesSearch && matchesType && matchesModality && matchesStatus && matchesCountry
+    return matchesSearch && matchesType && matchesStatus && matchesCountry
   })
 
   const getTypeIcon = (type: string) => {
@@ -195,25 +193,6 @@ const FightAssociations: React.FC = () => {
                 </div>
               </div>
 
-              {/* Modality Filter */}
-              <div className="relative">
-                <select
-                  value={modalityFilter}
-                  onChange={(e) => setModalityFilter(e.target.value)}
-                  className="appearance-none bg-white/10 border border-white/20 rounded-xl text-white px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 min-w-[140px]"
-                >
-                  <option value="all" className="bg-gray-800">All Modalities</option>
-                  {safeFightModalities.filter(m => m.active).map(modality => (
-                    <option key={modality.modalityId} value={modality.modalityId} className="bg-gray-800">
-                      {modality.name}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <span className="text-gray-400">🥋</span>
-                </div>
-              </div>
-
               {/* Country Filter */}
               <div className="relative">
                 <select
@@ -263,7 +242,7 @@ const FightAssociations: React.FC = () => {
               <div className="text-6xl mb-4">🏆</div>
               <h3 className="text-xl font-semibold text-white mb-2">No Fight Associations Found</h3>
               <p className="text-gray-400 mb-6">
-                {searchTerm || typeFilter !== 'all' || modalityFilter !== 'all' || statusFilter !== 'all' || countryFilter !== 'all'
+                {searchTerm || typeFilter !== 'all' || statusFilter !== 'all' || countryFilter !== 'all'
                   ? 'No fight associations match your current filters.'
                   : 'Get started by creating your first fight association.'}
               </p>
@@ -282,7 +261,6 @@ const FightAssociations: React.FC = () => {
                   <tr>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Association</th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Type</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Fight Modality</th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Country</th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
@@ -311,22 +289,6 @@ const FightAssociations: React.FC = () => {
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeColor(association.type)}`}>
                             {association.type.replace('_', ' ').toUpperCase()}
                           </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex flex-wrap gap-1">
-                          {association.fightModalities?.map(modalityId => {
-                            const modality = getModality(modalityId)
-                            return modality ? (
-                              <span
-                                key={modalityId}
-                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-300"
-                              >
-                                <span className="mr-1">{getFightModalityIcon(modalityId)}</span>
-                                {modality.name}
-                              </span>
-                            ) : null
-                          }) || <span className="text-gray-400 text-sm">No modalities</span>}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
