@@ -8,6 +8,7 @@ const ClassSchedules: React.FC = () => {
   const subMenuItems = [
     { id: 'class-registration', title: 'Class Registration', path: '/classes/registration', icon: '📅', description: 'Register and manage class schedules' },
     { id: 'class-calendar', title: 'Class Calendar', path: '/classes/calendar', icon: '🗓️', description: 'View class schedules in calendar format' },
+    { id: 'class-checkin', title: 'Class Check-In', path: '/classes/check-in', icon: '📝', description: 'Record class check-ins and track attendance' },
     { id: 'class-attendance', title: 'Class Attendance', path: '/classes/attendance', icon: '✅', description: 'Track student attendance in classes' },
     { id: 'class-evaluation', title: 'Class Evaluation', path: '/classes/evaluation', icon: '📊', description: 'Evaluate class performance and feedback' },
   ]
