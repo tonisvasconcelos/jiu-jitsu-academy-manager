@@ -54,13 +54,36 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         {/* Logo */}
         <div className="p-3 border-b border-white/10">
           <div className="flex items-center justify-center">
-            <div className={`${collapsed ? 'text-sm p-1' : 'text-lg p-1.5'} bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg`}>🥋</div>
-            {(!collapsed || isMobile) && (
-              <div className="ml-2">
-                <span className="text-sm font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                  {t('academy-manager')}
-                </span>
-                <p className="text-xs text-gray-400">{t('management-system')}</p>
+            {(!collapsed || isMobile) ? (
+              <div className="text-center">
+                <div className="relative">
+                  <div className="text-white font-bold text-lg leading-tight">
+                    <div className="relative">
+                      <span className="text-2xl font-black tracking-wide">OSS</span>
+                      {/* Belt graphic */}
+                      <div className="absolute -bottom-1 left-0 right-0 h-2 bg-white rounded-sm transform -skew-x-12">
+                        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white border border-gray-800 rounded-full"></div>
+                        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-gray-800 rounded-full"></div>
+                      </div>
+                    </div>
+                    <div className="text-2xl font-black tracking-wide mt-1">365</div>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">Fight Academy Manager</p>
+              </div>
+            ) : (
+              <div className="text-center">
+                <div className="text-white font-bold text-sm leading-tight">
+                  <div className="relative">
+                    <span className="text-lg font-black tracking-wide">OSS</span>
+                    {/* Belt graphic */}
+                    <div className="absolute -bottom-0.5 left-0 right-0 h-1.5 bg-white rounded-sm transform -skew-x-12">
+                      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white border border-gray-800 rounded-full"></div>
+                      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-gray-800 rounded-full"></div>
+                    </div>
+                  </div>
+                  <div className="text-lg font-black tracking-wide mt-0.5">365</div>
+                </div>
               </div>
             )}
           </div>
