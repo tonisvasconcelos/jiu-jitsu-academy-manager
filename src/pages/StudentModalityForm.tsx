@@ -20,6 +20,8 @@ const StudentModalityForm: React.FC = () => {
     assignmentDate: new Date().toISOString().split('T')[0],
     beltLevelAtStart: 'white',
     active: true,
+    closingDate: '',
+    expectedClosingDate: '',
     notes: ''
   })
   const [isLoading, setIsLoading] = useState(false)
@@ -88,6 +90,12 @@ const StudentModalityForm: React.FC = () => {
         modalityIds: connection.modalityIds
       })
       alert('Please select a student and at least one modality')
+      return
+    }
+
+    // Check if closing date is required when status is not active
+    if (!connection.active && !connection.closingDate) {
+      alert('Closing Date is required when assignment status is not Active')
       return
     }
     
@@ -190,6 +198,28 @@ const StudentModalityForm: React.FC = () => {
                 />
               </div>
 
+              {/* Closing Date */}
+              <div>
+                <label htmlFor="closingDate" className="block text-sm font-medium text-gray-300 mb-2">
+                  Closing Date {!connection.active ? '*' : ''}
+                </label>
+                <input
+                  id="closingDate"
+                  name="closingDate"
+                  type="date"
+                  value={connection.closingDate || ''}
+                  onChange={(e) => handleInputChange('closingDate', e.target.value)}
+                  readOnly={isViewMode}
+                  required={!connection.active}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                {!connection.active && (
+                  <p className="text-xs text-gray-400 mt-1">
+                    Required when assignment status is not Active
+                  </p>
+                )}
+              </div>
+
               {/* Belt Level at Start */}
               <div>
                 <label htmlFor="beltLevelAtStart" className="block text-sm font-medium text-gray-300 mb-2">Belt Level at Start *</label>
@@ -209,6 +239,23 @@ const StudentModalityForm: React.FC = () => {
                   <option value="black">Black Belt</option>
                 </select>
                 <p className="text-xs text-gray-400 mt-1">The student's belt level when starting this modality</p>
+              </div>
+
+              {/* Expected Closing Date */}
+              <div>
+                <label htmlFor="expectedClosingDate" className="block text-sm font-medium text-gray-300 mb-2">Expected Closing Date</label>
+                <input
+                  id="expectedClosingDate"
+                  name="expectedClosingDate"
+                  type="date"
+                  value={connection.expectedClosingDate || ''}
+                  onChange={(e) => handleInputChange('expectedClosingDate', e.target.value)}
+                  readOnly={isViewMode}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Planned end date for this modality assignment
+                </p>
               </div>
             </div>
 

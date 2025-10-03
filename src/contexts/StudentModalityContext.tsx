@@ -7,6 +7,8 @@ export interface StudentModalityConnection {
   assignmentDate: string
   beltLevelAtStart: 'white' | 'blue' | 'purple' | 'brown' | 'black'
   active: boolean
+  closingDate?: string
+  expectedClosingDate?: string
   notes?: string
 }
 
