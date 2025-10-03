@@ -95,6 +95,8 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 12,
     status: 'active',
     classType: 'regular',
+    genderCategory: 'unisex',
+    ageCategory: 'adult',
     price: 60,
     recurring: true,
     recurringPattern: 'weekly',
