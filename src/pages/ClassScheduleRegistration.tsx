@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useClassSchedules } from '../contexts/ClassScheduleContext'
+import { useFightModalities } from '../contexts/FightModalityContext'
 
 const ClassScheduleRegistration: React.FC = () => {
   const { t } = useLanguage()
   const { classes = [], deleteClass } = useClassSchedules()
+  const { fightModalities = [] } = useFightModalities()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [typeFilter, setTypeFilter] = useState('all')
@@ -38,6 +40,13 @@ const ClassScheduleRegistration: React.FC = () => {
       case 'competition': return 'bg-red-500/20 text-red-400'
       default: return 'bg-gray-500/20 text-gray-400'
     }
+  }
+
+  const getModalityNames = (modalityIds: string[]) => {
+    return modalityIds.map(id => {
+      const modality = fightModalities.find(m => m.modalityId === id)
+      return modality ? modality.modalityName : id
+    }).join(', ')
   }
 
   return (
@@ -149,8 +158,8 @@ const ClassScheduleRegistration: React.FC = () => {
                   <span>{classItem.duration} minutes</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-300">
-                  <span className="mr-2">🎯</span>
-                  <span className="capitalize">{classItem.difficulty}</span>
+                  <span className="mr-2">🥊</span>
+                  <span>{getModalityNames(classItem.modalityIds)}</span>
                 </div>
               </div>
 

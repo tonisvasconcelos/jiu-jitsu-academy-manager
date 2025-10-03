@@ -23,7 +23,7 @@ const ClassScheduleForm: React.FC = () => {
     branchId: '',
     facilityId: '',
     teacherId: '',
-    modalityId: '',
+    modalityIds: [],
     startDate: '',
     endDate: '',
     startTime: '',
@@ -34,7 +34,6 @@ const ClassScheduleForm: React.FC = () => {
     currentEnrollment: 0,
     status: 'active',
     classType: 'regular',
-    difficulty: 'beginner',
     price: 0,
     recurring: true,
     recurringPattern: 'weekly',
@@ -66,6 +65,15 @@ const ClassScheduleForm: React.FC = () => {
     return `CLS${String(maxId + 1).padStart(3, '0')}`
   }
 
+  const handleModalityToggle = (modalityId: string) => {
+    const currentModalities = formData.modalityIds || []
+    if (currentModalities.includes(modalityId)) {
+      setFormData({ ...formData, modalityIds: currentModalities.filter(id => id !== modalityId) })
+    } else {
+      setFormData({ ...formData, modalityIds: [...currentModalities, modalityId] })
+    }
+  }
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
@@ -73,7 +81,7 @@ const ClassScheduleForm: React.FC = () => {
     if (!formData.branchId) newErrors.branchId = 'Branch is required'
     if (!formData.facilityId) newErrors.facilityId = 'Facility is required'
     if (!formData.teacherId) newErrors.teacherId = 'Teacher is required'
-    if (!formData.modalityId) newErrors.modalityId = 'Modality is required'
+    if (!formData.modalityIds || formData.modalityIds.length === 0) newErrors.modalityIds = 'At least one modality is required'
     if (!formData.startDate) newErrors.startDate = 'Start date is required'
     if (!formData.endDate) newErrors.endDate = 'End date is required'
     if (!formData.startTime) newErrors.startTime = 'Start time is required'
@@ -100,7 +108,7 @@ const ClassScheduleForm: React.FC = () => {
         branchId: formData.branchId!,
         facilityId: formData.facilityId!,
         teacherId: formData.teacherId!,
-        modalityId: formData.modalityId!,
+        modalityIds: formData.modalityIds!,
         startDate: formData.startDate!,
         endDate: formData.endDate!,
         startTime: formData.startTime!,
@@ -291,28 +299,62 @@ const ClassScheduleForm: React.FC = () => {
                 {errors.teacherId && <p className="text-red-400 text-sm mt-1">{errors.teacherId}</p>}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Modality *
-                </label>
-                <select
-                  value={formData.modalityId || ''}
-                  onChange={(e) => setFormData({ ...formData, modalityId: e.target.value })}
-                  disabled={isViewMode}
-                  className={`w-full px-4 py-3 bg-white/5 border rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.modalityId ? 'border-red-500' : 'border-white/10'
-                  }`}
-                >
-                  <option value="">Select Modality</option>
-                  {fightModalities.map(modality => (
-                    <option key={modality.modalityId} value={modality.modalityId}>
-                      {modality.modalityName}
-                    </option>
-                  ))}
-                </select>
-                {errors.modalityId && <p className="text-red-400 text-sm mt-1">{errors.modalityId}</p>}
-              </div>
             </div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+            <h2 className="text-2xl font-semibold mb-6">Fight Modalities</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {fightModalities.map(modality => (
+                <div
+                  key={modality.modalityId}
+                  className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer ${
+                    formData.modalityIds?.includes(modality.modalityId)
+                      ? 'bg-blue-500/20 border-blue-400 text-blue-400'
+                      : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
+                  } ${isViewMode ? 'cursor-not-allowed' : ''}`}
+                  onClick={() => !isViewMode && handleModalityToggle(modality.modalityId)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium">{modality.modalityName}</div>
+                      <div className="text-xs text-gray-400 mt-1">{modality.description}</div>
+                      <div className="flex items-center mt-2 space-x-2">
+                        <span className="px-2 py-1 bg-white/10 rounded text-xs">
+                          {modality.level}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-2xl">
+                      {formData.modalityIds?.includes(modality.modalityId) ? '✅' : '⬜'}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {formData.modalityIds?.length === 0 && (
+              <p className="text-sm text-gray-400 mt-2">Please select at least one modality</p>
+            )}
+            
+            {formData.modalityIds && formData.modalityIds.length > 0 && (
+              <div className="mt-3 p-4 bg-white/5 rounded-xl border border-white/10">
+                <div className="text-sm font-medium text-white mb-2">Selected Modalities:</div>
+                <div className="flex flex-wrap gap-2">
+                  {formData.modalityIds.map(modalityId => {
+                    const modality = fightModalities.find(m => m.modalityId === modalityId)
+                    return modality ? (
+                      <span key={modalityId} className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm">
+                        {modality.modalityName}
+                      </span>
+                    ) : null
+                  })}
+                </div>
+              </div>
+            )}
+            
+            {errors.modalityIds && <p className="text-red-400 text-sm mt-1">{errors.modalityIds}</p>}
           </div>
 
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
@@ -357,22 +399,6 @@ const ClassScheduleForm: React.FC = () => {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Difficulty Level
-                </label>
-                <select
-                  value={formData.difficulty || 'beginner'}
-                  onChange={(e) => setFormData({ ...formData, difficulty: e.target.value as any })}
-                  disabled={isViewMode}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="beginner">Beginner</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="advanced">Advanced</option>
-                  <option value="all-levels">All Levels</option>
-                </select>
-              </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">

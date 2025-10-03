@@ -7,7 +7,7 @@ export interface ClassSchedule {
   branchId: string
   facilityId: string
   teacherId: string
-  modalityId: string
+  modalityIds: string[]
   startDate: string
   endDate: string
   startTime: string
@@ -18,7 +18,6 @@ export interface ClassSchedule {
   currentEnrollment: number
   status: 'active' | 'inactive' | 'cancelled' | 'completed'
   classType: 'regular' | 'private' | 'seminar' | 'workshop' | 'competition'
-  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'all-levels'
   price?: number
   recurring: boolean
   recurringPattern?: 'weekly' | 'bi-weekly' | 'monthly'
@@ -54,7 +53,7 @@ const initialClasses: ClassSchedule[] = [
     branchId: 'BR001',
     facilityId: 'FAC002',
     teacherId: 'TCH001',
-    modalityId: 'MOD001',
+    modalityIds: ['MOD001'],
     startDate: '2024-01-15',
     endDate: '2024-12-31',
     startTime: '18:00',
@@ -65,7 +64,6 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 15,
     status: 'active',
     classType: 'regular',
-    difficulty: 'beginner',
     price: 50,
     recurring: true,
     recurringPattern: 'weekly',
@@ -82,7 +80,7 @@ const initialClasses: ClassSchedule[] = [
     branchId: 'BR001',
     facilityId: 'FAC002',
     teacherId: 'TCH001',
-    modalityId: 'MOD001',
+    modalityIds: ['MOD001'],
     startDate: '2024-01-15',
     endDate: '2024-12-31',
     startTime: '19:30',
@@ -93,7 +91,6 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 12,
     status: 'active',
     classType: 'regular',
-    difficulty: 'advanced',
     price: 60,
     recurring: true,
     recurringPattern: 'weekly',
@@ -110,7 +107,7 @@ const initialClasses: ClassSchedule[] = [
     branchId: 'BR001',
     facilityId: 'FAC001',
     teacherId: 'TCH002',
-    modalityId: 'MOD002',
+    modalityIds: ['MOD002'],
     startDate: '2024-01-16',
     endDate: '2024-12-31',
     startTime: '17:00',
@@ -121,7 +118,6 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 18,
     status: 'active',
     classType: 'regular',
-    difficulty: 'beginner',
     price: 45,
     recurring: true,
     recurringPattern: 'weekly',
@@ -138,7 +134,7 @@ const initialClasses: ClassSchedule[] = [
     branchId: 'BR001',
     facilityId: 'FAC008',
     teacherId: 'TCH001',
-    modalityId: 'MOD001',
+    modalityIds: ['MOD001'],
     startDate: '2024-01-17',
     endDate: '2024-12-31',
     startTime: '16:00',
@@ -149,7 +145,6 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 16,
     status: 'active',
     classType: 'regular',
-    difficulty: 'beginner',
     price: 40,
     recurring: true,
     recurringPattern: 'weekly',
@@ -166,7 +161,7 @@ const initialClasses: ClassSchedule[] = [
     branchId: 'BR001',
     facilityId: 'FAC002',
     teacherId: 'TCH001',
-    modalityId: 'MOD001',
+    modalityIds: ['MOD001'],
     startDate: '2024-01-18',
     endDate: '2024-01-18',
     startTime: '14:00',
@@ -177,7 +172,6 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 1,
     status: 'active',
     classType: 'private',
-    difficulty: 'all-levels',
     price: 100,
     recurring: false,
     requirements: ['Gi'],
@@ -193,7 +187,7 @@ const initialClasses: ClassSchedule[] = [
     branchId: 'BR002',
     facilityId: 'FAC001',
     teacherId: 'TCH002',
-    modalityId: 'MOD003',
+    modalityIds: ['MOD003'],
     startDate: '2024-01-19',
     endDate: '2024-12-31',
     startTime: '18:30',
@@ -204,7 +198,6 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 14,
     status: 'active',
     classType: 'regular',
-    difficulty: 'beginner',
     price: 50,
     recurring: true,
     recurringPattern: 'weekly',
@@ -221,7 +214,7 @@ const initialClasses: ClassSchedule[] = [
     branchId: 'BR001',
     facilityId: 'FAC002',
     teacherId: 'TCH001',
-    modalityId: 'MOD001',
+    modalityIds: ['MOD001'],
     startDate: '2024-01-20',
     endDate: '2024-01-20',
     startTime: '10:00',
@@ -232,7 +225,6 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 25,
     status: 'active',
     classType: 'workshop',
-    difficulty: 'intermediate',
     price: 80,
     recurring: false,
     requirements: ['Gi', 'Notebook'],
@@ -248,7 +240,7 @@ const initialClasses: ClassSchedule[] = [
     branchId: 'BR001',
     facilityId: 'FAC002',
     teacherId: 'TCH001',
-    modalityId: 'MOD001',
+    modalityIds: ['MOD001'],
     startDate: '2024-01-21',
     endDate: '2024-12-31',
     startTime: '09:00',
@@ -259,7 +251,6 @@ const initialClasses: ClassSchedule[] = [
     currentEnrollment: 10,
     status: 'active',
     classType: 'competition',
-    difficulty: 'advanced',
     price: 70,
     recurring: true,
     recurringPattern: 'weekly',
@@ -339,7 +330,7 @@ export const ClassScheduleProvider: React.FC<{ children: ReactNode }> = ({ child
   }
 
   const getClassesByModality = (modalityId: string) => {
-    return classes.filter(classSchedule => classSchedule.modalityId === modalityId)
+    return classes.filter(classSchedule => classSchedule.modalityIds.includes(modalityId))
   }
 
   const getActiveClasses = () => {
