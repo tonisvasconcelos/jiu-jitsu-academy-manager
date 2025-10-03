@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useStudents } from '../contexts/StudentContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
 import { useStudentModalities, StudentModalityConnection } from '../contexts/StudentModalityContext'
+import { useClassCheckIns } from '../contexts/ClassCheckInContext'
 
 const StudentModalityForm: React.FC = () => {
   const { action, id, studentId } = useParams<{ action: string; id?: string; studentId?: string }>()
@@ -10,6 +11,7 @@ const StudentModalityForm: React.FC = () => {
   const { students } = useStudents()
   const { modalities } = useFightModalities()
   const { addConnection, updateConnection, getConnection } = useStudentModalities()
+  const { getCheckInsByStudentAndModality } = useClassCheckIns()
   
   const [connection, setConnection] = useState<StudentModalityConnection>({
     connectionId: '',
@@ -124,7 +126,7 @@ const StudentModalityForm: React.FC = () => {
     switch (action) {
       case 'new': return 'New Assignment'
       case 'edit': return 'Edit Assignment'
-      case 'view': return 'View Assignment'
+      case 'view': return 'FIGHT TRAINING PLAN'
       default: return 'Assignment Form'
     }
   }
@@ -284,6 +286,40 @@ const StudentModalityForm: React.FC = () => {
                 />
                 <p className="text-xs text-gray-400 mt-1">
                   Planned end date for this modality assignment
+                </p>
+              </div>
+
+              {/* Check-in Counter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Check-ins Count</label>
+                <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
+                  {(() => {
+                    if (!connection.studentId || connection.modalityIds.length === 0 || !connection.assignmentDate) {
+                      return <span className="text-gray-400">Select student and modalities to see check-in count</span>;
+                    }
+                    
+                    const startDate = connection.assignmentDate;
+                    const endDate = connection.closingDate || connection.expectedClosingDate || new Date().toISOString().split('T')[0];
+                    
+                    const selectedModalities = modalities.filter(m => connection.modalityIds.includes(m.modalityId));
+                    const totalCheckIns = selectedModalities.reduce((total, modality) => {
+                      const checkIns = getCheckInsByStudentAndModality(connection.studentId, modality.name, startDate, endDate);
+                      return total + checkIns.length;
+                    }, 0);
+                    
+                    return (
+                      <div>
+                        <span className="text-2xl font-bold text-blue-400">{totalCheckIns}</span>
+                        <span className="text-sm text-gray-400 ml-2">check-ins</span>
+                        <p className="text-xs text-gray-400 mt-1">
+                          From {new Date(startDate).toLocaleDateString()} to {new Date(endDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                    );
+                  })()}
+                </div>
+                <p className="text-xs text-gray-400 mt-1">
+                  Total archived check-ins for this student in selected modalities within the defined time range
                 </p>
               </div>
             </div>

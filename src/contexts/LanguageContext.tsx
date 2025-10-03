@@ -36,7 +36,7 @@ const translations = {
     // Students Sub-items
     'student-registration': 'Student Registration',
     'student-profiles': 'Student Profiles',
-    'modality-by-student': 'Modality by Student',
+    'modality-by-student': 'FIGHT TRAINING PLAN',
     'student-evaluation': 'Student Evaluation & Grades',
     'student-attendance': 'Student Attendance',
     
@@ -170,7 +170,7 @@ const translations = {
     // Students Sub-items
     'student-registration': 'Cadastro de Alunos',
     'student-profiles': 'Perfis dos Alunos',
-    'modality-by-student': 'Modalidade por Aluno',
+    'modality-by-student': 'PLANO DE TREINAMENTO DE LUTA',
     'student-evaluation': 'Avaliação e Notas dos Alunos',
     'student-attendance': 'Frequência dos Alunos',
     
