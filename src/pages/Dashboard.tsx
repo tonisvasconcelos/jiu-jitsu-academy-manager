@@ -70,7 +70,10 @@ const Dashboard: React.FC = () => {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Total Students */}
-          <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20">
+          <Link
+            to="/students"
+            className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20 cursor-pointer"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Total Students</p>
@@ -81,10 +84,14 @@ const Dashboard: React.FC = () => {
                 <span className="text-2xl">🎓</span>
               </div>
             </div>
-          </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </Link>
 
           {/* Total Teachers */}
-          <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20">
+          <Link
+            to="/teachers"
+            className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20 cursor-pointer"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Instructors</p>
@@ -95,10 +102,14 @@ const Dashboard: React.FC = () => {
                 <span className="text-2xl">👨‍🏫</span>
               </div>
             </div>
-          </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500/0 to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </Link>
 
           {/* Fight Modalities */}
-          <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20">
+          <Link
+            to="/fight-modalities"
+            className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 cursor-pointer"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Fight Modalities</p>
@@ -109,10 +120,14 @@ const Dashboard: React.FC = () => {
                 <span className="text-2xl">🥋</span>
               </div>
             </div>
-          </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/0 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </Link>
 
           {/* Classes Today */}
-          <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20">
+          <Link
+            to="/classes/registration"
+            className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20 cursor-pointer"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Classes Today</p>
@@ -123,13 +138,17 @@ const Dashboard: React.FC = () => {
                 <span className="text-2xl">📅</span>
               </div>
             </div>
-          </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500/0 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </Link>
         </div>
 
         {/* Additional Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Total Check-ins */}
-          <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/20">
+          <Link
+            to="/classes/check-in/archived"
+            className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/20 cursor-pointer"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Total Check-ins</p>
@@ -140,10 +159,14 @@ const Dashboard: React.FC = () => {
                 <span className="text-2xl">📝</span>
               </div>
             </div>
-          </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/0 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </Link>
 
           {/* Branches */}
-          <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-indigo-500/20">
+          <Link
+            to="/branches"
+            className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-indigo-500/20 cursor-pointer"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Branches</p>
@@ -154,10 +177,14 @@ const Dashboard: React.FC = () => {
                 <span className="text-2xl">🏢</span>
               </div>
             </div>
-          </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500/0 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </Link>
 
           {/* Training Plans */}
-          <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/20">
+          <Link
+            to="/students/modality"
+            className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/20 cursor-pointer"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Training Plans</p>
@@ -168,10 +195,14 @@ const Dashboard: React.FC = () => {
                 <span className="text-2xl">📋</span>
               </div>
             </div>
-          </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-500/0 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </Link>
 
           {/* Recent Activity */}
-          <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20">
+          <Link
+            to="/classes/check-in/archived"
+            className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20 cursor-pointer"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">Recent Activity</p>
@@ -182,7 +213,8 @@ const Dashboard: React.FC = () => {
                 <span className="text-2xl">⚡</span>
               </div>
             </div>
-          </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500/0 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </Link>
         </div>
 
         {/* Content Grid */}
