@@ -169,6 +169,117 @@ const StudentModalityForm: React.FC = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Training Progress - Prominent Section */}
+          <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-400/20 rounded-2xl p-6 shadow-lg shadow-blue-500/10">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+              <span className="mr-3 text-3xl">📊</span>
+              Training Progress
+            </h2>
+            
+            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+              {(() => {
+                if (!connection.studentId || connection.modalityIds.length === 0 || !connection.assignmentDate || !connection.expectedCheckInCount) {
+                  return (
+                    <div className="text-center py-8">
+                      <div className="text-6xl mb-4">📋</div>
+                      <p className="text-gray-400 text-lg">Complete the form to see training progress</p>
+                    </div>
+                  );
+                }
+                
+                const startDate = connection.assignmentDate;
+                const endDate = connection.closingDate || connection.expectedClosingDate || new Date().toISOString().split('T')[0];
+                
+                // Get all check-ins for the student
+                const allStudentCheckIns = getCheckInsByStudent(connection.studentId);
+                
+                // Filter by date range
+                const checkInsInDateRange = allStudentCheckIns.filter(checkIn => 
+                  checkIn.checkInDate >= startDate && checkIn.checkInDate <= endDate
+                );
+                
+                // Filter by selected modalities
+                const selectedModalityNames = modalities
+                  .filter(m => connection.modalityIds.includes(m.modalityId))
+                  .map(m => m.name);
+                
+                const relevantCheckIns = checkInsInDateRange.filter(checkIn => 
+                  checkIn.fightModalities.some(modality => selectedModalityNames.includes(modality))
+                );
+                
+                const actualCheckIns = relevantCheckIns.length;
+                const expectedCheckIns = connection.expectedCheckInCount || 0;
+                const progressPercentage = expectedCheckIns > 0 ? Math.min((actualCheckIns / expectedCheckIns) * 100, 100) : 0;
+                const remainingCheckIns = Math.max(expectedCheckIns - actualCheckIns, 0);
+                
+                return (
+                  <div className="space-y-6">
+                    {/* Progress Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-blue-400 mb-2">{actualCheckIns}</div>
+                        <div className="text-sm text-gray-400">Completed</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-orange-400 mb-2">{remainingCheckIns}</div>
+                        <div className="text-sm text-gray-400">Remaining</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-green-400 mb-2">{expectedCheckIns}</div>
+                        <div className="text-sm text-gray-400">Target</div>
+                      </div>
+                    </div>
+
+                    {/* Modern Progress Bar */}
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-lg font-semibold text-white">Check-ins Progress</span>
+                        <span className="text-lg font-bold text-white">{actualCheckIns} / {expectedCheckIns}</span>
+                      </div>
+                      
+                      {/* Modern Progress Bar Container */}
+                      <div className="relative">
+                        <div className="w-full bg-gray-700/50 rounded-full h-6 overflow-hidden shadow-inner">
+                          <div 
+                            className="h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
+                            style={{ width: `${progressPercentage}%` }}
+                          >
+                            {/* Animated gradient background */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 animate-pulse"></div>
+                            {/* Shine effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-pulse"></div>
+                          </div>
+                        </div>
+                        
+                        {/* Progress percentage overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-sm font-bold text-white drop-shadow-lg">
+                            {Math.round(progressPercentage)}%
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Status Message */}
+                      <div className="text-center">
+                        {progressPercentage >= 100 ? (
+                          <div className="inline-flex items-center px-4 py-2 bg-green-500/20 text-green-400 rounded-full border border-green-400/30">
+                            <span className="mr-2">🎉</span>
+                            <span className="font-semibold">Training Plan Complete!</span>
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center px-4 py-2 bg-blue-500/20 text-blue-400 rounded-full border border-blue-400/30">
+                            <span className="mr-2">📈</span>
+                            <span className="font-semibold">{remainingCheckIns} check-ins remaining</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
             <h2 className="text-xl font-semibold text-white mb-6">Assignment Information</h2>
             
@@ -398,68 +509,6 @@ const StudentModalityForm: React.FC = () => {
                 </p>
               </div>
 
-              {/* Progress Bar */}
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Training Progress</label>
-                <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
-                  {(() => {
-                    if (!connection.studentId || connection.modalityIds.length === 0 || !connection.assignmentDate || !connection.expectedCheckInCount) {
-                      return <span className="text-gray-400">Complete the form to see training progress</span>;
-                    }
-                    
-                    const startDate = connection.assignmentDate;
-                    const endDate = connection.closingDate || connection.expectedClosingDate || new Date().toISOString().split('T')[0];
-                    
-                    // Get all check-ins for the student
-                    const allStudentCheckIns = getCheckInsByStudent(connection.studentId);
-                    
-                    // Filter by date range
-                    const checkInsInDateRange = allStudentCheckIns.filter(checkIn => 
-                      checkIn.checkInDate >= startDate && checkIn.checkInDate <= endDate
-                    );
-                    
-                    // Filter by selected modalities
-                    const selectedModalityNames = modalities
-                      .filter(m => connection.modalityIds.includes(m.modalityId))
-                      .map(m => m.name);
-                    
-                    const relevantCheckIns = checkInsInDateRange.filter(checkIn => 
-                      checkIn.fightModalities.some(modality => selectedModalityNames.includes(modality))
-                    );
-                    
-                    const actualCheckIns = relevantCheckIns.length;
-                    const expectedCheckIns = connection.expectedCheckInCount || 0;
-                    const progressPercentage = expectedCheckIns > 0 ? Math.min((actualCheckIns / expectedCheckIns) * 100, 100) : 0;
-                    const remainingCheckIns = Math.max(expectedCheckIns - actualCheckIns, 0);
-                    
-                    return (
-                      <div>
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium text-white">Check-ins Progress</span>
-                          <span className="text-sm text-gray-400">{actualCheckIns} / {expectedCheckIns}</span>
-                        </div>
-                        <div className="w-full bg-gray-700 rounded-full h-3 mb-2">
-                          <div 
-                            className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500"
-                            style={{ width: `${progressPercentage}%` }}
-                          ></div>
-                        </div>
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="text-gray-400">
-                            {progressPercentage >= 100 ? '✅ Plan Complete!' : `${remainingCheckIns} check-ins remaining`}
-                          </span>
-                          <span className="text-gray-400">
-                            {Math.round(progressPercentage)}% complete
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-                <p className="text-xs text-gray-400 mt-1">
-                  Visual progress tracking based on expected vs actual check-ins
-                </p>
-              </div>
             </div>
 
             {/* Student Selection */}
