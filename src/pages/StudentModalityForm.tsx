@@ -27,6 +27,7 @@ const StudentModalityForm: React.FC = () => {
     expectedCheckInCount: 0,
     stripesAtStart: 0,
     expectedStripesAtConclusion: 0,
+    expectedBeltAtClosing: undefined,
     notes: ''
   })
   const [isLoading, setIsLoading] = useState(false)
@@ -663,6 +664,55 @@ const StudentModalityForm: React.FC = () => {
                 />
                 <p className="text-xs text-gray-400 mt-1">
                   {t('expected-check-in-description')}
+                </p>
+              </div>
+
+              {/* Expected Belt at Closing */}
+              <div>
+                <label htmlFor="expectedBeltAtClosing" className="block text-sm font-medium text-gray-300 mb-2">{t('expected-belt-at-closing')}</label>
+                <select
+                  id="expectedBeltAtClosing"
+                  name="expectedBeltAtClosing"
+                  value={connection.expectedBeltAtClosing || ''}
+                  onChange={(e) => handleInputChange('expectedBeltAtClosing', e.target.value)}
+                  disabled={isViewMode}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+                >
+                  <option value="">Select expected belt</option>
+                  <optgroup label={t('adult-belts')}>
+                    <option value="white">{t('white-belt')}</option>
+                    <option value="blue">{t('blue-belt')}</option>
+                    <option value="purple">{t('purple-belt')}</option>
+                    <option value="brown">{t('brown-belt')}</option>
+                    <option value="black">{t('black-belt')}</option>
+                  </optgroup>
+                  <optgroup label={t('kids-belts-bjj')}>
+                    <option value="kids-white">White</option>
+                    <option value="kids-gray-white">Gray/White</option>
+                    <option value="kids-gray">Gray</option>
+                    <option value="kids-gray-black">Gray/Black</option>
+                    <option value="kids-yellow-white">Yellow/White</option>
+                    <option value="kids-yellow">Yellow</option>
+                    <option value="kids-yellow-black">Yellow/Black</option>
+                    <option value="kids-orange-white">Orange/White</option>
+                    <option value="kids-orange">Orange</option>
+                    <option value="kids-orange-black">Orange/Black</option>
+                    <option value="kids-green-white">Green/White</option>
+                    <option value="kids-green">Green</option>
+                    <option value="kids-green-black">Green/Black</option>
+                  </optgroup>
+                  <optgroup label={t('kids-belts-judo')}>
+                    <option value="judo-kids-white">White</option>
+                    <option value="judo-kids-white-yellow">White/Yellow</option>
+                    <option value="judo-kids-yellow">Yellow</option>
+                    <option value="judo-kids-yellow-orange">Yellow/Orange</option>
+                    <option value="judo-kids-orange">Orange</option>
+                    <option value="judo-kids-orange-green">Orange/Green</option>
+                    <option value="judo-kids-green">Green</option>
+                  </optgroup>
+                </select>
+                <p className="text-xs text-gray-400 mt-1">
+                  {t('expected-belt-closing-description')}
                 </p>
               </div>
 

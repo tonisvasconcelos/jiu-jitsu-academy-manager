@@ -366,6 +366,8 @@ const translations = {
     'expected-check-in-description': 'Minimum number of check-ins required to conclude this training plan',
     'expected-stripes-degrees-conclusions': 'Expected Stripes/Degrees at Conclusions',
     'expected-stripes-conclusions-description': 'Expected number of stripes or degrees the student should have when concluding this training plan',
+    'expected-belt-at-closing': 'Expected Belt at Closing',
+    'expected-belt-closing-description': 'The target belt level the student should achieve when concluding this training plan',
     'from-to': 'From {startDate} to {endDate}',
     'check-ins': 'check-ins',
     
@@ -745,6 +747,8 @@ const translations = {
     'expected-check-in-description': 'Número mínimo de check-ins necessários para concluir este plano de treinamento',
     'expected-stripes-degrees-conclusions': 'Faixas/Graus Esperados na Conclusão',
     'expected-stripes-conclusions-description': 'Número esperado de faixas ou graus que o aluno deve ter ao concluir este plano de treinamento',
+    'expected-belt-at-closing': 'Faixa Esperada no Encerramento',
+    'expected-belt-closing-description': 'O nível de faixa alvo que o aluno deve alcançar ao concluir este plano de treinamento',
     'from-to': 'De {startDate} a {endDate}',
     'check-ins': 'check-ins',
     
@@ -1018,6 +1022,8 @@ const translations = {
     'expected-check-in-description': 'Mindestanzahl von Check-ins erforderlich, um diesen Trainingsplan abzuschließen',
     'expected-stripes-degrees-conclusions': 'Erwartete Streifen/Grade bei Abschluss',
     'expected-stripes-conclusions-description': 'Erwartete Anzahl von Streifen oder Graden, die der Schüler beim Abschluss dieses Trainingsplans haben sollte',
+    'expected-belt-at-closing': 'Erwarteter Gürtel beim Abschluss',
+    'expected-belt-closing-description': 'Das Ziel-Gürtel-Niveau, das der Schüler beim Abschluss dieses Trainingsplans erreichen sollte',
     'from-to': 'Von {startDate} bis {endDate}',
     'check-ins': 'Check-ins',
     
@@ -1291,6 +1297,8 @@ const translations = {
     'expected-check-in-description': 'Nombre minimum d\'enregistrements requis pour conclure ce plan d\'entraînement',
     'expected-stripes-degrees-conclusions': 'Rayures/Degrés Attendus à la Conclusion',
     'expected-stripes-conclusions-description': 'Nombre attendu de rayures ou degrés que l\'étudiant devrait avoir en concluant ce plan d\'entraînement',
+    'expected-belt-at-closing': 'Ceinture Attendue à la Clôture',
+    'expected-belt-closing-description': 'Le niveau de ceinture cible que l\'étudiant devrait atteindre en concluant ce plan d\'entraînement',
     'from-to': 'Du {startDate} au {endDate}',
     'check-ins': 'enregistrements',
     
@@ -1564,6 +1572,8 @@ const translations = {
     'expected-check-in-description': 'Número mínimo de registros requeridos para concluir este plan de entrenamiento',
     'expected-stripes-degrees-conclusions': 'Rayas/Grados Esperados en la Conclusión',
     'expected-stripes-conclusions-description': 'Número esperado de rayas o grados que el estudiante debería tener al concluir este plan de entrenamiento',
+    'expected-belt-at-closing': 'Cinturón Esperado al Cierre',
+    'expected-belt-closing-description': 'El nivel de cinturón objetivo que el estudiante debería alcanzar al concluir este plan de entrenamiento',
     'from-to': 'Del {startDate} al {endDate}',
     'check-ins': 'registros',
     
@@ -1837,6 +1847,8 @@ const translations = {
     'expected-check-in-description': 'このトレーニングプランを完了するために必要な最小チェックイン数',
     'expected-stripes-degrees-conclusions': '結論時の予想ストライプ/度数',
     'expected-stripes-conclusions-description': 'このトレーニングプランを完了する時に学生が持つべき予想ストライプまたは度数',
+    'expected-belt-at-closing': '終了時の予想ベルト',
+    'expected-belt-closing-description': 'このトレーニングプランを完了する時に学生が達成すべき目標ベルトレベル',
     'from-to': '{startDate}から{endDate}まで',
     'check-ins': 'チェックイン',
     
@@ -2110,6 +2122,8 @@ const translations = {
     'expected-check-in-description': 'Numero minimo di registrazioni richieste per concludere questo piano di allenamento',
     'expected-stripes-degrees-conclusions': 'Strisce/Gradi Previsti alla Conclusione',
     'expected-stripes-conclusions-description': 'Numero previsto di strisce o gradi che lo studente dovrebbe avere nel concludere questo piano di allenamento',
+    'expected-belt-at-closing': 'Cintura Prevista alla Chiusura',
+    'expected-belt-closing-description': 'Il livello di cintura obiettivo che lo studente dovrebbe raggiungere nel concludere questo piano di allenamento',
     'from-to': 'Dal {startDate} al {endDate}',
     'check-ins': 'registrazioni',
     
@@ -2383,6 +2397,8 @@ const translations = {
     'expected-check-in-description': 'Минимальное количество регистраций, необходимое для завершения этого плана тренировки',
     'expected-stripes-degrees-conclusions': 'Ожидаемые Полосы/Степени при Завершении',
     'expected-stripes-conclusions-description': 'Ожидаемое количество полос или степеней, которые студент должен иметь при завершении этого плана тренировки',
+    'expected-belt-at-closing': 'Ожидаемый Пояс при Завершении',
+    'expected-belt-closing-description': 'Целевой уровень пояса, которого студент должен достичь при завершении этого плана тренировки',
     'from-to': 'С {startDate} по {endDate}',
     'check-ins': 'регистрации',
     
@@ -2656,6 +2672,8 @@ const translations = {
     'expected-check-in-description': 'الحد الأدنى لعدد التسجيلات المطلوبة لإنهاء خطة التدريب هذه',
     'expected-stripes-degrees-conclusions': 'الخطوط/الدرجات المتوقعة عند الانتهاء',
     'expected-stripes-conclusions-description': 'العدد المتوقع من الخطوط أو الدرجات التي يجب أن يمتلكها الطالب عند إنهاء خطة التدريب هذه',
+    'expected-belt-at-closing': 'الحزام المتوقع عند الإغلاق',
+    'expected-belt-closing-description': 'مستوى الحزام المستهدف الذي يجب أن يحققه الطالب عند إنهاء خطة التدريب هذه',
     'from-to': 'من {startDate} إلى {endDate}',
     'check-ins': 'تسجيلات',
     
@@ -2929,6 +2947,8 @@ const translations = {
     'expected-check-in-description': '이 훈련 계획을 완료하는 데 필요한 최소 체크인 수',
     'expected-stripes-degrees-conclusions': '완료 시 예상 줄무늬/도수',
     'expected-stripes-conclusions-description': '이 훈련 계획을 완료할 때 학생이 가져야 할 예상 줄무늬 또는 도수',
+    'expected-belt-at-closing': '완료 시 예상 벨트',
+    'expected-belt-closing-description': '이 훈련 계획을 완료할 때 학생이 달성해야 할 목표 벨트 레벨',
     'from-to': '{startDate}부터 {endDate}까지',
     'check-ins': '체크인',
     
