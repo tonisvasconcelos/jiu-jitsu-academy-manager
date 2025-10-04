@@ -38,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     { id: 'students', title: t('students'), icon: '🥋', path: '/students' },
     { id: 'teachers', title: t('teachers-instructors'), icon: '🧑‍🏫', path: '/teachers' },
     { id: 'championships', title: t('championships'), icon: '🏟️', path: '/championships' },
-    { id: 'classes', title: 'Class Schedules', icon: '📅', path: '/classes' },
+    { id: 'classes', title: t('class-schedules'), icon: '📅', path: '/classes' },
     { id: 'fight-plans', title: t('fight-plans'), icon: '🗂️', path: '/fight-plans' },
     { id: 'quality-evaluation', title: t('quality-evaluation'), icon: '🧪', path: '/quality' },
     { id: 'branches', title: t('branches'), icon: '🌍', path: '/branches' },
@@ -49,10 +49,10 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       icon: '⚙️', 
       path: '/admin',
       subItems: [
-        { id: 'user-profiles', title: 'User Profiles', path: '/admin/profiles', icon: '👤' },
-        { id: 'company-info', title: 'Company Info & Settings', path: '/admin/company', icon: '🏢' },
-        { id: 'language-settings', title: 'Language Settings', path: '/admin/language', icon: '🌐' },
-        { id: 'app-settings', title: 'App Settings', path: '/admin/settings', icon: '⚙️' }
+        { id: 'user-profiles', title: t('user-profiles'), path: '/admin/profiles', icon: '👤' },
+        { id: 'company-info', title: t('company-info-settings'), path: '/admin/company', icon: '🏢' },
+        { id: 'language-settings', title: t('language-settings'), path: '/admin/language', icon: '🌐' },
+        { id: 'app-settings', title: t('app-settings'), path: '/admin/settings', icon: '⚙️' }
       ]
     }
   ]

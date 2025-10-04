@@ -196,7 +196,7 @@ const StudentForm: React.FC = () => {
         email: student.email,
         phone: student.phone
       })
-      alert('Please fill in all required fields')
+      alert(t('please-fill-required-fields'))
       return
     }
     
@@ -217,7 +217,7 @@ const StudentForm: React.FC = () => {
       
       // Show confirmation dialog for creating modality assignment
       const createModality = window.confirm(
-        'Student created successfully!\n\nWould you like to create a Modality by Student register for this student?'
+        `${t('student-created-success')}\n\n${t('create-modality-question')}`
       )
       
       if (createModality) {
@@ -240,10 +240,10 @@ const StudentForm: React.FC = () => {
 
   const getPageTitle = () => {
     switch (action) {
-      case 'new': return 'New Student'
-      case 'edit': return 'Edit Student'
-      case 'view': return 'View Student'
-      default: return 'Student'
+      case 'new': return t('new-student')
+      case 'edit': return t('edit-student')
+      case 'view': return t('view-student')
+      default: return t('student')
     }
   }
 
@@ -267,16 +267,16 @@ const StudentForm: React.FC = () => {
                 {getPageIcon()} {getPageTitle()}
               </h1>
               <p className="text-base sm:text-lg text-gray-300">
-                {action === 'new' && 'Register a new student'}
-                {action === 'edit' && 'Update student information'}
-                {action === 'view' && 'View student details'}
+                {action === 'new' && t('register-new-student')}
+                {action === 'edit' && t('update-student-information')}
+                {action === 'view' && t('view-student-details')}
               </p>
             </div>
             <Link
               to="/students/registration"
               className="bg-gray-600 hover:bg-gray-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl transition-all duration-300 flex items-center justify-center text-sm sm:text-base w-full sm:w-auto"
             >
-              ← Back to List
+              {t('back-to-list')}
             </Link>
           </div>
         </div>
@@ -284,12 +284,12 @@ const StudentForm: React.FC = () => {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Basic Information</h2>
+            <h2 className="text-xl font-semibold text-white mb-6">{t('basic-information')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Student ID */}
               <div>
-                <label htmlFor="studentId" className="block text-sm font-medium text-gray-300 mb-2">Student ID</label>
+                <label htmlFor="studentId" className="block text-sm font-medium text-gray-300 mb-2">{t('student-id')}</label>
                 <input
                   id="studentId"
                   name="studentId"
@@ -302,7 +302,7 @@ const StudentForm: React.FC = () => {
 
               {/* Display Name */}
               <div>
-                <label htmlFor="displayName" className="block text-sm font-medium text-gray-300 mb-2">Display Name</label>
+                <label htmlFor="displayName" className="block text-sm font-medium text-gray-300 mb-2">{t('display-name')}</label>
                 <input
                   id="displayName"
                   name="displayName"
@@ -315,7 +315,7 @@ const StudentForm: React.FC = () => {
 
               {/* First Name */}
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">First Name *</label>
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">{t('first-name')} *</label>
                 <input
                   id="firstName"
                   name="firstName"
@@ -330,7 +330,7 @@ const StudentForm: React.FC = () => {
 
               {/* Last Name */}
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-2">Last Name *</label>
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-300 mb-2">{t('last-name')} *</label>
                 <input
                   id="lastName"
                   name="lastName"
@@ -345,7 +345,7 @@ const StudentForm: React.FC = () => {
 
               {/* Birth Date */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Birth Date *</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('birth-date')} *</label>
                 <input
                   type="date"
                   value={student.birthDate}
@@ -367,17 +367,17 @@ const StudentForm: React.FC = () => {
                     className="w-5 h-5 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 focus:ring-2 disabled:opacity-50"
                   />
                   <span className="text-sm font-medium text-gray-300">
-                    Is Kids Student (Under 18 years old)
+                    {t('is-kids-student')}
                   </span>
                 </label>
                 <p className="text-xs text-gray-400 mt-1">
-                  Mark this for students under 18 years old for better data classification
+                  {t('kids-student-help')}
                 </p>
               </div>
 
               {/* Weight */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Weight (kg)</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('weight')}</label>
                 <input
                   type="number"
                   step="0.1"
@@ -388,27 +388,27 @@ const StudentForm: React.FC = () => {
                   placeholder="70.5"
                 />
                 <p className="text-xs text-gray-400 mt-1">
-                  Weight will automatically determine the weight division
+                  {t('weight-auto-determine')}
                 </p>
               </div>
 
               {/* Weight Division */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Weight Division</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('weight-division')}</label>
                 <input
                   type="text"
-                  value={getWeightDivisionName(student.weightDivisionId) || 'Not assigned'}
+                  value={getWeightDivisionName(student.weightDivisionId) || t('not-assigned')}
                   readOnly
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <p className="text-xs text-gray-400 mt-1">
-                  Automatically calculated based on weight, gender, and age
+                  {t('weight-division-auto')}
                 </p>
               </div>
 
               {/* Gender */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Gender *</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('gender')} *</label>
                 <select
                   value={student.gender}
                   onChange={(e) => handleInputChange('gender', e.target.value)}
@@ -424,7 +424,7 @@ const StudentForm: React.FC = () => {
 
               {/* Belt Level */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Belt Level *</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('belt-level')} *</label>
                 <select
                   value={student.beltLevel}
                   onChange={(e) => handleInputChange('beltLevel', e.target.value)}
@@ -432,14 +432,14 @@ const StudentForm: React.FC = () => {
                   disabled={isReadOnly}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
                 >
-                  <optgroup label="Adult Belts">
-                    <option value="white">White Belt</option>
-                    <option value="blue">Blue Belt</option>
-                    <option value="purple">Purple Belt</option>
-                    <option value="brown">Brown Belt</option>
-                    <option value="black">Black Belt</option>
+                  <optgroup label={t('adult-belts')}>
+                    <option value="white">{t('white-belt')}</option>
+                    <option value="blue">{t('blue-belt')}</option>
+                    <option value="purple">{t('purple-belt')}</option>
+                    <option value="brown">{t('brown-belt')}</option>
+                    <option value="black">{t('black-belt')}</option>
                   </optgroup>
-                  <optgroup label="Kids Belts (BJJ - Under 16)">
+                  <optgroup label={t('kids-belts-bjj')}>
                     <option value="kids-white">White</option>
                     <option value="kids-gray-white">Gray/White</option>
                     <option value="kids-gray">Solid Gray</option>
@@ -454,7 +454,7 @@ const StudentForm: React.FC = () => {
                     <option value="kids-green">Solid Green</option>
                     <option value="kids-green-black">Green/Black</option>
                   </optgroup>
-                  <optgroup label="Kids Belts (Judo - Under 15)">
+                  <optgroup label={t('kids-belts-judo')}>
                     <option value="judo-kids-white">White</option>
                     <option value="judo-kids-white-yellow">White/Yellow</option>
                     <option value="judo-kids-yellow">Yellow</option>
@@ -468,7 +468,7 @@ const StudentForm: React.FC = () => {
 
               {/* Branch */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Branch *</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('branch')} *</label>
                 <select
                   value={student.branchId}
                   onChange={(e) => handleInputChange('branchId', e.target.value)}
@@ -477,7 +477,7 @@ const StudentForm: React.FC = () => {
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
                 >
                   {activeBranches.length === 0 ? (
-                    <option value="" disabled>No branches available - Please create a branch first</option>
+                    <option value="" disabled>{t('no-branches-available')}</option>
                   ) : (
                     activeBranches.map(branch => (
                       <option key={branch.branchId} value={branch.branchId}>{branch.name}</option>
@@ -489,12 +489,12 @@ const StudentForm: React.FC = () => {
           </div>
 
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Contact Information</h2>
+            <h2 className="text-xl font-semibold text-white mb-6">{t('contact-information')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Document ID */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Document ID *</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('document-id')} *</label>
                 <input
                   type="text"
                   value={student.documentId}
@@ -507,7 +507,7 @@ const StudentForm: React.FC = () => {
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('email')} *</label>
                 <input
                   type="email"
                   value={student.email}
@@ -520,7 +520,7 @@ const StudentForm: React.FC = () => {
 
               {/* Phone */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Phone *</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('phone')} *</label>
                 <input
                   type="tel"
                   value={student.phone}
@@ -556,7 +556,7 @@ const StudentForm: React.FC = () => {
 
               {/* Photo URL */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Photo URL</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('photo-url')}</label>
                 <input
                   type="url"
                   value={student.photoUrl || ''}
@@ -588,12 +588,12 @@ const StudentForm: React.FC = () => {
 
           {/* Check-in Statistics */}
           <div key={checkInStatsKey} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Check-in Statistics</h2>
+            <h2 className="text-xl font-semibold text-white mb-6">{t('check-in-statistics')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Total Check-ins */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Total of Check-ins</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('total-check-ins')}</label>
                 <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
                   {(() => {
                     if (!student.studentId) {
@@ -613,7 +613,7 @@ const StudentForm: React.FC = () => {
 
               {/* Last Check-in */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Last Check-in</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('last-check-in')}</label>
                 <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
                   {(() => {
                     if (!student.studentId) {
@@ -646,7 +646,7 @@ const StudentForm: React.FC = () => {
 
               {/* Last Check-in Branch */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Last Check-in Branch</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('last-check-in-branch')}</label>
                 <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
                   {(() => {
                     if (!student.studentId) {
@@ -675,7 +675,7 @@ const StudentForm: React.FC = () => {
 
               {/* First Check-in */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">First Check-in</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('first-check-in')}</label>
                 <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
                   {(() => {
                     if (!student.studentId) {
@@ -722,7 +722,7 @@ const StudentForm: React.FC = () => {
                 disabled={isLoading}
                 className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Saving...' : action === 'new' ? 'Create Student' : 'Update Student'}
+                {isLoading ? t('saving') : action === 'new' ? t('create-student') : t('update-student')}
               </button>
             </div>
           )}
@@ -733,13 +733,13 @@ const StudentForm: React.FC = () => {
                 to="/students/registration"
                 className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all duration-300"
               >
-                Back to List
+                {t('back-to-list')}
               </Link>
               <Link
                 to={`/students/registration/edit/${student.studentId}`}
                 className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25"
               >
-                Edit Student
+                {t('edit-student')}
               </Link>
             </div>
           )}
