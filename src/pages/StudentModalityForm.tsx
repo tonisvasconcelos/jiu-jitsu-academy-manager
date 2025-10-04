@@ -398,44 +398,13 @@ const StudentModalityForm: React.FC = () => {
                       </span>
                     </div>
                     
-                    {/* Total of Stripes/Degrees at Start */}
-                    <div>
-                      <label htmlFor="stripesAtStart" className="block text-sm font-medium text-gray-300 mb-2">{t('total-stripes-degrees-start')}</label>
-                      <input
-                        id="stripesAtStart"
-                        name="stripesAtStart"
-                        type="number"
-                        min="0"
-                        max="4"
-                        value={connection.stripesAtStart || ''}
-                        onChange={(e) => handleInputChange('stripesAtStart', parseInt(e.target.value) || 0)}
-                        readOnly={isViewMode}
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder={t('stripes-degrees-start-placeholder')}
-                      />
-                      <p className="text-xs text-gray-400 mt-1">
-                        {t('stripes-degrees-start-description')}
-                      </p>
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{t('total-stripes-degrees-start')}:</span>
+                      <span className="text-white font-medium">{connection.stripesAtStart || 0}</span>
                     </div>
-                    
-                    {/* Expected Stripes/Degrees at Conclusions */}
-                    <div>
-                      <label htmlFor="expectedStripesAtConclusion" className="block text-sm font-medium text-gray-300 mb-2">{t('expected-stripes-degrees-conclusions')}</label>
-                      <input
-                        id="expectedStripesAtConclusion"
-                        name="expectedStripesAtConclusion"
-                        type="number"
-                        min="0"
-                        max="4"
-                        value={connection.expectedStripesAtConclusion || ''}
-                        onChange={(e) => handleInputChange('expectedStripesAtConclusion', parseInt(e.target.value) || 0)}
-                        readOnly={isViewMode}
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter expected stripes/degrees at conclusion"
-                      />
-                      <p className="text-xs text-gray-400 mt-1">
-                        {t('expected-stripes-conclusions-description')}
-                      </p>
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{t('expected-stripes-degrees-conclusions')}:</span>
+                      <span className="text-white font-medium">{connection.expectedStripesAtConclusion || 0}</span>
                     </div>
                   </div>
                 </div>
