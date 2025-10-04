@@ -6,10 +6,10 @@ const Teachers: React.FC = () => {
   const { t } = useLanguage()
 
   const subMenuItems = [
-    { id: 'teacher-registration', title: t('teacher-registration'), path: '/teachers/registration', icon: '📝', description: 'Register new teachers' },
-    { id: 'teacher-profiles', title: t('teacher-profiles'), path: '/teachers/profiles', icon: '👤', description: 'View and manage teacher profiles' },
-    { id: 'assign-teachers', title: t('assign-teachers'), path: '/teachers/assign', icon: '🔗', description: 'Assign teachers to classes' },
-    { id: 'teacher-evaluations', title: t('teacher-evaluations'), path: '/teachers/evaluations', icon: '📊', description: 'Evaluate teacher performance' },
+    { id: 'teacher-registration', title: t('teacher-registration'), path: '/teachers/registration', icon: '📝', description: t('register-new-teachers') },
+    { id: 'teacher-profiles', title: t('teacher-profiles'), path: '/teachers/profiles', icon: '👤', description: t('view-manage-teacher-profiles') },
+    { id: 'assign-teachers', title: t('assign-teachers'), path: '/teachers/assign', icon: '🔗', description: t('assign-teachers-to-classes-desc') },
+    { id: 'teacher-evaluations', title: t('teacher-evaluations'), path: '/teachers/evaluations', icon: '📊', description: t('evaluate-teacher-performance') },
   ]
 
   return (
@@ -18,10 +18,10 @@ const Teachers: React.FC = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent mb-3">
-            Teachers & Instructors
+            {t('teachers-instructors')}
           </h1>
           <p className="text-lg text-gray-300 max-w-2xl">
-            Manage all teacher-related activities and information
+            {t('manage-teacher-activities')}
           </p>
         </div>
 

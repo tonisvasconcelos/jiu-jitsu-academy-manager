@@ -6,10 +6,10 @@ const Students: React.FC = () => {
   const { t } = useLanguage()
 
   const subMenuItems = [
-    { id: 'student-registration', title: t('student-registration'), path: '/students/registration', icon: '📝', description: 'Register new students' },
+    { id: 'student-registration', title: t('student-registration'), path: '/students/registration', icon: '📝', description: t('register-new-students') },
     { id: 'modality', title: t('modality-by-student'), path: '/students/modality', icon: '🥊', description: t('student-modality-management') },
-    { id: 'student-evaluation', title: t('student-evaluation'), path: '/students/evaluation', icon: '📊', description: 'Evaluate student progress and grades' },
-    { id: 'student-attendance', title: t('student-attendance'), path: '/students/attendance', icon: '✅', description: 'Track student attendance' },
+    { id: 'student-evaluation', title: t('student-evaluation'), path: '/students/evaluation', icon: '📊', description: t('evaluate-student-progress') },
+    { id: 'student-attendance', title: t('student-attendance'), path: '/students/attendance', icon: '✅', description: t('track-student-attendance') },
   ]
 
   return (
@@ -21,7 +21,7 @@ const Students: React.FC = () => {
             {t('students')}
           </h1>
           <p className="text-lg text-gray-300 max-w-2xl">
-            Manage all student-related activities and information
+            {t('manage-student-activities')}
           </p>
         </div>
 

@@ -235,8 +235,8 @@ const Dashboard: React.FC = () => {
                       <span className="text-green-400">📝</span>
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium">{recentCheckIns} check-ins this week</p>
-                      <p className="text-gray-400 text-xs">Students actively training</p>
+                      <p className="text-white text-sm font-medium">{recentCheckIns} {t('check-ins-this-week')}</p>
+                      <p className="text-gray-400 text-xs">{t('students-actively-training')}</p>
                     </div>
                   </div>
                   <div className="flex items-center p-4 bg-white/5 rounded-xl border border-white/5">
@@ -244,8 +244,8 @@ const Dashboard: React.FC = () => {
                       <span className="text-blue-400">📅</span>
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium">{classesToday} classes scheduled today</p>
-                      <p className="text-gray-400 text-xs">Active class schedule</p>
+                      <p className="text-white text-sm font-medium">{classesToday} {t('classes-scheduled-today')}</p>
+                      <p className="text-gray-400 text-xs">{t('active-class-schedule')}</p>
                     </div>
                   </div>
                   <div className="flex items-center p-4 bg-white/5 rounded-xl border border-white/5">
@@ -253,8 +253,8 @@ const Dashboard: React.FC = () => {
                       <span className="text-purple-400">📋</span>
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium">{activeConnections} active training plans</p>
-                      <p className="text-gray-400 text-xs">Students with ongoing programs</p>
+                      <p className="text-white text-sm font-medium">{activeConnections} {t('active-training-plans')}</p>
+                      <p className="text-gray-400 text-xs">{t('students-with-ongoing-programs')}</p>
                     </div>
                   </div>
                 </div>
