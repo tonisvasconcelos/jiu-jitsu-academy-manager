@@ -11,7 +11,7 @@ const StudentModalityForm: React.FC = () => {
   const { students } = useStudents()
   const { modalities } = useFightModalities()
   const { addConnection, updateConnection, getConnection } = useStudentModalities()
-  const { getCheckInsByStudent, getCheckInsByDateRange } = useClassCheckIns()
+  const { getCheckInsByStudent } = useClassCheckIns()
   
   const [connection, setConnection] = useState<StudentModalityConnection>({
     connectionId: '',
@@ -57,7 +57,7 @@ const StudentModalityForm: React.FC = () => {
     }
   }, [action, id, studentId, getConnection, navigate, students])
 
-  const handleInputChange = (field: keyof StudentModalityConnection, value: string | string[] | boolean) => {
+  const handleInputChange = (field: keyof StudentModalityConnection, value: string | string[] | boolean | number) => {
     setConnection(prev => {
       const updated = { ...prev, [field]: value }
       
