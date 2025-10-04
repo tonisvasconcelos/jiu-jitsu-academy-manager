@@ -397,12 +397,6 @@ const StudentModalityForm: React.FC = () => {
                         }
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-300">{t('belt-progression')}:</span>
-                      <span className="text-white font-medium">
-                        {connection.stripesAtStart || 0} → {connection.expectedStripesAtConclusion || 0} {t('check-ins')}
-                      </span>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -433,31 +427,6 @@ const StudentModalityForm: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Plan Objectives */}
-                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
-                    <span className="mr-2">🎯</span>
-                    {t('plan-objectives')}
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span className="text-gray-300 text-sm">{t('skill-development')}</span>
-                    </div>
-                    <div className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span className="text-gray-300 text-sm">{t('technique-focus')}</span>
-                    </div>
-                    <div className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span className="text-gray-300 text-sm">{t('fitness-goals')}</span>
-                    </div>
-                    <div className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span className="text-gray-300 text-sm">{t('competition-readiness')}</span>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
