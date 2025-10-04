@@ -256,16 +256,16 @@ const StudentForm: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-3">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-2 sm:mb-3">
                 {getPageIcon()} {getPageTitle()}
               </h1>
-              <p className="text-lg text-gray-300">
+              <p className="text-base sm:text-lg text-gray-300">
                 {action === 'new' && 'Register a new student'}
                 {action === 'edit' && 'Update student information'}
                 {action === 'view' && 'View student details'}
@@ -273,7 +273,7 @@ const StudentForm: React.FC = () => {
             </div>
             <Link
               to="/students/registration"
-              className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all duration-300 flex items-center"
+              className="bg-gray-600 hover:bg-gray-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl transition-all duration-300 flex items-center justify-center text-sm sm:text-base w-full sm:w-auto"
             >
               ← Back to List
             </Link>
@@ -282,7 +282,7 @@ const StudentForm: React.FC = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-white mb-6">Basic Information</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -487,7 +487,7 @@ const StudentForm: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-white mb-6">Contact Information</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -544,7 +544,7 @@ const StudentForm: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-white mb-6">Status</h2>
             
             <div className="flex items-center">

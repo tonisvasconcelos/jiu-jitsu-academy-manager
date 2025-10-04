@@ -160,23 +160,23 @@ const ClassCalendar: React.FC = () => {
   const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-3">
-                Class Calendar
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-2 sm:mb-3">
+                📅 Class Calendar
               </h1>
-              <p className="text-lg text-gray-300">
+              <p className="text-base sm:text-lg text-gray-300">
                 View and manage class schedules in calendar format
               </p>
             </div>
-            <div className="mt-4 sm:mt-0">
+            <div>
               <Link
                 to="/classes/registration"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                className="inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm sm:text-base w-full sm:w-auto"
               >
                 <span className="mr-2">➕</span>
                 Add New Class
@@ -186,20 +186,20 @@ const ClassCalendar: React.FC = () => {
         </div>
 
         {/* Filters */}
-        <div className="mb-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="mb-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
             <h3 className="text-lg font-semibold text-white">Filters</h3>
             {hasActiveFilters() && (
               <button
                 onClick={clearAllFilters}
-                className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 rounded-lg text-sm transition-all duration-300"
+                className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 rounded-lg text-sm transition-all duration-300 w-full sm:w-auto"
               >
                 Clear All Filters
               </button>
             )}
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
             {/* Teacher Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">Teacher</label>
@@ -307,8 +307,8 @@ const ClassCalendar: React.FC = () => {
         </div>
 
         {/* Week Navigation */}
-        <div className="mb-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-          <div className="flex items-center justify-between">
+        <div className="mb-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
             <button
               onClick={goToPreviousWeek}
               className="flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-300"
@@ -328,7 +328,7 @@ const ClassCalendar: React.FC = () => {
               </p>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <button
                 onClick={goToCurrentWeek}
                 className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-lg transition-all duration-300"
@@ -337,7 +337,7 @@ const ClassCalendar: React.FC = () => {
               </button>
               <button
                 onClick={goToNextWeek}
-                className="flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-300"
+                className="flex items-center justify-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-300"
               >
                 Next Week
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -349,8 +349,8 @@ const ClassCalendar: React.FC = () => {
         </div>
 
         {/* Calendar Grid */}
-        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-          <div className="grid grid-cols-7 gap-4">
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-3 sm:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-7 gap-2 sm:gap-4">
             {/* Day Headers */}
             {dayNames.map((dayName, index) => (
               <div key={dayName} className="text-center">
@@ -363,7 +363,7 @@ const ClassCalendar: React.FC = () => {
 
             {/* Day Columns */}
             {dayKeys.map((dayKey, dayIndex) => (
-              <div key={dayKey} className="min-h-[400px] border border-white/10 rounded-lg p-3">
+              <div key={dayKey} className="min-h-[200px] sm:min-h-[400px] border border-white/10 rounded-lg p-2 sm:p-3">
                 <div className="space-y-2">
                   {weekClasses[dayKey]?.map((classItem) => (
                     <Link

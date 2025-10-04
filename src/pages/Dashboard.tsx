@@ -56,19 +56,19 @@ const Dashboard: React.FC = () => {
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header Section */}
-        <div className="mb-8">
-          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-3">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-2 sm:mb-3">
             {t('dashboard')}
           </h1>
-          <p className="text-lg text-gray-300 max-w-2xl">
+          <p className="text-base sm:text-lg text-gray-300 max-w-2xl">
             {t('welcome-message')}
           </p>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Total Students */}
           <Link
             to="/students"
@@ -143,7 +143,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Additional Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Total Check-ins */}
           <Link
             to="/classes/check-in/archived"
@@ -218,9 +218,9 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Recent Activity Card */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300">
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all duration-300">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-white">Recent Activity</h3>
               <div className="p-2 bg-blue-500/20 rounded-lg">
@@ -273,7 +273,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Quick Actions Card */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300">
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all duration-300">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-white">Quick Actions</h3>
               <div className="p-2 bg-green-500/20 rounded-lg">
