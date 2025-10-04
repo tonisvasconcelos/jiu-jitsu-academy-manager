@@ -10,7 +10,7 @@ const StudentModality: React.FC = () => {
   const { t } = useLanguage()
   const { students } = useStudents()
   const { modalities } = useFightModalities()
-  const { connections, deleteConnection, addConnection } = useStudentModalities()
+  const { connections, addConnection } = useStudentModalities()
   
   // Filter states
   const [searchTerm, setSearchTerm] = useState('')
@@ -110,11 +110,6 @@ const StudentModality: React.FC = () => {
     return beltNames[beltLevel.toLowerCase() as keyof typeof beltNames] || 'Unknown Belt'
   }
 
-  const handleDeleteConnection = (connectionId: string) => {
-    if (window.confirm('Are you sure you want to delete this connection?')) {
-      deleteConnection(connectionId)
-    }
-  }
 
   // Filter functions
   const clearAllFilters = () => {
@@ -434,17 +429,15 @@ const StudentModality: React.FC = () => {
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Modalities</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Belt at Start</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Assignment Date</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Closing Date</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Expected Closing</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Notes</th>
                   <th className="px-6 py-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/10">
                 {filteredConnections.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="px-6 py-4 text-center text-gray-400">
+                    <td colSpan={7} className="px-6 py-4 text-center text-gray-400">
                       {hasActiveFilters ? 'No connections match the current filters.' : 'No student modality connections yet.'}
                     </td>
                   </tr>
@@ -496,9 +489,6 @@ const StudentModality: React.FC = () => {
                           {new Date(connection.assignmentDate).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                          {connection.closingDate ? new Date(connection.closingDate).toLocaleDateString() : '-'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                           {connection.expectedClosingDate ? new Date(connection.expectedClosingDate).toLocaleDateString() : '-'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -511,9 +501,6 @@ const StudentModality: React.FC = () => {
                               Inactive
                             </span>
                           )}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-300 max-w-xs truncate">
-                          {connection.notes || '-'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex items-center justify-end space-x-4">
@@ -529,12 +516,6 @@ const StudentModality: React.FC = () => {
                             >
                               ✏️ Edit
                             </Link>
-                            <button 
-                              onClick={() => handleDeleteConnection(connection.connectionId)}
-                              className="text-red-400 hover:text-red-300 transition-colors"
-                            >
-                              🗑️ Delete
-                            </button>
                           </div>
                         </td>
                       </tr>

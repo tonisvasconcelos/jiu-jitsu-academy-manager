@@ -397,6 +397,69 @@ const StudentModalityForm: React.FC = () => {
                   Expected number of stripes or degrees the student should have when concluding this training plan
                 </p>
               </div>
+
+              {/* Progress Bar */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Training Progress</label>
+                <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
+                  {(() => {
+                    if (!connection.studentId || connection.modalityIds.length === 0 || !connection.assignmentDate || !connection.expectedCheckInCount) {
+                      return <span className="text-gray-400">Complete the form to see training progress</span>;
+                    }
+                    
+                    const startDate = connection.assignmentDate;
+                    const endDate = connection.closingDate || connection.expectedClosingDate || new Date().toISOString().split('T')[0];
+                    
+                    // Get all check-ins for the student
+                    const allStudentCheckIns = getCheckInsByStudent(connection.studentId);
+                    
+                    // Filter by date range
+                    const checkInsInDateRange = allStudentCheckIns.filter(checkIn => 
+                      checkIn.checkInDate >= startDate && checkIn.checkInDate <= endDate
+                    );
+                    
+                    // Filter by selected modalities
+                    const selectedModalityNames = modalities
+                      .filter(m => connection.modalityIds.includes(m.modalityId))
+                      .map(m => m.name);
+                    
+                    const relevantCheckIns = checkInsInDateRange.filter(checkIn => 
+                      checkIn.fightModalities.some(modality => selectedModalityNames.includes(modality))
+                    );
+                    
+                    const actualCheckIns = relevantCheckIns.length;
+                    const expectedCheckIns = connection.expectedCheckInCount || 0;
+                    const progressPercentage = expectedCheckIns > 0 ? Math.min((actualCheckIns / expectedCheckIns) * 100, 100) : 0;
+                    const remainingCheckIns = Math.max(expectedCheckIns - actualCheckIns, 0);
+                    
+                    return (
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium text-white">Check-ins Progress</span>
+                          <span className="text-sm text-gray-400">{actualCheckIns} / {expectedCheckIns}</span>
+                        </div>
+                        <div className="w-full bg-gray-700 rounded-full h-3 mb-2">
+                          <div 
+                            className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500"
+                            style={{ width: `${progressPercentage}%` }}
+                          ></div>
+                        </div>
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="text-gray-400">
+                            {progressPercentage >= 100 ? '✅ Plan Complete!' : `${remainingCheckIns} check-ins remaining`}
+                          </span>
+                          <span className="text-gray-400">
+                            {Math.round(progressPercentage)}% complete
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+                <p className="text-xs text-gray-400 mt-1">
+                  Visual progress tracking based on expected vs actual check-ins
+                </p>
+              </div>
             </div>
 
             {/* Student Selection */}
