@@ -20,6 +20,7 @@ interface ClassCheckInContextType {
   getCheckInsByDate: (date: string) => ClassCheckIn[];
   getCheckInsByClass: (classId: string) => ClassCheckIn[];
   getCheckInsByDateRange: (startDate: string, endDate: string) => ClassCheckIn[];
+  getCheckInsByStudent: (studentId: string) => ClassCheckIn[];
   getCheckInsByStudentAndModality: (studentId: string, modalityName: string, startDate: string, endDate: string) => ClassCheckIn[];
   getTotalCheckIns: () => number;
   getCheckInsThisWeek: () => number;
@@ -85,6 +86,10 @@ export const ClassCheckInProvider: React.FC<ClassCheckInProviderProps> = ({ chil
     );
   };
 
+  const getCheckInsByStudent = (studentId: string) => {
+    return checkIns.filter(checkIn => checkIn.studentId === studentId);
+  };
+
   const getCheckInsByStudentAndModality = (studentId: string, modalityName: string, startDate: string, endDate: string) => {
     return checkIns.filter(checkIn => 
       checkIn.studentId === studentId &&
@@ -136,6 +141,7 @@ export const ClassCheckInProvider: React.FC<ClassCheckInProviderProps> = ({ chil
     getCheckInsByDate,
     getCheckInsByClass,
     getCheckInsByDateRange,
+    getCheckInsByStudent,
     getCheckInsByStudentAndModality,
     getTotalCheckIns,
     getCheckInsThisWeek,

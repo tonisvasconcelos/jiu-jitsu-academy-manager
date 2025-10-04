@@ -11,7 +11,7 @@ const StudentModalityForm: React.FC = () => {
   const { students } = useStudents()
   const { modalities } = useFightModalities()
   const { addConnection, updateConnection, getConnection } = useStudentModalities()
-  const { getCheckInsByStudentAndModality } = useClassCheckIns()
+  const { getCheckInsByStudent, getCheckInsByDateRange } = useClassCheckIns()
   
   const [connection, setConnection] = useState<StudentModalityConnection>({
     connectionId: '',
@@ -301,11 +301,24 @@ const StudentModalityForm: React.FC = () => {
                     const startDate = connection.assignmentDate;
                     const endDate = connection.closingDate || connection.expectedClosingDate || new Date().toISOString().split('T')[0];
                     
-                    const selectedModalities = modalities.filter(m => connection.modalityIds.includes(m.modalityId));
-                    const totalCheckIns = selectedModalities.reduce((total, modality) => {
-                      const checkIns = getCheckInsByStudentAndModality(connection.studentId, modality.name, startDate, endDate);
-                      return total + checkIns.length;
-                    }, 0);
+                    // Get all check-ins for the student
+                    const allStudentCheckIns = getCheckInsByStudent(connection.studentId);
+                    
+                    // Filter by date range
+                    const checkInsInDateRange = allStudentCheckIns.filter(checkIn => 
+                      checkIn.checkInDate >= startDate && checkIn.checkInDate <= endDate
+                    );
+                    
+                    // Filter by selected modalities - only count check-ins that have at least one of the selected modalities
+                    const selectedModalityNames = modalities
+                      .filter(m => connection.modalityIds.includes(m.modalityId))
+                      .map(m => m.name);
+                    
+                    const relevantCheckIns = checkInsInDateRange.filter(checkIn => 
+                      checkIn.fightModalities.some(modality => selectedModalityNames.includes(modality))
+                    );
+                    
+                    const totalCheckIns = relevantCheckIns.length;
                     
                     return (
                       <div>
