@@ -360,7 +360,42 @@ const StudentModalityForm: React.FC = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-300">{t('target-belt')}:</span>
-                      <span className="text-white font-medium">Next Level</span>
+                      <span className="text-white font-medium">
+                        {connection.expectedBeltAtClosing ? 
+                          (() => {
+                            // Convert belt value to display name
+                            const beltMap: { [key: string]: string } = {
+                              'white': t('white-belt'),
+                              'blue': t('blue-belt'),
+                              'purple': t('purple-belt'),
+                              'brown': t('brown-belt'),
+                              'black': t('black-belt'),
+                              'kids-white': 'White',
+                              'kids-gray-white': 'Gray/White',
+                              'kids-gray': 'Gray',
+                              'kids-gray-black': 'Gray/Black',
+                              'kids-yellow-white': 'Yellow/White',
+                              'kids-yellow': 'Yellow',
+                              'kids-yellow-black': 'Yellow/Black',
+                              'kids-orange-white': 'Orange/White',
+                              'kids-orange': 'Orange',
+                              'kids-orange-black': 'Orange/Black',
+                              'kids-green-white': 'Green/White',
+                              'kids-green': 'Green',
+                              'kids-green-black': 'Green/Black',
+                              'judo-kids-white': 'White',
+                              'judo-kids-white-yellow': 'White/Yellow',
+                              'judo-kids-yellow': 'Yellow',
+                              'judo-kids-yellow-orange': 'Yellow/Orange',
+                              'judo-kids-orange': 'Orange',
+                              'judo-kids-orange-green': 'Orange/Green',
+                              'judo-kids-green': 'Green'
+                            };
+                            return beltMap[connection.expectedBeltAtClosing] || connection.expectedBeltAtClosing;
+                          })() : 
+                          'Not set'
+                        }
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-300">{t('belt-progression')}:</span>
