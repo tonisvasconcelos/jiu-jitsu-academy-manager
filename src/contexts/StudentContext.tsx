@@ -23,6 +23,7 @@ export interface Student {
   weight?: number
   weightDivisionId?: string
   photoUrl?: string
+  preferredLanguage?: 'ENU' | 'PTB' | 'ESP' | 'FRA' | 'GER' | 'JPN' | 'ITA' | 'RUS' | 'ARA' | 'KOR'
 }
 
 interface StudentContextType {

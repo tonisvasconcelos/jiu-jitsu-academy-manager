@@ -40,9 +40,14 @@ const CompanyInfo: React.FC = () => {
   const languages = [
     { code: 'ENU', name: 'English', flag: '🇺🇸' },
     { code: 'PTB', name: 'Português (Brasil)', flag: '🇧🇷' },
-    { code: 'GER', name: 'Deutsch', flag: '🇩🇪' },
+    { code: 'ESP', name: 'Español', flag: '🇪🇸' },
     { code: 'FRA', name: 'Français', flag: '🇫🇷' },
-    { code: 'ESP', name: 'Español', flag: '🇪🇸' }
+    { code: 'GER', name: 'Deutsch', flag: '🇩🇪' },
+    { code: 'JPN', name: '日本語', flag: '🇯🇵' },
+    { code: 'ITA', name: 'Italiano', flag: '🇮🇹' },
+    { code: 'RUS', name: 'Русский', flag: '🇷🇺' },
+    { code: 'ARA', name: 'العربية', flag: '🇸🇦' },
+    { code: 'KOR', name: '한국어', flag: '🇰🇷' }
   ]
 
   const handleInputChange = (field: string, value: string) => {
@@ -367,7 +372,7 @@ const CompanyInfo: React.FC = () => {
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-white mb-6">System Language</h2>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               {languages.map((language) => (
                 <div key={language.code} className="relative">
                   <input

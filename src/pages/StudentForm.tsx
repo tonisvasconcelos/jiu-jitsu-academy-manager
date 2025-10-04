@@ -29,7 +29,8 @@ const StudentForm: React.FC = () => {
     branchId: '',
     active: true,
     isKidsStudent: false,
-    photoUrl: ''
+    photoUrl: '',
+    preferredLanguage: 'PTB'
   })
 
   const [isLoading, setIsLoading] = useState(false)
@@ -528,6 +529,29 @@ const StudentForm: React.FC = () => {
                   disabled={isReadOnly}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
                 />
+              </div>
+
+              {/* Preferred Language for Interactions */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('preferred-language')}</label>
+                <select
+                  value={student.preferredLanguage || 'PTB'}
+                  onChange={(e) => handleInputChange('preferredLanguage', e.target.value)}
+                  disabled={isReadOnly}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+                >
+                  <option value="ENU">🇺🇸 English</option>
+                  <option value="PTB">🇧🇷 Português (Brasil)</option>
+                  <option value="ESP">🇪🇸 Español</option>
+                  <option value="FRA">🇫🇷 Français</option>
+                  <option value="GER">🇩🇪 Deutsch</option>
+                  <option value="JPN">🇯🇵 日本語</option>
+                  <option value="ITA">🇮🇹 Italiano</option>
+                  <option value="RUS">🇷🇺 Русский</option>
+                  <option value="ARA">🇸🇦 العربية</option>
+                  <option value="KOR">🇰🇷 한국어</option>
+                </select>
+                <p className="text-xs text-gray-400 mt-1">{t('preferred-language-help')}</p>
               </div>
 
               {/* Photo URL */}

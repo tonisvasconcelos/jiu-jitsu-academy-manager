@@ -76,9 +76,9 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Total Students</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">{t('total-students')}</p>
                 <p className="text-3xl font-bold text-white">{totalStudents}</p>
-                <p className="text-xs text-blue-400 mt-1">{activeStudents} active</p>
+                <p className="text-xs text-blue-400 mt-1">{activeStudents} {t('active')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
                 <span className="text-2xl">🎓</span>
@@ -94,9 +94,9 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Instructors</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">{t('instructors')}</p>
                 <p className="text-3xl font-bold text-white">{totalTeachers}</p>
-                <p className="text-xs text-green-400 mt-1">Active teachers</p>
+                <p className="text-xs text-green-400 mt-1">{t('active-teachers')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
                 <span className="text-2xl">👨‍🏫</span>
@@ -112,9 +112,9 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Fight Modalities</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">{t('fight-modalities')}</p>
                 <p className="text-3xl font-bold text-white">{totalModalities}</p>
-                <p className="text-xs text-purple-400 mt-1">Available styles</p>
+                <p className="text-xs text-purple-400 mt-1">{t('available-styles')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
                 <span className="text-2xl">🥋</span>
@@ -130,9 +130,9 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Classes Today</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">{t('classes-today')}</p>
                 <p className="text-3xl font-bold text-white">{classesToday}</p>
-                <p className="text-xs text-orange-400 mt-1">{activeClasses} total active</p>
+                <p className="text-xs text-orange-400 mt-1">{activeClasses} {t('total-active')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg">
                 <span className="text-2xl">📅</span>
@@ -151,9 +151,9 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Total Check-ins</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">{t('total-check-ins')}</p>
                 <p className="text-3xl font-bold text-white">{totalCheckIns}</p>
-                <p className="text-xs text-cyan-400 mt-1">{thisWeekCheckIns} this week</p>
+                <p className="text-xs text-cyan-400 mt-1">{thisWeekCheckIns} {t('this-week')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl shadow-lg">
                 <span className="text-2xl">📝</span>
@@ -169,9 +169,9 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Branches</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">{t('branches')}</p>
                 <p className="text-3xl font-bold text-white">{totalBranches}</p>
-                <p className="text-xs text-indigo-400 mt-1">{totalFacilities} facilities</p>
+                <p className="text-xs text-indigo-400 mt-1">{totalFacilities} {t('facilities')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-lg">
                 <span className="text-2xl">🏢</span>
@@ -187,9 +187,9 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Training Plans</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">{t('training-plans')}</p>
                 <p className="text-3xl font-bold text-white">{totalConnections}</p>
-                <p className="text-xs text-pink-400 mt-1">{activeConnections} active</p>
+                <p className="text-xs text-pink-400 mt-1">{activeConnections} {t('active-plans')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl shadow-lg">
                 <span className="text-2xl">📋</span>
@@ -205,9 +205,9 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Recent Activity</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">{t('recent-activity')}</p>
                 <p className="text-3xl font-bold text-white">{recentCheckIns}</p>
-                <p className="text-xs text-emerald-400 mt-1">Last 7 days</p>
+                <p className="text-xs text-emerald-400 mt-1">{t('last-7-days')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-lg">
                 <span className="text-2xl">⚡</span>
@@ -222,7 +222,7 @@ const Dashboard: React.FC = () => {
           {/* Recent Activity Card */}
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all duration-300">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold text-white">Recent Activity</h3>
+              <h3 className="text-xl font-semibold text-white">{t('recent-activity')}</h3>
               <div className="p-2 bg-blue-500/20 rounded-lg">
                 <span className="text-blue-400">📊</span>
               </div>
@@ -275,7 +275,7 @@ const Dashboard: React.FC = () => {
           {/* Quick Actions Card */}
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all duration-300">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold text-white">Quick Actions</h3>
+              <h3 className="text-xl font-semibold text-white">{t('quick-actions')}</h3>
               <div className="p-2 bg-green-500/20 rounded-lg">
                 <span className="text-green-400">⚡</span>
               </div>
@@ -286,28 +286,28 @@ const Dashboard: React.FC = () => {
                 className="w-full group relative bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 flex items-center justify-center"
               >
                 <span className="mr-2">👤</span>
-                <span className="font-medium">Add New Student</span>
+                <span className="font-medium">{t('add-new-student')}</span>
               </Link>
               <Link
                 to="/teachers/registration"
                 className="w-full group relative bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25 flex items-center justify-center"
               >
                 <span className="mr-2">👨‍🏫</span>
-                <span className="font-medium">Add New Instructor</span>
+                <span className="font-medium">{t('add-new-instructor')}</span>
               </Link>
               <Link
                 to="/classes/registration/new"
                 className="w-full group relative bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25 flex items-center justify-center"
               >
                 <span className="mr-2">📅</span>
-                <span className="font-medium">Create Class Schedule</span>
+                <span className="font-medium">{t('create-class-schedule')}</span>
               </Link>
               <Link
                 to="/classes/check-in/new"
                 className="w-full group relative bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 flex items-center justify-center"
               >
                 <span className="mr-2">📝</span>
-                <span className="font-medium">Check-In Student</span>
+                <span className="font-medium">{t('check-in-student')}</span>
               </Link>
             </div>
           </div>
