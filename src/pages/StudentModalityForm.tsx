@@ -347,13 +347,13 @@ const StudentModalityForm: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Belt Progression */}
+                {/* Target Progression */}
                 <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                   <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
                     <span className="mr-2">🥋</span>
-                    {t('target-belt-progression')}
+                    {t('target-progression')}
                   </h3>
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     <div className="flex justify-between">
                       <span className="text-gray-300">{t('current-belt')}:</span>
                       <span className="text-white font-medium">{connection.beltLevelAtStart || 'Not set'}</span>
@@ -396,6 +396,46 @@ const StudentModalityForm: React.FC = () => {
                           'Not set'
                         }
                       </span>
+                    </div>
+                    
+                    {/* Total of Stripes/Degrees at Start */}
+                    <div>
+                      <label htmlFor="stripesAtStart" className="block text-sm font-medium text-gray-300 mb-2">{t('total-stripes-degrees-start')}</label>
+                      <input
+                        id="stripesAtStart"
+                        name="stripesAtStart"
+                        type="number"
+                        min="0"
+                        max="4"
+                        value={connection.stripesAtStart || ''}
+                        onChange={(e) => handleInputChange('stripesAtStart', parseInt(e.target.value) || 0)}
+                        readOnly={isViewMode}
+                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder={t('stripes-degrees-start-placeholder')}
+                      />
+                      <p className="text-xs text-gray-400 mt-1">
+                        {t('stripes-degrees-start-description')}
+                      </p>
+                    </div>
+                    
+                    {/* Expected Stripes/Degrees at Conclusions */}
+                    <div>
+                      <label htmlFor="expectedStripesAtConclusion" className="block text-sm font-medium text-gray-300 mb-2">{t('expected-stripes-degrees-conclusions')}</label>
+                      <input
+                        id="expectedStripesAtConclusion"
+                        name="expectedStripesAtConclusion"
+                        type="number"
+                        min="0"
+                        max="4"
+                        value={connection.expectedStripesAtConclusion || ''}
+                        onChange={(e) => handleInputChange('expectedStripesAtConclusion', parseInt(e.target.value) || 0)}
+                        readOnly={isViewMode}
+                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Enter expected stripes/degrees at conclusion"
+                      />
+                      <p className="text-xs text-gray-400 mt-1">
+                        {t('expected-stripes-conclusions-description')}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -568,25 +608,6 @@ const StudentModalityForm: React.FC = () => {
                 <p className="text-xs text-gray-400 mt-1">{t('belt-level-start-description')}</p>
               </div>
 
-              {/* Total of Stripes/Degrees at Start */}
-              <div>
-                <label htmlFor="stripesAtStart" className="block text-sm font-medium text-gray-300 mb-2">{t('total-stripes-degrees-start')}</label>
-                <input
-                  id="stripesAtStart"
-                  name="stripesAtStart"
-                  type="number"
-                  min="0"
-                  max="4"
-                  value={connection.stripesAtStart || ''}
-                  onChange={(e) => handleInputChange('stripesAtStart', parseInt(e.target.value) || 0)}
-                  readOnly={isViewMode}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder={t('stripes-degrees-start-placeholder')}
-                />
-                <p className="text-xs text-gray-400 mt-1">
-                  {t('stripes-degrees-start-description')}
-                </p>
-              </div>
 
               {/* Expected Closing Date */}
               <div>
@@ -720,25 +741,6 @@ const StudentModalityForm: React.FC = () => {
                 </p>
               </div>
 
-              {/* Expected Stripes/Degrees at Conclusions */}
-              <div>
-                <label htmlFor="expectedStripesAtConclusion" className="block text-sm font-medium text-gray-300 mb-2">{t('expected-stripes-degrees-conclusions')}</label>
-                <input
-                  id="expectedStripesAtConclusion"
-                  name="expectedStripesAtConclusion"
-                  type="number"
-                  min="0"
-                  max="4"
-                  value={connection.expectedStripesAtConclusion || ''}
-                  onChange={(e) => handleInputChange('expectedStripesAtConclusion', parseInt(e.target.value) || 0)}
-                  readOnly={isViewMode}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter expected stripes/degrees at conclusion"
-                />
-                <p className="text-xs text-gray-400 mt-1">
-                  {t('expected-stripes-conclusions-description')}
-                </p>
-              </div>
 
             </div>
 
