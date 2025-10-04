@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents } from '../contexts/StudentContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
 import { useStudentModalities, StudentModalityConnection } from '../contexts/StudentModalityContext'
@@ -8,6 +9,7 @@ import { useClassCheckIns } from '../contexts/ClassCheckInContext'
 const StudentModalityForm: React.FC = () => {
   const { action, id, studentId } = useParams<{ action: string; id?: string; studentId?: string }>()
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const { students } = useStudents()
   const { modalities } = useFightModalities()
   const { addConnection, updateConnection, getConnection } = useStudentModalities()
@@ -129,7 +131,7 @@ const StudentModalityForm: React.FC = () => {
     switch (action) {
       case 'new': return 'New Assignment'
       case 'edit': return 'Edit Assignment'
-      case 'view': return 'FIGHT TRAINING PLAN'
+      case 'view': return t('fight-training-plan')
       default: return 'Assignment Form'
     }
   }
@@ -155,14 +157,14 @@ const StudentModalityForm: React.FC = () => {
               <p className="text-lg text-gray-300">
                 {action === 'new' && 'Assign modalities to a student'}
                 {action === 'edit' && 'Update modality assignment'}
-                {action === 'view' && 'View modality assignment details'}
+                {action === 'view' && t('view-modality-assignment-details')}
               </p>
             </div>
             <Link
               to="/students/modality"
               className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all duration-300 flex items-center"
             >
-              ← Back to Assignments
+              ← {t('back-to-assignments')}
             </Link>
           </div>
         </div>
@@ -173,7 +175,7 @@ const StudentModalityForm: React.FC = () => {
           <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-400/20 rounded-2xl p-6 shadow-lg shadow-blue-500/10">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
               <span className="mr-3 text-3xl">📊</span>
-              Training Progress
+              {t('training-progress')}
             </h2>
             
             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
@@ -218,22 +220,22 @@ const StudentModalityForm: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="text-center">
                         <div className="text-4xl font-bold text-blue-400 mb-2">{actualCheckIns}</div>
-                        <div className="text-sm text-gray-400">Completed</div>
+                        <div className="text-sm text-gray-400">{t('completed')}</div>
                       </div>
                       <div className="text-center">
                         <div className="text-4xl font-bold text-orange-400 mb-2">{remainingCheckIns}</div>
-                        <div className="text-sm text-gray-400">Remaining</div>
+                        <div className="text-sm text-gray-400">{t('remaining')}</div>
                       </div>
                       <div className="text-center">
                         <div className="text-4xl font-bold text-green-400 mb-2">{expectedCheckIns}</div>
-                        <div className="text-sm text-gray-400">Target</div>
+                        <div className="text-sm text-gray-400">{t('target')}</div>
                       </div>
                     </div>
 
                     {/* Modern Progress Bar */}
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-lg font-semibold text-white">Check-ins Progress</span>
+                        <span className="text-lg font-semibold text-white">{t('check-ins-progress')}</span>
                         <span className="text-lg font-bold text-white">{actualCheckIns} / {expectedCheckIns}</span>
                       </div>
                       
@@ -269,7 +271,7 @@ const StudentModalityForm: React.FC = () => {
                         ) : (
                           <div className="inline-flex items-center px-4 py-2 bg-blue-500/20 text-blue-400 rounded-full border border-blue-400/30">
                             <span className="mr-2">📈</span>
-                            <span className="font-semibold">{remainingCheckIns} check-ins remaining</span>
+                            <span className="font-semibold">{remainingCheckIns} {t('check-ins-remaining')}</span>
                           </div>
                         )}
                       </div>
@@ -281,12 +283,12 @@ const StudentModalityForm: React.FC = () => {
           </div>
 
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Assignment Information</h2>
+            <h2 className="text-xl font-semibold text-white mb-6">{t('assignment-information')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Connection ID */}
               <div>
-                <label htmlFor="connectionId" className="block text-sm font-medium text-gray-300 mb-2">Connection ID</label>
+                <label htmlFor="connectionId" className="block text-sm font-medium text-gray-300 mb-2">{t('connection-id')}</label>
                 <input
                   id="connectionId"
                   name="connectionId"
@@ -299,7 +301,7 @@ const StudentModalityForm: React.FC = () => {
 
               {/* Assignment Date */}
               <div>
-                <label htmlFor="assignmentDate" className="block text-sm font-medium text-gray-300 mb-2">Assignment Date *</label>
+                <label htmlFor="assignmentDate" className="block text-sm font-medium text-gray-300 mb-2">{t('assignment-date')} *</label>
                 <input
                   id="assignmentDate"
                   name="assignmentDate"
@@ -315,7 +317,7 @@ const StudentModalityForm: React.FC = () => {
               {/* Closing Date */}
               <div>
                 <label htmlFor="closingDate" className="block text-sm font-medium text-gray-300 mb-2">
-                  Closing Date {!connection.active ? '*' : ''}
+                  {t('closing-date')} {!connection.active ? '*' : ''}
                 </label>
                 <input
                   id="closingDate"
@@ -336,7 +338,7 @@ const StudentModalityForm: React.FC = () => {
 
               {/* Belt Level at Start */}
               <div>
-                <label htmlFor="beltLevelAtStart" className="block text-sm font-medium text-gray-300 mb-2">Belt Level at Start *</label>
+                <label htmlFor="beltLevelAtStart" className="block text-sm font-medium text-gray-300 mb-2">{t('belt-level-at-start')} *</label>
                 <select
                   id="beltLevelAtStart"
                   name="beltLevelAtStart"
@@ -383,12 +385,12 @@ const StudentModalityForm: React.FC = () => {
                     <option value="judo-kids-green">Green</option>
                   </optgroup>
                 </select>
-                <p className="text-xs text-gray-400 mt-1">The student's belt level when starting this modality</p>
+                <p className="text-xs text-gray-400 mt-1">{t('belt-level-start-description')}</p>
               </div>
 
               {/* Total of Stripes/Degrees at Start */}
               <div>
-                <label htmlFor="stripesAtStart" className="block text-sm font-medium text-gray-300 mb-2">Total of Stripes/Degrees at Start</label>
+                <label htmlFor="stripesAtStart" className="block text-sm font-medium text-gray-300 mb-2">{t('total-stripes-degrees-start')}</label>
                 <input
                   id="stripesAtStart"
                   name="stripesAtStart"
@@ -399,16 +401,16 @@ const StudentModalityForm: React.FC = () => {
                   onChange={(e) => handleInputChange('stripesAtStart', parseInt(e.target.value) || 0)}
                   readOnly={isViewMode}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter stripes/degrees at start"
+                  placeholder={t('stripes-degrees-start-placeholder')}
                 />
                 <p className="text-xs text-gray-400 mt-1">
-                  Number of stripes or degrees the student had when starting this modality
+                  {t('stripes-degrees-start-description')}
                 </p>
               </div>
 
               {/* Expected Closing Date */}
               <div>
-                <label htmlFor="expectedClosingDate" className="block text-sm font-medium text-gray-300 mb-2">Expected Closing Date</label>
+                <label htmlFor="expectedClosingDate" className="block text-sm font-medium text-gray-300 mb-2">{t('expected-closing-date')}</label>
                 <input
                   id="expectedClosingDate"
                   name="expectedClosingDate"
@@ -419,13 +421,13 @@ const StudentModalityForm: React.FC = () => {
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <p className="text-xs text-gray-400 mt-1">
-                  Planned end date for this modality assignment
+                  {t('expected-closing-date-description')}
                 </p>
               </div>
 
               {/* Check-in Counter */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Check-ins Count</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">{t('check-ins-count')}</label>
                 <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
                   {(() => {
                     if (!connection.studentId || connection.modalityIds.length === 0 || !connection.assignmentDate) {
@@ -457,22 +459,22 @@ const StudentModalityForm: React.FC = () => {
                     return (
                       <div>
                         <span className="text-2xl font-bold text-blue-400">{totalCheckIns}</span>
-                        <span className="text-sm text-gray-400 ml-2">check-ins</span>
+                        <span className="text-sm text-gray-400 ml-2">{t('check-ins')}</span>
                         <p className="text-xs text-gray-400 mt-1">
-                          From {new Date(startDate).toLocaleDateString()} to {new Date(endDate).toLocaleDateString()}
+                          {t('from-to').replace('{startDate}', new Date(startDate).toLocaleDateString()).replace('{endDate}', new Date(endDate).toLocaleDateString())}
                         </p>
                       </div>
                     );
                   })()}
                 </div>
                 <p className="text-xs text-gray-400 mt-1">
-                  Total archived check-ins for this student in selected modalities within the defined time range
+                  {t('check-ins-count-description')}
                 </p>
               </div>
 
               {/* Expected Check-in Count */}
               <div>
-                <label htmlFor="expectedCheckInCount" className="block text-sm font-medium text-gray-300 mb-2">Expected Count of Check-in</label>
+                <label htmlFor="expectedCheckInCount" className="block text-sm font-medium text-gray-300 mb-2">{t('expected-count-check-in')}</label>
                 <input
                   id="expectedCheckInCount"
                   name="expectedCheckInCount"
@@ -485,13 +487,13 @@ const StudentModalityForm: React.FC = () => {
                   placeholder="Enter minimum check-ins required"
                 />
                 <p className="text-xs text-gray-400 mt-1">
-                  Minimum number of check-ins required to conclude this training plan
+                  {t('expected-check-in-description')}
                 </p>
               </div>
 
               {/* Expected Stripes/Degrees at Conclusions */}
               <div>
-                <label htmlFor="expectedStripesAtConclusion" className="block text-sm font-medium text-gray-300 mb-2">Expected Stripes/Degrees at Conclusions</label>
+                <label htmlFor="expectedStripesAtConclusion" className="block text-sm font-medium text-gray-300 mb-2">{t('expected-stripes-degrees-conclusions')}</label>
                 <input
                   id="expectedStripesAtConclusion"
                   name="expectedStripesAtConclusion"
@@ -505,7 +507,7 @@ const StudentModalityForm: React.FC = () => {
                   placeholder="Enter expected stripes/degrees at conclusion"
                 />
                 <p className="text-xs text-gray-400 mt-1">
-                  Expected number of stripes or degrees the student should have when concluding this training plan
+                  {t('expected-stripes-conclusions-description')}
                 </p>
               </div>
 
