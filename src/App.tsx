@@ -19,6 +19,8 @@ import Students from './pages/Students'
 import Teachers from './pages/Teachers'
 import Championships from './pages/Championships'
 import Administration from './pages/Administration'
+import UserProfiles from './pages/UserProfiles'
+import AppSettings from './pages/AppSettings'
 import StudentRegistration from './pages/StudentRegistration'
 import StudentForm from './pages/StudentForm'
 import TeacherRegistration from './pages/TeacherRegistration'
@@ -134,9 +136,9 @@ function App() {
                     <Route path="/championships/fight-associations/:action/:id" element={<FightAssociationForm />} />
                     
                     {/* Sub-menu Routes - Administration */}
-                    <Route path="/admin/profiles" element={<div className="p-6">User Profiles & Roles</div>} />
+                    <Route path="/admin/profiles" element={<UserProfiles />} />
                     <Route path="/admin/language" element={<LanguageSelector />} />
-                    <Route path="/admin/settings" element={<div className="p-6">App Settings</div>} />
+                    <Route path="/admin/settings" element={<AppSettings />} />
                     
                     {/* Class Schedule Routes */}
                     <Route path="/classes" element={<ClassSchedules />} />

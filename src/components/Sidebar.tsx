@@ -10,6 +10,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const location = useLocation()
   const [isMobile, setIsMobile] = useState(false)
+  const [expandedMenus, setExpandedMenus] = useState<string[]>([])
   const { t } = useLanguage()
 
   useEffect(() => {
@@ -23,6 +24,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  const toggleMenu = (menuId: string) => {
+    setExpandedMenus(prev => 
+      prev.includes(menuId) 
+        ? prev.filter(id => id !== menuId)
+        : [...prev, menuId]
+    )
+  }
+
+  const isMenuExpanded = (menuId: string) => expandedMenus.includes(menuId)
+
   const menuItems = [
     { id: 'students', title: t('students'), icon: '🥋', path: '/students' },
     { id: 'teachers', title: 'Teachers & Instructors', icon: '🧑‍🏫', path: '/teachers' },
@@ -32,7 +43,17 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     { id: 'quality-evaluation', title: t('quality-evaluation'), icon: '🧪', path: '/quality' },
     { id: 'branches', title: t('branches'), icon: '🌍', path: '/branches' },
     { id: 'schedules-checkins', title: t('schedules-checkins'), icon: '📅', path: '/schedules' },
-    { id: 'administration', title: t('administration'), icon: '⚙️', path: '/admin' }
+    { 
+      id: 'administration', 
+      title: t('administration'), 
+      icon: '⚙️', 
+      path: '/admin',
+      subItems: [
+        { id: 'user-profiles', title: 'User Profiles', path: '/admin/profiles', icon: '👤' },
+        { id: 'language-settings', title: 'Language Settings', path: '/admin/language', icon: '🌐' },
+        { id: 'app-settings', title: 'App Settings', path: '/admin/settings', icon: '⚙️' }
+      ]
+    }
   ]
 
   return (
@@ -108,19 +129,68 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         <nav className="mt-3 overflow-y-auto flex-1">
           {menuItems.map((menu) => (
             <div key={menu.id} className="mb-2">
-              <Link
-                to={menu.path}
-                className={`w-full flex items-center text-left hover:bg-white/10 transition-all duration-300 rounded-lg group ${
-                  (collapsed && !isMobile) ? 'justify-center px-0 py-4 h-14' : 'px-3 mx-2 py-3'
-                } ${location.pathname.startsWith(menu.path) ? 'bg-white/10' : ''}`}
-              >
-                <div className="flex items-center">
-                  <span className="text-lg group-hover:scale-110 transition-transform">{menu.icon}</span>
-                  {(!collapsed || isMobile) && (
-                    <span className="ml-2 text-sm text-white font-medium group-hover:text-blue-400 transition-colors">{menu.title}</span>
-                  )}
+              {/* Main Menu Item */}
+              <div className="relative">
+                {menu.subItems ? (
+                  <button
+                    onClick={() => toggleMenu(menu.id)}
+                    className={`w-full flex items-center text-left hover:bg-white/10 transition-all duration-300 rounded-lg group ${
+                      (collapsed && !isMobile) ? 'justify-center px-0 py-4 h-14' : 'px-3 mx-2 py-3'
+                    } ${location.pathname.startsWith(menu.path) ? 'bg-white/10' : ''}`}
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center">
+                        <span className="text-lg group-hover:scale-110 transition-transform">{menu.icon}</span>
+                        {(!collapsed || isMobile) && (
+                          <span className="ml-2 text-sm text-white font-medium group-hover:text-blue-400 transition-colors">{menu.title}</span>
+                        )}
+                      </div>
+                      {(!collapsed || isMobile) && menu.subItems && (
+                        <svg 
+                          className={`w-4 h-4 text-gray-400 transition-transform ${isMenuExpanded(menu.id) ? 'rotate-90' : ''}`}
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      )}
+                    </div>
+                  </button>
+                ) : (
+                  <Link
+                    to={menu.path}
+                    className={`w-full flex items-center text-left hover:bg-white/10 transition-all duration-300 rounded-lg group ${
+                      (collapsed && !isMobile) ? 'justify-center px-0 py-4 h-14' : 'px-3 mx-2 py-3'
+                    } ${location.pathname.startsWith(menu.path) ? 'bg-white/10' : ''}`}
+                  >
+                    <div className="flex items-center">
+                      <span className="text-lg group-hover:scale-110 transition-transform">{menu.icon}</span>
+                      {(!collapsed || isMobile) && (
+                        <span className="ml-2 text-sm text-white font-medium group-hover:text-blue-400 transition-colors">{menu.title}</span>
+                      )}
+                    </div>
+                  </Link>
+                )}
+              </div>
+
+              {/* Sub Menu Items */}
+              {menu.subItems && (!collapsed || isMobile) && isMenuExpanded(menu.id) && (
+                <div className="ml-4 mt-1 space-y-1">
+                  {menu.subItems.map((subItem) => (
+                    <Link
+                      key={subItem.id}
+                      to={subItem.path}
+                      className={`w-full flex items-center text-left hover:bg-white/5 transition-all duration-300 rounded-lg group px-3 py-2 ${
+                        location.pathname === subItem.path ? 'bg-white/5 text-blue-400' : 'text-gray-300'
+                      }`}
+                    >
+                      <span className="text-sm group-hover:scale-110 transition-transform">{subItem.icon}</span>
+                      <span className="ml-2 text-xs font-medium group-hover:text-blue-400 transition-colors">{subItem.title}</span>
+                    </Link>
+                  ))}
                 </div>
-              </Link>
+              )}
             </div>
           ))}
         </nav>
