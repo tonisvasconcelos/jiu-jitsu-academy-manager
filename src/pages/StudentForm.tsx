@@ -4,6 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents, Student } from '../contexts/StudentContext'
 import { useBranches } from '../contexts/BranchContext'
 import { useWeightDivisions } from '../contexts/WeightDivisionContext'
+import { useClassCheckIns } from '../contexts/ClassCheckInContext'
 
 const StudentForm: React.FC = () => {
   const { t } = useLanguage()
@@ -12,6 +13,7 @@ const StudentForm: React.FC = () => {
   const { addStudent, updateStudent, getStudent } = useStudents()
   const { branches } = useBranches()
   const { weightDivisions, getWeightDivisionByWeight } = useWeightDivisions()
+  const { getCheckInsByStudent } = useClassCheckIns()
   
   const [student, setStudent] = useState<Student>({
     studentId: '',
@@ -525,6 +527,128 @@ const StudentForm: React.FC = () => {
               <label htmlFor="active" className="ml-2 block text-sm text-gray-300">
                 Active Student
               </label>
+            </div>
+          </div>
+
+          {/* Check-in Statistics */}
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+            <h2 className="text-xl font-semibold text-white mb-6">Check-in Statistics</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Total Check-ins */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Total of Check-ins</label>
+                <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
+                  {(() => {
+                    if (!student.studentId) {
+                      return <span className="text-gray-400">No student selected</span>;
+                    }
+                    
+                    const studentCheckIns = getCheckInsByStudent(student.studentId);
+                    return (
+                      <div className="flex items-center justify-between">
+                        <span className="text-2xl font-bold text-blue-400">{studentCheckIns.length}</span>
+                        <span className="text-sm text-gray-400">check-ins</span>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+
+              {/* Last Check-in */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Last Check-in</label>
+                <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
+                  {(() => {
+                    if (!student.studentId) {
+                      return <span className="text-gray-400">No student selected</span>;
+                    }
+                    
+                    const studentCheckIns = getCheckInsByStudent(student.studentId);
+                    if (studentCheckIns.length === 0) {
+                      return <span className="text-gray-400">No check-ins yet</span>;
+                    }
+                    
+                    const lastCheckIn = studentCheckIns.sort((a, b) => 
+                      new Date(b.checkInDate + ' ' + b.checkInTime).getTime() - 
+                      new Date(a.checkInDate + ' ' + a.checkInTime).getTime()
+                    )[0];
+                    
+                    return (
+                      <div>
+                        <div className="text-sm text-white">
+                          {new Date(lastCheckIn.checkInDate).toLocaleDateString()}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          at {lastCheckIn.checkInTime}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+
+              {/* Last Check-in Branch */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Last Check-in Branch</label>
+                <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
+                  {(() => {
+                    if (!student.studentId) {
+                      return <span className="text-gray-400">No student selected</span>;
+                    }
+                    
+                    const studentCheckIns = getCheckInsByStudent(student.studentId);
+                    if (studentCheckIns.length === 0) {
+                      return <span className="text-gray-400">No check-ins yet</span>;
+                    }
+                    
+                    const lastCheckIn = studentCheckIns.sort((a, b) => 
+                      new Date(b.checkInDate + ' ' + b.checkInTime).getTime() - 
+                      new Date(a.checkInDate + ' ' + a.checkInTime).getTime()
+                    )[0];
+                    
+                    return (
+                      <div>
+                        <div className="text-sm text-white">{lastCheckIn.branchName}</div>
+                        <div className="text-xs text-gray-400">{lastCheckIn.facilityName}</div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+
+              {/* First Check-in */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">First Check-in</label>
+                <div className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white">
+                  {(() => {
+                    if (!student.studentId) {
+                      return <span className="text-gray-400">No student selected</span>;
+                    }
+                    
+                    const studentCheckIns = getCheckInsByStudent(student.studentId);
+                    if (studentCheckIns.length === 0) {
+                      return <span className="text-gray-400">No check-ins yet</span>;
+                    }
+                    
+                    const firstCheckIn = studentCheckIns.sort((a, b) => 
+                      new Date(a.checkInDate + ' ' + a.checkInTime).getTime() - 
+                      new Date(b.checkInDate + ' ' + b.checkInTime).getTime()
+                    )[0];
+                    
+                    return (
+                      <div>
+                        <div className="text-sm text-white">
+                          {new Date(firstCheckIn.checkInDate).toLocaleDateString()}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          at {firstCheckIn.checkInTime}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
             </div>
           </div>
 
