@@ -23,6 +23,8 @@ const StudentModalityForm: React.FC = () => {
     closingDate: '',
     expectedClosingDate: '',
     expectedCheckInCount: 0,
+    stripesAtStart: 0,
+    expectedStripesAtConclusion: 0,
     notes: ''
   })
   const [isLoading, setIsLoading] = useState(false)
@@ -273,6 +275,26 @@ const StudentModalityForm: React.FC = () => {
                 <p className="text-xs text-gray-400 mt-1">The student's belt level when starting this modality</p>
               </div>
 
+              {/* Total of Stripes/Degrees at Start */}
+              <div>
+                <label htmlFor="stripesAtStart" className="block text-sm font-medium text-gray-300 mb-2">Total of Stripes/Degrees at Start</label>
+                <input
+                  id="stripesAtStart"
+                  name="stripesAtStart"
+                  type="number"
+                  min="0"
+                  max="4"
+                  value={connection.stripesAtStart || ''}
+                  onChange={(e) => handleInputChange('stripesAtStart', parseInt(e.target.value) || 0)}
+                  readOnly={isViewMode}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter stripes/degrees at start"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Number of stripes or degrees the student had when starting this modality
+                </p>
+              </div>
+
               {/* Expected Closing Date */}
               <div>
                 <label htmlFor="expectedClosingDate" className="block text-sm font-medium text-gray-300 mb-2">Expected Closing Date</label>
@@ -353,6 +375,26 @@ const StudentModalityForm: React.FC = () => {
                 />
                 <p className="text-xs text-gray-400 mt-1">
                   Minimum number of check-ins required to conclude this training plan
+                </p>
+              </div>
+
+              {/* Expected Stripes/Degrees at Conclusions */}
+              <div>
+                <label htmlFor="expectedStripesAtConclusion" className="block text-sm font-medium text-gray-300 mb-2">Expected Stripes/Degrees at Conclusions</label>
+                <input
+                  id="expectedStripesAtConclusion"
+                  name="expectedStripesAtConclusion"
+                  type="number"
+                  min="0"
+                  max="4"
+                  value={connection.expectedStripesAtConclusion || ''}
+                  onChange={(e) => handleInputChange('expectedStripesAtConclusion', parseInt(e.target.value) || 0)}
+                  readOnly={isViewMode}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter expected stripes/degrees at conclusion"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Expected number of stripes or degrees the student should have when concluding this training plan
                 </p>
               </div>
             </div>

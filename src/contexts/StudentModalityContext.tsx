@@ -16,6 +16,8 @@ export interface StudentModalityConnection {
   closingDate?: string
   expectedClosingDate?: string
   expectedCheckInCount?: number
+  stripesAtStart?: number
+  expectedStripesAtConclusion?: number
   notes?: string
 }
 
