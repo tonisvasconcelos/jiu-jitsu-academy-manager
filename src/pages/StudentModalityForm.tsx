@@ -22,6 +22,7 @@ const StudentModalityForm: React.FC = () => {
     active: true,
     closingDate: '',
     expectedClosingDate: '',
+    expectedCheckInCount: 0,
     notes: ''
   })
   const [isLoading, setIsLoading] = useState(false)
@@ -333,6 +334,25 @@ const StudentModalityForm: React.FC = () => {
                 </div>
                 <p className="text-xs text-gray-400 mt-1">
                   Total archived check-ins for this student in selected modalities within the defined time range
+                </p>
+              </div>
+
+              {/* Expected Check-in Count */}
+              <div>
+                <label htmlFor="expectedCheckInCount" className="block text-sm font-medium text-gray-300 mb-2">Expected Count of Check-in</label>
+                <input
+                  id="expectedCheckInCount"
+                  name="expectedCheckInCount"
+                  type="number"
+                  min="0"
+                  value={connection.expectedCheckInCount || ''}
+                  onChange={(e) => handleInputChange('expectedCheckInCount', parseInt(e.target.value) || 0)}
+                  readOnly={isViewMode}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter minimum check-ins required"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Minimum number of check-ins required to conclude this training plan
                 </p>
               </div>
             </div>

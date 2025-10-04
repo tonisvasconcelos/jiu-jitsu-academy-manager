@@ -15,6 +15,7 @@ export interface StudentModalityConnection {
   active: boolean
   closingDate?: string
   expectedClosingDate?: string
+  expectedCheckInCount?: number
   notes?: string
 }
 
