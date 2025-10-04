@@ -35,6 +35,7 @@ const StudentForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isReadOnly, setIsReadOnly] = useState(action === 'view')
   const [defaultBranchSet, setDefaultBranchSet] = useState(false)
+  const [checkInStatsKey, setCheckInStatsKey] = useState(0)
 
   // Function to calculate age from birth date
   const calculateAge = (birthDate: string) => {
@@ -102,6 +103,37 @@ const StudentForm: React.FC = () => {
   useEffect(() => {
     console.log('StudentForm: Student state changed, branchId is now:', student.branchId)
   }, [student.branchId])
+
+  // Force re-render of check-in statistics when component mounts or student changes
+  useEffect(() => {
+    // This effect will trigger whenever the component mounts or student changes
+    // The check-in statistics will be recalculated in the render
+    console.log('StudentForm: Check-in statistics will be recalculated for student:', student.studentId)
+    setCheckInStatsKey(prev => prev + 1) // Force re-render of check-in statistics
+  }, [student.studentId])
+
+  // Also update check-in statistics when the component first loads
+  useEffect(() => {
+    if (student.studentId) {
+      setCheckInStatsKey(prev => prev + 1)
+    }
+  }, [])
+
+  // Update check-in statistics when the page becomes visible (user navigates back)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && student.studentId) {
+        console.log('StudentForm: Page became visible, refreshing check-in statistics')
+        setCheckInStatsKey(prev => prev + 1)
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [student.studentId])
 
   const handleInputChange = (field: keyof Student, value: string | boolean) => {
     console.log('StudentForm: handleInputChange called with field:', field, 'value:', value)
@@ -531,7 +563,7 @@ const StudentForm: React.FC = () => {
           </div>
 
           {/* Check-in Statistics */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+          <div key={checkInStatsKey} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
             <h2 className="text-xl font-semibold text-white mb-6">Check-in Statistics</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
