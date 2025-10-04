@@ -282,6 +282,181 @@ const StudentModalityForm: React.FC = () => {
             </div>
           </div>
 
+          {/* Training Plan Details - New Section */}
+          <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-sm border border-purple-400/20 rounded-2xl p-6 shadow-lg shadow-purple-500/10">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+              <span className="mr-3 text-3xl">📋</span>
+              {t('training-plan-overview')}
+            </h2>
+            
+            {(() => {
+              // Calculate check-ins for this section
+              let currentCheckIns = 0;
+              if (connection.studentId && connection.modalityIds.length > 0 && connection.assignmentDate) {
+                const allStudentCheckIns = getCheckInsByStudent(connection.studentId);
+                const startDate = new Date(connection.assignmentDate);
+                const endDate = connection.expectedClosingDate ? new Date(connection.expectedClosingDate) : new Date();
+                
+                const modalities = useFightModalities().modalities;
+                const selectedModalityNames = modalities
+                  .filter(m => connection.modalityIds.includes(m.modalityId))
+                  .map(m => m.name);
+                
+                const relevantCheckIns = allStudentCheckIns.filter(checkIn => {
+                  const checkInDate = new Date(checkIn.checkInDate);
+                  const isInDateRange = checkInDate >= startDate && checkInDate <= endDate;
+                  const hasRelevantModality = checkIn.fightModalities.some(modality => 
+                    selectedModalityNames.includes(modality)
+                  );
+                  return isInDateRange && hasRelevantModality;
+                });
+                
+                currentCheckIns = relevantCheckIns.length;
+              }
+              
+              return (
+                <div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Plan Information */}
+              <div className="space-y-6">
+                {/* Plan Duration */}
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
+                    <span className="mr-2">⏱️</span>
+                    {t('plan-duration')}
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{t('assignment-date')}:</span>
+                      <span className="text-white font-medium">{connection.assignmentDate}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{t('expected-closing-date')}:</span>
+                      <span className="text-white font-medium">{connection.expectedClosingDate || 'Not set'}</span>
+                    </div>
+                    {connection.assignmentDate && connection.expectedClosingDate && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-300">{t('plan-duration')}:</span>
+                        <span className="text-white font-medium">
+                          {Math.ceil((new Date(connection.expectedClosingDate).getTime() - new Date(connection.assignmentDate).getTime()) / (1000 * 60 * 60 * 24))} days
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Belt Progression */}
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
+                    <span className="mr-2">🥋</span>
+                    {t('target-belt-progression')}
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{t('current-belt')}:</span>
+                      <span className="text-white font-medium">{connection.beltLevelAtStart || 'Not set'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{t('target-belt')}:</span>
+                      <span className="text-white font-medium">Next Level</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{t('belt-progression')}:</span>
+                      <span className="text-white font-medium">
+                        {connection.stripesAtStart || 0} → {connection.expectedStripesAtConclusion || 0} {t('check-ins')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column - Training Objectives */}
+              <div className="space-y-6">
+                {/* Training Frequency */}
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
+                    <span className="mr-2">📅</span>
+                    {t('training-frequency')}
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{t('recommended-sessions')}:</span>
+                      <span className="text-white font-medium">3-4 sessions</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{t('expected-count-check-in')}:</span>
+                      <span className="text-white font-medium">{connection.expectedCheckInCount || 0}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{t('attendance-rate')}:</span>
+                      <span className="text-white font-medium">
+                        {connection.expectedCheckInCount ? Math.round((currentCheckIns / connection.expectedCheckInCount) * 100) : 0}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Plan Objectives */}
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
+                    <span className="mr-2">🎯</span>
+                    {t('plan-objectives')}
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span className="text-gray-300 text-sm">{t('skill-development')}</span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span className="text-gray-300 text-sm">{t('technique-focus')}</span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span className="text-gray-300 text-sm">{t('fitness-goals')}</span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span className="text-gray-300 text-sm">{t('competition-readiness')}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Performance Metrics Row */}
+            <div className="mt-6 bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                <span className="mr-2">📊</span>
+                {t('performance-metrics')}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-400 mb-1">
+                    {connection.expectedCheckInCount ? Math.round((currentCheckIns / connection.expectedCheckInCount) * 100) : 0}%
+                  </div>
+                  <div className="text-sm text-gray-400">{t('attendance-rate')}</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-400 mb-1">
+                    {connection.modalityIds.length}
+                  </div>
+                  <div className="text-sm text-gray-400">Modalities</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-400 mb-1">
+                    {connection.expectedCheckInCount ? Math.ceil(connection.expectedCheckInCount / 4) : 0}
+                  </div>
+                  <div className="text-sm text-gray-400">Weeks</div>
+                </div>
+              </div>
+            </div>
+                </div>
+              );
+            })()}
+          </div>
+
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
             <h2 className="text-xl font-semibold text-white mb-6">{t('assignment-information')}</h2>
             

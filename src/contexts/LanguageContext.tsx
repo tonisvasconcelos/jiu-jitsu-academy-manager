@@ -367,7 +367,29 @@ const translations = {
     'expected-stripes-degrees-conclusions': 'Expected Stripes/Degrees at Conclusions',
     'expected-stripes-conclusions-description': 'Expected number of stripes or degrees the student should have when concluding this training plan',
     'from-to': 'From {startDate} to {endDate}',
-    'check-ins': 'check-ins'
+    'check-ins': 'check-ins',
+    
+    // Training Plan Details
+    'training-plan-overview': 'Training Plan Overview',
+    'plan-duration': 'Plan Duration',
+    'target-belt-progression': 'Target Belt Progression',
+    'current-belt': 'Current Belt',
+    'target-belt': 'Target Belt',
+    'belt-progression': 'Belt Progression',
+    'training-frequency': 'Training Frequency',
+    'recommended-sessions': 'Recommended Sessions per Week',
+    'plan-objectives': 'Plan Objectives',
+    'skill-development': 'Skill Development',
+    'technique-focus': 'Technique Focus',
+    'fitness-goals': 'Fitness Goals',
+    'competition-readiness': 'Competition Readiness',
+    'milestone-tracking': 'Milestone Tracking',
+    'quarterly-reviews': 'Quarterly Reviews',
+    'belt-testing': 'Belt Testing',
+    'performance-metrics': 'Performance Metrics',
+    'attendance-rate': 'Attendance Rate',
+    'skill-assessment': 'Skill Assessment',
+    'instructor-feedback': 'Instructor Feedback'
   },
   PTB: {
     // Main Menu Items
@@ -724,7 +746,29 @@ const translations = {
     'expected-stripes-degrees-conclusions': 'Faixas/Graus Esperados na Conclusão',
     'expected-stripes-conclusions-description': 'Número esperado de faixas ou graus que o aluno deve ter ao concluir este plano de treinamento',
     'from-to': 'De {startDate} a {endDate}',
-    'check-ins': 'check-ins'
+    'check-ins': 'check-ins',
+    
+    // Training Plan Details
+    'training-plan-overview': 'Visão Geral do Plano de Treinamento',
+    'plan-duration': 'Duração do Plano',
+    'target-belt-progression': 'Progressão de Faixa Alvo',
+    'current-belt': 'Faixa Atual',
+    'target-belt': 'Faixa Alvo',
+    'belt-progression': 'Progressão de Faixa',
+    'training-frequency': 'Frequência de Treinamento',
+    'recommended-sessions': 'Sessões Recomendadas por Semana',
+    'plan-objectives': 'Objetivos do Plano',
+    'skill-development': 'Desenvolvimento de Habilidades',
+    'technique-focus': 'Foco em Técnicas',
+    'fitness-goals': 'Metas de Condicionamento',
+    'competition-readiness': 'Preparação para Competições',
+    'milestone-tracking': 'Acompanhamento de Marcos',
+    'quarterly-reviews': 'Avaliações Trimestrais',
+    'belt-testing': 'Teste de Faixa',
+    'performance-metrics': 'Métricas de Desempenho',
+    'attendance-rate': 'Taxa de Frequência',
+    'skill-assessment': 'Avaliação de Habilidades',
+    'instructor-feedback': 'Feedback do Instrutor'
   },
   GER: {
     // Main Menu Items
@@ -975,7 +1019,29 @@ const translations = {
     'expected-stripes-degrees-conclusions': 'Erwartete Streifen/Grade bei Abschluss',
     'expected-stripes-conclusions-description': 'Erwartete Anzahl von Streifen oder Graden, die der Schüler beim Abschluss dieses Trainingsplans haben sollte',
     'from-to': 'Von {startDate} bis {endDate}',
-    'check-ins': 'Check-ins'
+    'check-ins': 'Check-ins',
+    
+    // Training Plan Details
+    'training-plan-overview': 'Trainingsplan-Übersicht',
+    'plan-duration': 'Plan-Dauer',
+    'target-belt-progression': 'Ziel-Gürtel-Fortschritt',
+    'current-belt': 'Aktueller Gürtel',
+    'target-belt': 'Ziel-Gürtel',
+    'belt-progression': 'Gürtel-Fortschritt',
+    'training-frequency': 'Trainingsfrequenz',
+    'recommended-sessions': 'Empfohlene Sitzungen pro Woche',
+    'plan-objectives': 'Plan-Ziele',
+    'skill-development': 'Fähigkeitsentwicklung',
+    'technique-focus': 'Technik-Fokus',
+    'fitness-goals': 'Fitness-Ziele',
+    'competition-readiness': 'Wettkampfbereitschaft',
+    'milestone-tracking': 'Meilenstein-Verfolgung',
+    'quarterly-reviews': 'Vierteljährliche Bewertungen',
+    'belt-testing': 'Gürtel-Test',
+    'performance-metrics': 'Leistungsmetriken',
+    'attendance-rate': 'Anwesenheitsrate',
+    'skill-assessment': 'Fähigkeitsbewertung',
+    'instructor-feedback': 'Trainer-Feedback'
   },
   FRA: {
     // Main Menu Items
@@ -1226,7 +1292,29 @@ const translations = {
     'expected-stripes-degrees-conclusions': 'Rayures/Degrés Attendus à la Conclusion',
     'expected-stripes-conclusions-description': 'Nombre attendu de rayures ou degrés que l\'étudiant devrait avoir en concluant ce plan d\'entraînement',
     'from-to': 'Du {startDate} au {endDate}',
-    'check-ins': 'enregistrements'
+    'check-ins': 'enregistrements',
+    
+    // Training Plan Details
+    'training-plan-overview': 'Aperçu du Plan d\'Entraînement',
+    'plan-duration': 'Durée du Plan',
+    'target-belt-progression': 'Progression de Ceinture Cible',
+    'current-belt': 'Ceinture Actuelle',
+    'target-belt': 'Ceinture Cible',
+    'belt-progression': 'Progression de Ceinture',
+    'training-frequency': 'Fréquence d\'Entraînement',
+    'recommended-sessions': 'Sessions Recommandées par Semaine',
+    'plan-objectives': 'Objectifs du Plan',
+    'skill-development': 'Développement des Compétences',
+    'technique-focus': 'Focus sur la Technique',
+    'fitness-goals': 'Objectifs de Conditionnement',
+    'competition-readiness': 'Préparation à la Compétition',
+    'milestone-tracking': 'Suivi des Jalons',
+    'quarterly-reviews': 'Évaluations Trimestrielles',
+    'belt-testing': 'Test de Ceinture',
+    'performance-metrics': 'Métriques de Performance',
+    'attendance-rate': 'Taux de Présence',
+    'skill-assessment': 'Évaluation des Compétences',
+    'instructor-feedback': 'Commentaires de l\'Instructeur'
   },
   ESP: {
     // Main Menu Items
@@ -1477,7 +1565,29 @@ const translations = {
     'expected-stripes-degrees-conclusions': 'Rayas/Grados Esperados en la Conclusión',
     'expected-stripes-conclusions-description': 'Número esperado de rayas o grados que el estudiante debería tener al concluir este plan de entrenamiento',
     'from-to': 'Del {startDate} al {endDate}',
-    'check-ins': 'registros'
+    'check-ins': 'registros',
+    
+    // Training Plan Details
+    'training-plan-overview': 'Resumen del Plan de Entrenamiento',
+    'plan-duration': 'Duración del Plan',
+    'target-belt-progression': 'Progresión de Cinturón Objetivo',
+    'current-belt': 'Cinturón Actual',
+    'target-belt': 'Cinturón Objetivo',
+    'belt-progression': 'Progresión de Cinturón',
+    'training-frequency': 'Frecuencia de Entrenamiento',
+    'recommended-sessions': 'Sesiones Recomendadas por Semana',
+    'plan-objectives': 'Objetivos del Plan',
+    'skill-development': 'Desarrollo de Habilidades',
+    'technique-focus': 'Enfoque en Técnicas',
+    'fitness-goals': 'Metas de Acondicionamiento',
+    'competition-readiness': 'Preparación para Competencias',
+    'milestone-tracking': 'Seguimiento de Hitos',
+    'quarterly-reviews': 'Evaluaciones Trimestrales',
+    'belt-testing': 'Prueba de Cinturón',
+    'performance-metrics': 'Métricas de Rendimiento',
+    'attendance-rate': 'Tasa de Asistencia',
+    'skill-assessment': 'Evaluación de Habilidades',
+    'instructor-feedback': 'Comentarios del Instructor'
   },
   JPN: {
     // Main Menu Items
@@ -1728,7 +1838,29 @@ const translations = {
     'expected-stripes-degrees-conclusions': '結論時の予想ストライプ/度数',
     'expected-stripes-conclusions-description': 'このトレーニングプランを完了する時に学生が持つべき予想ストライプまたは度数',
     'from-to': '{startDate}から{endDate}まで',
-    'check-ins': 'チェックイン'
+    'check-ins': 'チェックイン',
+    
+    // Training Plan Details
+    'training-plan-overview': 'トレーニングプラン概要',
+    'plan-duration': 'プラン期間',
+    'target-belt-progression': '目標ベルト進行',
+    'current-belt': '現在のベルト',
+    'target-belt': '目標ベルト',
+    'belt-progression': 'ベルト進行',
+    'training-frequency': 'トレーニング頻度',
+    'recommended-sessions': '週推奨セッション数',
+    'plan-objectives': 'プラン目標',
+    'skill-development': 'スキル開発',
+    'technique-focus': 'テクニックフォーカス',
+    'fitness-goals': 'フィットネス目標',
+    'competition-readiness': '競技準備',
+    'milestone-tracking': 'マイルストーン追跡',
+    'quarterly-reviews': '四半期レビュー',
+    'belt-testing': 'ベルトテスト',
+    'performance-metrics': 'パフォーマンス指標',
+    'attendance-rate': '出席率',
+    'skill-assessment': 'スキル評価',
+    'instructor-feedback': 'インストラクターフィードバック'
   },
   ITA: {
     // Main Menu Items
@@ -1979,7 +2111,29 @@ const translations = {
     'expected-stripes-degrees-conclusions': 'Strisce/Gradi Previsti alla Conclusione',
     'expected-stripes-conclusions-description': 'Numero previsto di strisce o gradi che lo studente dovrebbe avere nel concludere questo piano di allenamento',
     'from-to': 'Dal {startDate} al {endDate}',
-    'check-ins': 'registrazioni'
+    'check-ins': 'registrazioni',
+    
+    // Training Plan Details
+    'training-plan-overview': 'Panoramica del Piano di Allenamento',
+    'plan-duration': 'Durata del Piano',
+    'target-belt-progression': 'Progressione Cintura Obiettivo',
+    'current-belt': 'Cintura Attuale',
+    'target-belt': 'Cintura Obiettivo',
+    'belt-progression': 'Progressione Cintura',
+    'training-frequency': 'Frequenza di Allenamento',
+    'recommended-sessions': 'Sessioni Raccomandate per Settimana',
+    'plan-objectives': 'Obiettivi del Piano',
+    'skill-development': 'Sviluppo delle Abilità',
+    'technique-focus': 'Focus sulla Tecnica',
+    'fitness-goals': 'Obiettivi di Fitness',
+    'competition-readiness': 'Preparazione alla Competizione',
+    'milestone-tracking': 'Tracciamento dei Traguardi',
+    'quarterly-reviews': 'Valutazioni Trimestrali',
+    'belt-testing': 'Test di Cintura',
+    'performance-metrics': 'Metriche di Performance',
+    'attendance-rate': 'Tasso di Presenza',
+    'skill-assessment': 'Valutazione delle Abilità',
+    'instructor-feedback': 'Feedback dell\'Istruttore'
   },
   RUS: {
     // Main Menu Items
@@ -2230,7 +2384,29 @@ const translations = {
     'expected-stripes-degrees-conclusions': 'Ожидаемые Полосы/Степени при Завершении',
     'expected-stripes-conclusions-description': 'Ожидаемое количество полос или степеней, которые студент должен иметь при завершении этого плана тренировки',
     'from-to': 'С {startDate} по {endDate}',
-    'check-ins': 'регистрации'
+    'check-ins': 'регистрации',
+    
+    // Training Plan Details
+    'training-plan-overview': 'Обзор Плана Тренировки',
+    'plan-duration': 'Продолжительность Плана',
+    'target-belt-progression': 'Целевая Прогрессия Пояса',
+    'current-belt': 'Текущий Пояс',
+    'target-belt': 'Целевой Пояс',
+    'belt-progression': 'Прогрессия Пояса',
+    'training-frequency': 'Частота Тренировок',
+    'recommended-sessions': 'Рекомендуемые Сессии в Неделю',
+    'plan-objectives': 'Цели Плана',
+    'skill-development': 'Развитие Навыков',
+    'technique-focus': 'Фокус на Технике',
+    'fitness-goals': 'Цели Фитнеса',
+    'competition-readiness': 'Готовность к Соревнованиям',
+    'milestone-tracking': 'Отслеживание Вех',
+    'quarterly-reviews': 'Квартальные Обзоры',
+    'belt-testing': 'Тестирование Пояса',
+    'performance-metrics': 'Метрики Производительности',
+    'attendance-rate': 'Показатель Посещаемости',
+    'skill-assessment': 'Оценка Навыков',
+    'instructor-feedback': 'Обратная Связь Инструктора'
   },
   ARA: {
     // Main Menu Items
@@ -2481,7 +2657,29 @@ const translations = {
     'expected-stripes-degrees-conclusions': 'الخطوط/الدرجات المتوقعة عند الانتهاء',
     'expected-stripes-conclusions-description': 'العدد المتوقع من الخطوط أو الدرجات التي يجب أن يمتلكها الطالب عند إنهاء خطة التدريب هذه',
     'from-to': 'من {startDate} إلى {endDate}',
-    'check-ins': 'تسجيلات'
+    'check-ins': 'تسجيلات',
+    
+    // Training Plan Details
+    'training-plan-overview': 'نظرة عامة على خطة التدريب',
+    'plan-duration': 'مدة الخطة',
+    'target-belt-progression': 'تقدم الحزام المستهدف',
+    'current-belt': 'الحزام الحالي',
+    'target-belt': 'الحزام المستهدف',
+    'belt-progression': 'تقدم الحزام',
+    'training-frequency': 'تكرار التدريب',
+    'recommended-sessions': 'الجلسات الموصى بها في الأسبوع',
+    'plan-objectives': 'أهداف الخطة',
+    'skill-development': 'تطوير المهارات',
+    'technique-focus': 'التركيز على التقنية',
+    'fitness-goals': 'أهداف اللياقة البدنية',
+    'competition-readiness': 'الاستعداد للمنافسة',
+    'milestone-tracking': 'تتبع المعالم',
+    'quarterly-reviews': 'المراجعات الربعية',
+    'belt-testing': 'اختبار الحزام',
+    'performance-metrics': 'مقاييس الأداء',
+    'attendance-rate': 'معدل الحضور',
+    'skill-assessment': 'تقييم المهارات',
+    'instructor-feedback': 'ملاحظات المدرب'
   },
   KOR: {
     // Main Menu Items
@@ -2732,7 +2930,29 @@ const translations = {
     'expected-stripes-degrees-conclusions': '완료 시 예상 줄무늬/도수',
     'expected-stripes-conclusions-description': '이 훈련 계획을 완료할 때 학생이 가져야 할 예상 줄무늬 또는 도수',
     'from-to': '{startDate}부터 {endDate}까지',
-    'check-ins': '체크인'
+    'check-ins': '체크인',
+    
+    // Training Plan Details
+    'training-plan-overview': '훈련 계획 개요',
+    'plan-duration': '계획 기간',
+    'target-belt-progression': '목표 벨트 진행',
+    'current-belt': '현재 벨트',
+    'target-belt': '목표 벨트',
+    'belt-progression': '벨트 진행',
+    'training-frequency': '훈련 빈도',
+    'recommended-sessions': '주당 권장 세션',
+    'plan-objectives': '계획 목표',
+    'skill-development': '기술 개발',
+    'technique-focus': '기술 집중',
+    'fitness-goals': '피트니스 목표',
+    'competition-readiness': '경쟁 준비',
+    'milestone-tracking': '마일스톤 추적',
+    'quarterly-reviews': '분기별 검토',
+    'belt-testing': '벨트 테스트',
+    'performance-metrics': '성능 지표',
+    'attendance-rate': '출석률',
+    'skill-assessment': '기술 평가',
+    'instructor-feedback': '강사 피드백'
   }
 }
 
