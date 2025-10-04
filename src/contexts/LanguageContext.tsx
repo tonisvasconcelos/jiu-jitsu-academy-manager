@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
-export type Language = 'en' | 'pt'
+export type Language = 'ENU' | 'PTB' | 'GER' | 'FRA' | 'ESP'
 
 interface LanguageContextType {
   language: Language
@@ -12,7 +12,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 // Translation keys
 const translations = {
-  en: {
+  ENU: {
     // Main Menu Items
     'students': 'Students',
     'teachers': 'Teachers',
@@ -146,7 +146,7 @@ const translations = {
     'save-settings': 'Save Settings',
     'settings-saved': 'Settings saved successfully!'
   },
-  pt: {
+  PTB: {
     // Main Menu Items
     'students': 'Alunos',
     'teachers': 'Professores',
@@ -279,16 +279,100 @@ const translations = {
     'english': 'Inglês',
     'save-settings': 'Salvar Configurações',
     'settings-saved': 'Configurações salvas com sucesso!'
+  },
+  GER: {
+    // Main Menu Items
+    'students': 'Schüler',
+    'teachers': 'Lehrer',
+    'championships': 'Meisterschaften',
+    'classes': 'Klassen',
+    'fight-plans': 'Kampfpläne',
+    'fight-modalities': 'Kampfmodalitäten',
+    'quality-evaluation': 'Qualität & Bewertung',
+    'branches': 'Zweigstellen',
+    'schedules-checkins': 'Zeitpläne & Check-ins',
+    'administration': 'Administration',
+    'dashboard': 'Dashboard',
+    'management-system': 'Verwaltungssystem',
+    'welcome-message': 'Willkommen zu Ihrem Jiu-Jitsu-Akademie-Verwaltungssystem - Moderne UI bereitgestellt!',
+    'welcome-admin': 'Willkommen zurück, Admin',
+    'total-students': 'Gesamte Schüler',
+    'instructors': 'Ausbilder',
+    'recent-activity': 'Letzte Aktivität',
+    'quick-actions': 'Schnellaktionen',
+    'add-new-student': 'Neuen Schüler hinzufügen',
+    'add-new-instructor': 'Neuen Ausbilder hinzufügen',
+    'add-martial-art-type': 'Kampfkunsttyp hinzufügen',
+    'no-recent-activity': 'Keine letzte Aktivität',
+    'start-adding': 'Beginnen Sie mit dem Hinzufügen von Schülern oder Ausbildern',
+    'save-settings': 'Einstellungen speichern',
+    'settings-saved': 'Einstellungen erfolgreich gespeichert!'
+  },
+  FRA: {
+    // Main Menu Items
+    'students': 'Étudiants',
+    'teachers': 'Professeurs',
+    'championships': 'Championnats',
+    'classes': 'Classes',
+    'fight-plans': 'Plans de Combat',
+    'fight-modalities': 'Modalités de Combat',
+    'quality-evaluation': 'Qualité & Évaluation',
+    'branches': 'Succursales',
+    'schedules-checkins': 'Horaires & Enregistrements',
+    'administration': 'Administration',
+    'dashboard': 'Tableau de Bord',
+    'management-system': 'Système de Gestion',
+    'welcome-message': 'Bienvenue dans votre Système de Gestion d\'Académie de Jiu-Jitsu - Interface Moderne Déployée!',
+    'welcome-admin': 'Bon retour, Admin',
+    'total-students': 'Total des Étudiants',
+    'instructors': 'Instructeurs',
+    'recent-activity': 'Activité Récente',
+    'quick-actions': 'Actions Rapides',
+    'add-new-student': 'Ajouter un Nouvel Étudiant',
+    'add-new-instructor': 'Ajouter un Nouvel Instructeur',
+    'add-martial-art-type': 'Ajouter un Type d\'Art Martial',
+    'no-recent-activity': 'Aucune activité récente',
+    'start-adding': 'Commencez par ajouter des étudiants ou des instructeurs',
+    'save-settings': 'Enregistrer les Paramètres',
+    'settings-saved': 'Paramètres enregistrés avec succès!'
+  },
+  ESP: {
+    // Main Menu Items
+    'students': 'Estudiantes',
+    'teachers': 'Profesores',
+    'championships': 'Campeonatos',
+    'classes': 'Clases',
+    'fight-plans': 'Planes de Lucha',
+    'fight-modalities': 'Modalidades de Lucha',
+    'quality-evaluation': 'Calidad & Evaluación',
+    'branches': 'Sucursales',
+    'schedules-checkins': 'Horarios & Registros',
+    'administration': 'Administración',
+    'dashboard': 'Panel de Control',
+    'management-system': 'Sistema de Gestión',
+    'welcome-message': '¡Bienvenido a tu Sistema de Gestión de Academia de Jiu-Jitsu - Interfaz Moderna Desplegada!',
+    'welcome-admin': 'Bienvenido de vuelta, Admin',
+    'total-students': 'Total de Estudiantes',
+    'instructors': 'Instructores',
+    'recent-activity': 'Actividad Reciente',
+    'quick-actions': 'Acciones Rápidas',
+    'add-new-student': 'Agregar Nuevo Estudiante',
+    'add-new-instructor': 'Agregar Nuevo Instructor',
+    'add-martial-art-type': 'Agregar Tipo de Arte Marcial',
+    'no-recent-activity': 'Sin actividad reciente',
+    'start-adding': 'Comience agregando estudiantes o instructores',
+    'save-settings': 'Guardar Configuración',
+    'settings-saved': '¡Configuración guardada exitosamente!'
   }
 }
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('en')
+  const [language, setLanguage] = useState<Language>('PTB')
 
   // Load language from localStorage on mount
   useEffect(() => {
     const savedLanguage = localStorage.getItem('academy-language') as Language
-    if (savedLanguage && (savedLanguage === 'en' || savedLanguage === 'pt')) {
+    if (savedLanguage && ['ENU', 'PTB', 'GER', 'FRA', 'ESP'].includes(savedLanguage)) {
       setLanguage(savedLanguage)
     }
   }, [])

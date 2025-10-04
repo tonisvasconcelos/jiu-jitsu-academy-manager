@@ -21,6 +21,7 @@ import Championships from './pages/Championships'
 import Administration from './pages/Administration'
 import UserProfiles from './pages/UserProfiles'
 import AppSettings from './pages/AppSettings'
+import CompanyInfo from './pages/CompanyInfo'
 import StudentRegistration from './pages/StudentRegistration'
 import StudentForm from './pages/StudentForm'
 import TeacherRegistration from './pages/TeacherRegistration'
@@ -137,6 +138,7 @@ function App() {
                     
                     {/* Sub-menu Routes - Administration */}
                     <Route path="/admin/profiles" element={<UserProfiles />} />
+                    <Route path="/admin/company" element={<CompanyInfo />} />
                     <Route path="/admin/language" element={<LanguageSelector />} />
                     <Route path="/admin/settings" element={<AppSettings />} />
                     

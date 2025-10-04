@@ -50,6 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       path: '/admin',
       subItems: [
         { id: 'user-profiles', title: 'User Profiles', path: '/admin/profiles', icon: '👤' },
+        { id: 'company-info', title: 'Company Info & Settings', path: '/admin/company', icon: '🏢' },
         { id: 'language-settings', title: 'Language Settings', path: '/admin/language', icon: '🌐' },
         { id: 'app-settings', title: 'App Settings', path: '/admin/settings', icon: '⚙️' }
       ]
