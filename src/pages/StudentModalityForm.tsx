@@ -14,6 +14,83 @@ const StudentModalityForm: React.FC = () => {
   const { modalities } = useFightModalities()
   const { addConnection, updateConnection, getConnection } = useStudentModalities()
   const { getCheckInsByStudent } = useClassCheckIns()
+
+  // Helper function to render belt icon
+  const renderBeltIcon = (beltLevel: string) => {
+    const beltColors: { [key: string]: string } = {
+      'white': '#FFFFFF',
+      'blue': '#0066CC',
+      'purple': '#6633CC',
+      'brown': '#8B4513',
+      'black': '#000000',
+      'kids-white': '#FFFFFF',
+      'kids-gray-white': '#C0C0C0',
+      'kids-gray': '#808080',
+      'kids-gray-black': '#404040',
+      'kids-yellow-white': '#FFD700',
+      'kids-yellow': '#FFA500',
+      'kids-yellow-black': '#FF8C00',
+      'kids-orange-white': '#FFA500',
+      'kids-orange': '#FF8C00',
+      'kids-orange-black': '#FF4500',
+      'kids-green-white': '#90EE90',
+      'kids-green': '#32CD32',
+      'kids-green-black': '#228B22',
+      'judo-kids-white': '#FFFFFF',
+      'judo-kids-white-yellow': '#FFD700',
+      'judo-kids-yellow': '#FFA500',
+      'judo-kids-yellow-orange': '#FF8C00',
+      'judo-kids-orange': '#FF4500',
+      'judo-kids-orange-green': '#32CD32',
+      'judo-kids-green': '#228B22'
+    };
+
+    const color = beltColors[beltLevel] || '#FFFFFF';
+    
+    return (
+      <div className="flex items-center">
+        <div 
+          className="w-8 h-4 rounded border-2 border-gray-300 flex items-center justify-center"
+          style={{ backgroundColor: color }}
+        >
+          <span className="text-xs font-bold" style={{ color: color === '#FFFFFF' ? '#000000' : '#FFFFFF' }}>
+            {beltLevel.includes('kids') ? 'K' : beltLevel.charAt(0).toUpperCase()}
+          </span>
+        </div>
+        <span className="ml-2 text-sm text-gray-300">
+          {beltLevel.includes('kids') ? beltLevel.replace('kids-', '').replace('judo-kids-', '') : beltLevel}
+        </span>
+      </div>
+    );
+  };
+
+  // Helper function to render stripe icons
+  const renderStripeIcons = (count: number) => {
+    const maxStripes = 4;
+    const stripes = [];
+    
+    for (let i = 0; i < maxStripes; i++) {
+      stripes.push(
+        <div
+          key={i}
+          className={`w-3 h-1 rounded ${
+            i < count ? 'bg-yellow-400' : 'bg-gray-600'
+          }`}
+        />
+      );
+    }
+    
+    return (
+      <div className="flex items-center space-x-1">
+        <div className="flex space-x-1">
+          {stripes}
+        </div>
+        <span className="ml-2 text-sm text-gray-300">
+          {count}/{maxStripes}
+        </span>
+      </div>
+    );
+  };
   
   const [connection, setConnection] = useState<StudentModalityConnection>({
     connectionId: '',
@@ -423,57 +500,36 @@ const StudentModalityForm: React.FC = () => {
                     {t('target-progression')}
                   </h3>
                   <div className="space-y-4">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
                       <span className="text-gray-300">{t('current-belt')}:</span>
-                      <span className="text-white font-medium">{connection.beltLevelAtStart || 'Not set'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-300">{t('target-belt')}:</span>
-                      <span className="text-white font-medium">
-                        {connection.expectedBeltAtClosing ? 
-                          (() => {
-                            // Convert belt value to display name
-                            const beltMap: { [key: string]: string } = {
-                              'white': t('white-belt'),
-                              'blue': t('blue-belt'),
-                              'purple': t('purple-belt'),
-                              'brown': t('brown-belt'),
-                              'black': t('black-belt'),
-                              'kids-white': 'White',
-                              'kids-gray-white': 'Gray/White',
-                              'kids-gray': 'Gray',
-                              'kids-gray-black': 'Gray/Black',
-                              'kids-yellow-white': 'Yellow/White',
-                              'kids-yellow': 'Yellow',
-                              'kids-yellow-black': 'Yellow/Black',
-                              'kids-orange-white': 'Orange/White',
-                              'kids-orange': 'Orange',
-                              'kids-orange-black': 'Orange/Black',
-                              'kids-green-white': 'Green/White',
-                              'kids-green': 'Green',
-                              'kids-green-black': 'Green/Black',
-                              'judo-kids-white': 'White',
-                              'judo-kids-white-yellow': 'White/Yellow',
-                              'judo-kids-yellow': 'Yellow',
-                              'judo-kids-yellow-orange': 'Yellow/Orange',
-                              'judo-kids-orange': 'Orange',
-                              'judo-kids-orange-green': 'Orange/Green',
-                              'judo-kids-green': 'Green'
-                            };
-                            return beltMap[connection.expectedBeltAtClosing] || connection.expectedBeltAtClosing;
-                          })() : 
-                          'Not set'
+                      <div className="flex items-center">
+                        {connection.beltLevelAtStart ? 
+                          renderBeltIcon(connection.beltLevelAtStart) : 
+                          <span className="text-gray-400 text-sm">Not set</span>
                         }
-                      </span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-300">{t('target-belt')}:</span>
+                      <div className="flex items-center">
+                        {connection.expectedBeltAtClosing ? 
+                          renderBeltIcon(connection.expectedBeltAtClosing) : 
+                          <span className="text-gray-400 text-sm">Not set</span>
+                        }
+                      </div>
                     </div>
                     
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
                       <span className="text-gray-300">{t('total-stripes-degrees-start')}:</span>
-                      <span className="text-white font-medium">{connection.stripesAtStart || 0}</span>
+                      <div className="flex items-center">
+                        {renderStripeIcons(connection.stripesAtStart || 0)}
+                      </div>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
                       <span className="text-gray-300">{t('expected-stripes-degrees-conclusions')}:</span>
-                      <span className="text-white font-medium">{connection.expectedStripesAtConclusion || 0}</span>
+                      <div className="flex items-center">
+                        {renderStripeIcons(connection.expectedStripesAtConclusion || 0)}
+                      </div>
                     </div>
                   </div>
                 </div>
