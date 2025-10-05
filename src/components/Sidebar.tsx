@@ -41,20 +41,22 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
   const toggleMenu = (menuId: string) => {
     setExpandedMenus(prev => {
-      const newExpanded = prev.includes(menuId) 
-        ? prev.filter(id => id !== menuId)
-        : [...prev, menuId]
+      // If the menu is already expanded, close it
+      if (prev.includes(menuId)) {
+        return prev.filter(id => id !== menuId)
+      }
+      
+      // If the menu is not expanded, close all others and open this one
+      const newExpanded = [menuId]
       
       // Update menu positions when expanding
-      if (!prev.includes(menuId) && newExpanded.includes(menuId)) {
-        const menuElement = menuRefs.current[menuId]
-        if (menuElement) {
-          const rect = menuElement.getBoundingClientRect()
-          setMenuPositions(prev => ({
-            ...prev,
-            [menuId]: rect.top
-          }))
-        }
+      const menuElement = menuRefs.current[menuId]
+      if (menuElement) {
+        const rect = menuElement.getBoundingClientRect()
+        setMenuPositions(prev => ({
+          ...prev,
+          [menuId]: rect.top
+        }))
       }
       
       return newExpanded
