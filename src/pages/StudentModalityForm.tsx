@@ -386,8 +386,22 @@ const StudentModalityForm: React.FC = () => {
                         <span className="text-lg font-bold text-white">{actualCheckIns} / {expectedCheckIns}</span>
                       </div>
                       
-                      {/* Modern Progress Bar Container */}
+                      {/* Modern Progress Bar Container with Start/End Indicators */}
                       <div className="relative">
+                        {/* Starting Point Indicator (Left) */}
+                        <div className="absolute -left-20 top-1/2 transform -translate-y-1/2">
+                          <div className="bg-gray-800/90 border border-gray-600 rounded-lg p-2 min-w-[80px] text-center">
+                            <div className="text-xs text-gray-300 mb-1">{t('start')}</div>
+                            <div className="flex items-center justify-center mb-1">
+                              {connection.beltLevelAtStart ? renderBeltIcon(connection.beltLevelAtStart) : <span className="text-gray-400 text-xs">Not set</span>}
+                            </div>
+                            <div className="flex items-center justify-center">
+                              {renderStripeIcons(connection.stripesAtStart || 0)}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Progress Bar */}
                         <div className="w-full bg-gray-700/50 rounded-full h-6 overflow-hidden shadow-inner">
                           <div 
                             className="h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
@@ -397,6 +411,19 @@ const StudentModalityForm: React.FC = () => {
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 animate-pulse"></div>
                             {/* Shine effect */}
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-pulse"></div>
+                          </div>
+                        </div>
+                        
+                        {/* Target Point Indicator (Right) */}
+                        <div className="absolute -right-20 top-1/2 transform -translate-y-1/2">
+                          <div className="bg-gray-800/90 border border-gray-600 rounded-lg p-2 min-w-[80px] text-center">
+                            <div className="text-xs text-gray-300 mb-1">{t('target')}</div>
+                            <div className="flex items-center justify-center mb-1">
+                              {connection.expectedBeltAtClosing ? renderBeltIcon(connection.expectedBeltAtClosing) : <span className="text-gray-400 text-xs">Not set</span>}
+                            </div>
+                            <div className="flex items-center justify-center">
+                              {renderStripeIcons(connection.expectedStripesAtConclusion || 0)}
+                            </div>
                           </div>
                         </div>
                         
