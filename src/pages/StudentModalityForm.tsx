@@ -83,6 +83,64 @@ const StudentModalityForm: React.FC = () => {
     }))
   }
 
+  const handleShareProgress = () => {
+    if (!connection.studentId || connection.modalityIds.length === 0 || !connection.assignmentDate || !connection.expectedCheckInCount) {
+      return;
+    }
+
+    const startDate = connection.assignmentDate;
+    const endDate = connection.closingDate || connection.expectedClosingDate || new Date().toISOString().split('T')[0];
+    
+    // Get all check-ins for the student
+    const allStudentCheckIns = getCheckInsByStudent(connection.studentId);
+    
+    // Filter by date range
+    const checkInsInDateRange = allStudentCheckIns.filter(checkIn => 
+      checkIn.checkInDate >= startDate && checkIn.checkInDate <= endDate
+    );
+    
+    // Filter by selected modalities
+    const selectedModalityNames = modalities
+      .filter(m => connection.modalityIds.includes(m.modalityId))
+      .map(m => m.name);
+    
+    const relevantCheckIns = checkInsInDateRange.filter(checkIn => 
+      checkIn.fightModalities.some(modality => selectedModalityNames.includes(modality))
+    );
+    
+    const actualCheckIns = relevantCheckIns.length;
+    const expectedCheckIns = connection.expectedCheckInCount || 0;
+    const progressPercentage = expectedCheckIns > 0 ? Math.min((actualCheckIns / expectedCheckIns) * 100, 100) : 0;
+    
+    // Get student name
+    const student = students.find(s => s.studentId === connection.studentId);
+    const studentName = student ? `${student.firstName} ${student.lastName}` : 'Student';
+    
+    // Create share text
+    const shareText = t('share-progress-text')
+      .replace('{studentName}', studentName)
+      .replace('{actualCheckIns}', actualCheckIns.toString())
+      .replace('{expectedCheckIns}', expectedCheckIns.toString())
+      .replace('{progressPercentage}', Math.round(progressPercentage).toString());
+    
+    // Try to use Web Share API if available
+    if (navigator.share) {
+      navigator.share({
+        title: t('training-progress'),
+        text: shareText,
+        url: window.location.href
+      }).catch(console.error);
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(shareText).then(() => {
+        alert(t('progress-copied-to-clipboard'));
+      }).catch(() => {
+        // Final fallback: show in alert
+        alert(shareText);
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log('=== STUDENT MODALITY FORM SUBMISSION STARTED ===')
@@ -174,10 +232,21 @@ const StudentModalityForm: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Training Progress - Prominent Section */}
           <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-400/20 rounded-2xl p-6 shadow-lg shadow-blue-500/10">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-              <span className="mr-3 text-3xl">📊</span>
-              {t('training-progress')}
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white flex items-center">
+                <span className="mr-3 text-3xl">📊</span>
+                {t('training-progress')}
+              </h2>
+              <button
+                onClick={handleShareProgress}
+                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors duration-200 border border-white/20 hover:border-white/30"
+                title={t('share-progress')}
+              >
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                </svg>
+              </button>
+            </div>
             
             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
               {(() => {
