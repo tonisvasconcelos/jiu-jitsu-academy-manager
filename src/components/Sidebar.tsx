@@ -194,7 +194,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                       (collapsed && !isMobile) ? 'justify-center px-0 py-4 h-14' : 'px-3 mx-2 py-3'
                     } ${location.pathname.startsWith(menu.path) ? 'bg-white/10' : ''}`}
                   >
-                    <div className="flex items-center justify-between w-full">
+                    <div className={`flex items-center w-full ${(collapsed && !isMobile) ? 'justify-center' : 'justify-between'}`}>
                       <div className="flex items-center relative">
                         <span className="text-lg group-hover:scale-110 transition-transform">{menu.icon}</span>
                         {(!collapsed || isMobile) && (
@@ -239,7 +239,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                 <div className={`fixed ${
                   isMobile 
                     ? 'left-0 top-full mt-1 w-full' 
-                    : 'left-64 ml-2 min-w-max'
+                    : 'left-16 ml-1 min-w-max'
                 } bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-xl z-[60]`}
                 style={{
                   top: isMobile ? 'auto' : `${menuPositions[menu.id] || 0}px`
