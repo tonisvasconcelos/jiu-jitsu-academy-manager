@@ -55,7 +55,10 @@ const StudentModalityForm: React.FC = () => {
           <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-white transform -translate-y-1/2" />
         </div>
         <span className="ml-2 text-sm text-gray-300">
-          {beltLevel.includes('kids') ? beltLevel.replace('kids-', '').replace('judo-kids-', '') : beltLevel}
+          {beltLevel.includes('kids') ? 
+            beltLevel.replace('kids-', '').replace('judo-kids-', '') : 
+            t(`${beltLevel}-belt`)
+          }
         </span>
       </div>
     );
@@ -483,7 +486,15 @@ const StudentModalityForm: React.FC = () => {
                       <div className="flex justify-between">
                         <span className="text-gray-300">{t('plan-duration')}:</span>
                         <span className="text-white font-medium">
-                          {Math.ceil((new Date(connection.expectedClosingDate).getTime() - new Date(connection.assignmentDate).getTime()) / (1000 * 60 * 60 * 24))} days
+                          {Math.ceil((new Date(connection.expectedClosingDate).getTime() - new Date(connection.assignmentDate).getTime()) / (1000 * 60 * 60 * 24))} {t('days')}
+                        </span>
+                      </div>
+                    )}
+                    {connection.expectedClosingDate && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-300">{t('remaining-days')}:</span>
+                        <span className="text-white font-medium">
+                          {Math.max(0, Math.ceil((new Date(connection.expectedClosingDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))} {t('days')}
                         </span>
                       </div>
                     )}
@@ -543,7 +554,7 @@ const StudentModalityForm: React.FC = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-300">{t('recommended-sessions')}:</span>
-                      <span className="text-white font-medium">3-4 sessions</span>
+                      <span className="text-white font-medium">3-4 {t('sessions')}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-300">{t('expected-count-check-in')}:</span>
