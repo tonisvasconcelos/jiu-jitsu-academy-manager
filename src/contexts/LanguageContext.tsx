@@ -56,12 +56,6 @@ const translations = {
     'championship-categories': 'Championship Categories',
     'registrations': 'Registrations',
     'referees-officials': 'Referees / Officials',
-    'championship-sponsors': 'Championship Sponsors'
-    'fight-associations': 'Fight Associations',
-    'affiliations': 'Affiliations',
-    'championship-categories': 'Championship Categories',
-    'registrations': 'Registrations',
-    'referees-officials': 'Referees / Officials',
     'championship-sponsors': 'Championship Sponsors',
     
     // Affiliations
