@@ -390,15 +390,13 @@ const StudentModalityForm: React.FC = () => {
                       <div className="bg-gray-800/20 border border-gray-600/30 rounded-xl p-4">
                         <div className="flex items-center space-x-4">
                           {/* Starting Point Indicator (Left) */}
-                          <div className="flex-shrink-0">
-                            <div className="bg-gray-800/90 border border-gray-600 rounded-lg p-3 min-w-[90px] text-center">
-                              <div className="text-xs text-gray-300 mb-2 font-medium">{t('start')}</div>
-                              <div className="flex items-center justify-center mb-2">
-                                {connection.beltLevelAtStart ? renderBeltIcon(connection.beltLevelAtStart) : <span className="text-gray-400 text-xs">Not set</span>}
-                              </div>
-                              <div className="flex items-center justify-center">
-                                {renderStripeIcons(connection.stripesAtStart || 0)}
-                              </div>
+                          <div className="flex-shrink-0 min-w-[90px] text-center">
+                            <div className="text-sm text-gray-300 mb-2 font-medium">{t('start')}</div>
+                            <div className="flex items-center justify-center mb-2">
+                              {connection.beltLevelAtStart ? renderBeltIcon(connection.beltLevelAtStart) : <span className="text-gray-400 text-xs">Not set</span>}
+                            </div>
+                            <div className="flex items-center justify-center">
+                              {renderStripeIcons(connection.stripesAtStart || 0)}
                             </div>
                           </div>
 
@@ -425,15 +423,13 @@ const StudentModalityForm: React.FC = () => {
                           </div>
                           
                           {/* Target Point Indicator (Right) */}
-                          <div className="flex-shrink-0">
-                            <div className="bg-gray-800/90 border border-gray-600 rounded-lg p-3 min-w-[90px] text-center">
-                              <div className="text-xs text-gray-300 mb-2 font-medium">{t('target')}</div>
-                              <div className="flex items-center justify-center mb-2">
-                                {connection.expectedBeltAtClosing ? renderBeltIcon(connection.expectedBeltAtClosing) : <span className="text-gray-400 text-xs">Not set</span>}
-                              </div>
-                              <div className="flex items-center justify-center">
-                                {renderStripeIcons(connection.expectedStripesAtConclusion || 0)}
-                              </div>
+                          <div className="flex-shrink-0 min-w-[90px] text-center">
+                            <div className="text-sm text-gray-300 mb-2 font-medium">{t('target')}</div>
+                            <div className="flex items-center justify-center mb-2">
+                              {connection.expectedBeltAtClosing ? renderBeltIcon(connection.expectedBeltAtClosing) : <span className="text-gray-400 text-xs">Not set</span>}
+                            </div>
+                            <div className="flex items-center justify-center">
+                              {renderStripeIcons(connection.expectedStripesAtConclusion || 0)}
                             </div>
                           </div>
                         </div>
