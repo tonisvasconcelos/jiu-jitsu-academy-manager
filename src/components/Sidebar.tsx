@@ -11,8 +11,10 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const location = useLocation()
   const [isMobile, setIsMobile] = useState(false)
   const [expandedMenus, setExpandedMenus] = useState<string[]>([])
+  const [menuPositions, setMenuPositions] = useState<Record<string, number>>({})
   const { t } = useLanguage()
   const sidebarRef = useRef<HTMLDivElement>(null)
+  const menuRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
   useEffect(() => {
     const checkMobile = () => {
@@ -38,11 +40,25 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   }, [])
 
   const toggleMenu = (menuId: string) => {
-    setExpandedMenus(prev => 
-      prev.includes(menuId) 
+    setExpandedMenus(prev => {
+      const newExpanded = prev.includes(menuId) 
         ? prev.filter(id => id !== menuId)
         : [...prev, menuId]
-    )
+      
+      // Update menu positions when expanding
+      if (!prev.includes(menuId) && newExpanded.includes(menuId)) {
+        const menuElement = menuRefs.current[menuId]
+        if (menuElement) {
+          const rect = menuElement.getBoundingClientRect()
+          setMenuPositions(prev => ({
+            ...prev,
+            [menuId]: rect.top
+          }))
+        }
+      }
+      
+      return newExpanded
+    })
   }
 
   const isMenuExpanded = (menuId: string) => expandedMenus.includes(menuId)
@@ -160,9 +176,13 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         </div>
 
         {/* Menu Items */}
-        <nav className="mt-3 overflow-y-auto flex-1">
+        <nav className="mt-3 overflow-y-auto flex-1 relative">
           {menuItems.map((menu) => (
-            <div key={menu.id} className="mb-2 relative">
+            <div 
+              key={menu.id} 
+              className="mb-2 relative"
+              ref={(el) => { menuRefs.current[menu.id] = el }}
+            >
               {/* Main Menu Item */}
               <div className="relative">
                 {menu.subItems ? (
@@ -210,11 +230,14 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
               {/* Sub Menu Items - Horizontal Layout */}
               {menu.subItems && (!collapsed || isMobile) && isMenuExpanded(menu.id) && (
-                <div className={`absolute ${
+                <div className={`fixed ${
                   isMobile 
                     ? 'left-0 top-full mt-1 w-full' 
-                    : 'left-full top-0 ml-2 min-w-max'
-                } bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-xl z-50`}>
+                    : 'left-64 ml-2 min-w-max'
+                } bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-xl z-[60]`}
+                style={{
+                  top: isMobile ? 'auto' : `${menuPositions[menu.id] || 0}px`
+                }}>
                   <div className="p-2 space-y-1">
                     {menu.subItems.map((subItem) => (
                       <Link
