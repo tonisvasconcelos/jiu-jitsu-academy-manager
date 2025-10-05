@@ -239,7 +239,9 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                 <div className={`fixed ${
                   isMobile 
                     ? 'left-0 top-full mt-1 w-full' 
-                    : 'left-16 ml-1 min-w-max'
+                    : collapsed 
+                      ? 'left-16 ml-1 min-w-max'
+                      : 'left-64 ml-2 min-w-max'
                 } bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-xl z-[60]`}
                 style={{
                   top: isMobile ? 'auto' : `${menuPositions[menu.id] || 0}px`
