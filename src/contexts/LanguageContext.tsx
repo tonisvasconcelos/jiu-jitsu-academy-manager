@@ -637,12 +637,6 @@ const translations = {
     'championship-categories': 'Categorias de Campeonato',
     'registrations': 'Inscrições',
     'referees-officials': 'Árbitros / Oficiais',
-    'championship-sponsors': 'Patrocinadores de Campeonato'
-    'fight-associations': 'Associações de Luta',
-    'affiliations': 'Afiliações',
-    'championship-categories': 'Categorias de Campeonato',
-    'registrations': 'Inscrições',
-    'referees-officials': 'Árbitros / Oficiais',
     'championship-sponsors': 'Patrocinadores de Campeonato',
     
     // Affiliations
@@ -1468,12 +1462,6 @@ const translations = {
     'student-enrollment': 'Studentenanmeldung für Meisterschaften',
     'championship-results': 'Meisterschaftsergebnisse',
     'ranking-statistics': 'Ranglisten & Statistiken',
-    'fight-associations': 'Kampfsportverbände',
-    'affiliations': 'Mitgliedschaften',
-    'championship-categories': 'Meisterschaftskategorien',
-    'registrations': 'Anmeldungen',
-    'referees-officials': 'Schiedsrichter / Offizielle',
-    'championship-sponsors': 'Meisterschaftssponsoren'
     'fight-associations': 'Kampfsportverbände',
     'affiliations': 'Mitgliedschaften',
     'championship-categories': 'Meisterschaftskategorien',
