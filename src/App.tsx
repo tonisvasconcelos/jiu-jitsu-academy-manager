@@ -11,6 +11,13 @@ import { WeightDivisionProvider } from './contexts/WeightDivisionContext'
 import { FightAssociationProvider } from './contexts/FightAssociationContext'
 import { ClassScheduleProvider } from './contexts/ClassScheduleContext'
 import { ClassCheckInProvider } from './contexts/ClassCheckInContext'
+import { AffiliationProvider } from './contexts/AffiliationContext'
+import { ChampionshipProvider } from './contexts/ChampionshipContext'
+import { ChampionshipCategoryProvider } from './contexts/ChampionshipCategoryContext'
+import { ChampionshipRegistrationProvider } from './contexts/ChampionshipRegistrationContext'
+import { ChampionshipResultProvider } from './contexts/ChampionshipResultContext'
+import { ChampionshipOfficialProvider } from './contexts/ChampionshipOfficialContext'
+import { ChampionshipSponsorProvider } from './contexts/ChampionshipSponsorContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -47,6 +54,14 @@ import ClassCalendar from './pages/ClassCalendar'
 import ClassCheckIn from './pages/ClassCheckIn'
 import ClassCheckInForm from './pages/ClassCheckInForm'
 import ArchivedCheckIns from './pages/ArchivedCheckIns'
+import Affiliations from './pages/Affiliations'
+import AffiliationForm from './pages/AffiliationForm'
+import ChampionshipRegistration from './pages/ChampionshipRegistration'
+import ChampionshipForm from './pages/ChampionshipForm'
+import ChampionshipCategories from './pages/ChampionshipCategories'
+import ChampionshipRegistrations from './pages/ChampionshipRegistrations'
+import ChampionshipRegistrationForm from './pages/ChampionshipRegistrationForm'
+import ChampionshipResults from './pages/ChampionshipResults'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -83,6 +98,13 @@ function App() {
                         <FightAssociationProvider>
                           <ClassScheduleProvider>
                             <ClassCheckInProvider>
+                              <AffiliationProvider>
+                                <ChampionshipProvider>
+                                  <ChampionshipCategoryProvider>
+                                    <ChampionshipRegistrationProvider>
+                                      <ChampionshipResultProvider>
+                                        <ChampionshipOfficialProvider>
+                                          <ChampionshipSponsorProvider>
                 <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
@@ -128,13 +150,25 @@ function App() {
                     <Route path="/teachers/evaluations" element={<div className="p-6">Teacher Evaluations</div>} />
                     
                     {/* Sub-menu Routes - Championships */}
-                    <Route path="/championships/registration" element={<div className="p-6">Championship Registration</div>} />
+                    <Route path="/championships/registration" element={<ChampionshipRegistration />} />
+                    <Route path="/championships/registration/:action" element={<ChampionshipForm />} />
+                    <Route path="/championships/registration/:action/:id" element={<ChampionshipForm />} />
                     <Route path="/championships/enrollment" element={<div className="p-6">Student Enrollment in Championships</div>} />
                     <Route path="/championships/results" element={<div className="p-6">Championship Results</div>} />
                     <Route path="/championships/ranking" element={<div className="p-6">Ranking & Statistics</div>} />
                     <Route path="/championships/fight-associations" element={<FightAssociations />} />
                     <Route path="/championships/fight-associations/:action" element={<FightAssociationForm />} />
                     <Route path="/championships/fight-associations/:action/:id" element={<FightAssociationForm />} />
+                    
+                    {/* Championship Module Routes */}
+                    <Route path="/championships/affiliations" element={<Affiliations />} />
+                    <Route path="/championships/affiliations/:action" element={<AffiliationForm />} />
+                    <Route path="/championships/affiliations/:action/:id" element={<AffiliationForm />} />
+                    <Route path="/championships/categories" element={<ChampionshipCategories />} />
+                    <Route path="/championships/registrations" element={<ChampionshipRegistrations />} />
+                    <Route path="/championships/registrations/:action" element={<ChampionshipRegistrationForm />} />
+                    <Route path="/championships/registrations/:action/:id" element={<ChampionshipRegistrationForm />} />
+                    <Route path="/championships/results" element={<ChampionshipResults />} />
                     
                     {/* Sub-menu Routes - Administration */}
                     <Route path="/admin/profiles" element={<UserProfiles />} />
@@ -182,6 +216,13 @@ function App() {
           </div>
         </div>
                 </Router>
+                                          </ChampionshipSponsorProvider>
+                                        </ChampionshipOfficialProvider>
+                                      </ChampionshipResultProvider>
+                                    </ChampionshipRegistrationProvider>
+                                  </ChampionshipCategoryProvider>
+                                </ChampionshipProvider>
+                              </AffiliationProvider>
                             </ClassCheckInProvider>
                           </ClassScheduleProvider>
                         </FightAssociationProvider>

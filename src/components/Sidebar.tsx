@@ -37,7 +37,24 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const menuItems = [
     { id: 'students', title: t('students'), icon: '🥋', path: '/students' },
     { id: 'teachers', title: t('teachers-instructors'), icon: '🧑‍🏫', path: '/teachers' },
-    { id: 'championships', title: t('championships'), icon: '🏟️', path: '/championships' },
+    { 
+      id: 'championships', 
+      title: t('championships'), 
+      icon: '🏟️', 
+      path: '/championships',
+      subItems: [
+        { id: 'championship-registration', title: t('championship-registration'), path: '/championships/registration', icon: '📝' },
+        { id: 'student-enrollment', title: t('student-enrollment'), path: '/championships/enrollment', icon: '👥' },
+        { id: 'championship-results', title: t('championship-results'), path: '/championships/results', icon: '🏆' },
+        { id: 'ranking-statistics', title: t('ranking-statistics'), path: '/championships/ranking', icon: '📊' },
+        { id: 'fight-associations', title: t('fight-associations'), path: '/championships/fight-associations', icon: '🏛️' },
+        { id: 'affiliations', title: t('affiliations'), path: '/championships/affiliations', icon: '🤝' },
+        { id: 'championship-categories', title: t('championship-categories'), path: '/championships/categories', icon: '📋' },
+        { id: 'registrations', title: t('registrations'), path: '/championships/registrations', icon: '📝' },
+        { id: 'referees-officials', title: t('referees-officials'), path: '/championships/officials', icon: '👨‍⚖️' },
+        { id: 'championship-sponsors', title: t('championship-sponsors'), path: '/championships/sponsors', icon: '💰' }
+      ]
+    },
     { id: 'classes', title: t('class-schedules'), icon: '📅', path: '/classes' },
     { id: 'fight-plans', title: t('fight-plans'), icon: '🗂️', path: '/fight-plans' },
     { id: 'quality-evaluation', title: t('quality-evaluation'), icon: '🧪', path: '/quality' },
