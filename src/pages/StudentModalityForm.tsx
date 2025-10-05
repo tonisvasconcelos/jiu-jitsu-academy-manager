@@ -49,46 +49,10 @@ const StudentModalityForm: React.FC = () => {
     
     return (
       <div className="flex items-center">
-        {/* Tied Belt Icon */}
-        <div className="relative w-8 h-6 flex items-center justify-center">
-          {/* Belt knot */}
-          <div 
-            className="absolute w-3 h-3 rounded-full border-2"
-            style={{ 
-              backgroundColor: color,
-              borderColor: color === '#FFFFFF' ? '#CCCCCC' : color,
-              top: '2px',
-              left: '50%',
-              transform: 'translateX(-50%)'
-            }}
-          />
-          {/* Belt ends hanging down */}
-          <div 
-            className="absolute w-1 h-4 rounded-sm"
-            style={{ 
-              backgroundColor: color,
-              left: '30%',
-              top: '8px'
-            }}
-          />
-          <div 
-            className="absolute w-1 h-4 rounded-sm"
-            style={{ 
-              backgroundColor: color,
-              right: '30%',
-              top: '8px'
-            }}
-          />
-          {/* Belt body */}
-          <div 
-            className="absolute w-6 h-1 rounded-sm"
-            style={{ 
-              backgroundColor: color,
-              top: '4px',
-              left: '50%',
-              transform: 'translateX(-50%)'
-            }}
-          />
+        {/* Simple Belt Bar */}
+        <div className="relative w-8 h-4 border border-gray-600" style={{ backgroundColor: color }}>
+          {/* White line across center */}
+          <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-white transform -translate-y-1/2" />
         </div>
         <span className="ml-2 text-sm text-gray-300">
           {beltLevel.includes('kids') ? beltLevel.replace('kids-', '').replace('judo-kids-', '') : beltLevel}
