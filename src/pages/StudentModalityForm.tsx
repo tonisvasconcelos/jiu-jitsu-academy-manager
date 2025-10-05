@@ -386,52 +386,56 @@ const StudentModalityForm: React.FC = () => {
                         <span className="text-lg font-bold text-white">{actualCheckIns} / {expectedCheckIns}</span>
                       </div>
                       
-                      {/* Modern Progress Bar Container with Start/End Indicators */}
-                      <div className="relative">
-                        {/* Starting Point Indicator (Left) */}
-                        <div className="absolute -left-20 top-1/2 transform -translate-y-1/2">
-                          <div className="bg-gray-800/90 border border-gray-600 rounded-lg p-2 min-w-[80px] text-center">
-                            <div className="text-xs text-gray-300 mb-1">{t('start')}</div>
-                            <div className="flex items-center justify-center mb-1">
-                              {connection.beltLevelAtStart ? renderBeltIcon(connection.beltLevelAtStart) : <span className="text-gray-400 text-xs">Not set</span>}
-                            </div>
-                            <div className="flex items-center justify-center">
-                              {renderStripeIcons(connection.stripesAtStart || 0)}
+                      {/* Modern Progress Bar Container with Integrated Indicators */}
+                      <div className="bg-gray-800/20 border border-gray-600/30 rounded-xl p-4">
+                        <div className="flex items-center space-x-4">
+                          {/* Starting Point Indicator (Left) */}
+                          <div className="flex-shrink-0">
+                            <div className="bg-gray-800/90 border border-gray-600 rounded-lg p-3 min-w-[90px] text-center">
+                              <div className="text-xs text-gray-300 mb-2 font-medium">{t('start')}</div>
+                              <div className="flex items-center justify-center mb-2">
+                                {connection.beltLevelAtStart ? renderBeltIcon(connection.beltLevelAtStart) : <span className="text-gray-400 text-xs">Not set</span>}
+                              </div>
+                              <div className="flex items-center justify-center">
+                                {renderStripeIcons(connection.stripesAtStart || 0)}
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        {/* Progress Bar */}
-                        <div className="w-full bg-gray-700/50 rounded-full h-6 overflow-hidden shadow-inner">
-                          <div 
-                            className="h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
-                            style={{ width: `${progressPercentage}%` }}
-                          >
-                            {/* Animated gradient background */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 animate-pulse"></div>
-                            {/* Shine effect */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-pulse"></div>
-                          </div>
-                        </div>
-                        
-                        {/* Target Point Indicator (Right) */}
-                        <div className="absolute -right-20 top-1/2 transform -translate-y-1/2">
-                          <div className="bg-gray-800/90 border border-gray-600 rounded-lg p-2 min-w-[80px] text-center">
-                            <div className="text-xs text-gray-300 mb-1">{t('target')}</div>
-                            <div className="flex items-center justify-center mb-1">
-                              {connection.expectedBeltAtClosing ? renderBeltIcon(connection.expectedBeltAtClosing) : <span className="text-gray-400 text-xs">Not set</span>}
+                          {/* Progress Bar Container */}
+                          <div className="flex-1 relative">
+                            <div className="w-full bg-gray-700/50 rounded-full h-6 overflow-hidden shadow-inner">
+                              <div 
+                                className="h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
+                                style={{ width: `${progressPercentage}%` }}
+                              >
+                                {/* Animated gradient background */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 animate-pulse"></div>
+                                {/* Shine effect */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-pulse"></div>
+                              </div>
                             </div>
-                            <div className="flex items-center justify-center">
-                              {renderStripeIcons(connection.expectedStripesAtConclusion || 0)}
+                            
+                            {/* Progress percentage overlay */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <span className="text-sm font-bold text-white drop-shadow-lg">
+                                {Math.round(progressPercentage)}%
+                              </span>
                             </div>
                           </div>
-                        </div>
-                        
-                        {/* Progress percentage overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-sm font-bold text-white drop-shadow-lg">
-                            {Math.round(progressPercentage)}%
-                          </span>
+                          
+                          {/* Target Point Indicator (Right) */}
+                          <div className="flex-shrink-0">
+                            <div className="bg-gray-800/90 border border-gray-600 rounded-lg p-3 min-w-[90px] text-center">
+                              <div className="text-xs text-gray-300 mb-2 font-medium">{t('target')}</div>
+                              <div className="flex items-center justify-center mb-2">
+                                {connection.expectedBeltAtClosing ? renderBeltIcon(connection.expectedBeltAtClosing) : <span className="text-gray-400 text-xs">Not set</span>}
+                              </div>
+                              <div className="flex items-center justify-center">
+                                {renderStripeIcons(connection.expectedStripesAtConclusion || 0)}
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
 
