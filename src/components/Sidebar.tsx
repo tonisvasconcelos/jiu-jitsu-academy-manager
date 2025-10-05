@@ -195,10 +195,14 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                     } ${location.pathname.startsWith(menu.path) ? 'bg-white/10' : ''}`}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <div className="flex items-center">
+                      <div className="flex items-center relative">
                         <span className="text-lg group-hover:scale-110 transition-transform">{menu.icon}</span>
                         {(!collapsed || isMobile) && (
                           <span className="ml-2 text-sm text-white font-medium group-hover:text-blue-400 transition-colors">{menu.title}</span>
+                        )}
+                        {/* Sub-menu indicator for collapsed sidebar */}
+                        {(collapsed && !isMobile) && menu.subItems && (
+                          <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full"></div>
                         )}
                       </div>
                       {(!collapsed || isMobile) && menu.subItems && (
@@ -231,7 +235,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
               </div>
 
               {/* Sub Menu Items - Horizontal Layout */}
-              {menu.subItems && (!collapsed || isMobile) && isMenuExpanded(menu.id) && (
+              {menu.subItems && isMenuExpanded(menu.id) && (
                 <div className={`fixed ${
                   isMobile 
                     ? 'left-0 top-full mt-1 w-full' 
