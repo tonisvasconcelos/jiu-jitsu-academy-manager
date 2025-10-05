@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 
@@ -12,6 +12,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const [isMobile, setIsMobile] = useState(false)
   const [expandedMenus, setExpandedMenus] = useState<string[]>([])
   const { t } = useLanguage()
+  const sidebarRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -22,6 +23,18 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     window.addEventListener('resize', checkMobile)
     
     return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // Close sub-menus when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setExpandedMenus([])
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   const toggleMenu = (menuId: string) => {
@@ -85,11 +98,14 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       )}
       
       {/* Sidebar */}
-      <div className={`fixed left-0 top-0 h-full bg-white/5 backdrop-blur-md border-r border-white/10 transition-all duration-300 z-50 ${
-        isMobile 
-          ? (collapsed ? '-translate-x-full w-64' : 'translate-x-0 w-64')
-          : (collapsed ? 'w-16' : 'w-64')
-      }`}>
+      <div 
+        ref={sidebarRef}
+        className={`fixed left-0 top-0 h-full bg-white/5 backdrop-blur-md border-r border-white/10 transition-all duration-300 z-50 ${
+          isMobile 
+            ? (collapsed ? '-translate-x-full w-64' : 'translate-x-0 w-64')
+            : (collapsed ? 'w-16' : 'w-64')
+        }`}
+      >
         {/* Logo */}
         <div className="p-3 border-b border-white/10">
           <div className="flex items-center justify-center">
@@ -146,7 +162,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         {/* Menu Items */}
         <nav className="mt-3 overflow-y-auto flex-1">
           {menuItems.map((menu) => (
-            <div key={menu.id} className="mb-2">
+            <div key={menu.id} className="mb-2 relative">
               {/* Main Menu Item */}
               <div className="relative">
                 {menu.subItems ? (
@@ -192,21 +208,29 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                 )}
               </div>
 
-              {/* Sub Menu Items */}
+              {/* Sub Menu Items - Horizontal Layout */}
               {menu.subItems && (!collapsed || isMobile) && isMenuExpanded(menu.id) && (
-                <div className="ml-4 mt-1 space-y-1">
-                  {menu.subItems.map((subItem) => (
-                    <Link
-                      key={subItem.id}
-                      to={subItem.path}
-                      className={`w-full flex items-center text-left hover:bg-white/5 transition-all duration-300 rounded-lg group px-3 py-2 ${
-                        location.pathname === subItem.path ? 'bg-white/5 text-blue-400' : 'text-gray-300'
-                      }`}
-                    >
-                      <span className="text-sm group-hover:scale-110 transition-transform">{subItem.icon}</span>
-                      <span className="ml-2 text-xs font-medium group-hover:text-blue-400 transition-colors">{subItem.title}</span>
-                    </Link>
-                  ))}
+                <div className={`absolute ${
+                  isMobile 
+                    ? 'left-0 top-full mt-1 w-full' 
+                    : 'left-full top-0 ml-2 min-w-max'
+                } bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-xl z-50`}>
+                  <div className="p-2 space-y-1">
+                    {menu.subItems.map((subItem) => (
+                      <Link
+                        key={subItem.id}
+                        to={subItem.path}
+                        className={`w-full flex items-center text-left hover:bg-white/10 transition-all duration-300 rounded-lg group px-3 py-2 ${
+                          isMobile ? '' : 'whitespace-nowrap'
+                        } ${
+                          location.pathname === subItem.path ? 'bg-white/10 text-blue-400' : 'text-gray-300'
+                        }`}
+                      >
+                        <span className="text-sm group-hover:scale-110 transition-transform">{subItem.icon}</span>
+                        <span className="ml-2 text-xs font-medium group-hover:text-blue-400 transition-colors">{subItem.title}</span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
