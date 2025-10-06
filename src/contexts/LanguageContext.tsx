@@ -137,6 +137,11 @@ const translations: Record<Language, Record<string, string>> = {
     'no-locations-found-description': 'No qualified locations match your current filters. Try adjusting your search criteria or create a new qualified location.',
     'create-first-location': 'Create First Qualified Location',
     'confirm-delete-location': 'Are you sure you want to delete this qualified location?',
+    'location-image': 'Location Image',
+    'image-url-placeholder': 'Enter image URL (e.g., https://example.com/image.jpg)',
+    'image-preview': 'Image Preview',
+    'location-image-alt': 'Location image',
+    'image': 'Image',
     
     // Affiliation forms
     'affiliation-id': 'Affiliation ID',
@@ -382,6 +387,11 @@ const translations: Record<Language, Record<string, string>> = {
     'no-locations-found-description': 'Nenhum local qualificado corresponde aos seus filtros atuais. Tente ajustar seus critérios de pesquisa ou criar um novo local qualificado.',
     'create-first-location': 'Criar Primeiro Local Qualificado',
     'confirm-delete-location': 'Tem certeza de que deseja excluir este local qualificado?',
+    'location-image': 'Imagem do Local',
+    'image-url-placeholder': 'Digite a URL da imagem (ex: https://exemplo.com/imagem.jpg)',
+    'image-preview': 'Visualização da Imagem',
+    'location-image-alt': 'Imagem do local',
+    'image': 'Imagem',
     
     // Affiliation forms
     'affiliation-id': 'ID da Afiliação',

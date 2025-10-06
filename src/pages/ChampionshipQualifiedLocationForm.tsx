@@ -21,6 +21,7 @@ const ChampionshipQualifiedLocationForm: React.FC = () => {
     contactPerson: '',
     contactEmail: '',
     contactPhone: '',
+    imageUrl: '',
     isActive: true,
     certificationLevel: 'basic' as 'basic' | 'intermediate' | 'advanced' | 'premium',
     certificationDate: '',
@@ -47,6 +48,7 @@ const ChampionshipQualifiedLocationForm: React.FC = () => {
           contactPerson: existingLocation.contactPerson,
           contactEmail: existingLocation.contactEmail,
           contactPhone: existingLocation.contactPhone,
+          imageUrl: existingLocation.imageUrl || '',
           isActive: existingLocation.isActive,
           certificationLevel: existingLocation.certificationLevel,
           certificationDate: existingLocation.certificationDate,
@@ -240,6 +242,45 @@ const ChampionshipQualifiedLocationForm: React.FC = () => {
                   required
                   min="1"
                 />
+              </div>
+
+              <div className="md:col-span-2">
+                <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('location-image')}
+                </label>
+                <div className="space-y-4">
+                  <input
+                    type="url"
+                    id="imageUrl"
+                    value={location.imageUrl}
+                    onChange={(e) => handleInputChange('imageUrl', e.target.value)}
+                    placeholder={t('image-url-placeholder')}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  {location.imageUrl && (
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-300 mb-2">{t('image-preview')}:</p>
+                      <div className="relative w-full max-w-md">
+                        <img
+                          src={location.imageUrl}
+                          alt={t('location-image-alt')}
+                          className="w-full h-48 object-cover rounded-xl border border-white/20"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleInputChange('imageUrl', '')}
+                          className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

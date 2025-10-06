@@ -13,6 +13,7 @@ export interface ChampionshipQualifiedLocation {
   contactPerson: string
   contactEmail: string
   contactPhone: string
+  imageUrl?: string
   isActive: boolean
   certificationLevel: 'basic' | 'intermediate' | 'advanced' | 'premium'
   certificationDate: string
@@ -70,6 +71,7 @@ export const ChampionshipQualifiedLocationProvider: React.FC<{ children: React.R
           contactPerson: 'João Silva',
           contactEmail: 'joao.silva@rjcc.com.br',
           contactPhone: '+55 21 99999-9999',
+          imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop',
           isActive: true,
           certificationLevel: 'premium',
           certificationDate: '2024-01-15',
@@ -91,6 +93,7 @@ export const ChampionshipQualifiedLocationProvider: React.FC<{ children: React.R
           contactPerson: 'Ahmed Al-Rashid',
           contactEmail: 'ahmed.rashid@adnec.ae',
           contactPhone: '+971 50 123 4567',
+          imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
           isActive: true,
           certificationLevel: 'premium',
           certificationDate: '2024-02-01',
@@ -112,6 +115,7 @@ export const ChampionshipQualifiedLocationProvider: React.FC<{ children: React.R
           contactPerson: 'Maria Rodriguez',
           contactEmail: 'maria.rodriguez@lacc.com',
           contactPhone: '+1 213 741-1151',
+          imageUrl: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop',
           isActive: true,
           certificationLevel: 'advanced',
           certificationDate: '2024-01-20',

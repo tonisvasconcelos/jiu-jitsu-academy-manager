@@ -135,6 +135,7 @@ const ChampionshipQualifiedLocations: React.FC = () => {
             <table className="w-full">
               <thead className="bg-white/10">
                 <tr>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('image')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('location-id')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('name')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('city')}</th>
@@ -148,6 +149,23 @@ const ChampionshipQualifiedLocations: React.FC = () => {
               <tbody className="divide-y divide-white/10">
                 {filteredLocations.map((location) => (
                   <tr key={location.locationId} className="hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4">
+                      {location.imageUrl ? (
+                        <img
+                          src={location.imageUrl}
+                          alt={t('location-image-alt')}
+                          className="w-12 h-12 object-cover rounded-lg border border-white/20"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-gray-600/20 rounded-lg border border-white/20 flex items-center justify-center">
+                          <span className="text-gray-400 text-lg">🏢</span>
+                        </div>
+                      )}
+                    </td>
                     <td className="px-6 py-4 text-sm text-white font-mono">{location.locationId}</td>
                     <td className="px-6 py-4 text-sm text-white font-medium">{location.name}</td>
                     <td className="px-6 py-4 text-sm text-white">{location.city}</td>
