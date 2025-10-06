@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useBranches, Branch } from '../contexts/BranchContext'
 import BranchMap from '../components/BranchMap'
+import DistanceCalculator from '../components/DistanceCalculator'
 import * as XLSX from 'xlsx'
 
 const BranchRegistration: React.FC = () => {
@@ -382,6 +383,11 @@ const BranchRegistration: React.FC = () => {
             <p className="text-gray-400">View all branch locations on the interactive map</p>
           </div>
           <BranchMap branches={filteredBranches} />
+        </div>
+
+        {/* Distance Calculator */}
+        <div className="mb-8">
+          <DistanceCalculator branches={branches} />
         </div>
 
         {/* Actions */}
