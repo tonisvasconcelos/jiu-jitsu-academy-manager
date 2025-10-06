@@ -9,7 +9,7 @@ const ChampionshipCategories: React.FC = () => {
   const { t } = useLanguage()
   const { categories, deleteCategory } = useChampionshipCategories()
   const { championships } = useChampionships()
-  const { associations } = useFightAssociations()
+  const { fightAssociations: associations = [] } = useFightAssociations()
   const [searchTerm, setSearchTerm] = useState('')
   const [ageGroupFilter, setAgeGroupFilter] = useState<string>('all')
   const [beltFilter, setBeltFilter] = useState<string>('all')

@@ -11,7 +11,7 @@ const AffiliationForm: React.FC = () => {
   const { id } = useParams()
   const { addAffiliation, updateAffiliation, getAffiliation } = useAffiliations()
   const { students } = useStudents()
-  const { associations } = useFightAssociations()
+  const { fightAssociations: associations = [] } = useFightAssociations()
 
   const [affiliation, setAffiliation] = useState({
     studentId: '',

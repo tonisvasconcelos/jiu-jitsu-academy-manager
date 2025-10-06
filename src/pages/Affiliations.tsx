@@ -9,7 +9,7 @@ const Affiliations: React.FC = () => {
   const { t } = useLanguage()
   const { affiliations, deleteAffiliation } = useAffiliations()
   const { students } = useStudents()
-  const { associations } = useFightAssociations()
+  const { fightAssociations: associations = [] } = useFightAssociations()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
 
