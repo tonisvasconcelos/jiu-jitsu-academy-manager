@@ -180,6 +180,48 @@ const FightTeamForm: React.FC = () => {
                   disabled={isView}
                 />
               </div>
+
+              <div className="md:col-span-2">
+                <label htmlFor="teamLogo" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('team-logo')}
+                </label>
+                <div className="space-y-4">
+                  <input
+                    type="url"
+                    id="teamLogo"
+                    value={team.teamLogo}
+                    onChange={(e) => handleInputChange('teamLogo', e.target.value)}
+                    placeholder={t('logo-url-placeholder')}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={isView}
+                  />
+                  {team.teamLogo && (
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-300 mb-2">{t('logo-preview')}:</p>
+                      <div className="relative w-full max-w-md">
+                        <img
+                          src={team.teamLogo}
+                          alt={t('team-logo-alt')}
+                          className="w-full h-48 object-cover rounded-xl border border-white/20"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
+                        />
+                        {!isView && (
+                          <button
+                            type="button"
+                            onClick={() => handleInputChange('teamLogo', '')}
+                            className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
+                          >
+                            ×
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 

@@ -87,6 +87,7 @@ const FightTeams: React.FC = () => {
             <table className="w-full">
               <thead className="bg-white/10">
                 <tr>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('logo')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('team-id')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('team-name')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('team-size')}</th>
@@ -98,6 +99,23 @@ const FightTeams: React.FC = () => {
               <tbody className="divide-y divide-white/10">
                 {filteredTeams.map((team) => (
                   <tr key={team.teamId} className="hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4">
+                      {team.teamLogo ? (
+                        <img
+                          src={team.teamLogo}
+                          alt={t('team-logo-alt')}
+                          className="w-12 h-12 object-cover rounded-lg border border-white/20"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-gray-600/20 rounded-lg border border-white/20 flex items-center justify-center">
+                          <span className="text-gray-400 text-lg">🥊</span>
+                        </div>
+                      )}
+                    </td>
                     <td className="px-6 py-4 text-sm text-white font-mono">{team.teamId}</td>
                     <td className="px-6 py-4 text-sm text-white font-medium">{team.teamName}</td>
                     <td className="px-6 py-4 text-sm text-white">{team.teamSize}</td>
