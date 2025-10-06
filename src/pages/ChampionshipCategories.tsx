@@ -1,27 +1,23 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useChampionshipCategories } from '../contexts/ChampionshipCategoryContext'
-import { useChampionships } from '../contexts/ChampionshipContext'
 import { useFightAssociations } from '../contexts/FightAssociationContext'
 import { useLanguage } from '../contexts/LanguageContext'
 
 const ChampionshipCategories: React.FC = () => {
   const { t } = useLanguage()
   const { categories, deleteCategory } = useChampionshipCategories()
-  const { championships } = useChampionships()
   const { fightAssociations: associations = [] } = useFightAssociations()
   const [searchTerm, setSearchTerm] = useState('')
   const [ageGroupFilter, setAgeGroupFilter] = useState<string>('all')
   const [beltFilter, setBeltFilter] = useState<string>('all')
 
   const filteredCategories = categories.filter(category => {
-    const championship = championships.find(c => c.championshipId === category.championshipId)
     const association = associations.find(a => a.associationId === category.fightAssociation)
     
     const matchesSearch = 
       category.categoryId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       category.weightCategory.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      championship?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       association?.name.toLowerCase().includes(searchTerm.toLowerCase())
     
     const matchesAgeGroup = ageGroupFilter === 'all' || category.ageGroup === ageGroupFilter
@@ -30,10 +26,6 @@ const ChampionshipCategories: React.FC = () => {
     return matchesSearch && matchesAgeGroup && matchesBelt
   })
 
-  const getChampionshipName = (championshipId: string) => {
-    const championship = championships.find(c => c.championshipId === championshipId)
-    return championship ? championship.name : 'Unknown Championship'
-  }
 
   const getAssociationName = (associationId: string) => {
     const association = associations.find(a => a.associationId === associationId)
@@ -138,7 +130,6 @@ const ChampionshipCategories: React.FC = () => {
               <thead className="bg-white/10">
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('category-id')}</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('championship')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('age-group')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('belt')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('weight-category')}</th>
@@ -151,7 +142,6 @@ const ChampionshipCategories: React.FC = () => {
                 {filteredCategories.map((category) => (
                   <tr key={category.categoryId} className="hover:bg-white/5 transition-colors">
                     <td className="px-6 py-4 text-sm text-white font-mono">{category.categoryId}</td>
-                    <td className="px-6 py-4 text-sm text-white">{getChampionshipName(category.championshipId)}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getAgeGroupColor(category.ageGroup)}`}>
                         {t(category.ageGroup)}

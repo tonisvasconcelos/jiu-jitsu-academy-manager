@@ -15,15 +15,11 @@ const ChampionshipCategoryForm: React.FC = () => {
   const { fightAssociations: associations = [] } = useFightAssociations()
 
   const [category, setCategory] = useState<Omit<ChampionshipCategory, 'categoryId'>>({
-    championshipId: '',
     ageGroup: 'adult',
     belt: 'white',
     weightCategory: '',
     gender: 'mixed',
-    fightAssociation: '',
-    maxParticipants: undefined,
-    entryFee: undefined,
-    description: ''
+    fightAssociation: ''
   })
 
   const [isLoading, setIsLoading] = useState(false)
@@ -57,7 +53,7 @@ const ChampionshipCategoryForm: React.FC = () => {
 
     try {
       // Validation
-      if (!category.championshipId || !category.weightCategory || !category.fightAssociation) {
+      if (!category.weightCategory || !category.fightAssociation) {
         setError(t('fill-required-fields'))
         setIsLoading(false)
         return
@@ -87,15 +83,11 @@ const ChampionshipCategoryForm: React.FC = () => {
       }
     } else {
       setCategory({
-        championshipId: '',
         ageGroup: 'adult',
         belt: 'white',
         weightCategory: '',
         gender: 'mixed',
-        fightAssociation: '',
-        maxParticipants: undefined,
-        entryFee: undefined,
-        description: ''
+        fightAssociation: ''
       })
     }
   }
@@ -139,27 +131,6 @@ const ChampionshipCategoryForm: React.FC = () => {
             <h2 className="text-xl font-semibold text-white mb-6">{t('basic-information')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Championship */}
-              <div>
-                <label htmlFor="championshipId" className="block text-sm font-medium text-gray-300 mb-2">
-                  {t('championship')} <span className="text-red-400">*</span>
-                </label>
-                <select
-                  id="championshipId"
-                  value={category.championshipId}
-                  onChange={(e) => handleInputChange('championshipId', e.target.value)}
-                  disabled={isReadOnly}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
-                >
-                  <option value="">{t('select-championship')}</option>
-                  {championships.map(championship => (
-                    <option key={championship.championshipId} value={championship.championshipId}>
-                      {championship.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               {/* Fight Association */}
               <div>
                 <label htmlFor="fightAssociation" className="block text-sm font-medium text-gray-300 mb-2">
@@ -257,63 +228,6 @@ const ChampionshipCategoryForm: React.FC = () => {
             </div>
           </div>
 
-          {/* Additional Information */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">{t('additional-information')}</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Max Participants */}
-              <div>
-                <label htmlFor="maxParticipants" className="block text-sm font-medium text-gray-300 mb-2">
-                  {t('max-participants')}
-                </label>
-                <input
-                  id="maxParticipants"
-                  type="number"
-                  min="1"
-                  value={category.maxParticipants || ''}
-                  onChange={(e) => handleInputChange('maxParticipants', e.target.value ? parseInt(e.target.value) : undefined)}
-                  disabled={isReadOnly}
-                  placeholder={t('max-participants-placeholder')}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
-                />
-              </div>
-
-              {/* Entry Fee */}
-              <div>
-                <label htmlFor="entryFee" className="block text-sm font-medium text-gray-300 mb-2">
-                  {t('entry-fee')}
-                </label>
-                <input
-                  id="entryFee"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={category.entryFee || ''}
-                  onChange={(e) => handleInputChange('entryFee', e.target.value ? parseFloat(e.target.value) : undefined)}
-                  disabled={isReadOnly}
-                  placeholder={t('entry-fee-placeholder')}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
-                />
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="mt-6">
-              <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">
-                {t('description')}
-              </label>
-              <textarea
-                id="description"
-                rows={4}
-                value={category.description || ''}
-                onChange={(e) => handleInputChange('description', e.target.value)}
-                disabled={isReadOnly}
-                placeholder={t('category-description-placeholder')}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50 resize-none"
-              />
-            </div>
-          </div>
 
           {/* Action Buttons */}
           {!isReadOnly && (

@@ -2,15 +2,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react'
 
 export interface ChampionshipCategory {
   categoryId: string
-  championshipId: string
   ageGroup: 'kids' | 'adult' | 'master' | 'senior'
   belt: 'white' | 'blue' | 'purple' | 'brown' | 'black' | 'all-belts'
   weightCategory: string
   gender: 'male' | 'female' | 'mixed'
   fightAssociation: string
-  maxParticipants?: number
-  entryFee?: number
-  description?: string
 }
 
 interface ChampionshipCategoryContextType {
@@ -81,7 +77,9 @@ export const ChampionshipCategoryProvider: React.FC<{ children: React.ReactNode 
   }
 
   const getCategoriesByChampionship = (championshipId: string) => {
-    return categories.filter(category => category.championshipId === championshipId)
+    // Since championshipId is no longer part of the category, return all categories
+    // This function can be used for future championship-specific filtering if needed
+    return categories
   }
 
   const getCategoriesByBelt = (belt: string) => {
