@@ -25,7 +25,6 @@ import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
-import Teachers from './pages/Teachers'
 import Championships from './pages/Championships'
 import Administration from './pages/Administration'
 import UserProfiles from './pages/UserProfiles'
@@ -130,7 +129,6 @@ function App() {
                     
                     {/* Main Menu Pages */}
                     <Route path="/students" element={<Students />} />
-                    <Route path="/teachers" element={<Teachers />} />
                     <Route path="/championships" element={<Championships />} />
                     <Route path="/administration" element={<Administration />} />
                     
@@ -145,7 +143,7 @@ function App() {
                       <Route path="/students/evaluation" element={<div className="p-6">Student Evaluation & Grades</div>} />
                       <Route path="/students/attendance" element={<div className="p-6">Student Attendance</div>} />
                     
-                    {/* Sub-menu Routes - Teachers */}
+                    {/* Sub-menu Routes - Teachers (now accessible via /students menu) */}
                     <Route path="/teachers/registration" element={<TeacherRegistration />} />
                     <Route path="/teachers/registration/:action" element={<TeacherForm />} />
                     <Route path="/teachers/registration/:action/:id" element={<TeacherForm />} />
