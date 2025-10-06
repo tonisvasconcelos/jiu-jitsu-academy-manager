@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useBranches, Branch } from '../contexts/BranchContext'
+import BranchMap from '../components/BranchMap'
 import * as XLSX from 'xlsx'
 
 const BranchRegistration: React.FC = () => {
@@ -372,6 +373,15 @@ const BranchRegistration: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Branch Map */}
+        <div className="mb-8">
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold text-white mb-2">Branch Locations Map</h2>
+            <p className="text-gray-400">View all branch locations on the interactive map</p>
+          </div>
+          <BranchMap branches={filteredBranches} />
         </div>
 
         {/* Actions */}
