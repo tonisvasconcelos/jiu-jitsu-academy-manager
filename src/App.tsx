@@ -209,7 +209,6 @@ function App() {
                     
                             <Route path="/quality" element={<div className="p-6">Quality & Evaluation</div>} />
                             <Route path="/branches" element={<Branches />} />
-                            <Route path="/schedules" element={<div className="p-6">Schedules & Check-Ins</div>} />
                             
                             {/* Sub-menu Routes - Branches */}
                             <Route path="/branches/registration" element={<BranchRegistration />} />
