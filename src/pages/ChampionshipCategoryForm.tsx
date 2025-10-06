@@ -15,10 +15,6 @@ const ChampionshipCategoryForm: React.FC = () => {
   const { championships } = useChampionships()
   const { fightAssociations: associations = [] } = useFightAssociations()
   const { fightModalities: modalities = [] } = useFightModalities()
-  
-  // Debug: Check if modalities are loaded
-  console.log('ChampionshipCategoryForm - Modalities:', modalities)
-  console.log('ChampionshipCategoryForm - Modalities length:', modalities.length)
 
   const [category, setCategory] = useState<Omit<ChampionshipCategory, 'categoryId'>>({
     ageGroups: ['adult'],
@@ -312,74 +308,52 @@ const ChampionshipCategoryForm: React.FC = () => {
                 <label className="block text-sm font-semibold text-white mb-3">
                   {t('fight-modalities')}
                 </label>
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 max-h-48 overflow-y-auto">
-                  {/* Debug info */}
-                  <div className="mb-4 p-2 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
-                    <p className="text-yellow-300 text-xs">Debug: Modalities count: {modalities.length}</p>
-                    <p className="text-yellow-300 text-xs">Debug: Modalities: {JSON.stringify(modalities.map(m => m.name))}</p>
-                  </div>
-                  
-                  {modalities.length > 0 ? (
-                    <div className="space-y-2">
-                      {modalities.map(modality => (
-                        <label key={modality.modalityId} className="flex items-center p-3 rounded-xl hover:bg-white/5 transition-all duration-200 cursor-pointer group">
-                          <div className="relative">
-                            <input
-                              type="checkbox"
-                              checked={category.fightModalities.includes(modality.modalityId)}
-                              onChange={(e) => handleMultiSelectChange('fightModalities', modality.modalityId, e.target.checked)}
-                              disabled={isReadOnly}
-                              className="sr-only"
-                            />
-                            <div className={`w-5 h-5 rounded-md border-2 transition-all duration-200 flex items-center justify-center ${
-                              category.fightModalities.includes(modality.modalityId)
-                                ? 'bg-gradient-to-r from-purple-500 to-pink-500 border-transparent'
-                                : 'border-white/30 group-hover:border-white/50'
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {modalities.map(modality => (
+                    <div
+                      key={modality.modalityId}
+                      className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer ${
+                        category.fightModalities.includes(modality.modalityId)
+                          ? 'bg-purple-500/20 border-purple-400 text-purple-400'
+                          : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
+                      } ${isReadOnly ? 'cursor-not-allowed' : ''}`}
+                      onClick={() => !isReadOnly && handleMultiSelectChange('fightModalities', modality.modalityId, !category.fightModalities.includes(modality.modalityId))}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium">{modality.name}</div>
+                          <div className="text-xs text-gray-400 mt-1">{modality.description}</div>
+                          <div className="flex items-center mt-2 space-x-2">
+                            <span className={`px-2 py-1 text-xs rounded-full ${
+                              modality.type === 'striking' ? 'bg-red-500/20 text-red-400' :
+                              modality.type === 'grappling' ? 'bg-blue-500/20 text-blue-400' :
+                              modality.type === 'mixed' ? 'bg-purple-500/20 text-purple-400' :
+                              'bg-gray-500/20 text-gray-400'
                             }`}>
-                              {category.fightModalities.includes(modality.modalityId) && (
-                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                              )}
-                            </div>
+                              {modality.type}
+                            </span>
+                            <span className={`px-2 py-1 text-xs rounded-full ${
+                              modality.level === 'beginner' ? 'bg-green-500/20 text-green-400' :
+                              modality.level === 'intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                              modality.level === 'advanced' ? 'bg-orange-500/20 text-orange-400' :
+                              'bg-red-500/20 text-red-400'
+                            }`}>
+                              {modality.level}
+                            </span>
                           </div>
-                          <div className="ml-3 flex-1">
-                            <span className="text-white font-medium">{modality.name}</span>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                modality.type === 'grappling' ? 'bg-blue-500/20 text-blue-300' :
-                                modality.type === 'striking' ? 'bg-red-500/20 text-red-300' :
-                                modality.type === 'mixed' ? 'bg-purple-500/20 text-purple-300' :
-                                'bg-gray-500/20 text-gray-300'
-                              }`}>
-                                {modality.type}
-                              </span>
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                modality.level === 'beginner' ? 'bg-green-500/20 text-green-300' :
-                                modality.level === 'intermediate' ? 'bg-orange-500/20 text-orange-300' :
-                                modality.level === 'advanced' ? 'bg-orange-500/20 text-orange-300' :
-                                'bg-red-500/20 text-red-300'
-                              }`}>
-                                {modality.level}
-                              </span>
-                              <span className="text-gray-400 text-xs">{modality.duration} min</span>
-                            </div>
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <div className="text-gray-400 mb-2">
-                        <svg className="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
+                        </div>
+                        <div className="text-2xl">
+                          {category.fightModalities.includes(modality.modalityId) ? '✅' : '⬜'}
+                        </div>
                       </div>
-                      <p className="text-gray-400 text-sm">No fight modalities available</p>
-                      <p className="text-gray-500 text-xs mt-1">Create fight modalities first to select them here</p>
                     </div>
-                  )}
+                  ))}
                 </div>
+                
+                {category.fightModalities.length === 0 && (
+                  <p className="text-sm text-gray-400 mt-2">Please select at least one modality</p>
+                )}
+                
                 <p className="text-sm text-gray-400">{t('select-multiple-fight-modalities')}</p>
               </div>
 
