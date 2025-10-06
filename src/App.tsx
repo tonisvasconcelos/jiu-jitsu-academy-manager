@@ -150,6 +150,8 @@ function App() {
                     <Route path="/teachers/new" element={<Navigate to="/teachers/registration/new" replace />} />
                     <Route path="/teachers/edit/:id" element={<Navigate to="/teachers/registration/edit/:id" replace />} />
                     <Route path="/teachers/view/:id" element={<Navigate to="/teachers/registration/view/:id" replace />} />
+                    <Route path="/teachers/profiles" element={<div className="p-6">Teacher Profiles</div>} />
+                    <Route path="/teachers/assign" element={<div className="p-6">Assign Teachers to Classes</div>} />
                     
                     {/* Sub-menu Routes - Championships */}
                     <Route path="/championships/registration" element={<ChampionshipRegistration />} />
