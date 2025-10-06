@@ -89,7 +89,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     },
     { id: 'classes', title: t('class-schedules'), icon: '📅', path: '/classes' },
     { id: 'fight-plans', title: t('fight-plans'), icon: '🗂️', path: '/fight-plans' },
-    { id: 'quality-evaluation', title: t('quality-evaluation'), icon: '🧪', path: '/quality' },
+    { 
+      id: 'quality-evaluation', 
+      title: t('quality-evaluation'), 
+      icon: '🧪', 
+      path: '/quality',
+      subItems: [
+        { id: 'student-evaluation', title: t('student-evaluation'), path: '/quality/student-evaluation', icon: '📊' },
+        { id: 'teacher-evaluations', title: t('teacher-evaluations'), path: '/quality/teacher-evaluations', icon: '📊' }
+      ]
+    },
     { id: 'branches', title: t('branches'), icon: '🌍', path: '/branches' },
     { 
       id: 'administration', 

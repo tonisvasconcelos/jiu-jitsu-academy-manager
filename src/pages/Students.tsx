@@ -9,13 +9,9 @@ const Students: React.FC = () => {
     // Student-related items
     { id: 'student-registration', title: t('student-registration'), path: '/students/registration', icon: '📝', description: t('register-new-students') },
     { id: 'modality', title: t('modality-by-student'), path: '/students/modality', icon: '🥊', description: t('student-modality-management') },
-    { id: 'student-evaluation', title: t('student-evaluation'), path: '/students/evaluation', icon: '📊', description: t('evaluate-student-progress') },
     { id: 'student-attendance', title: t('student-attendance'), path: '/students/attendance', icon: '✅', description: t('track-student-attendance') },
     // Teacher-related items (transferred from Teachers menu)
     { id: 'teacher-registration', title: t('teacher-registration'), path: '/teachers/registration', icon: '📝', description: t('register-new-teachers') },
-    { id: 'teacher-profiles', title: t('teacher-profiles'), path: '/teachers/profiles', icon: '👤', description: t('view-manage-teacher-profiles') },
-    { id: 'assign-teachers', title: t('assign-teachers'), path: '/teachers/assign', icon: '🔗', description: t('assign-teachers-to-classes-desc') },
-    { id: 'teacher-evaluations', title: t('teacher-evaluations'), path: '/teachers/evaluations', icon: '📊', description: t('evaluate-teacher-performance') },
   ]
 
   return (
@@ -32,7 +28,7 @@ const Students: React.FC = () => {
         </div>
 
         {/* Sub-menu Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {subMenuItems.map((item) => (
             <Link
               key={item.id}
