@@ -21,6 +21,8 @@ const BranchForm: React.FC = () => {
     phone: '',
     email: '',
     website: '',
+    latitude: undefined,
+    longitude: undefined,
     workingHours: {
       monday: { open: '06:00', close: '22:00', closed: false },
       tuesday: { open: '06:00', close: '22:00', closed: false },
@@ -363,6 +365,62 @@ const BranchForm: React.FC = () => {
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Location Coordinates */}
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+            <h2 className="text-xl font-semibold text-white mb-6">Location Coordinates</h2>
+            <p className="text-gray-400 text-sm mb-6">
+              Enter precise latitude and longitude coordinates for accurate map positioning. 
+              You can find these coordinates using Google Maps or other mapping services.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Latitude */}
+              <div>
+                <label htmlFor="latitude" className="block text-sm font-medium text-gray-300 mb-2">
+                  Latitude <span className="text-gray-500">(optional)</span>
+                </label>
+                <input
+                  id="latitude"
+                  name="latitude"
+                  type="number"
+                  step="any"
+                  value={branch.latitude || ''}
+                  onChange={(e) => handleInputChange('latitude', e.target.value ? parseFloat(e.target.value) : undefined)}
+                  disabled={isReadOnly}
+                  placeholder="e.g., -23.5505"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
+                />
+                <p className="text-xs text-gray-500 mt-1">Range: -90 to 90</p>
+              </div>
+
+              {/* Longitude */}
+              <div>
+                <label htmlFor="longitude" className="block text-sm font-medium text-gray-300 mb-2">
+                  Longitude <span className="text-gray-500">(optional)</span>
+                </label>
+                <input
+                  id="longitude"
+                  name="longitude"
+                  type="number"
+                  step="any"
+                  value={branch.longitude || ''}
+                  onChange={(e) => handleInputChange('longitude', e.target.value ? parseFloat(e.target.value) : undefined)}
+                  disabled={isReadOnly}
+                  placeholder="e.g., -46.6333"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
+                />
+                <p className="text-xs text-gray-500 mt-1">Range: -180 to 180</p>
+              </div>
+            </div>
+            
+            <div className="mt-4 p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+              <p className="text-blue-400 text-sm">
+                <strong>💡 Tip:</strong> To find coordinates, right-click on a location in Google Maps and select "What's here?" 
+                or use online coordinate finder tools. This ensures your branch appears in the exact correct location on the map.
+              </p>
             </div>
           </div>
 

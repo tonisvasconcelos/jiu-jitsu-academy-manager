@@ -12,6 +12,8 @@ export interface Branch {
   phone: string
   email: string
   website?: string
+  latitude?: number
+  longitude?: number
   workingHours: {
     monday: { open: string; close: string; closed: boolean }
     tuesday: { open: string; close: string; closed: boolean }
@@ -56,6 +58,8 @@ const initialBranches: Branch[] = [
     phone: '+55 11 99999-9999',
     email: 'sao-paulo@academy.com',
     website: 'https://academy.com/sao-paulo',
+    latitude: -23.5505,
+    longitude: -46.6333,
     workingHours: {
       monday: { open: '06:00', close: '22:00', closed: false },
       tuesday: { open: '06:00', close: '22:00', closed: false },
@@ -86,6 +90,8 @@ const initialBranches: Branch[] = [
     phone: '+55 21 77777-7777',
     email: 'rio@academy.com',
     website: 'https://academy.com/rio',
+    latitude: -22.9068,
+    longitude: -43.1729,
     workingHours: {
       monday: { open: '07:00', close: '21:00', closed: false },
       tuesday: { open: '07:00', close: '21:00', closed: false },

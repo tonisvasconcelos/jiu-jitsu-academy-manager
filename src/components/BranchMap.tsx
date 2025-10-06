@@ -84,24 +84,34 @@ const BranchMap: React.FC<BranchMapProps> = ({ branches }) => {
 
         const locations: BranchLocation[] = []
         
-        // Geocode each branch address
+        // Process each branch - use direct coordinates if available, otherwise geocode
         for (const branch of branches) {
-          const fullAddress = `${branch.address}, ${branch.city}, ${branch.state}, ${branch.country}`
-          const coords = await geocodeAddress(fullAddress)
-          
-          if (coords) {
+          // Check if branch has direct coordinates
+          if (branch.latitude && branch.longitude) {
             locations.push({
               branch,
-              lat: coords.lat,
-              lng: coords.lng
+              lat: branch.latitude,
+              lng: branch.longitude
             })
           } else {
-            // Fallback to approximate coordinates for Brazil
-            locations.push({
-              branch,
-              lat: -22.9068 + (Math.random() - 0.5) * 0.1, // Rio de Janeiro area
-              lng: -43.1729 + (Math.random() - 0.5) * 0.1
-            })
+            // Fallback to geocoding if no direct coordinates
+            const fullAddress = `${branch.address}, ${branch.city}, ${branch.state}, ${branch.country}`
+            const coords = await geocodeAddress(fullAddress)
+            
+            if (coords) {
+              locations.push({
+                branch,
+                lat: coords.lat,
+                lng: coords.lng
+              })
+            } else {
+              // Final fallback to approximate coordinates for Brazil
+              locations.push({
+                branch,
+                lat: -22.9068 + (Math.random() - 0.5) * 0.1, // Rio de Janeiro area
+                lng: -43.1729 + (Math.random() - 0.5) * 0.1
+              })
+            }
           }
         }
 
