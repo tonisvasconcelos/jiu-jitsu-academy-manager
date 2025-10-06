@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useChampionships } from '../contexts/ChampionshipContext'
 import { useFightAssociations } from '../contexts/FightAssociationContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
+import { useChampionshipQualifiedLocations } from '../contexts/ChampionshipQualifiedLocationContext'
 import { useLanguage } from '../contexts/LanguageContext'
 
 const ChampionshipForm: React.FC = () => {
@@ -12,11 +13,12 @@ const ChampionshipForm: React.FC = () => {
   const { addChampionship, updateChampionship, getChampionship } = useChampionships()
   const { fightAssociations: associations = [] } = useFightAssociations()
   const { modalities = [] } = useFightModalities()
+  const { qualifiedLocations = [] } = useChampionshipQualifiedLocations()
 
   const [championship, setChampionship] = useState({
     associationId: '',
     name: '',
-    location: '',
+    qualifiedLocationId: '',
     startDate: '',
     endDate: '',
     fightModality: '',
@@ -39,7 +41,7 @@ const ChampionshipForm: React.FC = () => {
         setChampionship({
           associationId: existingChampionship.associationId,
           name: existingChampionship.name,
-          location: existingChampionship.location,
+          qualifiedLocationId: existingChampionship.qualifiedLocationId,
           startDate: existingChampionship.startDate,
           endDate: existingChampionship.endDate,
           fightModality: existingChampionship.fightModality,
@@ -159,20 +161,25 @@ const ChampionshipForm: React.FC = () => {
                   />
                 </div>
 
-                {/* Location */}
+                {/* Qualified Location */}
                 <div>
-                  <label htmlFor="location" className="block text-sm font-medium text-gray-300 mb-2">
+                  <label htmlFor="qualifiedLocationId" className="block text-sm font-medium text-gray-300 mb-2">
                     {t('championship-location')} *
                   </label>
-                  <input
-                    type="text"
-                    id="location"
-                    value={championship.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
-                    placeholder={t('championship-location-placeholder')}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  <select
+                    id="qualifiedLocationId"
+                    value={championship.qualifiedLocationId}
+                    onChange={(e) => handleInputChange('qualifiedLocationId', e.target.value)}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
-                  />
+                  >
+                    <option value="">{t('select-qualified-location')}</option>
+                    {qualifiedLocations.filter(location => location.isActive).map((location) => (
+                      <option key={location.locationId} value={location.locationId}>
+                        {location.name} - {location.city}, {location.country}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Fight Modality */}

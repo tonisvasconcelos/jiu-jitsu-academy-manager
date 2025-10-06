@@ -4,7 +4,7 @@ export interface Championship {
   championshipId: string
   associationId: string
   name: string
-  location: string
+  qualifiedLocationId: string
   startDate: string
   endDate: string
   fightModality: string

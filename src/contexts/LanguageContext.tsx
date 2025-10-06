@@ -96,6 +96,7 @@ const translations: Record<Language, Record<string, string>> = {
     'contact-phone-placeholder': 'Enter contact phone',
     'championship-description': 'Championship Description',
     'championship-description-placeholder': 'Enter championship description',
+    'select-qualified-location': 'Select Qualified Location',
     
     // Qualified Locations specific translations
     'manage-qualified-locations': 'Manage Championship Qualified Locations',
@@ -347,6 +348,7 @@ const translations: Record<Language, Record<string, string>> = {
     'contact-phone-placeholder': 'Digite o telefone de contato',
     'championship-description': 'Descrição do Campeonato',
     'championship-description-placeholder': 'Digite a descrição do campeonato',
+    'select-qualified-location': 'Selecionar Local Qualificado',
     
     // Qualified Locations specific translations
     'manage-qualified-locations': 'Gerenciar Locais Qualificados para Campeonatos',

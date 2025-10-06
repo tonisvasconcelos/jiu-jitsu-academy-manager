@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useChampionships } from '../contexts/ChampionshipContext'
 import { useFightAssociations } from '../contexts/FightAssociationContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
+import { useChampionshipQualifiedLocations } from '../contexts/ChampionshipQualifiedLocationContext'
 import { useLanguage } from '../contexts/LanguageContext'
 
 const ChampionshipRegistration: React.FC = () => {
@@ -10,6 +11,7 @@ const ChampionshipRegistration: React.FC = () => {
   const { championships = [], deleteChampionship } = useChampionships()
   const { fightAssociations: associations = [] } = useFightAssociations()
   const { modalities = [] } = useFightModalities()
+  const { qualifiedLocations = [] } = useChampionshipQualifiedLocations()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [associationFilter, setAssociationFilter] = useState<string>('all')
@@ -17,11 +19,14 @@ const ChampionshipRegistration: React.FC = () => {
   const filteredChampionships = championships.filter(championship => {
     const association = associations.find(a => a.associationId === championship.associationId)
     const modality = modalities.find(m => m.modalityId === championship.fightModality)
+    const qualifiedLocation = qualifiedLocations.find(l => l.locationId === championship.qualifiedLocationId)
     
     const matchesSearch = 
       championship.championshipId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       championship.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      championship.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      qualifiedLocation?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      qualifiedLocation?.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      qualifiedLocation?.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
       association?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       modality?.name.toLowerCase().includes(searchTerm.toLowerCase())
     
@@ -140,12 +145,16 @@ const ChampionshipRegistration: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/10">
-                {filteredChampionships.map((championship) => (
-                  <tr key={championship.championshipId} className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 text-sm text-white font-mono">{championship.championshipId}</td>
-                    <td className="px-6 py-4 text-sm text-white font-medium">{championship.name}</td>
-                    <td className="px-6 py-4 text-sm text-white">{getAssociationName(championship.associationId)}</td>
-                    <td className="px-6 py-4 text-sm text-white">{championship.location}</td>
+                {filteredChampionships.map((championship) => {
+                  const qualifiedLocation = qualifiedLocations.find(l => l.locationId === championship.qualifiedLocationId)
+                  return (
+                    <tr key={championship.championshipId} className="hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4 text-sm text-white font-mono">{championship.championshipId}</td>
+                      <td className="px-6 py-4 text-sm text-white font-medium">{championship.name}</td>
+                      <td className="px-6 py-4 text-sm text-white">{getAssociationName(championship.associationId)}</td>
+                      <td className="px-6 py-4 text-sm text-white">
+                        {qualifiedLocation ? `${qualifiedLocation.name} - ${qualifiedLocation.city}, ${qualifiedLocation.country}` : 'Unknown Location'}
+                      </td>
                     <td className="px-6 py-4 text-sm text-white">{formatDate(championship.startDate)}</td>
                     <td className="px-6 py-4 text-sm text-white">{getModalityName(championship.fightModality)}</td>
                     <td className="px-6 py-4">
@@ -180,7 +189,8 @@ const ChampionshipRegistration: React.FC = () => {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  )
+                })}
               </tbody>
             </table>
           </div>
