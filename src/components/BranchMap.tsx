@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Loader } from '@googlemaps/js-api-loader'
 import { Branch } from '../contexts/BranchContext'
 
 interface BranchMapProps {
@@ -25,14 +24,21 @@ const BranchMap: React.FC<BranchMapProps> = ({ branches }) => {
         setIsLoading(true)
         setError(null)
 
-        // Initialize Google Maps Loader
-        const loader = new Loader({
-          apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'AIzaSyBvOkBw3cJ4XqJ8H9vL2M3N4O5P6Q7R8S9T0', // Fallback key for demo
-          version: 'weekly',
-          libraries: ['places']
-        })
-
-        await loader.load()
+        // Initialize Google Maps with new functional API
+        const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'AIzaSyBvOkBw3cJ4XqJ8H9vL2M3N4O5P6Q7R8S9T0' // Fallback key for demo
+        
+        // Load Google Maps script if not already loaded
+        if (!window.google || !window.google.maps) {
+          await new Promise<void>((resolve, reject) => {
+            const script = document.createElement('script')
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`
+            script.async = true
+            script.defer = true
+            script.onload = () => resolve()
+            script.onerror = () => reject(new Error('Failed to load Google Maps'))
+            document.head.appendChild(script)
+          })
+        }
 
         if (mapRef.current && !mapInstance.current) {
           // Initialize map with default center (Rio de Janeiro, Brazil)
