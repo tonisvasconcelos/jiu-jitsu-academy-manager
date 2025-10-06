@@ -5,6 +5,7 @@ export interface FightTeam {
   teamName: string
   description?: string
   countryCode: string
+  fightModalities: string[] // Array of fight modality IDs
   establishedDate: string
   teamSize: number
   isActive: boolean
@@ -56,6 +57,7 @@ export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           teamName: 'Rio Elite Fighters',
           description: 'Elite competition team focused on Brazilian Jiu-Jitsu',
           countryCode: 'BR',
+          fightModalities: ['FM001', 'FM002'], // Brazilian Jiu-Jitsu GI and No-Gi
           establishedDate: '2023-01-15',
           teamSize: 8,
           isActive: true,
@@ -77,6 +79,7 @@ export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           teamName: 'Abu Dhabi Warriors',
           description: 'International competition team for UAE championships',
           countryCode: 'AE',
+          fightModalities: ['FM002'], // No-Gi only
           establishedDate: '2023-03-20',
           teamSize: 6,
           isActive: true,
@@ -97,6 +100,7 @@ export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           teamName: 'Los Angeles Grapplers',
           description: 'Youth development team for upcoming fighters',
           countryCode: 'US',
+          fightModalities: ['FM001', 'FM002', 'FM003'], // Brazilian Jiu-Jitsu GI, No-Gi, and Judo
           establishedDate: '2023-06-10',
           teamSize: 4,
           isActive: true,

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useFightTeams } from '../contexts/FightTeamContext'
 import { useStudents } from '../contexts/StudentContext'
+import { useFightModalities } from '../contexts/FightModalityContext'
 import { useLanguage } from '../contexts/LanguageContext'
 
 const FightTeamForm: React.FC = () => {
@@ -11,11 +12,13 @@ const FightTeamForm: React.FC = () => {
   
   const { fightTeams = [], addFightTeam, updateFightTeam, getFightTeam } = useFightTeams()
   const { students = [] } = useStudents()
+  const { modalities = [] } = useFightModalities()
 
   const [team, setTeam] = useState({
     teamName: '',
     description: '',
     countryCode: '',
+    fightModalities: [] as string[],
     establishedDate: '',
     isActive: true,
     achievements: [] as string[],
@@ -37,6 +40,7 @@ const FightTeamForm: React.FC = () => {
           teamName: existingTeam.teamName,
           description: existingTeam.description || '',
           countryCode: existingTeam.countryCode || '',
+          fightModalities: existingTeam.fightModalities || [],
           establishedDate: existingTeam.establishedDate,
           isActive: existingTeam.isActive,
           achievements: existingTeam.achievements || [],
@@ -52,6 +56,15 @@ const FightTeamForm: React.FC = () => {
 
   const handleInputChange = (field: string, value: string | boolean | string[]) => {
     setTeam(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleFightModalityToggle = (modalityId: string) => {
+    setTeam(prev => ({
+      ...prev,
+      fightModalities: prev.fightModalities.includes(modalityId)
+        ? prev.fightModalities.filter(id => id !== modalityId)
+        : [...prev.fightModalities, modalityId]
+    }))
   }
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,6 +218,35 @@ const FightTeamForm: React.FC = () => {
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   disabled={isView}
                 />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('fight-modalities')}
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {modalities.map((modality) => (
+                    <div key={modality.modalityId} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`modality-${modality.modalityId}`}
+                        checked={team.fightModalities.includes(modality.modalityId)}
+                        onChange={() => handleFightModalityToggle(modality.modalityId)}
+                        className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 focus:ring-2"
+                        disabled={isView}
+                      />
+                      <label
+                        htmlFor={`modality-${modality.modalityId}`}
+                        className="ml-2 text-sm text-gray-300 cursor-pointer"
+                      >
+                        {modality.name}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm text-gray-400 mt-2">
+                  {t('fight-modalities-description')}
+                </p>
               </div>
 
               <div className="md:col-span-2">
