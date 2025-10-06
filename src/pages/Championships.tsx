@@ -7,7 +7,7 @@ const Championships: React.FC = () => {
 
   const subMenuItems = [
     { id: 'championship-registration', title: t('championship-registration'), path: '/championships/registration', icon: '📝', description: 'Register new championships' },
-    { id: 'student-enrollment', title: t('student-enrollment'), path: '/championships/enrollment', icon: '📋', description: 'Enroll students in championships' },
+    { id: 'student-enrollment', title: t('student-enrollment'), path: '/championships/athlete-enrollment', icon: '📋', description: 'Enroll students in championships' },
     { id: 'championship-results', title: t('championship-results'), path: '/championships/results', icon: '🏆', description: 'Record and view championship results' },
     { id: 'ranking-statistics', title: t('ranking-statistics'), path: '/championships/ranking', icon: '📈', description: 'View rankings and statistics' },
     { id: 'fight-associations', title: t('fight-associations'), path: '/championships/fight-associations', icon: '🏛️', description: 'Manage fight associations and federations' },

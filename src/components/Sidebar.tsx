@@ -67,15 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
   const menuItems = [
     { id: 'students', title: t('coach-students'), icon: '🥋', path: '/students' },
-    { 
-      id: 'championships', 
-      title: t('championships'), 
-      icon: '🥇', 
-      path: '/championships',
-      subItems: [
-        { id: 'athlete-enrollment', title: t('athlete-enrollment'), path: '/championships/athlete-enrollment', icon: '👥' }
-      ]
-    },
+    { id: 'championships', title: t('championships'), icon: '🥇', path: '/championships' },
     { id: 'classes', title: t('class-schedules'), icon: '📅', path: '/classes' },
     { id: 'fight-plans', title: t('fight-plans'), icon: '🗂️', path: '/fight-plans' },
     { 
