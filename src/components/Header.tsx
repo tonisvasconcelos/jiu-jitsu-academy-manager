@@ -22,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
     if (path.startsWith('/quality/')) return t('quality-evaluation')
     if (path.startsWith('/branches/')) return t('branches')
     if (path.startsWith('/schedules/')) return t('schedules-checkins')
-    if (path.startsWith('/admin/')) return t('administration')
+    if (path.startsWith('/administration/')) return t('administration')
     
     // Legacy routes
     if (path === '/students') return t('students')

@@ -81,7 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       ]
     },
     { id: 'branches', title: t('branches'), icon: '🌍', path: '/branches' },
-    { id: 'administration', title: t('administration'), icon: '⚙️', path: '/admin' }
+    { id: 'administration', title: t('administration'), icon: '⚙️', path: '/administration' }
   ]
 
   return (

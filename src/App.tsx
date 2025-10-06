@@ -178,10 +178,10 @@ function App() {
                             <Route path="/championships/fight-teams/:action/:id" element={<FightTeamForm />} />
                     
                     {/* Sub-menu Routes - Administration */}
-                    <Route path="/admin/profiles" element={<UserProfiles />} />
-                    <Route path="/admin/company" element={<CompanyInfo />} />
-                    <Route path="/admin/language" element={<LanguageSelector />} />
-                    <Route path="/admin/settings" element={<AppSettings />} />
+                    <Route path="/administration/profiles" element={<UserProfiles />} />
+                    <Route path="/administration/company" element={<CompanyInfo />} />
+                    <Route path="/administration/language" element={<LanguageSelector />} />
+                    <Route path="/administration/settings" element={<AppSettings />} />
                     
                     {/* Class Schedule Routes */}
                     <Route path="/classes" element={<ClassSchedules />} />

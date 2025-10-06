@@ -6,10 +6,10 @@ const Administration: React.FC = () => {
   const { t } = useLanguage()
 
   const subMenuItems = [
-    { id: 'user-profiles', title: t('user-profiles'), path: '/admin/profiles', icon: '👤', description: 'Manage user profiles and roles' },
-    { id: 'company-info', title: t('company-info-settings'), path: '/admin/company', icon: '🏢', description: 'Manage company information and settings' },
-    { id: 'language-settings', title: t('language-settings'), path: '/admin/language', icon: '🌐', description: 'Change application language' },
-    { id: 'app-settings', title: t('app-settings'), path: '/admin/settings', icon: '⚙️', description: 'Configure application settings' },
+    { id: 'user-profiles', title: t('user-profiles'), path: '/administration/profiles', icon: '👤', description: 'Manage user profiles and roles' },
+    { id: 'company-info', title: t('company-info-settings'), path: '/administration/company', icon: '🏢', description: 'Manage company information and settings' },
+    { id: 'language-settings', title: t('language-settings'), path: '/administration/language', icon: '🌐', description: 'Change application language' },
+    { id: 'app-settings', title: t('app-settings'), path: '/administration/settings', icon: '⚙️', description: 'Configure application settings' },
   ]
 
   return (
