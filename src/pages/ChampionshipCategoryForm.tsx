@@ -15,6 +15,10 @@ const ChampionshipCategoryForm: React.FC = () => {
   const { championships } = useChampionships()
   const { fightAssociations: associations = [] } = useFightAssociations()
   const { fightModalities: modalities = [] } = useFightModalities()
+  
+  // Debug: Check if modalities are loaded
+  console.log('ChampionshipCategoryForm - Modalities:', modalities)
+  console.log('ChampionshipCategoryForm - Modalities length:', modalities.length)
 
   const [category, setCategory] = useState<Omit<ChampionshipCategory, 'categoryId'>>({
     ageGroups: ['adult'],
@@ -309,6 +313,12 @@ const ChampionshipCategoryForm: React.FC = () => {
                   {t('fight-modalities')}
                 </label>
                 <div className="bg-white/5 border border-white/10 rounded-2xl p-4 max-h-48 overflow-y-auto">
+                  {/* Debug info */}
+                  <div className="mb-4 p-2 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
+                    <p className="text-yellow-300 text-xs">Debug: Modalities count: {modalities.length}</p>
+                    <p className="text-yellow-300 text-xs">Debug: Modalities: {JSON.stringify(modalities.map(m => m.name))}</p>
+                  </div>
+                  
                   {modalities.length > 0 ? (
                     <div className="space-y-2">
                       {modalities.map(modality => (
