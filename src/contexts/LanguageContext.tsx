@@ -55,6 +55,11 @@ const translations: Record<Language, Record<string, string>> = {
     // Students page translations
     'manage-student-activities': 'Manage Student Activities',
     'manage-coach-students-data': 'Manage Coach and Students Data',
+    'company-info-settings': 'Company Info & Settings',
+    'manage-company-info': 'Manage your academy\'s company information and system language',
+    'company-fight-team': 'Company Fight Team',
+    'select-company-fight-team': 'Select the fight team that represents your company',
+    'company-fight-team-description': 'Choose which fight team your academy officially represents in competitions and events',
     'student-registration': 'Student Registration',
     'register-new-students': 'Register new students and manage student information',
     'modality-by-student': 'Fight Training Plan',
@@ -422,6 +427,11 @@ const translations: Record<Language, Record<string, string>> = {
     // Students page translations
     'manage-student-activities': 'Gerenciar Atividades dos Estudantes',
     'manage-coach-students-data': 'Gerenciar Dados de Técnicos e Estudantes',
+    'company-info-settings': 'Informações e Configurações da Empresa',
+    'manage-company-info': 'Gerencie as informações da empresa da sua academia e idioma do sistema',
+    'company-fight-team': 'Equipe de Luta da Empresa',
+    'select-company-fight-team': 'Selecione a equipe de luta que representa sua empresa',
+    'company-fight-team-description': 'Escolha qual equipe de luta sua academia representa oficialmente em competições e eventos',
     'student-registration': 'Registro de Estudantes',
     'register-new-students': 'Registrar novos estudantes e gerenciar informações dos estudantes',
     'modality-by-student': 'Plano de Treinamento de Luta',

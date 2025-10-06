@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
+import { useFightTeams } from '../contexts/FightTeamContext'
 
 const CompanyInfo: React.FC = () => {
   const { t, setLanguage } = useLanguage()
+  const { fightTeams = [] } = useFightTeams()
   
   const [companyData, setCompanyData] = useState({
     companyName: 'OSS 365 Fight Academy',
@@ -34,7 +36,8 @@ const CompanyInfo: React.FC = () => {
       saturday: '08:00 - 18:00',
       sunday: '08:00 - 16:00'
     },
-    systemLanguage: 'PTB'
+    systemLanguage: 'PTB',
+    companyFightTeam: 'FT001' // Default to first fight team
   })
 
   const languages = [
@@ -114,7 +117,8 @@ const CompanyInfo: React.FC = () => {
           saturday: '08:00 - 18:00',
           sunday: '08:00 - 16:00'
         },
-        systemLanguage: 'PTB'
+        systemLanguage: 'PTB',
+        companyFightTeam: 'FT001'
       })
     }
   }
@@ -127,10 +131,10 @@ const CompanyInfo: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent mb-2 sm:mb-3">
-                🏢 Company Info & Settings
+                🏢 {t('company-info-settings')}
               </h1>
               <p className="text-base sm:text-lg text-gray-300">
-                Manage your academy's company information and system language
+                {t('manage-company-info')}
               </p>
             </div>
             <Link
@@ -219,6 +223,35 @@ const CompanyInfo: React.FC = () => {
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="https://www.example.com"
                 />
+              </div>
+            </div>
+          </div>
+
+          {/* Company Fight Team */}
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
+            <h2 className="text-xl font-semibold text-white mb-6">{t('company-fight-team')}</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="md:col-span-2">
+                <label htmlFor="companyFightTeam" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('company-fight-team')}
+                </label>
+                <select
+                  id="companyFightTeam"
+                  value={companyData.companyFightTeam}
+                  onChange={(e) => handleInputChange('companyFightTeam', e.target.value)}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="">{t('select-company-fight-team')}</option>
+                  {fightTeams.filter(team => team.isActive).map((team) => (
+                    <option key={team.teamId} value={team.teamId}>
+                      {team.teamName} ({team.countryCode})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-sm text-gray-400 mt-2">
+                  {t('company-fight-team-description')}
+                </p>
               </div>
             </div>
           </div>
