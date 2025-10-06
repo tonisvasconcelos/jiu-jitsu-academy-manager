@@ -7,7 +7,8 @@ const Administration: React.FC = () => {
 
   const subMenuItems = [
     { id: 'user-profiles', title: t('user-profiles'), path: '/admin/profiles', icon: '👤', description: 'Manage user profiles and roles' },
-    { id: 'language-selector', title: t('language-selector'), path: '/admin/language', icon: '🌐', description: 'Change application language' },
+    { id: 'company-info', title: t('company-info-settings'), path: '/admin/company', icon: '🏢', description: 'Manage company information and settings' },
+    { id: 'language-settings', title: t('language-settings'), path: '/admin/language', icon: '🌐', description: 'Change application language' },
     { id: 'app-settings', title: t('app-settings'), path: '/admin/settings', icon: '⚙️', description: 'Configure application settings' },
   ]
 

@@ -67,26 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
   const menuItems = [
     { id: 'students', title: t('coach-students'), icon: '🥋', path: '/students' },
-    { 
-      id: 'championships', 
-      title: t('championships'), 
-      icon: '🥇', 
-      path: '/championships',
-      subItems: [
-        { id: 'championship-registration', title: t('championship-registration'), path: '/championships/registration', icon: '📝' },
-        { id: 'student-enrollment', title: t('student-enrollment'), path: '/championships/enrollment', icon: '👥' },
-        { id: 'championship-results', title: t('championship-results'), path: '/championships/results', icon: '🏆' },
-        { id: 'ranking-statistics', title: t('ranking-statistics'), path: '/championships/ranking', icon: '📊' },
-        { id: 'fight-associations', title: t('fight-associations'), path: '/championships/fight-associations', icon: '🏛️' },
-        { id: 'affiliations', title: t('affiliations'), path: '/championships/affiliations', icon: '🤝' },
-        { id: 'championship-categories', title: t('championship-categories'), path: '/championships/categories', icon: '📋' },
-        { id: 'registrations', title: t('registrations'), path: '/championships/registrations', icon: '📝' },
-        { id: 'referees-officials', title: t('referees-officials'), path: '/championships/officials', icon: '👨‍⚖️' },
-        { id: 'championship-sponsors', title: t('championship-sponsors'), path: '/championships/sponsors', icon: '💰' },
-        { id: 'championship-qualified-locations', title: t('championship-qualified-locations'), path: '/championships/qualified-locations', icon: '🏢' },
-        { id: 'fight-teams', title: t('fight-teams'), path: '/championships/fight-teams', icon: '🥊' }
-      ]
-    },
+    { id: 'championships', title: t('championships'), icon: '🥇', path: '/championships' },
     { id: 'classes', title: t('class-schedules'), icon: '📅', path: '/classes' },
     { id: 'fight-plans', title: t('fight-plans'), icon: '🗂️', path: '/fight-plans' },
     { 
@@ -100,18 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       ]
     },
     { id: 'branches', title: t('branches'), icon: '🌍', path: '/branches' },
-    { 
-      id: 'administration', 
-      title: t('administration'), 
-      icon: '⚙️', 
-      path: '/admin',
-      subItems: [
-        { id: 'user-profiles', title: t('user-profiles'), path: '/admin/profiles', icon: '👤' },
-        { id: 'company-info', title: t('company-info-settings'), path: '/admin/company', icon: '🏢' },
-        { id: 'language-settings', title: t('language-settings'), path: '/admin/language', icon: '🌐' },
-        { id: 'app-settings', title: t('app-settings'), path: '/admin/settings', icon: '⚙️' }
-      ]
-    }
+    { id: 'administration', title: t('administration'), icon: '⚙️', path: '/admin' }
   ]
 
   return (
