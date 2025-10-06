@@ -17,6 +17,7 @@ const Championships: React.FC = () => {
     { id: 'championship-sponsors', title: t('championship-sponsors'), path: '/championships/sponsors', icon: '💰', description: 'Manage championship sponsors' },
     { id: 'championship-qualified-locations', title: t('championship-qualified-locations'), path: '/championships/qualified-locations', icon: '🏢', description: 'Manage championship qualified locations' },
     { id: 'fight-teams', title: t('fight-teams'), path: '/championships/fight-teams', icon: '🥊', description: 'Manage fight teams' },
+    { id: 'fight-management', title: t('fight-management'), path: '/championships/fight-phases', icon: '🥊', description: t('manage-fight-phases') },
   ]
 
   return (
