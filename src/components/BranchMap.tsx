@@ -24,8 +24,15 @@ const BranchMap: React.FC<BranchMapProps> = ({ branches }) => {
         setIsLoading(true)
         setError(null)
 
-        // Initialize Google Maps with new functional API
-        const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'AIzaSyBvOkBw3cJ4XqJ8H9vL2M3N4O5P6Q7R8S9T0' // Fallback key for demo
+        // Check if we have a valid API key
+        const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+        const isDemoMode = !apiKey || apiKey.includes('AIzaSyBvOkBw3cJ4XqJ8H9vL2M3N4O5P6Q7R8S9T0')
+        
+        if (isDemoMode) {
+          // Demo mode - show static map with branch locations
+          setIsLoading(false)
+          return
+        }
         
         // Load Google Maps script if not already loaded
         if (!window.google || !window.google.maps) {
@@ -35,7 +42,11 @@ const BranchMap: React.FC<BranchMapProps> = ({ branches }) => {
             script.async = true
             script.defer = true
             script.onload = () => resolve()
-            script.onerror = () => reject(new Error('Failed to load Google Maps'))
+            script.onerror = () => {
+              console.warn('Failed to load Google Maps, falling back to demo mode')
+              setIsLoading(false)
+              setError('Demo Mode: Google Maps API key required for interactive map')
+            }
             document.head.appendChild(script)
           })
         }
@@ -271,13 +282,53 @@ const BranchMap: React.FC<BranchMapProps> = ({ branches }) => {
     initializeMap()
   }, [branches])
 
-  if (error) {
+  // Check if we're in demo mode
+  const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+  const isDemoMode = !apiKey || apiKey.includes('AIzaSyBvOkBw3cJ4XqJ8H9vL2M3N4O5P6Q7R8S9T0')
+
+  if (error || isDemoMode) {
     return (
       <div className="w-full h-96 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-4">🗺️</div>
-          <p className="text-red-400 mb-2">Map Error</p>
-          <p className="text-gray-400 text-sm">{error}</p>
+        <div className="text-center max-w-md">
+          <div className="text-6xl mb-6">🗺️</div>
+          <h3 className="text-xl font-semibold text-white mb-4">Branch Locations Map</h3>
+          <p className="text-gray-400 mb-6">
+            {isDemoMode 
+              ? "Demo Mode: Interactive map requires a valid Google Maps API key"
+              : error
+            }
+          </p>
+          
+          {/* Show branch locations as cards */}
+          <div className="space-y-3 max-h-48 overflow-y-auto">
+            {branches.map((branch, index) => (
+              <div key={branch.branchId} className="bg-white/10 rounded-lg p-3 text-left">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className={`w-3 h-3 rounded-full mr-3 ${branch.active ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <div>
+                      <p className="text-white font-medium text-sm">{branch.name}</p>
+                      <p className="text-gray-400 text-xs">{branch.address}, {branch.city}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-gray-300 text-xs">{branch.capacity} students</p>
+                    <p className="text-gray-400 text-xs">{branch.managerName}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {isDemoMode && (
+            <div className="mt-6 p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+              <p className="text-blue-400 text-sm">
+                <strong>To enable interactive map:</strong><br/>
+                1. Get a Google Maps API key from <a href="https://console.cloud.google.com/google/maps-apis" target="_blank" rel="noopener noreferrer" className="underline">Google Cloud Console</a><br/>
+                2. Set REACT_APP_GOOGLE_MAPS_API_KEY environment variable
+              </p>
+            </div>
+          )}
         </div>
       </div>
     )
