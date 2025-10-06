@@ -10,8 +10,8 @@ const ChampionshipForm: React.FC = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const { addChampionship, updateChampionship, getChampionship } = useChampionships()
-  const { associations } = useFightAssociations()
-  const { modalities } = useFightModalities()
+  const { associations = [] } = useFightAssociations()
+  const { modalities = [] } = useFightModalities()
 
   const [championship, setChampionship] = useState({
     associationId: '',
