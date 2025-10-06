@@ -47,6 +47,18 @@ const translations: Record<Language, Record<string, string>> = {
     'referees-officials': 'Referees / Officials',
     'championship-sponsors': 'Championship Sponsors',
     
+    // Championship specific translations
+    'manage-championship-registrations': 'Manage Championship Registrations',
+    'search-championships': 'Search championships...',
+    'all-statuses': 'All Statuses',
+    'association': 'Association',
+    'all-associations': 'All Associations',
+    'actions': 'Actions',
+    'no-championships-found': 'No Championships Found',
+    'no-championships-found-description': 'No championships match your current filters. Try adjusting your search criteria or create a new championship.',
+    'create-first-championship': 'Create First Championship',
+    'confirm-delete-championship': 'Are you sure you want to delete this championship?',
+    
     // Championship forms
     'championship-id': 'Championship ID',
     'association-id': 'Association ID',
@@ -219,6 +231,18 @@ const translations: Record<Language, Record<string, string>> = {
     'registrations': 'Inscrições',
     'referees-officials': 'Árbitros / Oficiais',
     'championship-sponsors': 'Patrocinadores de Campeonato',
+    
+    // Championship specific translations
+    'manage-championship-registrations': 'Gerenciar Registros de Campeonato',
+    'search-championships': 'Pesquisar campeonatos...',
+    'all-statuses': 'Todos os Status',
+    'association': 'Associação',
+    'all-associations': 'Todas as Associações',
+    'actions': 'Ações',
+    'no-championships-found': 'Nenhum Campeonato Encontrado',
+    'no-championships-found-description': 'Nenhum campeonato corresponde aos seus filtros atuais. Tente ajustar seus critérios de pesquisa ou criar um novo campeonato.',
+    'create-first-championship': 'Criar Primeiro Campeonato',
+    'confirm-delete-championship': 'Tem certeza de que deseja excluir este campeonato?',
     
     // Championship forms
     'championship-id': 'ID do Campeonato',

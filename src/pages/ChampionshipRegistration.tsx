@@ -7,9 +7,9 @@ import { useLanguage } from '../contexts/LanguageContext'
 
 const ChampionshipRegistration: React.FC = () => {
   const { t } = useLanguage()
-  const { championships, deleteChampionship } = useChampionships()
-  const { associations } = useFightAssociations()
-  const { modalities } = useFightModalities()
+  const { championships = [], deleteChampionship } = useChampionships()
+  const { associations = [] } = useFightAssociations()
+  const { modalities = [] } = useFightModalities()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [associationFilter, setAssociationFilter] = useState<string>('all')
