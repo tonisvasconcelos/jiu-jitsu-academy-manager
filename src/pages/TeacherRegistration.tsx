@@ -279,8 +279,8 @@ const TeacherRegistration: React.FC = () => {
               </svg>
             </Link>
             <div>
-              <h1 className="text-4xl font-bold text-white mb-2">Teachers & Instructors</h1>
-              <p className="text-gray-400">Manage all teacher-related activities and information</p>
+              <h1 className="text-4xl font-bold text-white mb-2">Coaches & Instructors</h1>
+              <p className="text-gray-400">Manage all coach-related activities and information</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-3 mt-4 lg:mt-0">
@@ -300,7 +300,7 @@ const TeacherRegistration: React.FC = () => {
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              New Teacher
+              New Coach
             </Link>
             <button
               onClick={handleExportToExcel}
@@ -335,7 +335,7 @@ const TeacherRegistration: React.FC = () => {
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Total Teachers</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">Total Coaches</p>
                 <p className="text-3xl font-bold text-white">{totalTeachers}</p>
               </div>
               <div className="p-3 bg-blue-500/20 rounded-xl">
@@ -349,7 +349,7 @@ const TeacherRegistration: React.FC = () => {
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400 mb-1">Active Teachers</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">Active Coaches</p>
                 <p className="text-3xl font-bold text-white">{activeTeachers}</p>
               </div>
               <div className="p-3 bg-green-500/20 rounded-xl">
@@ -587,7 +587,7 @@ const TeacherRegistration: React.FC = () => {
             <table className="min-w-full divide-y divide-white/10">
               <thead className="bg-white/5">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Teacher</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Coach</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Type</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Belt Level</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Branch</th>

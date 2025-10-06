@@ -172,10 +172,10 @@ const TeacherForm: React.FC = () => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">
-              {action === 'new' ? 'New Teacher' : action === 'edit' ? 'Edit Teacher' : 'View Teacher'}
+              {action === 'new' ? 'New Coach' : action === 'edit' ? 'Edit Coach' : 'View Coach'}
             </h1>
             <p className="text-gray-400">
-              {action === 'new' ? 'Register a new teacher' : action === 'edit' ? 'Update teacher information' : 'View teacher details'}
+              {action === 'new' ? 'Register a new coach' : action === 'edit' ? 'Update coach information' : 'View coach details'}
             </p>
           </div>
           <Link

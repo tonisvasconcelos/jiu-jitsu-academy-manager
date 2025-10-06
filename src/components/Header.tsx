@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
     
     if (path === '/') return t('dashboard')
     if (path.startsWith('/students/')) return t('students')
-    if (path.startsWith('/teachers/')) return t('teachers')
+    if (path.startsWith('/teachers/')) return t('coach-students')
     if (path.startsWith('/championships/')) return t('championships')
     if (path.startsWith('/classes/')) return t('classes')
     if (path.startsWith('/fight-plans/')) return t('fight-plans')
