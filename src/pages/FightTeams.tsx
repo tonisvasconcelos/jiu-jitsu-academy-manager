@@ -7,23 +7,16 @@ const FightTeams: React.FC = () => {
   const { t } = useLanguage()
   const { fightTeams = [], deleteFightTeam } = useFightTeams()
   const [searchTerm, setSearchTerm] = useState('')
-  const [branchFilter, setBranchFilter] = useState<string>('all')
-  const [modalityFilter, setModalityFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
 
   const filteredTeams = fightTeams.filter(team => {
     const matchesSearch = 
       team.teamId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      team.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      team.coachName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      team.branchName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      team.modality.toLowerCase().includes(searchTerm.toLowerCase())
+      team.teamName.toLowerCase().includes(searchTerm.toLowerCase())
     
-    const matchesBranch = branchFilter === 'all' || team.branchId === branchFilter
-    const matchesModality = modalityFilter === 'all' || team.modality === modalityFilter
     const matchesStatus = statusFilter === 'all' || (statusFilter === 'active' ? team.isActive : !team.isActive)
     
-    return matchesSearch && matchesBranch && matchesModality && matchesStatus
+    return matchesSearch && matchesStatus
   })
 
   const getStatusColor = (isActive: boolean) => {
@@ -36,9 +29,6 @@ const FightTeams: React.FC = () => {
     return new Date(dateString).toLocaleDateString()
   }
 
-  // Get unique branches and modalities for filters
-  const branches = Array.from(new Set(fightTeams.map(team => team.branchName))).sort()
-  const modalities = Array.from(new Set(fightTeams.map(team => team.modality))).sort()
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
@@ -65,7 +55,7 @@ const FightTeams: React.FC = () => {
 
         {/* Filters */}
         <div className="bg-white/5 rounded-xl p-6 border border-white/10 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">{t('search')}</label>
               <input
@@ -75,36 +65,6 @@ const FightTeams: React.FC = () => {
                 placeholder={t('search-teams')}
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">{t('branch')}</label>
-              <select
-                value={branchFilter}
-                onChange={(e) => setBranchFilter(e.target.value)}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="all">{t('all-branches')}</option>
-                {branches.map((branch) => (
-                  <option key={branch} value={branch}>
-                    {branch}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">{t('modality')}</label>
-              <select
-                value={modalityFilter}
-                onChange={(e) => setModalityFilter(e.target.value)}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="all">{t('all-modalities')}</option>
-                {modalities.map((modality) => (
-                  <option key={modality} value={modality}>
-                    {modality}
-                  </option>
-                ))}
-              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">{t('status')}</label>
@@ -129,9 +89,6 @@ const FightTeams: React.FC = () => {
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('team-id')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('team-name')}</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('coach')}</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('branch')}</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('modality')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('team-size')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('established')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('status')}</th>
@@ -143,10 +100,7 @@ const FightTeams: React.FC = () => {
                   <tr key={team.teamId} className="hover:bg-white/5 transition-colors">
                     <td className="px-6 py-4 text-sm text-white font-mono">{team.teamId}</td>
                     <td className="px-6 py-4 text-sm text-white font-medium">{team.teamName}</td>
-                    <td className="px-6 py-4 text-sm text-white">{team.coachName}</td>
-                    <td className="px-6 py-4 text-sm text-white">{team.branchName}</td>
-                    <td className="px-6 py-4 text-sm text-white">{team.modality}</td>
-                    <td className="px-6 py-4 text-sm text-white">{team.teamSize}/{team.maxTeamSize}</td>
+                    <td className="px-6 py-4 text-sm text-white">{team.teamSize}</td>
                     <td className="px-6 py-4 text-sm text-white">{formatDate(team.establishedDate)}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(team.isActive)}`}>

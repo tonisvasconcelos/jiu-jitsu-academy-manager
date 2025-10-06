@@ -4,14 +4,8 @@ export interface FightTeam {
   teamId: string
   teamName: string
   description?: string
-  coachId: string
-  coachName: string
-  branchId: string
-  branchName: string
-  modality: string
   establishedDate: string
   teamSize: number
-  maxTeamSize: number
   isActive: boolean
   achievements?: string[]
   teamMembers: string[] // Array of student IDs
@@ -29,9 +23,6 @@ interface FightTeamContextType {
   updateFightTeam: (id: string, team: Partial<FightTeam>) => void
   deleteFightTeam: (id: string) => void
   getFightTeam: (id: string) => FightTeam | undefined
-  getFightTeamsByBranch: (branchId: string) => FightTeam[]
-  getFightTeamsByModality: (modality: string) => FightTeam[]
-  getFightTeamsByCoach: (coachId: string) => FightTeam[]
 }
 
 const FightTeamContext = createContext<FightTeamContextType | undefined>(undefined)
@@ -63,14 +54,8 @@ export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           teamId: 'FT001',
           teamName: 'Rio Elite Fighters',
           description: 'Elite competition team focused on Brazilian Jiu-Jitsu',
-          coachId: 'T001',
-          coachName: 'Carlos Silva',
-          branchId: 'B001',
-          branchName: 'Rio de Janeiro Main',
-          modality: 'Brazilian Jiu-Jitsu',
           establishedDate: '2023-01-15',
           teamSize: 8,
-          maxTeamSize: 12,
           isActive: true,
           achievements: [
             '2024 State Championship - 1st Place',
@@ -89,14 +74,8 @@ export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           teamId: 'FT002',
           teamName: 'Abu Dhabi Warriors',
           description: 'International competition team for UAE championships',
-          coachId: 'T002',
-          coachName: 'Ahmed Al-Rashid',
-          branchId: 'B002',
-          branchName: 'Abu Dhabi Branch',
-          modality: 'Brazilian Jiu-Jitsu',
           establishedDate: '2023-03-20',
           teamSize: 6,
-          maxTeamSize: 10,
           isActive: true,
           achievements: [
             '2024 UAE National Championship - 1st Place',
@@ -114,14 +93,8 @@ export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           teamId: 'FT003',
           teamName: 'Los Angeles Grapplers',
           description: 'Youth development team for upcoming fighters',
-          coachId: 'T003',
-          coachName: 'Maria Rodriguez',
-          branchId: 'B003',
-          branchName: 'Los Angeles Branch',
-          modality: 'Brazilian Jiu-Jitsu',
           establishedDate: '2023-06-10',
           teamSize: 4,
-          maxTeamSize: 8,
           isActive: true,
           achievements: [
             '2024 Youth State Championship - 1st Place'
@@ -172,27 +145,12 @@ export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return fightTeams.find(team => team.teamId === id)
   }
 
-  const getFightTeamsByBranch = (branchId: string) => {
-    return fightTeams.filter(team => team.branchId === branchId)
-  }
-
-  const getFightTeamsByModality = (modality: string) => {
-    return fightTeams.filter(team => team.modality === modality)
-  }
-
-  const getFightTeamsByCoach = (coachId: string) => {
-    return fightTeams.filter(team => team.coachId === coachId)
-  }
-
   const value: FightTeamContextType = {
     fightTeams,
     addFightTeam,
     updateFightTeam,
     deleteFightTeam,
-    getFightTeam,
-    getFightTeamsByBranch,
-    getFightTeamsByModality,
-    getFightTeamsByCoach
+    getFightTeam
   }
 
   return (

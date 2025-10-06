@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useFightTeams } from '../contexts/FightTeamContext'
-import { useBranches } from '../contexts/BranchContext'
-import { useTeachers } from '../contexts/TeacherContext'
-import { useFightModalities } from '../contexts/FightModalityContext'
 import { useStudents } from '../contexts/StudentContext'
 import { useLanguage } from '../contexts/LanguageContext'
 
@@ -13,19 +10,12 @@ const FightTeamForm: React.FC = () => {
   const navigate = useNavigate()
   
   const { fightTeams = [], addFightTeam, updateFightTeam, getFightTeam } = useFightTeams()
-  const { branches = [] } = useBranches()
-  const { teachers = [] } = useTeachers()
-  const { modalities = [] } = useFightModalities()
   const { students = [] } = useStudents()
 
   const [team, setTeam] = useState({
     teamName: '',
     description: '',
-    coachId: '',
-    branchId: '',
-    modality: '',
     establishedDate: '',
-    maxTeamSize: '',
     isActive: true,
     achievements: [] as string[],
     teamMembers: [] as string[],
@@ -45,11 +35,7 @@ const FightTeamForm: React.FC = () => {
         setTeam({
           teamName: existingTeam.teamName,
           description: existingTeam.description || '',
-          coachId: existingTeam.coachId,
-          branchId: existingTeam.branchId,
-          modality: existingTeam.modality,
           establishedDate: existingTeam.establishedDate,
-          maxTeamSize: existingTeam.maxTeamSize.toString(),
           isActive: existingTeam.isActive,
           achievements: existingTeam.achievements || [],
           teamMembers: existingTeam.teamMembers || [],
@@ -93,14 +79,13 @@ const FightTeamForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!team.teamName || !team.coachId || !team.branchId || !team.modality || !team.establishedDate) {
+    if (!team.teamName || !team.establishedDate) {
       alert(t('fill-required-fields'))
       return
     }
 
     const teamData = {
       ...team,
-      maxTeamSize: parseInt(team.maxTeamSize) || 10,
       teamSize: team.teamMembers.length
     }
 
@@ -162,68 +147,8 @@ const FightTeamForm: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label htmlFor="coachId" className="block text-sm font-medium text-gray-300 mb-2">
-                  {t('coach')} *
-                </label>
-                <select
-                  id="coachId"
-                  value={team.coachId}
-                  onChange={(e) => handleInputChange('coachId', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                  disabled={isView}
-                >
-                  <option value="">{t('select-coach')}</option>
-                  {teachers.filter(teacher => teacher.active).map((teacher) => (
-                    <option key={teacher.teacherId} value={teacher.teacherId}>
-                      {teacher.firstName} {teacher.lastName}
-                    </option>
-                  ))}
-                </select>
-              </div>
 
-              <div>
-                <label htmlFor="branchId" className="block text-sm font-medium text-gray-300 mb-2">
-                  {t('branch')} *
-                </label>
-                <select
-                  id="branchId"
-                  value={team.branchId}
-                  onChange={(e) => handleInputChange('branchId', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                  disabled={isView}
-                >
-                  <option value="">{t('select-branch')}</option>
-                  {branches.filter(branch => branch.isActive).map((branch) => (
-                    <option key={branch.branchId} value={branch.branchId}>
-                      {branch.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
 
-              <div>
-                <label htmlFor="modality" className="block text-sm font-medium text-gray-300 mb-2">
-                  {t('modality')} *
-                </label>
-                <select
-                  id="modality"
-                  value={team.modality}
-                  onChange={(e) => handleInputChange('modality', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                  disabled={isView}
-                >
-                  <option value="">{t('select-modality')}</option>
-                  {modalities.map((modality) => (
-                    <option key={modality.modalityId} value={modality.name}>
-                      {modality.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
 
               <div>
                 <label htmlFor="establishedDate" className="block text-sm font-medium text-gray-300 mb-2">
@@ -240,22 +165,6 @@ const FightTeamForm: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label htmlFor="maxTeamSize" className="block text-sm font-medium text-gray-300 mb-2">
-                  {t('max-team-size')}
-                </label>
-                <input
-                  type="number"
-                  id="maxTeamSize"
-                  value={team.maxTeamSize}
-                  onChange={(e) => handleInputChange('maxTeamSize', e.target.value)}
-                  placeholder={t('max-team-size-placeholder')}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  min="1"
-                  max="50"
-                  disabled={isView}
-                />
-              </div>
 
               <div className="md:col-span-2">
                 <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">
