@@ -71,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     { 
       id: 'championships', 
       title: t('championships'), 
-      icon: '🏟️', 
+      icon: '🥇', 
       path: '/championships',
       subItems: [
         { id: 'championship-registration', title: t('championship-registration'), path: '/championships/registration', icon: '📝' },

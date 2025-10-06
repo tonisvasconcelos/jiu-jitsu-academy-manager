@@ -95,7 +95,7 @@ const ChampionshipForm: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2 flex items-center">
-                <span className="mr-3 text-5xl">🏟️</span>
+                <span className="mr-3 text-5xl">🥇</span>
                 {id && id !== 'new' ? t('edit-championship') : t('new-championship')}
               </h1>
               <p className="text-gray-400 text-lg">

@@ -63,7 +63,7 @@ const ChampionshipRegistration: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2 flex items-center">
-                <span className="mr-3 text-5xl">🏟️</span>
+                <span className="mr-3 text-5xl">🥇</span>
                 {t('championship-registration')}
               </h1>
               <p className="text-gray-400 text-lg">{t('manage-championship-registrations')}</p>
@@ -187,7 +187,7 @@ const ChampionshipRegistration: React.FC = () => {
           
           {filteredChampionships.length === 0 && (
             <div className="text-center py-12">
-              <div className="text-6xl mb-4">🏟️</div>
+              <div className="text-6xl mb-4">🥇</div>
               <h3 className="text-xl font-semibold text-gray-300 mb-2">{t('no-championships-found')}</h3>
               <p className="text-gray-400 mb-6">{t('no-championships-found-description')}</p>
               <Link
