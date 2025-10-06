@@ -33,8 +33,6 @@ const ChampionshipRegistrationForm: React.FC = () => {
   })
 
   const [isLoading, setIsLoading] = useState(false)
-  const [availableCategories, setAvailableCategories] = useState<any[]>([])
-
   useEffect(() => {
     if (id && id !== 'new') {
       const existingRegistration = getRegistration(id)
@@ -56,16 +54,6 @@ const ChampionshipRegistrationForm: React.FC = () => {
       }
     }
   }, [id, getRegistration])
-
-  // Update available categories when championship changes
-  useEffect(() => {
-    if (registration.championshipId) {
-      const championshipCategories = categories.filter(cat => cat.championshipId === registration.championshipId)
-      setAvailableCategories(championshipCategories)
-    } else {
-      setAvailableCategories([])
-    }
-  }, [registration.championshipId, categories])
 
   const handleInputChange = (field: keyof typeof registration, value: string) => {
     setRegistration(prev => ({
@@ -109,7 +97,7 @@ const ChampionshipRegistrationForm: React.FC = () => {
 
   const getCategoryInfo = (categoryId: string) => {
     const category = categories.find(cat => cat.categoryId === categoryId)
-    return category ? `${category.ageGroup} - ${category.belt} - ${category.weightCategory}` : 'Unknown Category'
+    return category ? `${category.ageGroups.join(', ')} - ${category.belts.join(', ')} - ${category.weightCategory}` : 'Unknown Category'
   }
 
   const getTeacherName = (teacherId: string) => {
@@ -205,12 +193,11 @@ const ChampionshipRegistrationForm: React.FC = () => {
                     onChange={(e) => handleInputChange('categoryId', e.target.value)}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
-                    disabled={!registration.championshipId}
                   >
                     <option value="">{t('select-category')}</option>
-                    {availableCategories.map((category) => (
+                    {categories.map((category) => (
                       <option key={category.categoryId} value={category.categoryId}>
-                        {category.ageGroup} - {category.belt} - {category.weightCategory} - {t(category.gender)}
+                        {category.ageGroups.join(', ')} - {category.belts.join(', ')} - {category.weightCategory} - {t(category.gender)}
                       </option>
                     ))}
                   </select>
