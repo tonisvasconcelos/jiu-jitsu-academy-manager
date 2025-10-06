@@ -138,6 +138,10 @@ const translations: Record<Language, Record<string, string>> = {
     'select-multiple-age-groups': 'Select one or more age groups',
     'select-multiple-belts': 'Select one or more belt levels',
     'select-multiple-fight-modalities': 'Select one or more fight modalities',
+    'athlete-enrollment': 'Athlete Enrollment',
+    'manage-athlete-enrollment': 'Manage athlete enrollment in championships',
+    'athlete-enrollment-list': 'Athlete Enrollment List',
+    'view-enrolled-athletes': 'View enrolled athletes by championship and category',
     'category-description-placeholder': 'Enter category description and rules',
     'update-category': 'Update Category',
     'create-category': 'Create Category',
@@ -533,6 +537,10 @@ const translations: Record<Language, Record<string, string>> = {
     'select-multiple-age-groups': 'Selecione um ou mais grupos de idade',
     'select-multiple-belts': 'Selecione um ou mais níveis de faixa',
     'select-multiple-fight-modalities': 'Selecione uma ou mais modalidades de luta',
+    'athlete-enrollment': 'Inscrição de Atletas',
+    'manage-athlete-enrollment': 'Gerenciar inscrições de atletas em campeonatos',
+    'athlete-enrollment-list': 'Lista de Inscrições de Atletas',
+    'view-enrolled-athletes': 'Visualizar atletas inscritos por campeonato e categoria',
     'category-description-placeholder': 'Digite a descrição e regras da categoria',
     'update-category': 'Atualizar Categoria',
     'create-category': 'Criar Categoria',
@@ -879,7 +887,11 @@ const translations: Record<Language, Record<string, string>> = {
     'teacher-registration': 'Lehrer-Registrierung',
     'register-new-teachers': 'Neue Lehrer registrieren und Lehrerinformationen verwalten',
     'coach-registration': 'Trainer-Registrierung',
-    'register-new-coaches': 'Neue Trainer registrieren und Trainerinformationen verwalten'
+    'register-new-coaches': 'Neue Trainer registrieren und Trainerinformationen verwalten',
+    'athlete-enrollment': 'Athleten-Anmeldung',
+    'manage-athlete-enrollment': 'Athleten-Anmeldungen in Meisterschaften verwalten',
+    'athlete-enrollment-list': 'Athleten-Anmeldungsliste',
+    'view-enrolled-athletes': 'Angemeldete Athleten nach Meisterschaft und Kategorie anzeigen'
   },
   
   FRA: {
@@ -953,7 +965,11 @@ const translations: Record<Language, Record<string, string>> = {
     'female': 'Féminin',
     'other': 'Autre',
     'unisex': 'Unisexe',
-    'womens-only': 'Femmes Seulement'
+    'womens-only': 'Femmes Seulement',
+    'athlete-enrollment': 'Inscription des Athlètes',
+    'manage-athlete-enrollment': 'Gérer les inscriptions des athlètes aux championnats',
+    'athlete-enrollment-list': 'Liste des Inscriptions des Athlètes',
+    'view-enrolled-athletes': 'Voir les athlètes inscrits par championnat et catégorie'
   },
   
   ESP: {
@@ -1033,7 +1049,11 @@ const translations: Record<Language, Record<string, string>> = {
     'teacher-registration': 'Registro de Profesores',
     'register-new-teachers': 'Registrar nuevos profesores y gestionar información de profesores',
     'coach-registration': 'Registro de Entrenadores',
-    'register-new-coaches': 'Registrar nuevos entrenadores y gestionar información de entrenadores'
+    'register-new-coaches': 'Registrar nuevos entrenadores y gestionar información de entrenadores',
+    'athlete-enrollment': 'Inscripción de Atletas',
+    'manage-athlete-enrollment': 'Gestionar inscripciones de atletas en campeonatos',
+    'athlete-enrollment-list': 'Lista de Inscripciones de Atletas',
+    'view-enrolled-athletes': 'Ver atletas inscritos por campeonato y categoría'
   },
   
   JPN: {
