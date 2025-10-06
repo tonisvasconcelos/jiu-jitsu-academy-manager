@@ -60,6 +60,7 @@ import AffiliationForm from './pages/AffiliationForm'
 import ChampionshipRegistration from './pages/ChampionshipRegistration'
 import ChampionshipForm from './pages/ChampionshipForm'
 import ChampionshipCategories from './pages/ChampionshipCategories'
+import ChampionshipCategoryForm from './pages/ChampionshipCategoryForm'
 import ChampionshipRegistrations from './pages/ChampionshipRegistrations'
 import ChampionshipRegistrationForm from './pages/ChampionshipRegistrationForm'
 import ChampionshipResults from './pages/ChampionshipResults'
@@ -166,6 +167,8 @@ function App() {
                     <Route path="/championships/affiliations/:action" element={<AffiliationForm />} />
                     <Route path="/championships/affiliations/:action/:id" element={<AffiliationForm />} />
                     <Route path="/championships/categories" element={<ChampionshipCategories />} />
+                    <Route path="/championships/categories/:action" element={<ChampionshipCategoryForm />} />
+                    <Route path="/championships/categories/:action/:id" element={<ChampionshipCategoryForm />} />
                     <Route path="/championships/registrations" element={<ChampionshipRegistrations />} />
                     <Route path="/championships/registrations/:action" element={<ChampionshipRegistrationForm />} />
                     <Route path="/championships/registrations/:action/:id" element={<ChampionshipRegistrationForm />} />
