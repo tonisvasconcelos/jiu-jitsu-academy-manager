@@ -15,6 +15,7 @@ const FightTeamForm: React.FC = () => {
   const [team, setTeam] = useState({
     teamName: '',
     description: '',
+    countryCode: '',
     establishedDate: '',
     isActive: true,
     achievements: [] as string[],
@@ -35,6 +36,7 @@ const FightTeamForm: React.FC = () => {
         setTeam({
           teamName: existingTeam.teamName,
           description: existingTeam.description || '',
+          countryCode: existingTeam.countryCode || '',
           establishedDate: existingTeam.establishedDate,
           isActive: existingTeam.isActive,
           achievements: existingTeam.achievements || [],
@@ -189,6 +191,21 @@ const FightTeamForm: React.FC = () => {
                 />
               </div>
 
+              <div>
+                <label htmlFor="countryCode" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('country-code')}
+                </label>
+                <input
+                  type="text"
+                  id="countryCode"
+                  value={team.countryCode}
+                  onChange={(e) => handleInputChange('countryCode', e.target.value.toUpperCase())}
+                  placeholder={t('country-code-placeholder')}
+                  maxLength={2}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isView}
+                />
+              </div>
 
               <div className="md:col-span-2">
                 <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">

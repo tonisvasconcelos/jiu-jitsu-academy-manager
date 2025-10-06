@@ -90,6 +90,7 @@ const FightTeams: React.FC = () => {
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('logo')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('team-id')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('team-name')}</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('country-code')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('team-size')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('established')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('status')}</th>
@@ -118,6 +119,7 @@ const FightTeams: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 text-sm text-white font-mono">{team.teamId}</td>
                     <td className="px-6 py-4 text-sm text-white font-medium">{team.teamName}</td>
+                    <td className="px-6 py-4 text-sm text-white font-mono">{team.countryCode}</td>
                     <td className="px-6 py-4 text-sm text-white">{team.teamSize}</td>
                     <td className="px-6 py-4 text-sm text-white">{formatDate(team.establishedDate)}</td>
                     <td className="px-6 py-4">

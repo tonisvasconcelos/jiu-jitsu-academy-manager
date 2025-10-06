@@ -4,6 +4,7 @@ export interface FightTeam {
   teamId: string
   teamName: string
   description?: string
+  countryCode: string
   establishedDate: string
   teamSize: number
   isActive: boolean
@@ -54,6 +55,7 @@ export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           teamId: 'FT001',
           teamName: 'Rio Elite Fighters',
           description: 'Elite competition team focused on Brazilian Jiu-Jitsu',
+          countryCode: 'BR',
           establishedDate: '2023-01-15',
           teamSize: 8,
           isActive: true,
@@ -74,6 +76,7 @@ export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           teamId: 'FT002',
           teamName: 'Abu Dhabi Warriors',
           description: 'International competition team for UAE championships',
+          countryCode: 'AE',
           establishedDate: '2023-03-20',
           teamSize: 6,
           isActive: true,
@@ -93,6 +96,7 @@ export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           teamId: 'FT003',
           teamName: 'Los Angeles Grapplers',
           description: 'Youth development team for upcoming fighters',
+          countryCode: 'US',
           establishedDate: '2023-06-10',
           teamSize: 4,
           isActive: true,
