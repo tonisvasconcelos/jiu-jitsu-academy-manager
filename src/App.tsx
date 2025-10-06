@@ -18,6 +18,7 @@ import { ChampionshipRegistrationProvider } from './contexts/ChampionshipRegistr
 import { ChampionshipResultProvider } from './contexts/ChampionshipResultContext'
 import { ChampionshipOfficialProvider } from './contexts/ChampionshipOfficialContext'
 import { ChampionshipSponsorProvider } from './contexts/ChampionshipSponsorContext'
+import { ChampionshipQualifiedLocationProvider } from './contexts/ChampionshipQualifiedLocationContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -62,6 +63,8 @@ import ChampionshipCategories from './pages/ChampionshipCategories'
 import ChampionshipRegistrations from './pages/ChampionshipRegistrations'
 import ChampionshipRegistrationForm from './pages/ChampionshipRegistrationForm'
 import ChampionshipResults from './pages/ChampionshipResults'
+import ChampionshipQualifiedLocations from './pages/ChampionshipQualifiedLocations'
+import ChampionshipQualifiedLocationForm from './pages/ChampionshipQualifiedLocationForm'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -105,6 +108,7 @@ function App() {
                                       <ChampionshipResultProvider>
                                         <ChampionshipOfficialProvider>
                                           <ChampionshipSponsorProvider>
+                                            <ChampionshipQualifiedLocationProvider>
                 <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
@@ -169,6 +173,9 @@ function App() {
                     <Route path="/championships/registrations/:action" element={<ChampionshipRegistrationForm />} />
                     <Route path="/championships/registrations/:action/:id" element={<ChampionshipRegistrationForm />} />
                     <Route path="/championships/results" element={<ChampionshipResults />} />
+                    <Route path="/championships/qualified-locations" element={<ChampionshipQualifiedLocations />} />
+                    <Route path="/championships/qualified-locations/:action" element={<ChampionshipQualifiedLocationForm />} />
+                    <Route path="/championships/qualified-locations/:action/:id" element={<ChampionshipQualifiedLocationForm />} />
                     
                     {/* Sub-menu Routes - Administration */}
                     <Route path="/admin/profiles" element={<UserProfiles />} />
@@ -216,6 +223,7 @@ function App() {
           </div>
         </div>
                 </Router>
+                                            </ChampionshipQualifiedLocationProvider>
                                           </ChampionshipSponsorProvider>
                                         </ChampionshipOfficialProvider>
                                       </ChampionshipResultProvider>
