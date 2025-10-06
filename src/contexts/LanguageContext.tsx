@@ -73,6 +73,8 @@ const translations: Record<Language, Record<string, string>> = {
     'manage-teacher-activities': 'Manage Teacher Activities',
     'teacher-registration': 'Teacher Registration',
     'register-new-teachers': 'Register new teachers and manage teacher information',
+    'coach-registration': 'Coach Registration',
+    'register-new-coaches': 'Register new coaches and manage coach information',
     'teacher-profiles': 'Teacher Profiles',
     'view-manage-teacher-profiles': 'View and manage teacher profiles and information',
     'assign-teachers': 'Assign Teachers',
@@ -446,6 +448,8 @@ const translations: Record<Language, Record<string, string>> = {
     'manage-teacher-activities': 'Gerenciar Atividades dos Professores',
     'teacher-registration': 'Registro de Professores',
     'register-new-teachers': 'Registrar novos professores e gerenciar informações dos professores',
+    'coach-registration': 'Registro de Treinadores',
+    'register-new-coaches': 'Registrar novos treinadores e gerenciar informações dos treinadores',
     'teacher-profiles': 'Perfis dos Professores',
     'view-manage-teacher-profiles': 'Visualizar e gerenciar perfis e informações dos professores',
     'assign-teachers': 'Atribuir Professores',
@@ -829,7 +833,13 @@ const translations: Record<Language, Record<string, string>> = {
     'female': 'Weiblich',
     'other': 'Andere',
     'unisex': 'Unisex',
-    'womens-only': 'Nur Frauen'
+    'womens-only': 'Nur Frauen',
+    
+    // Teachers page translations
+    'teacher-registration': 'Lehrer-Registrierung',
+    'register-new-teachers': 'Neue Lehrer registrieren und Lehrerinformationen verwalten',
+    'coach-registration': 'Trainer-Registrierung',
+    'register-new-coaches': 'Neue Trainer registrieren und Trainerinformationen verwalten'
   },
   
   FRA: {
@@ -977,7 +987,13 @@ const translations: Record<Language, Record<string, string>> = {
     'female': 'Femenino',
     'other': 'Otro',
     'unisex': 'Unisex',
-    'womens-only': 'Solo Mujeres'
+    'womens-only': 'Solo Mujeres',
+    
+    // Teachers page translations
+    'teacher-registration': 'Registro de Profesores',
+    'register-new-teachers': 'Registrar nuevos profesores y gestionar información de profesores',
+    'coach-registration': 'Registro de Entrenadores',
+    'register-new-coaches': 'Registrar nuevos entrenadores y gestionar información de entrenadores'
   },
   
   JPN: {
@@ -1051,7 +1067,13 @@ const translations: Record<Language, Record<string, string>> = {
     'female': '女性',
     'other': 'その他',
     'unisex': 'ユニセックス',
-    'womens-only': '女性のみ'
+    'womens-only': '女性のみ',
+    
+    // Teachers page translations
+    'teacher-registration': '教師登録',
+    'register-new-teachers': '新しい教師を登録し、教師情報を管理する',
+    'coach-registration': 'コーチ登録',
+    'register-new-coaches': '新しいコーチを登録し、コーチ情報を管理する'
   },
   
   ITA: {
@@ -1125,7 +1147,13 @@ const translations: Record<Language, Record<string, string>> = {
     'female': 'Femmina',
     'other': 'Altro',
     'unisex': 'Unisex',
-    'womens-only': 'Solo Donne'
+    'womens-only': 'Solo Donne',
+    
+    // Teachers page translations
+    'teacher-registration': 'Registrazione Insegnanti',
+    'register-new-teachers': 'Registra nuovi insegnanti e gestisci informazioni insegnanti',
+    'coach-registration': 'Registrazione Allenatori',
+    'register-new-coaches': 'Registra nuovi allenatori e gestisci informazioni allenatori'
   },
   
   RUS: {
@@ -1199,7 +1227,13 @@ const translations: Record<Language, Record<string, string>> = {
     'female': 'Женский',
     'other': 'Другой',
     'unisex': 'Унисекс',
-    'womens-only': 'Только Женщины'
+    'womens-only': 'Только Женщины',
+    
+    // Teachers page translations
+    'teacher-registration': 'Регистрация Преподавателей',
+    'register-new-teachers': 'Зарегистрировать новых преподавателей и управлять информацией преподавателей',
+    'coach-registration': 'Регистрация Тренеров',
+    'register-new-coaches': 'Зарегистрировать новых тренеров и управлять информацией тренеров'
   },
   
   ARA: {
@@ -1273,7 +1307,13 @@ const translations: Record<Language, Record<string, string>> = {
     'female': 'أنثى',
     'other': 'آخر',
     'unisex': 'للجنسين',
-    'womens-only': 'للنساء فقط'
+    'womens-only': 'للنساء فقط',
+    
+    // Teachers page translations
+    'teacher-registration': 'تسجيل المعلمين',
+    'register-new-teachers': 'تسجيل معلمين جدد وإدارة معلومات المعلمين',
+    'coach-registration': 'تسجيل المدربين',
+    'register-new-coaches': 'تسجيل مدربين جدد وإدارة معلومات المدربين'
   },
   
   KOR: {
@@ -1347,7 +1387,13 @@ const translations: Record<Language, Record<string, string>> = {
     'female': '여성',
     'other': '기타',
     'unisex': '유니섹스',
-    'womens-only': '여성 전용'
+    'womens-only': '여성 전용',
+    
+    // Teachers page translations
+    'teacher-registration': '교사 등록',
+    'register-new-teachers': '새 교사를 등록하고 교사 정보를 관리합니다',
+    'coach-registration': '코치 등록',
+    'register-new-coaches': '새 코치를 등록하고 코치 정보를 관리합니다'
   }
 }
 
