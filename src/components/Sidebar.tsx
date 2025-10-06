@@ -243,7 +243,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
                     : collapsed 
                       ? 'left-16 ml-1 min-w-max'
                       : 'left-64 ml-2 min-w-max'
-                } bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-xl z-[60]`}
+                } bg-gray-800/95 backdrop-blur-md border border-white/20 rounded-lg shadow-xl z-[60]`}
                 style={{
                   top: isMobile ? 'auto' : `${menuPositions[menu.id] || 0}px`
                 }}>
