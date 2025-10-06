@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useChampionshipCategories } from '../contexts/ChampionshipCategoryContext'
 import { useChampionships } from '../contexts/ChampionshipContext'
 import { useFightAssociations } from '../contexts/FightAssociationContext'
+import { useFightModalities } from '../contexts/FightModalityContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import { ChampionshipCategory } from '../contexts/ChampionshipCategoryContext'
 
@@ -13,14 +14,16 @@ const ChampionshipCategoryForm: React.FC = () => {
   const { addCategory, updateCategory, getCategory } = useChampionshipCategories()
   const { championships } = useChampionships()
   const { fightAssociations: associations = [] } = useFightAssociations()
+  const { fightModalities: modalities = [] } = useFightModalities()
 
   const [category, setCategory] = useState<Omit<ChampionshipCategory, 'categoryId'>>({
-    ageGroup: 'adult',
-    belt: 'white',
+    ageGroups: ['adult'],
+    belts: ['white'],
     weightCategory: '',
     weightLimit: undefined,
     gender: 'mixed',
-    fightAssociation: ''
+    fightAssociation: '',
+    fightModalities: []
   })
 
   const [isLoading, setIsLoading] = useState(false)
@@ -44,6 +47,15 @@ const ChampionshipCategoryForm: React.FC = () => {
     setCategory(prev => ({
       ...prev,
       [field]: value
+    }))
+  }
+
+  const handleMultiSelectChange = (field: 'ageGroups' | 'belts' | 'fightModalities', value: string, checked: boolean) => {
+    setCategory(prev => ({
+      ...prev,
+      [field]: checked 
+        ? [...(prev[field] as string[]), value]
+        : (prev[field] as string[]).filter(item => item !== value)
     }))
   }
 
@@ -84,12 +96,13 @@ const ChampionshipCategoryForm: React.FC = () => {
       }
     } else {
       setCategory({
-        ageGroup: 'adult',
-        belt: 'white',
+        ageGroups: ['adult'],
+        belts: ['white'],
         weightCategory: '',
         weightLimit: undefined,
         gender: 'mixed',
-        fightAssociation: ''
+        fightAssociation: '',
+        fightModalities: []
       })
     }
   }
@@ -154,44 +167,50 @@ const ChampionshipCategoryForm: React.FC = () => {
                 </select>
               </div>
 
-              {/* Age Group */}
+              {/* Age Groups */}
               <div>
-                <label htmlFor="ageGroup" className="block text-sm font-medium text-gray-300 mb-2">
-                  {t('age-group')} <span className="text-red-400">*</span>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('age-groups')} <span className="text-red-400">*</span>
                 </label>
-                <select
-                  id="ageGroup"
-                  value={category.ageGroup}
-                  onChange={(e) => handleInputChange('ageGroup', e.target.value as 'kids' | 'adult' | 'master' | 'senior')}
-                  disabled={isReadOnly}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
-                >
-                  <option value="kids">{t('kids')}</option>
-                  <option value="adult">{t('adult')}</option>
-                  <option value="master">{t('master')}</option>
-                  <option value="senior">{t('senior')}</option>
-                </select>
+                <div className="space-y-2">
+                  {['kids', 'adult', 'master', 'senior'].map(ageGroup => (
+                    <label key={ageGroup} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={category.ageGroups.includes(ageGroup as any)}
+                        onChange={(e) => handleMultiSelectChange('ageGroups', ageGroup, e.target.checked)}
+                        disabled={isReadOnly}
+                        className="form-checkbox h-4 w-4 text-green-500 focus:ring-green-500 border-gray-300 rounded disabled:opacity-50"
+                      />
+                      <span className="ml-2 text-gray-300">{t(ageGroup)}</span>
+                    </label>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">{t('select-multiple-age-groups')}</p>
               </div>
 
-              {/* Belt */}
+              {/* Belts */}
               <div>
-                <label htmlFor="belt" className="block text-sm font-medium text-gray-300 mb-2">
-                  {t('belt')} <span className="text-red-400">*</span>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('belts')} <span className="text-red-400">*</span>
                 </label>
-                <select
-                  id="belt"
-                  value={category.belt}
-                  onChange={(e) => handleInputChange('belt', e.target.value as 'white' | 'blue' | 'purple' | 'brown' | 'black' | 'all-belts')}
-                  disabled={isReadOnly}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
-                >
-                  <option value="white">{t('white-belt')}</option>
-                  <option value="blue">{t('blue-belt')}</option>
-                  <option value="purple">{t('purple-belt')}</option>
-                  <option value="brown">{t('brown-belt')}</option>
-                  <option value="black">{t('black-belt')}</option>
-                  <option value="all-belts">{t('all-belts')}</option>
-                </select>
+                <div className="space-y-2">
+                  {['white', 'blue', 'purple', 'brown', 'black', 'all-belts'].map(belt => (
+                    <label key={belt} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={category.belts.includes(belt as any)}
+                        onChange={(e) => handleMultiSelectChange('belts', belt, e.target.checked)}
+                        disabled={isReadOnly}
+                        className="form-checkbox h-4 w-4 text-green-500 focus:ring-green-500 border-gray-300 rounded disabled:opacity-50"
+                      />
+                      <span className="ml-2 text-gray-300">
+                        {belt === 'all-belts' ? t('all-belts') : t(`${belt}-belt`)}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">{t('select-multiple-belts')}</p>
               </div>
 
               {/* Weight Category */}
@@ -227,6 +246,28 @@ const ChampionshipCategoryForm: React.FC = () => {
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
                 />
                 <p className="text-xs text-gray-500 mt-1">{t('weight-limit-help')}</p>
+              </div>
+
+              {/* Fight Modalities */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('fight-modalities')}
+                </label>
+                <div className="space-y-2 max-h-32 overflow-y-auto">
+                  {modalities.map(modality => (
+                    <label key={modality.modalityId} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={category.fightModalities.includes(modality.modalityId)}
+                        onChange={(e) => handleMultiSelectChange('fightModalities', modality.modalityId, e.target.checked)}
+                        disabled={isReadOnly}
+                        className="form-checkbox h-4 w-4 text-green-500 focus:ring-green-500 border-gray-300 rounded disabled:opacity-50"
+                      />
+                      <span className="ml-2 text-gray-300">{modality.name}</span>
+                    </label>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">{t('select-multiple-fight-modalities')}</p>
               </div>
 
               {/* Gender */}

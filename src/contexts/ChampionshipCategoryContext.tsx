@@ -2,12 +2,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react'
 
 export interface ChampionshipCategory {
   categoryId: string
-  ageGroup: 'kids' | 'adult' | 'master' | 'senior'
-  belt: 'white' | 'blue' | 'purple' | 'brown' | 'black' | 'all-belts'
+  ageGroups: ('kids' | 'adult' | 'master' | 'senior')[]
+  belts: ('white' | 'blue' | 'purple' | 'brown' | 'black' | 'all-belts')[]
   weightCategory: string
   weightLimit?: number
   gender: 'male' | 'female' | 'mixed'
   fightAssociation: string
+  fightModalities: string[]
 }
 
 interface ChampionshipCategoryContextType {
@@ -84,11 +85,11 @@ export const ChampionshipCategoryProvider: React.FC<{ children: React.ReactNode 
   }
 
   const getCategoriesByBelt = (belt: string) => {
-    return categories.filter(category => category.belt === belt)
+    return categories.filter(category => category.belts.includes(belt as any))
   }
 
   const getCategoriesByAgeGroup = (ageGroup: string) => {
-    return categories.filter(category => category.ageGroup === ageGroup)
+    return categories.filter(category => category.ageGroups.includes(ageGroup as any))
   }
 
   const value: ChampionshipCategoryContextType = {

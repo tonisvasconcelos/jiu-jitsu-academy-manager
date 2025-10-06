@@ -20,8 +20,8 @@ const ChampionshipCategories: React.FC = () => {
       category.weightCategory.toLowerCase().includes(searchTerm.toLowerCase()) ||
       association?.name.toLowerCase().includes(searchTerm.toLowerCase())
     
-    const matchesAgeGroup = ageGroupFilter === 'all' || category.ageGroup === ageGroupFilter
-    const matchesBelt = beltFilter === 'all' || category.belt === beltFilter
+    const matchesAgeGroup = ageGroupFilter === 'all' || category.ageGroups.includes(ageGroupFilter as any)
+    const matchesBelt = beltFilter === 'all' || category.belts.includes(beltFilter as any)
     
     return matchesSearch && matchesAgeGroup && matchesBelt
   })
@@ -144,14 +144,22 @@ const ChampionshipCategories: React.FC = () => {
                   <tr key={category.categoryId} className="hover:bg-white/5 transition-colors">
                     <td className="px-6 py-4 text-sm text-white font-mono">{category.categoryId}</td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getAgeGroupColor(category.ageGroup)}`}>
-                        {t(category.ageGroup)}
-                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {category.ageGroups.map(ageGroup => (
+                          <span key={ageGroup} className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getAgeGroupColor(ageGroup)}`}>
+                            {t(ageGroup)}
+                          </span>
+                        ))}
+                      </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getBeltColor(category.belt)}`}>
-                        {category.belt === 'all-belts' ? t('all-belts') : t(`${category.belt}-belt`)}
-                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {category.belts.map(belt => (
+                          <span key={belt} className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getBeltColor(belt)}`}>
+                            {belt === 'all-belts' ? t('all-belts') : t(`${belt}-belt`)}
+                          </span>
+                        ))}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-white">{category.weightCategory}</td>
                     <td className="px-6 py-4 text-sm text-white">
