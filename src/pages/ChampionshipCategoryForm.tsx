@@ -108,27 +108,33 @@ const ChampionshipCategoryForm: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4 sm:p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center mb-8">
-          <Link
-            to="/championships/categories"
-            className="mr-4 p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 hover:scale-105"
-            title="Back to Championship Categories"
-          >
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-          </Link>
-          <div>
-            <h1 className="text-4xl font-bold text-white mb-2 flex items-center">
-              <span className="mr-3 text-5xl">🏆</span>
-              {isNew ? t('new-category') : isEdit ? t('edit-category') : t('view-category')}
-            </h1>
-            <p className="text-gray-400 text-lg">
-              {isNew ? t('new-category-description') : isEdit ? t('edit-category-description') : t('view-category-description')}
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 sm:p-6">
+      <div className="max-w-5xl mx-auto">
+        {/* Modern Header */}
+        <div className="mb-8">
+          <div className="flex items-center mb-6">
+            <Link
+              to="/championships/categories"
+              className="group mr-6 p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-all duration-300 hover:scale-105 border border-white/10 hover:border-white/20"
+              title="Back to Championship Categories"
+            >
+              <svg className="w-6 h-6 text-white group-hover:text-purple-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </Link>
+            <div className="flex items-center">
+              <div className="p-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl mr-4 shadow-lg">
+                <span className="text-3xl">🏆</span>
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent mb-2">
+                  {isNew ? t('new-category') : isEdit ? t('edit-category') : t('view-category')}
+                </h1>
+                <p className="text-gray-300 text-lg font-medium">
+                  {isNew ? t('new-category-description') : isEdit ? t('edit-category-description') : t('view-category-description')}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -139,83 +145,127 @@ const ChampionshipCategoryForm: React.FC = () => {
           </div>
         )}
 
-        {/* Form */}
+        {/* Modern Form */}
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Basic Information */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">{t('basic-information')}</h2>
+          {/* Basic Information Card */}
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+            <div className="flex items-center mb-8">
+              <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mr-4">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-white">{t('basic-information')}</h2>
+            </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Fight Association */}
-              <div>
-                <label htmlFor="fightAssociation" className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="space-y-3">
+                <label htmlFor="fightAssociation" className="block text-sm font-semibold text-white mb-3">
                   {t('fight-association')} <span className="text-red-400">*</span>
                 </label>
-                <select
-                  id="fightAssociation"
-                  value={category.fightAssociation}
-                  onChange={(e) => handleInputChange('fightAssociation', e.target.value)}
-                  disabled={isReadOnly}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
-                >
-                  <option value="">{t('select-association')}</option>
-                  {associations.map(association => (
-                    <option key={association.associationId} value={association.associationId}>
-                      {association.name}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    id="fightAssociation"
+                    value={category.fightAssociation}
+                    onChange={(e) => handleInputChange('fightAssociation', e.target.value)}
+                    disabled={isReadOnly}
+                    className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50 transition-all duration-300 hover:bg-white/15 appearance-none cursor-pointer"
+                  >
+                    <option value="">{t('select-association')}</option>
+                    {associations.map(association => (
+                      <option key={association.associationId} value={association.associationId}>
+                        {association.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
               </div>
 
               {/* Age Groups */}
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-white mb-3">
                   {t('age-groups')} <span className="text-red-400">*</span>
                 </label>
-                <div className="space-y-2">
-                  {['kids', 'adult', 'master', 'senior'].map(ageGroup => (
-                    <label key={ageGroup} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={category.ageGroups.includes(ageGroup as any)}
-                        onChange={(e) => handleMultiSelectChange('ageGroups', ageGroup, e.target.checked)}
-                        disabled={isReadOnly}
-                        className="form-checkbox h-4 w-4 text-green-500 focus:ring-green-500 border-gray-300 rounded disabled:opacity-50"
-                      />
-                      <span className="ml-2 text-gray-300">{t(ageGroup)}</span>
-                    </label>
-                  ))}
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    {['kids', 'adult', 'master', 'senior'].map(ageGroup => (
+                      <label key={ageGroup} className="flex items-center p-3 rounded-xl hover:bg-white/5 transition-all duration-200 cursor-pointer group">
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            checked={category.ageGroups.includes(ageGroup as any)}
+                            onChange={(e) => handleMultiSelectChange('ageGroups', ageGroup, e.target.checked)}
+                            disabled={isReadOnly}
+                            className="sr-only"
+                          />
+                          <div className={`w-5 h-5 rounded-md border-2 transition-all duration-200 flex items-center justify-center ${
+                            category.ageGroups.includes(ageGroup as any)
+                              ? 'bg-gradient-to-r from-purple-500 to-pink-500 border-transparent'
+                              : 'border-white/30 group-hover:border-white/50'
+                          }`}>
+                            {category.ageGroups.includes(ageGroup as any) && (
+                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                        <span className="ml-3 text-white font-medium">{t(ageGroup)}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">{t('select-multiple-age-groups')}</p>
+                <p className="text-sm text-gray-400">{t('select-multiple-age-groups')}</p>
               </div>
 
               {/* Belts */}
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-white mb-3">
                   {t('belts')} <span className="text-red-400">*</span>
                 </label>
-                <div className="space-y-2">
-                  {['white', 'blue', 'purple', 'brown', 'black', 'all-belts'].map(belt => (
-                    <label key={belt} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={category.belts.includes(belt as any)}
-                        onChange={(e) => handleMultiSelectChange('belts', belt, e.target.checked)}
-                        disabled={isReadOnly}
-                        className="form-checkbox h-4 w-4 text-green-500 focus:ring-green-500 border-gray-300 rounded disabled:opacity-50"
-                      />
-                      <span className="ml-2 text-gray-300">
-                        {belt === 'all-belts' ? t('all-belts') : t(`${belt}-belt`)}
-                      </span>
-                    </label>
-                  ))}
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    {['white', 'blue', 'purple', 'brown', 'black', 'all-belts'].map(belt => (
+                      <label key={belt} className="flex items-center p-3 rounded-xl hover:bg-white/5 transition-all duration-200 cursor-pointer group">
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            checked={category.belts.includes(belt as any)}
+                            onChange={(e) => handleMultiSelectChange('belts', belt, e.target.checked)}
+                            disabled={isReadOnly}
+                            className="sr-only"
+                          />
+                          <div className={`w-5 h-5 rounded-md border-2 transition-all duration-200 flex items-center justify-center ${
+                            category.belts.includes(belt as any)
+                              ? 'bg-gradient-to-r from-purple-500 to-pink-500 border-transparent'
+                              : 'border-white/30 group-hover:border-white/50'
+                          }`}>
+                            {category.belts.includes(belt as any) && (
+                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                        <span className="ml-3 text-white font-medium">
+                          {belt === 'all-belts' ? t('all-belts') : t(`${belt}-belt`)}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">{t('select-multiple-belts')}</p>
+                <p className="text-sm text-gray-400">{t('select-multiple-belts')}</p>
               </div>
 
               {/* Weight Category */}
-              <div>
-                <label htmlFor="weightCategory" className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="space-y-3">
+                <label htmlFor="weightCategory" className="block text-sm font-semibold text-white mb-3">
                   {t('weight-category')} <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -225,92 +275,122 @@ const ChampionshipCategoryForm: React.FC = () => {
                   onChange={(e) => handleInputChange('weightCategory', e.target.value)}
                   disabled={isReadOnly}
                   placeholder={t('weight-category-placeholder')}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
+                  className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50 transition-all duration-300 hover:bg-white/15"
                 />
               </div>
 
               {/* Weight Limit */}
-              <div>
-                <label htmlFor="weightLimit" className="block text-sm font-medium text-gray-300 mb-2">
-                  {t('weight-limit')} <span className="text-gray-500">(kg)</span>
+              <div className="space-y-3">
+                <label htmlFor="weightLimit" className="block text-sm font-semibold text-white mb-3">
+                  {t('weight-limit')} <span className="text-gray-400 text-sm font-normal">(kg)</span>
                 </label>
-                <input
-                  id="weightLimit"
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  value={category.weightLimit || ''}
-                  onChange={(e) => handleInputChange('weightLimit', e.target.value ? parseFloat(e.target.value) : undefined)}
-                  disabled={isReadOnly}
-                  placeholder={t('weight-limit-placeholder')}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
-                />
-                <p className="text-xs text-gray-500 mt-1">{t('weight-limit-help')}</p>
+                <div className="relative">
+                  <input
+                    id="weightLimit"
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    value={category.weightLimit || ''}
+                    onChange={(e) => handleInputChange('weightLimit', e.target.value ? parseFloat(e.target.value) : undefined)}
+                    disabled={isReadOnly}
+                    placeholder={t('weight-limit-placeholder')}
+                    className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50 transition-all duration-300 hover:bg-white/15"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                    <span className="text-gray-400 text-sm font-medium">kg</span>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-400">{t('weight-limit-help')}</p>
               </div>
 
               {/* Fight Modalities */}
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-white mb-3">
                   {t('fight-modalities')}
                 </label>
-                <div className="space-y-2 max-h-32 overflow-y-auto">
-                  {modalities.map(modality => (
-                    <label key={modality.modalityId} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={category.fightModalities.includes(modality.modalityId)}
-                        onChange={(e) => handleMultiSelectChange('fightModalities', modality.modalityId, e.target.checked)}
-                        disabled={isReadOnly}
-                        className="form-checkbox h-4 w-4 text-green-500 focus:ring-green-500 border-gray-300 rounded disabled:opacity-50"
-                      />
-                      <span className="ml-2 text-gray-300">{modality.name}</span>
-                    </label>
-                  ))}
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 max-h-48 overflow-y-auto">
+                  <div className="space-y-2">
+                    {modalities.map(modality => (
+                      <label key={modality.modalityId} className="flex items-center p-3 rounded-xl hover:bg-white/5 transition-all duration-200 cursor-pointer group">
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            checked={category.fightModalities.includes(modality.modalityId)}
+                            onChange={(e) => handleMultiSelectChange('fightModalities', modality.modalityId, e.target.checked)}
+                            disabled={isReadOnly}
+                            className="sr-only"
+                          />
+                          <div className={`w-5 h-5 rounded-md border-2 transition-all duration-200 flex items-center justify-center ${
+                            category.fightModalities.includes(modality.modalityId)
+                              ? 'bg-gradient-to-r from-purple-500 to-pink-500 border-transparent'
+                              : 'border-white/30 group-hover:border-white/50'
+                          }`}>
+                            {category.fightModalities.includes(modality.modalityId) && (
+                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                        <span className="ml-3 text-white font-medium">{modality.name}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">{t('select-multiple-fight-modalities')}</p>
+                <p className="text-sm text-gray-400">{t('select-multiple-fight-modalities')}</p>
               </div>
 
               {/* Gender */}
-              <div>
-                <label htmlFor="gender" className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="space-y-3">
+                <label htmlFor="gender" className="block text-sm font-semibold text-white mb-3">
                   {t('gender')} <span className="text-red-400">*</span>
                 </label>
-                <select
-                  id="gender"
-                  value={category.gender}
-                  onChange={(e) => handleInputChange('gender', e.target.value as 'male' | 'female' | 'mixed')}
-                  disabled={isReadOnly}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
-                >
-                  <option value="male">{t('male')}</option>
-                  <option value="female">{t('female')}</option>
-                  <option value="mixed">{t('mixed')}</option>
-                </select>
+                <div className="relative">
+                  <select
+                    id="gender"
+                    value={category.gender}
+                    onChange={(e) => handleInputChange('gender', e.target.value as 'male' | 'female' | 'mixed')}
+                    disabled={isReadOnly}
+                    className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50 transition-all duration-300 hover:bg-white/15 appearance-none cursor-pointer"
+                  >
+                    <option value="male">{t('male')}</option>
+                    <option value="female">{t('female')}</option>
+                    <option value="mixed">{t('mixed')}</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-
-          {/* Action Buttons */}
+          {/* Modern Action Buttons */}
           {!isReadOnly && (
-            <div className="flex flex-col sm:flex-row gap-4 justify-end">
+            <div className="flex flex-col sm:flex-row gap-4 justify-end pt-6">
               <button
                 type="button"
                 onClick={handleReset}
-                className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all duration-300 flex items-center justify-center"
+                className="group px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/30 text-white rounded-2xl transition-all duration-300 flex items-center justify-center font-semibold hover:scale-105"
               >
-                <span className="mr-2">🔄</span>
+                <svg className="w-5 h-5 mr-3 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
                 {t('reset')}
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="group px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-semibold shadow-lg"
               >
                 {isLoading ? (
                   <span className="animate-spin h-5 w-5 border-b-2 border-white rounded-full mr-3"></span>
                 ) : (
-                  <span className="mr-2">💾</span>
+                  <svg className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
                 )}
                 {isEdit ? t('update-category') : t('create-category')}
               </button>
