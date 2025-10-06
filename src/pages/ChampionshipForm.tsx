@@ -105,11 +105,11 @@ const ChampionshipForm: React.FC = () => {
               </p>
             </div>
             <button
-              onClick={() => navigate('/championships/registration')}
+              onClick={() => navigate('/championships')}
               className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all duration-300 flex items-center"
             >
               <span className="mr-2">←</span>
-              {t('back-to-championships')}
+              Back to Championships
             </button>
           </div>
         </div>

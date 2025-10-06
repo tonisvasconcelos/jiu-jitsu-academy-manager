@@ -311,12 +311,25 @@ const BranchRegistration: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-green-400 via-teal-500 to-blue-500 bg-clip-text text-transparent mb-3">
-            {t('branch-registration')}
-          </h1>
-          <p className="text-lg text-gray-300 max-w-2xl">
-            Manage branch registrations and information
-          </p>
+          <div className="flex items-center">
+            <Link
+              to="/branches"
+              className="mr-4 p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 hover:scale-105"
+              title="Back to Branches"
+            >
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </Link>
+            <div>
+              <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-green-400 via-teal-500 to-blue-500 bg-clip-text text-transparent mb-3">
+                {t('branch-registration')}
+              </h1>
+              <p className="text-lg text-gray-300 max-w-2xl">
+                Manage branch registrations and information
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Statistics */}

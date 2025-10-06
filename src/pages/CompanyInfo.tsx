@@ -138,10 +138,10 @@ const CompanyInfo: React.FC = () => {
               </p>
             </div>
             <Link
-              to="/admin"
+              to="/administration"
               className="bg-gray-600 hover:bg-gray-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl transition-all duration-300 flex items-center justify-center text-sm sm:text-base w-full sm:w-auto"
             >
-              ← Back to Admin
+              ← Back to Administration
             </Link>
           </div>
         </div>

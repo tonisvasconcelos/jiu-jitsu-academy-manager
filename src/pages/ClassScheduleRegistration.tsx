@@ -80,13 +80,24 @@ const ClassScheduleRegistration: React.FC = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-3">
-                Class Schedule Registration
-              </h1>
-              <p className="text-lg text-gray-300">
-                Manage and view all class schedules
-              </p>
+            <div className="flex items-center">
+              <Link
+                to="/classes"
+                className="mr-4 p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 hover:scale-105"
+                title="Back to Class Schedules"
+              >
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+              </Link>
+              <div>
+                <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-3">
+                  Class Schedule Registration
+                </h1>
+                <p className="text-lg text-gray-300">
+                  Manage and view all class schedules
+                </p>
+              </div>
             </div>
             <div className="mt-4 sm:mt-0">
               <Link

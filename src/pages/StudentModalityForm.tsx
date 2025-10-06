@@ -297,10 +297,10 @@ const StudentModalityForm: React.FC = () => {
               </p>
             </div>
             <Link
-              to="/students/modality"
+              to="/students"
               className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all duration-300 flex items-center"
             >
-              ← {t('back-to-assignments')}
+              ← Back to Coach & Students
             </Link>
           </div>
         </div>

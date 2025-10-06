@@ -268,9 +268,20 @@ const TeacherRegistration: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Teachers & Instructors</h1>
-            <p className="text-gray-400">Manage all teacher-related activities and information</p>
+          <div className="flex items-center">
+            <Link
+              to="/students"
+              className="mr-4 p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 hover:scale-105"
+              title="Back to Coach & Students"
+            >
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </Link>
+            <div>
+              <h1 className="text-4xl font-bold text-white mb-2">Teachers & Instructors</h1>
+              <p className="text-gray-400">Manage all teacher-related activities and information</p>
+            </div>
           </div>
           <div className="flex flex-wrap gap-3 mt-4 lg:mt-0">
             <Link

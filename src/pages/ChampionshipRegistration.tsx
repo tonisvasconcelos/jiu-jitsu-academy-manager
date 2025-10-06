@@ -66,12 +66,23 @@ const ChampionshipRegistration: React.FC = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2 flex items-center">
-                <span className="mr-3 text-5xl">🥇</span>
-                {t('championship-registration')}
-              </h1>
-              <p className="text-gray-400 text-lg">{t('manage-championship-registrations')}</p>
+            <div className="flex items-center">
+              <Link
+                to="/championships"
+                className="mr-4 p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 hover:scale-105"
+                title="Back to Championships"
+              >
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+              </Link>
+              <div>
+                <h1 className="text-4xl font-bold text-white mb-2 flex items-center">
+                  <span className="mr-3 text-5xl">🥇</span>
+                  {t('championship-registration')}
+                </h1>
+                <p className="text-gray-400 text-lg">{t('manage-championship-registrations')}</p>
+              </div>
             </div>
             <Link
               to="/championships/registration/new"
