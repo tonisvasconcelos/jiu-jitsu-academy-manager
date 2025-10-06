@@ -18,6 +18,7 @@ const ChampionshipCategoryForm: React.FC = () => {
     ageGroup: 'adult',
     belt: 'white',
     weightCategory: '',
+    weightLimit: undefined,
     gender: 'mixed',
     fightAssociation: ''
   })
@@ -86,6 +87,7 @@ const ChampionshipCategoryForm: React.FC = () => {
         ageGroup: 'adult',
         belt: 'white',
         weightCategory: '',
+        weightLimit: undefined,
         gender: 'mixed',
         fightAssociation: ''
       })
@@ -206,6 +208,25 @@ const ChampionshipCategoryForm: React.FC = () => {
                   placeholder={t('weight-category-placeholder')}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
                 />
+              </div>
+
+              {/* Weight Limit */}
+              <div>
+                <label htmlFor="weightLimit" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('weight-limit')} <span className="text-gray-500">(kg)</span>
+                </label>
+                <input
+                  id="weightLimit"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value={category.weightLimit || ''}
+                  onChange={(e) => handleInputChange('weightLimit', e.target.value ? parseFloat(e.target.value) : undefined)}
+                  disabled={isReadOnly}
+                  placeholder={t('weight-limit-placeholder')}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50"
+                />
+                <p className="text-xs text-gray-500 mt-1">{t('weight-limit-help')}</p>
               </div>
 
               {/* Gender */}

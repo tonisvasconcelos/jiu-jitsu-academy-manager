@@ -133,6 +133,7 @@ const ChampionshipCategories: React.FC = () => {
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('age-group')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('belt')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('weight-category')}</th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('weight-limit')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('gender')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('association')}</th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">{t('actions')}</th>
@@ -153,6 +154,9 @@ const ChampionshipCategories: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-white">{category.weightCategory}</td>
+                    <td className="px-6 py-4 text-sm text-white">
+                      {category.weightLimit ? `${category.weightLimit} kg` : '-'}
+                    </td>
                     <td className="px-6 py-4 text-sm text-white">{t(category.gender)}</td>
                     <td className="px-6 py-4 text-sm text-white">{getAssociationName(category.fightAssociation)}</td>
                     <td className="px-6 py-4">

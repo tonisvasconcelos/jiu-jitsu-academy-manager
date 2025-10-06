@@ -5,6 +5,7 @@ export interface ChampionshipCategory {
   ageGroup: 'kids' | 'adult' | 'master' | 'senior'
   belt: 'white' | 'blue' | 'purple' | 'brown' | 'black' | 'all-belts'
   weightCategory: string
+  weightLimit?: number
   gender: 'male' | 'female' | 'mixed'
   fightAssociation: string
 }
