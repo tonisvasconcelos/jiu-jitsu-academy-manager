@@ -7,13 +7,12 @@ const Championships: React.FC = () => {
 
   const subMenuItems = [
     { id: 'championship-registration', title: t('championship-registration'), path: '/championships/registration', icon: '📝', description: 'Register new championships' },
-    { id: 'student-enrollment', title: t('student-enrollment'), path: '/championships/athlete-enrollment', icon: '📋', description: 'Enroll students in championships' },
     { id: 'championship-results', title: t('championship-results'), path: '/championships/results', icon: '🏆', description: 'Record and view championship results' },
     { id: 'ranking-statistics', title: t('ranking-statistics'), path: '/championships/ranking', icon: '📈', description: 'View rankings and statistics' },
     { id: 'fight-associations', title: t('fight-associations'), path: '/championships/fight-associations', icon: '🏛️', description: 'Manage fight associations and federations' },
     { id: 'affiliations', title: t('affiliations'), path: '/championships/affiliations', icon: '🤝', description: 'Manage student-fight association affiliations' },
     { id: 'championship-categories', title: t('championship-categories'), path: '/championships/categories', icon: '📋', description: 'Manage championship categories and divisions' },
-    { id: 'registrations', title: t('registrations'), path: '/championships/registrations', icon: '📝', description: 'Manage student championship registrations' },
+    { id: 'registrations', title: t('registrations'), path: '/championships/athlete-enrollment', icon: '📝', description: 'Manage student championship registrations' },
     { id: 'referees-officials', title: t('referees-officials'), path: '/championships/officials', icon: '👨‍⚖️', description: 'Manage referees and officials' },
     { id: 'championship-sponsors', title: t('championship-sponsors'), path: '/championships/sponsors', icon: '💰', description: 'Manage championship sponsors' },
     { id: 'championship-qualified-locations', title: t('championship-qualified-locations'), path: '/championships/qualified-locations', icon: '🏢', description: 'Manage championship qualified locations' },
