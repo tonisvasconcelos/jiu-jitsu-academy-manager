@@ -1,0 +1,461 @@
+import React, { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useFightTeams } from '../contexts/FightTeamContext'
+import { useBranches } from '../contexts/BranchContext'
+import { useTeachers } from '../contexts/TeacherContext'
+import { useFightModalities } from '../contexts/FightModalityContext'
+import { useStudents } from '../contexts/StudentContext'
+import { useLanguage } from '../contexts/LanguageContext'
+
+const FightTeamForm: React.FC = () => {
+  const { t } = useLanguage()
+  const { action, id } = useParams<{ action: string; id?: string }>()
+  const navigate = useNavigate()
+  
+  const { fightTeams = [], addFightTeam, updateFightTeam, getFightTeam } = useFightTeams()
+  const { branches = [] } = useBranches()
+  const { teachers = [] } = useTeachers()
+  const { modalities = [] } = useFightModalities()
+  const { students = [] } = useStudents()
+
+  const [team, setTeam] = useState({
+    teamName: '',
+    description: '',
+    coachId: '',
+    branchId: '',
+    modality: '',
+    establishedDate: '',
+    maxTeamSize: '',
+    isActive: true,
+    achievements: [] as string[],
+    teamMembers: [] as string[],
+    teamLogo: '',
+    contactEmail: '',
+    contactPhone: '',
+    notes: ''
+  })
+
+  const [newAchievement, setNewAchievement] = useState('')
+  const [newMember, setNewMember] = useState('')
+
+  useEffect(() => {
+    if (id && id !== 'new') {
+      const existingTeam = getFightTeam(id)
+      if (existingTeam) {
+        setTeam({
+          teamName: existingTeam.teamName,
+          description: existingTeam.description || '',
+          coachId: existingTeam.coachId,
+          branchId: existingTeam.branchId,
+          modality: existingTeam.modality,
+          establishedDate: existingTeam.establishedDate,
+          maxTeamSize: existingTeam.maxTeamSize.toString(),
+          isActive: existingTeam.isActive,
+          achievements: existingTeam.achievements || [],
+          teamMembers: existingTeam.teamMembers || [],
+          teamLogo: existingTeam.teamLogo || '',
+          contactEmail: existingTeam.contactEmail || '',
+          contactPhone: existingTeam.contactPhone || '',
+          notes: existingTeam.notes || ''
+        })
+      }
+    }
+  }, [id, getFightTeam])
+
+  const handleInputChange = (field: string, value: string | boolean | string[]) => {
+    setTeam(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleAddAchievement = () => {
+    if (newAchievement.trim()) {
+      handleInputChange('achievements', [...team.achievements, newAchievement.trim()])
+      setNewAchievement('')
+    }
+  }
+
+  const handleRemoveAchievement = (index: number) => {
+    const updatedAchievements = team.achievements.filter((_, i) => i !== index)
+    handleInputChange('achievements', updatedAchievements)
+  }
+
+  const handleAddMember = () => {
+    if (newMember && !team.teamMembers.includes(newMember)) {
+      handleInputChange('teamMembers', [...team.teamMembers, newMember])
+      setNewMember('')
+    }
+  }
+
+  const handleRemoveMember = (memberId: string) => {
+    const updatedMembers = team.teamMembers.filter(id => id !== memberId)
+    handleInputChange('teamMembers', updatedMembers)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!team.teamName || !team.coachId || !team.branchId || !team.modality || !team.establishedDate) {
+      alert(t('fill-required-fields'))
+      return
+    }
+
+    const teamData = {
+      ...team,
+      maxTeamSize: parseInt(team.maxTeamSize) || 10,
+      teamSize: team.teamMembers.length
+    }
+
+    if (id && id !== 'new') {
+      updateFightTeam(id, teamData)
+    } else {
+      addFightTeam(teamData)
+    }
+
+    navigate('/championships/fight-teams')
+  }
+
+  const isEdit = action === 'edit'
+  const isView = action === 'view'
+  const isNew = action === 'new'
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-white mb-2 flex items-center">
+                <span className="mr-3 text-5xl">🥊</span>
+                {isEdit ? t('edit-fight-team') : isView ? t('view-fight-team') : t('new-fight-team')}
+              </h1>
+              <p className="text-gray-400 text-lg">
+                {isEdit ? t('edit-fight-team-description') : isView ? t('view-fight-team-description') : t('new-fight-team-description')}
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/championships/fight-teams')}
+              className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition-all duration-300"
+            >
+              {t('back-to-teams')}
+            </button>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Basic Information */}
+          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <h2 className="text-2xl font-bold text-white mb-6">{t('basic-information')}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="teamName" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('team-name')} *
+                </label>
+                <input
+                  type="text"
+                  id="teamName"
+                  value={team.teamName}
+                  onChange={(e) => handleInputChange('teamName', e.target.value)}
+                  placeholder={t('team-name-placeholder')}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                  disabled={isView}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="coachId" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('coach')} *
+                </label>
+                <select
+                  id="coachId"
+                  value={team.coachId}
+                  onChange={(e) => handleInputChange('coachId', e.target.value)}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                  disabled={isView}
+                >
+                  <option value="">{t('select-coach')}</option>
+                  {teachers.filter(teacher => teacher.active).map((teacher) => (
+                    <option key={teacher.teacherId} value={teacher.teacherId}>
+                      {teacher.firstName} {teacher.lastName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="branchId" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('branch')} *
+                </label>
+                <select
+                  id="branchId"
+                  value={team.branchId}
+                  onChange={(e) => handleInputChange('branchId', e.target.value)}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                  disabled={isView}
+                >
+                  <option value="">{t('select-branch')}</option>
+                  {branches.filter(branch => branch.isActive).map((branch) => (
+                    <option key={branch.branchId} value={branch.branchId}>
+                      {branch.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="modality" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('modality')} *
+                </label>
+                <select
+                  id="modality"
+                  value={team.modality}
+                  onChange={(e) => handleInputChange('modality', e.target.value)}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                  disabled={isView}
+                >
+                  <option value="">{t('select-modality')}</option>
+                  {modalities.map((modality) => (
+                    <option key={modality.modalityId} value={modality.name}>
+                      {modality.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="establishedDate" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('established-date')} *
+                </label>
+                <input
+                  type="date"
+                  id="establishedDate"
+                  value={team.establishedDate}
+                  onChange={(e) => handleInputChange('establishedDate', e.target.value)}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                  disabled={isView}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="maxTeamSize" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('max-team-size')}
+                </label>
+                <input
+                  type="number"
+                  id="maxTeamSize"
+                  value={team.maxTeamSize}
+                  onChange={(e) => handleInputChange('maxTeamSize', e.target.value)}
+                  placeholder={t('max-team-size-placeholder')}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  min="1"
+                  max="50"
+                  disabled={isView}
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('description')}
+                </label>
+                <textarea
+                  id="description"
+                  value={team.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  placeholder={t('team-description-placeholder')}
+                  rows={3}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isView}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Team Members */}
+          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <h2 className="text-2xl font-bold text-white mb-6">{t('team-members')}</h2>
+            
+            <div className="mb-4">
+              <div className="flex gap-2">
+                <select
+                  value={newMember}
+                  onChange={(e) => setNewMember(e.target.value)}
+                  className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isView}
+                >
+                  <option value="">{t('select-student')}</option>
+                  {students.filter(student => student.active && !team.teamMembers.includes(student.studentId)).map((student) => (
+                    <option key={student.studentId} value={student.studentId}>
+                      {student.firstName} {student.lastName}
+                    </option>
+                  ))}
+                </select>
+                {!isView && (
+                  <button
+                    type="button"
+                    onClick={handleAddMember}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl transition-colors"
+                  >
+                    {t('add')}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              {team.teamMembers.map((memberId) => {
+                const student = students.find(s => s.studentId === memberId)
+                return (
+                  <div key={memberId} className="flex items-center justify-between bg-white/5 rounded-lg p-3">
+                    <span className="text-white">
+                      {student ? `${student.firstName} ${student.lastName}` : `Student ${memberId}`}
+                    </span>
+                    {!isView && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveMember(memberId)}
+                        className="text-red-400 hover:text-red-300"
+                      >
+                        {t('remove')}
+                      </button>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Achievements */}
+          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <h2 className="text-2xl font-bold text-white mb-6">{t('achievements')}</h2>
+            
+            <div className="mb-4">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newAchievement}
+                  onChange={(e) => setNewAchievement(e.target.value)}
+                  placeholder={t('achievement-placeholder')}
+                  className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isView}
+                />
+                {!isView && (
+                  <button
+                    type="button"
+                    onClick={handleAddAchievement}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl transition-colors"
+                  >
+                    {t('add')}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              {team.achievements.map((achievement, index) => (
+                <div key={index} className="flex items-center justify-between bg-white/5 rounded-lg p-3">
+                  <span className="text-white">{achievement}</span>
+                  {!isView && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveAchievement(index)}
+                      className="text-red-400 hover:text-red-300"
+                    >
+                      {t('remove')}
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <h2 className="text-2xl font-bold text-white mb-6">{t('contact-information')}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="contactEmail" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('contact-email')}
+                </label>
+                <input
+                  type="email"
+                  id="contactEmail"
+                  value={team.contactEmail}
+                  onChange={(e) => handleInputChange('contactEmail', e.target.value)}
+                  placeholder={t('contact-email-placeholder')}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isView}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="contactPhone" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('contact-phone')}
+                </label>
+                <input
+                  type="tel"
+                  id="contactPhone"
+                  value={team.contactPhone}
+                  onChange={(e) => handleInputChange('contactPhone', e.target.value)}
+                  placeholder={t('contact-phone-placeholder')}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isView}
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label htmlFor="notes" className="block text-sm font-medium text-gray-300 mb-2">
+                  {t('notes')}
+                </label>
+                <textarea
+                  id="notes"
+                  value={team.notes}
+                  onChange={(e) => handleInputChange('notes', e.target.value)}
+                  placeholder={t('notes-placeholder')}
+                  rows={3}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isView}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Status */}
+          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <h2 className="text-2xl font-bold text-white mb-6">{t('status')}</h2>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="isActive"
+                checked={team.isActive}
+                onChange={(e) => handleInputChange('isActive', e.target.checked)}
+                className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 focus:ring-2"
+                disabled={isView}
+              />
+              <label htmlFor="isActive" className="ml-2 text-sm text-gray-300">
+                {t('active-team')}
+              </label>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          {!isView && (
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl transition-all duration-300"
+              >
+                {isEdit ? t('update-team') : t('create-team')}
+              </button>
+            </div>
+          )}
+        </form>
+      </div>
+    </div>
+  )
+}
+
+export default FightTeamForm

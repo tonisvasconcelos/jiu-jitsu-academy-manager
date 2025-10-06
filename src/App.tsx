@@ -19,6 +19,7 @@ import { ChampionshipResultProvider } from './contexts/ChampionshipResultContext
 import { ChampionshipOfficialProvider } from './contexts/ChampionshipOfficialContext'
 import { ChampionshipSponsorProvider } from './contexts/ChampionshipSponsorContext'
 import { ChampionshipQualifiedLocationProvider } from './contexts/ChampionshipQualifiedLocationContext'
+import { FightTeamProvider } from './contexts/FightTeamContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
@@ -65,6 +66,8 @@ import ChampionshipRegistrationForm from './pages/ChampionshipRegistrationForm'
 import ChampionshipResults from './pages/ChampionshipResults'
 import ChampionshipQualifiedLocations from './pages/ChampionshipQualifiedLocations'
 import ChampionshipQualifiedLocationForm from './pages/ChampionshipQualifiedLocationForm'
+import FightTeams from './pages/FightTeams'
+import FightTeamForm from './pages/FightTeamForm'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -108,8 +111,9 @@ function App() {
                                       <ChampionshipResultProvider>
                                         <ChampionshipOfficialProvider>
                                           <ChampionshipSponsorProvider>
-                                            <ChampionshipQualifiedLocationProvider>
-                <Router basename="/jiu-jitsu-academy-manager">
+                        <ChampionshipQualifiedLocationProvider>
+                          <FightTeamProvider>
+                            <Router basename="/jiu-jitsu-academy-manager">
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
           <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
               <div className={`transition-all duration-300 ${
@@ -173,9 +177,12 @@ function App() {
                     <Route path="/championships/registrations/:action" element={<ChampionshipRegistrationForm />} />
                     <Route path="/championships/registrations/:action/:id" element={<ChampionshipRegistrationForm />} />
                     <Route path="/championships/results" element={<ChampionshipResults />} />
-                    <Route path="/championships/qualified-locations" element={<ChampionshipQualifiedLocations />} />
-                    <Route path="/championships/qualified-locations/:action" element={<ChampionshipQualifiedLocationForm />} />
-                    <Route path="/championships/qualified-locations/:action/:id" element={<ChampionshipQualifiedLocationForm />} />
+                            <Route path="/championships/qualified-locations" element={<ChampionshipQualifiedLocations />} />
+                            <Route path="/championships/qualified-locations/:action" element={<ChampionshipQualifiedLocationForm />} />
+                            <Route path="/championships/qualified-locations/:action/:id" element={<ChampionshipQualifiedLocationForm />} />
+                            <Route path="/championships/fight-teams" element={<FightTeams />} />
+                            <Route path="/championships/fight-teams/:action" element={<FightTeamForm />} />
+                            <Route path="/championships/fight-teams/:action/:id" element={<FightTeamForm />} />
                     
                     {/* Sub-menu Routes - Administration */}
                     <Route path="/admin/profiles" element={<UserProfiles />} />
@@ -221,8 +228,9 @@ function App() {
                 </main>
           </div>
         </div>
-                </Router>
-                                            </ChampionshipQualifiedLocationProvider>
+                            </Router>
+                          </FightTeamProvider>
+                        </ChampionshipQualifiedLocationProvider>
                                           </ChampionshipSponsorProvider>
                                         </ChampionshipOfficialProvider>
                                       </ChampionshipResultProvider>

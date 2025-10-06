@@ -84,7 +84,8 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         { id: 'registrations', title: t('registrations'), path: '/championships/registrations', icon: '📝' },
         { id: 'referees-officials', title: t('referees-officials'), path: '/championships/officials', icon: '👨‍⚖️' },
         { id: 'championship-sponsors', title: t('championship-sponsors'), path: '/championships/sponsors', icon: '💰' },
-        { id: 'championship-qualified-locations', title: t('championship-qualified-locations'), path: '/championships/qualified-locations', icon: '🏢' }
+        { id: 'championship-qualified-locations', title: t('championship-qualified-locations'), path: '/championships/qualified-locations', icon: '🏢' },
+        { id: 'fight-teams', title: t('fight-teams'), path: '/championships/fight-teams', icon: '🥊' }
       ]
     },
     { id: 'classes', title: t('class-schedules'), icon: '📅', path: '/classes' },
