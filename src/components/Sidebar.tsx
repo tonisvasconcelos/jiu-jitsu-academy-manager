@@ -66,7 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const isMenuExpanded = (menuId: string) => expandedMenus.includes(menuId)
 
   const menuItems = [
-    { id: 'students', title: t('students'), icon: '🥋', path: '/students' },
+    { id: 'students', title: t('coach-students'), icon: '🥋', path: '/students' },
     { id: 'teachers', title: t('teachers-instructors'), icon: '🧑‍🏫', path: '/teachers' },
     { 
       id: 'championships', 

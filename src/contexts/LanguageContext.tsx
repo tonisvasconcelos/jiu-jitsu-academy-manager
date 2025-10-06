@@ -15,6 +15,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Basic navigation
     'dashboard': 'Dashboard',
     'students': 'Students',
+    'coach-students': 'Coach & Students',
     'teachers-instructors': 'Teachers & Instructors',
     'championships': 'Championships',
     'administration': 'Administration',
@@ -53,6 +54,7 @@ const translations: Record<Language, Record<string, string>> = {
     
     // Students page translations
     'manage-student-activities': 'Manage Student Activities',
+    'manage-coach-students-data': 'Manage Coach and Students Data',
     'student-registration': 'Student Registration',
     'register-new-students': 'Register new students and manage student information',
     'modality-by-student': 'Fight Training Plan',
@@ -378,6 +380,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Basic navigation
     'dashboard': 'Painel de Controle',
     'students': 'Estudantes',
+    'coach-students': 'Técnicos e Estudantes',
     'teachers-instructors': 'Professores e Instrutores',
     'championships': 'Campeonatos',
     'administration': 'Administração',
@@ -416,6 +419,7 @@ const translations: Record<Language, Record<string, string>> = {
     
     // Students page translations
     'manage-student-activities': 'Gerenciar Atividades dos Estudantes',
+    'manage-coach-students-data': 'Gerenciar Dados de Técnicos e Estudantes',
     'student-registration': 'Registro de Estudantes',
     'register-new-students': 'Registrar novos estudantes e gerenciar informações dos estudantes',
     'modality-by-student': 'Plano de Treinamento de Luta',

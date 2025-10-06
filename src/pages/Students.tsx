@@ -18,10 +18,10 @@ const Students: React.FC = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-3">
-            {t('students')}
+            {t('coach-students')}
           </h1>
           <p className="text-lg text-gray-300 max-w-2xl">
-            {t('manage-student-activities')}
+            {t('manage-coach-students-data')}
           </p>
         </div>
 
