@@ -51,6 +51,36 @@ const translations: Record<Language, Record<string, string>> = {
     'quality-evaluation': 'Quality Evaluation',
     'branches': 'Branches',
     
+    // Students page translations
+    'manage-student-activities': 'Manage Student Activities',
+    'student-registration': 'Student Registration',
+    'register-new-students': 'Register new students and manage student information',
+    'modality-by-student': 'Fight Training Plan',
+    'student-modality-management': 'Manage student modality assignments and training plans',
+    'student-evaluation': 'Student Evaluation',
+    'evaluate-student-progress': 'Evaluate student progress and performance',
+    'student-attendance': 'Student Attendance',
+    'track-student-attendance': 'Track student attendance and participation',
+    
+    // Teachers page translations
+    'manage-teacher-activities': 'Manage Teacher Activities',
+    'teacher-registration': 'Teacher Registration',
+    'register-new-teachers': 'Register new teachers and manage teacher information',
+    'teacher-profiles': 'Teacher Profiles',
+    'view-manage-teacher-profiles': 'View and manage teacher profiles and information',
+    'assign-teachers': 'Assign Teachers',
+    'assign-teachers-to-classes-desc': 'Assign teachers to classes and manage teaching schedules',
+    'teacher-evaluations': 'Teacher Evaluations',
+    'evaluate-teacher-performance': 'Evaluate teacher performance and provide feedback',
+    
+    // Fight Plans page translations
+    'modality-management': 'Manage fight modalities and styles',
+    'training-phases': 'Training Phases',
+    
+    // Branches page translations
+    'branch-registration': 'Branch Registration',
+    'branch-facilities': 'Branch Facilities',
+    
     // Common actions
     'new': 'New',
     'edit': 'Edit',
@@ -333,6 +363,36 @@ const translations: Record<Language, Record<string, string>> = {
     'fight-plans': 'Planos de Luta',
     'quality-evaluation': 'Avaliação de Qualidade',
     'branches': 'Filiais',
+    
+    // Students page translations
+    'manage-student-activities': 'Gerenciar Atividades dos Estudantes',
+    'student-registration': 'Registro de Estudantes',
+    'register-new-students': 'Registrar novos estudantes e gerenciar informações dos estudantes',
+    'modality-by-student': 'Plano de Treinamento de Luta',
+    'student-modality-management': 'Gerenciar atribuições de modalidade e planos de treinamento dos estudantes',
+    'student-evaluation': 'Avaliação de Estudantes',
+    'evaluate-student-progress': 'Avaliar progresso e desempenho dos estudantes',
+    'student-attendance': 'Frequência dos Estudantes',
+    'track-student-attendance': 'Acompanhar frequência e participação dos estudantes',
+    
+    // Teachers page translations
+    'manage-teacher-activities': 'Gerenciar Atividades dos Professores',
+    'teacher-registration': 'Registro de Professores',
+    'register-new-teachers': 'Registrar novos professores e gerenciar informações dos professores',
+    'teacher-profiles': 'Perfis dos Professores',
+    'view-manage-teacher-profiles': 'Visualizar e gerenciar perfis e informações dos professores',
+    'assign-teachers': 'Atribuir Professores',
+    'assign-teachers-to-classes-desc': 'Atribuir professores às aulas e gerenciar cronogramas de ensino',
+    'teacher-evaluations': 'Avaliações dos Professores',
+    'evaluate-teacher-performance': 'Avaliar desempenho dos professores e fornecer feedback',
+    
+    // Fight Plans page translations
+    'modality-management': 'Gerenciar modalidades e estilos de luta',
+    'training-phases': 'Fases de Treinamento',
+    
+    // Branches page translations
+    'branch-registration': 'Registro de Filiais',
+    'branch-facilities': 'Instalações das Filiais',
     
     // Common actions
     'new': 'Novo',
