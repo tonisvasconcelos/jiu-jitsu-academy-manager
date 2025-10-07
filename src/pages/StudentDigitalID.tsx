@@ -188,12 +188,25 @@ const StudentDigitalID: React.FC = () => {
               {/* Student Photo and Basic Info */}
               <div className="lg:col-span-1">
                 <div className="text-center mb-6">
-                  <div className="w-32 h-32 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                  <div className="w-32 h-32 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-4 overflow-hidden">
                     {student.photoUrl ? (
                       <img 
                         src={student.photoUrl} 
                         alt={`${student.firstName} ${student.lastName}`}
                         className="w-full h-full rounded-full object-cover"
+                        onError={(e) => {
+                          // If image fails to load, show fallback
+                          const target = e.target as HTMLImageElement
+                          target.style.display = 'none'
+                          const parent = target.parentElement
+                          if (parent) {
+                            parent.innerHTML = `
+                              <div class="text-4xl text-gray-500">
+                                ${student.gender === 'female' ? '👩' : '👨'}
+                              </div>
+                            `
+                          }
+                        }}
                       />
                     ) : (
                       <div className="text-4xl text-gray-500">

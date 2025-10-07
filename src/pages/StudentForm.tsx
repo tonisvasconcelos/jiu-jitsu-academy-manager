@@ -5,6 +5,7 @@ import { useStudents, Student } from '../contexts/StudentContext'
 import { useBranches } from '../contexts/BranchContext'
 import { useWeightDivisions } from '../contexts/WeightDivisionContext'
 import { useClassCheckIns } from '../contexts/ClassCheckInContext'
+import ImageUpload from '../components/ImageUpload'
 
 const StudentForm: React.FC = () => {
   const { t } = useLanguage()
@@ -554,15 +555,15 @@ const StudentForm: React.FC = () => {
                 <p className="text-xs text-gray-400 mt-1">{t('preferred-language-help')}</p>
               </div>
 
-              {/* Photo URL */}
+              {/* Photo Upload */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">{t('photo-url')}</label>
-                <input
-                  type="url"
+                <label className="block text-sm font-medium text-gray-300 mb-2">Student Photo</label>
+                <ImageUpload
                   value={student.photoUrl || ''}
-                  onChange={(e) => handleInputChange('photoUrl', e.target.value)}
+                  onChange={(value) => handleInputChange('photoUrl', value)}
                   disabled={isReadOnly}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+                  placeholder={`${student.firstName} ${student.lastName}`}
+                  className="w-full"
                 />
               </div>
             </div>

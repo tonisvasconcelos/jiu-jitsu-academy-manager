@@ -903,7 +903,25 @@ const StudentRegistration: React.FC = () => {
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-12 w-12">
                           {student.photoUrl ? (
-                            <img className="h-12 w-12 rounded-full object-cover" src={student.photoUrl} alt={student.displayName} />
+                            <img 
+                              className="h-12 w-12 rounded-full object-cover" 
+                              src={student.photoUrl} 
+                              alt={student.displayName}
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement
+                                target.style.display = 'none'
+                                const parent = target.parentElement
+                                if (parent) {
+                                  parent.innerHTML = `
+                                    <div class="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                                      <span class="text-white text-lg font-semibold">
+                                        ${student.firstName.charAt(0)}${student.lastName.charAt(0)}
+                                      </span>
+                                    </div>
+                                  `
+                                }
+                              }}
+                            />
                           ) : (
                             <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                               <span className="text-white text-lg font-semibold">

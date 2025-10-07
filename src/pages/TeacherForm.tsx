@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useTeachers, Teacher } from '../contexts/TeacherContext'
 import { useBranches } from '../contexts/BranchContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
 import { useWeightDivisions } from '../contexts/WeightDivisionContext'
+import ImageUpload from '../components/ImageUpload'
 
 const TeacherForm: React.FC = () => {
   const { action, id } = useParams<{ action: string; id?: string }>()
@@ -12,8 +13,6 @@ const TeacherForm: React.FC = () => {
   const { branches } = useBranches()
   const { modalities } = useFightModalities()
   const { weightDivisions } = useWeightDivisions()
-  
-  const fileInputRef = useRef<HTMLInputElement>(null)
   
   const [teacher, setTeacher] = useState<Teacher>({
     teacherId: '',
@@ -111,20 +110,6 @@ const TeacherForm: React.FC = () => {
     }))
   }
 
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const result = e.target?.result as string
-        setTeacher(prev => ({
-          ...prev,
-          photoUrl: result
-        }))
-      }
-      reader.readAsDataURL(file)
-    }
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -647,41 +632,13 @@ const TeacherForm: React.FC = () => {
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
             <h2 className="text-xl font-semibold text-white mb-6">Photo</h2>
             
-            <div className="flex items-center space-x-6">
-              <div className="flex-shrink-0">
-                {teacher.photoUrl ? (
-                  <img
-                    src={teacher.photoUrl}
-                    alt="Teacher photo"
-                    className="h-24 w-24 rounded-full object-cover border-2 border-white/20"
-                  />
-                ) : (
-                  <div className="h-24 w-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center border-2 border-white/20">
-                    <span className="text-white font-semibold text-2xl">
-                      {teacher.firstName.charAt(0)}{teacher.lastName.charAt(0)}
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="flex-1">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePhotoUpload}
-                  className="hidden"
-                />
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isReadOnly}
-                  className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                >
-                  {teacher.photoUrl ? 'Change Photo' : 'Upload Photo'}
-                </button>
-                <p className="text-xs text-gray-400 mt-1">JPG, PNG or GIF (max 5MB)</p>
-              </div>
-            </div>
+            <ImageUpload
+              value={teacher.photoUrl || ''}
+              onChange={(value) => setTeacher(prev => ({ ...prev, photoUrl: value }))}
+              disabled={isReadOnly}
+              placeholder={`${teacher.firstName} ${teacher.lastName}`}
+              className="w-full"
+            />
           </div>
 
           {/* Emergency Contact */}
