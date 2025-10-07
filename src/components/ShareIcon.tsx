@@ -11,6 +11,7 @@ interface ShareIconProps {
 }
 
 const ShareIcon: React.FC<ShareIconProps> = ({ classData, className = "" }) => {
+  console.log('ShareIcon: Component rendered with classData:', classData)
   const [isGenerating, setIsGenerating] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -54,6 +55,7 @@ const ShareIcon: React.FC<ShareIconProps> = ({ classData, className = "" }) => {
   }
 
   const generateStoryImage = async () => {
+    console.log('ShareIcon: generateStoryImage called', classData)
     setIsGenerating(true)
     
     try {
