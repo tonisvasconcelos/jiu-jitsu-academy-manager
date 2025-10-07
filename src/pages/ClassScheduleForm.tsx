@@ -6,6 +6,7 @@ import { useBranches } from '../contexts/BranchContext'
 import { useBranchFacilities } from '../contexts/BranchFacilityContext'
 import { useTeachers } from '../contexts/TeacherContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
+import ShareIcon from '../components/ShareIcon'
 
 const ClassScheduleForm: React.FC = () => {
   const { action, id } = useParams<{ action: string; id?: string }>()
@@ -155,18 +156,27 @@ const ClassScheduleForm: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center mb-4">
-            <Link
-              to="/classes/registration"
-              className="mr-4 p-2 hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              {action === 'new' ? 'Add New Class' : action === 'edit' ? 'Edit Class' : 'View Class'}
-            </h1>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <Link
+                to="/classes/registration"
+                className="mr-4 p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </Link>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                {action === 'new' ? 'Add New Class' : action === 'edit' ? 'Edit Class' : 'View Class'}
+              </h1>
+            </div>
+            {/* Share Button - Only show for existing classes */}
+            {(action === 'edit' || action === 'view') && formData.classId && (
+              <ShareIcon 
+                classData={formData as ClassSchedule} 
+                className="ml-4"
+              />
+            )}
           </div>
           <p className="text-lg text-gray-300">
             {action === 'new' ? 'Create a new class schedule' : action === 'edit' ? 'Update class information' : 'View class details'}
