@@ -6,6 +6,9 @@ import { useBranches } from '../contexts/BranchContext'
 import { useBranchFacilities } from '../contexts/BranchFacilityContext'
 import { useTeachers } from '../contexts/TeacherContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
+import { useChampionships } from '../contexts/ChampionshipContext'
+import { useFightAssociations } from '../contexts/FightAssociationContext'
+import { useChampionshipQualifiedLocations } from '../contexts/ChampionshipQualifiedLocationContext'
 
 const ClassCalendar: React.FC = () => {
   const { t } = useLanguage()
@@ -14,6 +17,9 @@ const ClassCalendar: React.FC = () => {
   const { facilities = [] } = useBranchFacilities()
   const { teachers = [] } = useTeachers()
   const { modalities: fightModalities = [] } = useFightModalities()
+  const { championships = [] } = useChampionships()
+  const { fightAssociations = [] } = useFightAssociations()
+  const { qualifiedLocations = [] } = useChampionshipQualifiedLocations()
 
   const [currentWeek, setCurrentWeek] = useState(new Date())
   const [weekStart, setWeekStart] = useState<Date>(new Date())
@@ -25,6 +31,7 @@ const ClassCalendar: React.FC = () => {
   const [modalityFilter, setModalityFilter] = useState('all')
   const [genderFilter, setGenderFilter] = useState('all')
   const [ageCategoryFilter, setAgeCategoryFilter] = useState('all')
+  const [showChampionships, setShowChampionships] = useState(true)
 
   // Calculate the start of the current week (Monday)
   useEffect(() => {
@@ -60,12 +67,42 @@ const ClassCalendar: React.FC = () => {
         if (matchesTeacher && matchesBranch && matchesFacility && matchesModality && matchesGender && matchesAgeCategory) {
           classItem.daysOfWeek.forEach(day => {
             if (weekClasses[day]) {
-              weekClasses[day].push(classItem)
+              weekClasses[day].push({ ...classItem, type: 'class' })
             }
           })
         }
       }
     })
+
+    // Add championships if enabled
+    if (showChampionships) {
+      championships.forEach(championship => {
+        const startDate = new Date(championship.startDate)
+        const endDate = new Date(championship.endDate)
+        
+        // Check if championship overlaps with current week
+        const weekEnd = new Date(weekStart)
+        weekEnd.setDate(weekStart.getDate() + 6)
+        
+        if (startDate <= weekEnd && endDate >= weekStart) {
+          // Find which days of the week the championship falls on
+          const currentDate = new Date(Math.max(startDate.getTime(), weekStart.getTime()))
+          const finalDate = new Date(Math.min(endDate.getTime(), weekEnd.getTime()))
+          
+          while (currentDate <= finalDate) {
+            const dayOfWeek = currentDate.getDay()
+            const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1 // Convert Sunday=0 to Sunday=6, Monday=0
+            const dayKey = weekDays[dayIndex]
+            
+            if (weekClasses[dayKey]) {
+              weekClasses[dayKey].push({ ...championship, type: 'championship' })
+            }
+            
+            currentDate.setDate(currentDate.getDate() + 1)
+          }
+        }
+      })
+    }
 
     return weekClasses
   }
@@ -120,6 +157,27 @@ const ClassCalendar: React.FC = () => {
     setModalityFilter('all')
     setGenderFilter('all')
     setAgeCategoryFilter('all')
+  }
+
+  // Championship helper functions
+  const getAssociationName = (associationId: string) => {
+    const association = fightAssociations.find(a => a.associationId === associationId)
+    return association ? association.name : 'Unknown Association'
+  }
+
+  const getLocationName = (locationId: string) => {
+    const location = qualifiedLocations.find(l => l.locationId === locationId)
+    return location ? location.name : 'Unknown Location'
+  }
+
+  const getChampionshipStatusColor = (status: string) => {
+    switch (status) {
+      case 'upcoming': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+      case 'ongoing': return 'bg-green-500/20 text-green-400 border-green-500/30'
+      case 'completed': return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+      case 'cancelled': return 'bg-red-500/20 text-red-400 border-red-500/30'
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+    }
   }
 
   const hasActiveFilters = () => {
@@ -303,6 +361,19 @@ const ClassCalendar: React.FC = () => {
                 <option value="kids2">Kids 2</option>
               </select>
             </div>
+
+            {/* Championship Toggle */}
+            <div className="flex items-center justify-center">
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showChampionships}
+                  onChange={(e) => setShowChampionships(e.target.checked)}
+                  className="w-5 h-5 text-blue-600 bg-white/5 border-white/10 rounded focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="text-sm font-medium text-gray-300">Show Championships</span>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -365,33 +436,63 @@ const ClassCalendar: React.FC = () => {
             {dayKeys.map((dayKey, dayIndex) => (
               <div key={dayKey} className="min-h-[200px] sm:min-h-[400px] border border-white/10 rounded-lg p-2 sm:p-3">
                 <div className="space-y-2">
-                  {weekClasses[dayKey]?.map((classItem) => (
-                    <Link
-                      key={classItem.classId}
-                      to={`/classes/registration/view/${classItem.classId}`}
-                      className={`block p-3 rounded-lg border transition-all duration-300 hover:scale-105 hover:shadow-lg ${getClassTypeColor(classItem.classType)}`}
-                    >
-                      <div className="text-xs font-medium mb-1">
-                        {classItem.startTime} - {classItem.endTime}
-                      </div>
-                      <div className="text-sm font-semibold mb-1">
-                        {classItem.className}
-                      </div>
-                      <div className="text-xs opacity-80 mb-2">
-                        {getTeacherName(classItem.teacherId)}
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <div className="flex items-center space-x-1">
-                          <span>{getGenderIcon(classItem.genderCategory)}</span>
-                          <span className={getAgeCategoryColor(classItem.ageCategory)}>
-                            {classItem.ageCategory}
-                          </span>
+                  {weekClasses[dayKey]?.map((item) => (
+                    item.type === 'class' ? (
+                      <Link
+                        key={item.classId}
+                        to={`/classes/registration/view/${item.classId}`}
+                        className={`block p-3 rounded-lg border transition-all duration-300 hover:scale-105 hover:shadow-lg ${getClassTypeColor(item.classType)}`}
+                      >
+                        <div className="text-xs font-medium mb-1">
+                          {item.startTime} - {item.endTime}
                         </div>
-                        <div className="text-xs opacity-60">
-                          {classItem.currentEnrollment}/{classItem.maxCapacity}
+                        <div className="text-sm font-semibold mb-1">
+                          {item.className}
                         </div>
-                      </div>
-                    </Link>
+                        <div className="text-xs opacity-80 mb-2">
+                          {getTeacherName(item.teacherId)}
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center space-x-1">
+                            <span>{getGenderIcon(item.genderCategory)}</span>
+                            <span className={getAgeCategoryColor(item.ageCategory)}>
+                              {item.ageCategory}
+                            </span>
+                          </div>
+                          <div className="text-xs opacity-60">
+                            {item.currentEnrollment}/{item.maxCapacity}
+                          </div>
+                        </div>
+                      </Link>
+                    ) : (
+                      <Link
+                        key={item.championshipId}
+                        to={`/championships/registration/view/${item.championshipId}`}
+                        className={`block p-3 rounded-lg border transition-all duration-300 hover:scale-105 hover:shadow-lg ${getChampionshipStatusColor(item.status)}`}
+                      >
+                        <div className="text-xs font-medium mb-1 flex items-center">
+                          <span className="mr-1">🏆</span>
+                          Championship
+                        </div>
+                        <div className="text-sm font-semibold mb-1">
+                          {item.name}
+                        </div>
+                        <div className="text-xs opacity-80 mb-2">
+                          {getAssociationName(item.associationId)}
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center space-x-1">
+                            <span>📍</span>
+                            <span className="truncate">
+                              {getLocationName(item.qualifiedLocationId)}
+                            </span>
+                          </div>
+                          <div className="text-xs opacity-60">
+                            {item.fightModality}
+                          </div>
+                        </div>
+                      </Link>
+                    )
                   ))}
                   
                   {(!weekClasses[dayKey] || weekClasses[dayKey].length === 0) && (
@@ -407,29 +508,59 @@ const ClassCalendar: React.FC = () => {
 
         {/* Legend */}
         <div className="mt-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Class Type Legend</h3>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-blue-500/20 border border-blue-500/30 rounded"></div>
-              <span className="text-sm text-gray-300">Regular</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-purple-500/20 border border-purple-500/30 rounded"></div>
-              <span className="text-sm text-gray-300">Private</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-orange-500/20 border border-orange-500/30 rounded"></div>
-              <span className="text-sm text-gray-300">Seminar</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-yellow-500/20 border border-yellow-500/30 rounded"></div>
-              <span className="text-sm text-gray-300">Workshop</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-red-500/20 border border-red-500/30 rounded"></div>
-              <span className="text-sm text-gray-300">Competition</span>
+          <h3 className="text-lg font-semibold text-white mb-4">Legend</h3>
+          
+          {/* Class Types */}
+          <div className="mb-6">
+            <h4 className="text-md font-medium text-gray-300 mb-3">Class Types</h4>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-blue-500/20 border border-blue-500/30 rounded"></div>
+                <span className="text-sm text-gray-300">Regular</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-purple-500/20 border border-purple-500/30 rounded"></div>
+                <span className="text-sm text-gray-300">Private</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-orange-500/20 border border-orange-500/30 rounded"></div>
+                <span className="text-sm text-gray-300">Seminar</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-yellow-500/20 border border-yellow-500/30 rounded"></div>
+                <span className="text-sm text-gray-300">Workshop</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-red-500/20 border border-red-500/30 rounded"></div>
+                <span className="text-sm text-gray-300">Competition</span>
+              </div>
             </div>
           </div>
+
+          {/* Championship Status */}
+          {showChampionships && (
+            <div>
+              <h4 className="text-md font-medium text-gray-300 mb-3">Championship Status</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-blue-500/20 border border-blue-500/30 rounded"></div>
+                  <span className="text-sm text-gray-300">Upcoming</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-green-500/20 border border-green-500/30 rounded"></div>
+                  <span className="text-sm text-gray-300">Ongoing</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-gray-500/20 border border-gray-500/30 rounded"></div>
+                  <span className="text-sm text-gray-300">Completed</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-red-500/20 border border-red-500/30 rounded"></div>
+                  <span className="text-sm text-gray-300">Cancelled</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
