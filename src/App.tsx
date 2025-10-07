@@ -43,6 +43,7 @@ import FightModalities from './pages/FightModalities'
 import FightModalityForm from './pages/FightModalityForm'
 import StudentModality from './pages/StudentModality'
 import StudentModalityForm from './pages/StudentModalityForm'
+import StudentDigitalID from './pages/StudentDigitalID'
 import Branches from './pages/Branches'
 import BranchRegistration from './pages/BranchRegistration'
 import BranchForm from './pages/BranchForm'
@@ -148,6 +149,8 @@ function App() {
                       <Route path="/students/modality/:action" element={<StudentModalityForm />} />
                       <Route path="/students/modality/:action/:id" element={<StudentModalityForm />} />
                       <Route path="/students/modality/:action/:id/:studentId" element={<StudentModalityForm />} />
+                      <Route path="/students/digital-id" element={<StudentDigitalID />} />
+                      <Route path="/students/digital-id/:id" element={<StudentDigitalID />} />
                     
                     {/* Sub-menu Routes - Teachers (now accessible via /students menu) */}
                     <Route path="/teachers/registration" element={<TeacherRegistration />} />

@@ -9,6 +9,7 @@ const Students: React.FC = () => {
     // Student-related items
     { id: 'student-registration', title: t('student-registration'), path: '/students/registration', icon: '📝', description: t('register-new-students') },
     { id: 'modality', title: t('modality-by-student'), path: '/students/modality', icon: '🥊', description: t('student-modality-management') },
+    { id: 'digital-id', title: 'Digital ID', path: '/students/digital-id', icon: '🆔', description: 'Virtual student register with health insurance card layout' },
     // Coach-related items
     { id: 'coach-registration', title: t('coach-registration'), path: '/teachers/registration', icon: '👨‍🏫', description: t('register-new-coaches') },
   ]
