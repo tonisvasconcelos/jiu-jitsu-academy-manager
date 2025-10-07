@@ -125,7 +125,7 @@ const Dashboard: React.FC = () => {
 
           {/* Classes Today */}
           <Link
-            to="/classes/registration"
+            to="/classes/registration?filter=today"
             className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20 cursor-pointer"
           >
             <div className="flex items-center justify-between">

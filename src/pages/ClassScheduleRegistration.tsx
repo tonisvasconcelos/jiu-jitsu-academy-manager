@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useClassSchedules } from '../contexts/ClassScheduleContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
@@ -14,9 +14,20 @@ const ClassScheduleRegistration: React.FC = () => {
   const { branches = [] } = useBranches()
   const { facilities = [] } = useBranchFacilities()
   const { teachers = [] } = useTeachers()
+  const [searchParams] = useSearchParams()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [typeFilter, setTypeFilter] = useState('all')
+  const [dayFilter, setDayFilter] = useState('all')
+
+  // Handle URL parameters for filtering
+  useEffect(() => {
+    const filterParam = searchParams.get('filter')
+    if (filterParam === 'today') {
+      setDayFilter('today')
+      setStatusFilter('active') // Only show active classes for today
+    }
+  }, [searchParams])
 
   const filteredClasses = classes.filter(classItem => {
     const matchesSearch = classItem.className.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -24,7 +35,16 @@ const ClassScheduleRegistration: React.FC = () => {
     const matchesStatus = statusFilter === 'all' || classItem.status === statusFilter
     const matchesType = typeFilter === 'all' || classItem.classType === typeFilter
     
-    return matchesSearch && matchesStatus && matchesType
+    // Handle day filtering
+    let matchesDay = true
+    if (dayFilter === 'today') {
+      const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase()
+      matchesDay = classItem.daysOfWeek.includes(today as any)
+    } else if (dayFilter !== 'all') {
+      matchesDay = classItem.daysOfWeek.includes(dayFilter as any)
+    }
+    
+    return matchesSearch && matchesStatus && matchesType && matchesDay
   })
 
   // Debug logging
@@ -111,8 +131,23 @@ const ClassScheduleRegistration: React.FC = () => {
           </div>
         </div>
 
+        {/* Today's Classes Banner */}
+        {dayFilter === 'today' && (
+          <div className="mb-6 p-4 bg-gradient-to-r from-orange-500/20 to-orange-600/20 border border-orange-500/30 rounded-xl">
+            <div className="flex items-center">
+              <span className="text-2xl mr-3">📅</span>
+              <div>
+                <h3 className="text-lg font-semibold text-orange-400">Today's Classes</h3>
+                <p className="text-sm text-orange-300">
+                  Showing {filteredClasses.length} class{filteredClasses.length !== 1 ? 'es' : ''} scheduled for {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Filters */}
-        <div className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-5 gap-4">
           <div>
             <input
               type="text"
@@ -147,6 +182,23 @@ const ClassScheduleRegistration: React.FC = () => {
               <option value="seminar">Seminar</option>
               <option value="workshop">Workshop</option>
               <option value="competition">Competition</option>
+            </select>
+          </div>
+          <div>
+            <select
+              value={dayFilter}
+              onChange={(e) => setDayFilter(e.target.value)}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Days</option>
+              <option value="today">Today</option>
+              <option value="monday">Monday</option>
+              <option value="tuesday">Tuesday</option>
+              <option value="wednesday">Wednesday</option>
+              <option value="thursday">Thursday</option>
+              <option value="friday">Friday</option>
+              <option value="saturday">Saturday</option>
+              <option value="sunday">Sunday</option>
             </select>
           </div>
           <div className="flex items-center text-gray-400">
