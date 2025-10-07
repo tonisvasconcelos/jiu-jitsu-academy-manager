@@ -146,9 +146,29 @@ const StudentDigitalID: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
+      {/* Print Styles */}
+      <style jsx>{`
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          .badge-container, .badge-container * {
+            visibility: visible;
+          }
+          .badge-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+          }
+          .no-print {
+            display: none !important;
+          }
+        }
+      `}</style>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 no-print">
           <Link
             to="/students"
             className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors mb-4"
@@ -166,250 +186,136 @@ const StudentDigitalID: React.FC = () => {
           </p>
         </div>
 
-        {/* Digital ID Card */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          {/* Card Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold">OSS 365</h2>
-                <p className="text-blue-100">Jiu-Jitsu Academy</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-blue-100">Student ID</p>
-                <p className="text-lg font-mono font-bold">{student.studentId}</p>
+        {/* Corporate Badge */}
+        <div className="max-w-md mx-auto badge-container">
+          <div className="bg-white rounded-lg shadow-2xl overflow-hidden border-2 border-gray-200">
+            {/* Badge Header */}
+            <div className="bg-gradient-to-r from-blue-700 to-blue-900 px-6 py-4 text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-bold">OSS 365</h2>
+                  <p className="text-xs text-blue-200">JIU-JITSU ACADEMY</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-blue-200">STUDENT ID</p>
+                  <p className="text-sm font-mono font-bold">{student.studentId}</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Card Body */}
-          <div className="p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Student Photo and Basic Info */}
-              <div className="lg:col-span-1">
-                <div className="text-center mb-6">
-                  <div className="w-32 h-32 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-4 overflow-hidden">
-                    {student.photoUrl ? (
-                      <img 
-                        src={student.photoUrl} 
-                        alt={`${student.firstName} ${student.lastName}`}
-                        className="w-full h-full rounded-full object-cover"
-                        onError={(e) => {
-                          // If image fails to load, show fallback
-                          const target = e.target as HTMLImageElement
-                          target.style.display = 'none'
-                          const parent = target.parentElement
-                          if (parent) {
-                            parent.innerHTML = `
-                              <div class="text-4xl text-gray-500">
-                                ${student.gender === 'female' ? '👩' : '👨'}
-                              </div>
-                            `
-                          }
-                        }}
-                      />
-                    ) : (
-                      <div className="text-4xl text-gray-500">
-                        {student.gender === 'female' ? '👩' : '👨'}
-                      </div>
-                    )}
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-800">
-                    {student.firstName} {student.lastName}
-                  </h3>
-                  <p className="text-gray-600">{student.displayName}</p>
-                </div>
-
-                {/* QR Code */}
-                <div className="text-center">
-                  <div className="w-24 h-24 mx-auto bg-white border-2 border-gray-300 rounded-lg flex items-center justify-center">
+            {/* Badge Body */}
+            <div className="p-6">
+              {/* Photo and Name Section */}
+              <div className="text-center mb-6">
+                <div className="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-3 overflow-hidden border-2 border-gray-300">
+                  {student.photoUrl ? (
                     <img 
-                      src={generateQRCode(student.studentId)} 
-                      alt="QR Code"
-                      className="w-full h-full rounded"
+                      src={student.photoUrl} 
+                      alt={`${student.firstName} ${student.lastName}`}
+                      className="w-full h-full rounded-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.style.display = 'none'
+                        const parent = target.parentElement
+                        if (parent) {
+                          parent.innerHTML = `
+                            <div class="text-2xl text-gray-500">
+                              ${student.gender === 'female' ? '👩' : '👨'}
+                            </div>
+                          `
+                        }
+                      }}
                     />
+                  ) : (
+                    <div className="text-2xl text-gray-500">
+                      {student.gender === 'female' ? '👩' : '👨'}
+                    </div>
+                  )}
+                </div>
+                <h3 className="text-lg font-bold text-gray-800 mb-1">
+                  {student.firstName.toUpperCase()} {student.lastName.toUpperCase()}
+                </h3>
+                <p className="text-sm text-gray-600">{student.displayName}</p>
+              </div>
+
+              {/* Key Information Grid */}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 uppercase tracking-wide">Belt Level</p>
+                  <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${getBeltColor(student.beltLevel)}`}>
+                    {student.beltLevel.replace('-', ' ').toUpperCase()}
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">Digital Verification</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 uppercase tracking-wide">Status</p>
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
+                    student.active 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {student.active ? 'ACTIVE' : 'INACTIVE'}
+                  </span>
                 </div>
               </div>
 
-              {/* Student Details */}
-              <div className="lg:col-span-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Personal Information */}
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
-                      Personal Information
-                    </h4>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Full Name</label>
-                        <p className="text-gray-800 font-medium">{student.firstName} {student.lastName}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Document ID</label>
-                        <p className="text-gray-800 font-mono">{student.documentId}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Date of Birth</label>
-                        <p className="text-gray-800">{formatDate(student.birthDate)}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Age</label>
-                        <p className="text-gray-800">{calculateAge(student.birthDate)} years old</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Gender</label>
-                        <p className="text-gray-800 capitalize">{student.gender}</p>
-                      </div>
-                    </div>
-                  </div>
+              {/* Document ID */}
+              <div className="text-center mb-4">
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Document ID</p>
+                <p className="text-sm font-mono font-bold text-gray-800">{student.documentId}</p>
+              </div>
 
-                  {/* Academy Information */}
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
-                      Academy Information
-                    </h4>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Branch</label>
-                        <p className="text-gray-800">{getBranchName(student.branchId)}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Status</label>
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          student.active 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
-                        }`}>
-                          {student.active ? 'Active' : 'Inactive'}
-                        </span>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-600">Student Type</label>
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          student.isKidsStudent 
-                            ? 'bg-yellow-100 text-yellow-800' 
-                            : 'bg-blue-100 text-blue-800'
-                        }`}>
-                          {student.isKidsStudent ? 'Kids Student' : 'Adult Student'}
-                        </span>
-                      </div>
-                      {student.weight && (
-                        <div>
-                          <label className="text-sm font-medium text-gray-600">Weight</label>
-                          <p className="text-gray-800">{student.weight} kg</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+              {/* Branch Information */}
+              <div className="text-center mb-4">
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Branch</p>
+                <p className="text-sm font-medium text-gray-800">{getBranchName(student.branchId)}</p>
+              </div>
+
+              {/* QR Code Section */}
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto bg-white border border-gray-300 rounded flex items-center justify-center mb-2">
+                  <img 
+                    src={generateQRCode(student.studentId)} 
+                    alt="QR Code"
+                    className="w-full h-full rounded"
+                  />
                 </div>
-
-                {/* Belt Level */}
-                <div className="mt-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
-                    Current Belt Level
-                  </h4>
-                  <div className="flex items-center space-x-4">
-                    <div className={`px-4 py-2 rounded-lg border-2 ${getBeltColor(student.beltLevel)}`}>
-                      <span className="font-bold capitalize">
-                        {student.beltLevel.replace('-', ' ')}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Training Modalities */}
-                {studentModalities.length > 0 && (
-                  <div className="mt-6">
-                    <h4 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
-                      Training Modalities
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {studentModalities.map((connection) => (
-                        <div key={connection.connectionId} className="bg-gray-50 p-3 rounded-lg">
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-gray-800">
-                              {getModalityName(connection.modalityId)}
-                            </span>
-                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              connection.active 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-gray-100 text-gray-800'
-                            }`}>
-                              {connection.active ? 'Active' : 'Inactive'}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1">
-                            Started: {formatDate(connection.assignmentDate)}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Contact Information */}
-                <div className="mt-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
-                    Contact Information
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Email</label>
-                      <p className="text-gray-800">{student.email}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-600">Phone</label>
-                      <p className="text-gray-800">{student.phone}</p>
-                    </div>
-                  </div>
-                </div>
+                <p className="text-xs text-gray-500">DIGITAL VERIFICATION</p>
               </div>
             </div>
-          </div>
 
-          {/* Card Footer */}
-          <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
-            <div className="flex items-center justify-between text-sm text-gray-600">
-              <div>
-                <p>Generated on: {new Date().toLocaleDateString()}</p>
-              </div>
-              <div className="text-right">
-                <p>Valid until: {new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString()}</p>
+            {/* Badge Footer */}
+            <div className="bg-gray-50 px-4 py-2 border-t border-gray-200">
+              <div className="flex items-center justify-between text-xs text-gray-500">
+                <span>Issued: {new Date().toLocaleDateString()}</span>
+                <span>Valid: 1 Year</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-8 flex flex-wrap gap-4">
+        <div className="mt-8 flex flex-wrap justify-center gap-4 no-print">
           <button
             onClick={() => window.print()}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors duration-300"
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-300 shadow-lg"
           >
-            🖨️ Print ID Card
+            🖨️ Print Badge
           </button>
           <button
             onClick={() => {
-              const cardElement = document.querySelector('.bg-white.rounded-2xl')
-              if (cardElement) {
-                const canvas = document.createElement('canvas')
-                const ctx = canvas.getContext('2d')
-                // Simple download functionality - in a real app, you'd use html2canvas
-                const link = document.createElement('a')
-                link.download = `${student.firstName}_${student.lastName}_DigitalID.png`
-                link.href = generateQRCode(student.studentId)
-                link.click()
-              }
+              // Create a download link for the badge
+              const link = document.createElement('a')
+              link.download = `${student.firstName}_${student.lastName}_Badge.png`
+              link.href = generateQRCode(student.studentId)
+              link.click()
             }}
-            className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors duration-300"
+            className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-300 shadow-lg"
           >
-            📱 Download ID Card
+            📱 Download Badge
           </button>
           <Link
             to={`/students/registration/edit/${student.studentId}`}
-            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-colors duration-300"
+            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors duration-300 shadow-lg"
           >
             ✏️ Edit Student
           </Link>
