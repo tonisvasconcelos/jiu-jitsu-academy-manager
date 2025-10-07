@@ -119,6 +119,121 @@ const ChampionshipForm: React.FC = () => {
         {/* Form */}
         <div className="bg-white/5 rounded-xl border border-white/10 p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Registration Statistics - Only show for existing championships */}
+            {id && id !== 'new' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2">
+                  Registration Statistics
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Total Registrations */}
+                  <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-blue-400 text-sm font-medium mb-1">Total Registrations</p>
+                        <p className="text-3xl font-bold text-white">
+                          {registrations.filter(reg => reg.championshipId === id).length}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-blue-500/20 rounded-xl">
+                        <span className="text-2xl">📝</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Confirmed Registrations */}
+                  <div className="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-green-400 text-sm font-medium mb-1">Confirmed</p>
+                        <p className="text-3xl font-bold text-white">
+                          {registrations.filter(reg => reg.championshipId === id && reg.status === 'confirmed').length}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-green-500/20 rounded-xl">
+                        <span className="text-2xl">✅</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pending Registrations */}
+                  <div className="bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-xl p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-yellow-400 text-sm font-medium mb-1">Pending</p>
+                        <p className="text-3xl font-bold text-white">
+                          {registrations.filter(reg => reg.championshipId === id && reg.status === 'pending').length}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-yellow-500/20 rounded-xl">
+                        <span className="text-2xl">⏳</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Statistics */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Weighed In */}
+                  <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-purple-400 text-sm font-medium mb-1">Weighed In</p>
+                        <p className="text-2xl font-bold text-white">
+                          {registrations.filter(reg => reg.championshipId === id && reg.status === 'weighed-in').length}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-purple-500/20 rounded-xl">
+                        <span className="text-2xl">⚖️</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Completed */}
+                  <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 rounded-xl p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-emerald-400 text-sm font-medium mb-1">Completed</p>
+                        <p className="text-2xl font-bold text-white">
+                          {registrations.filter(reg => reg.championshipId === id && reg.status === 'completed').length}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-emerald-500/20 rounded-xl">
+                        <span className="text-2xl">🏆</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Registration Progress Bar */}
+                {championship.maxParticipants && (
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-lg font-semibold text-white">Registration Progress</h4>
+                      <span className="text-sm text-gray-400">
+                        {registrations.filter(reg => reg.championshipId === id).length} / {championship.maxParticipants}
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-3">
+                      <div 
+                        className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-300"
+                        style={{ 
+                          width: `${Math.min(
+                            (registrations.filter(reg => reg.championshipId === id).length / parseInt(championship.maxParticipants)) * 100, 
+                            100
+                          )}%` 
+                        }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-2">
+                      {Math.round((registrations.filter(reg => reg.championshipId === id).length / parseInt(championship.maxParticipants)) * 100)}% of capacity filled
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Basic Information */}
             <div className="space-y-6">
               <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2">
@@ -370,121 +485,6 @@ const ChampionshipForm: React.FC = () => {
                 />
               </div>
             </div>
-
-            {/* Registration Statistics - Only show for existing championships */}
-            {id && id !== 'new' && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-2">
-                  Registration Statistics
-                </h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Total Registrations */}
-                  <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-xl p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-blue-400 text-sm font-medium mb-1">Total Registrations</p>
-                        <p className="text-3xl font-bold text-white">
-                          {registrations.filter(reg => reg.championshipId === id).length}
-                        </p>
-                      </div>
-                      <div className="p-3 bg-blue-500/20 rounded-xl">
-                        <span className="text-2xl">📝</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Confirmed Registrations */}
-                  <div className="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-green-400 text-sm font-medium mb-1">Confirmed</p>
-                        <p className="text-3xl font-bold text-white">
-                          {registrations.filter(reg => reg.championshipId === id && reg.status === 'confirmed').length}
-                        </p>
-                      </div>
-                      <div className="p-3 bg-green-500/20 rounded-xl">
-                        <span className="text-2xl">✅</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Pending Registrations */}
-                  <div className="bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-xl p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-yellow-400 text-sm font-medium mb-1">Pending</p>
-                        <p className="text-3xl font-bold text-white">
-                          {registrations.filter(reg => reg.championshipId === id && reg.status === 'pending').length}
-                        </p>
-                      </div>
-                      <div className="p-3 bg-yellow-500/20 rounded-xl">
-                        <span className="text-2xl">⏳</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Additional Statistics */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Weighed In */}
-                  <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-xl p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-purple-400 text-sm font-medium mb-1">Weighed In</p>
-                        <p className="text-2xl font-bold text-white">
-                          {registrations.filter(reg => reg.championshipId === id && reg.status === 'weighed-in').length}
-                        </p>
-                      </div>
-                      <div className="p-3 bg-purple-500/20 rounded-xl">
-                        <span className="text-2xl">⚖️</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Completed */}
-                  <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 rounded-xl p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-emerald-400 text-sm font-medium mb-1">Completed</p>
-                        <p className="text-2xl font-bold text-white">
-                          {registrations.filter(reg => reg.championshipId === id && reg.status === 'completed').length}
-                        </p>
-                      </div>
-                      <div className="p-3 bg-emerald-500/20 rounded-xl">
-                        <span className="text-2xl">🏆</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Registration Progress Bar */}
-                {championship.maxParticipants && (
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h4 className="text-lg font-semibold text-white">Registration Progress</h4>
-                      <span className="text-sm text-gray-400">
-                        {registrations.filter(reg => reg.championshipId === id).length} / {championship.maxParticipants}
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-700 rounded-full h-3">
-                      <div 
-                        className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-300"
-                        style={{ 
-                          width: `${Math.min(
-                            (registrations.filter(reg => reg.championshipId === id).length / parseInt(championship.maxParticipants)) * 100, 
-                            100
-                          )}%` 
-                        }}
-                      ></div>
-                    </div>
-                    <p className="text-xs text-gray-400 mt-2">
-                      {Math.round((registrations.filter(reg => reg.championshipId === id).length / parseInt(championship.maxParticipants)) * 100)}% of capacity filled
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
 
             {/* Submit Button */}
             <div className="flex justify-end space-x-4 pt-6">
