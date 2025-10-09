@@ -163,7 +163,7 @@ const Login: React.FC = () => {
         </form>
 
         {/* Footer */}
-        <div className="text-center">
+        <div className="text-center space-y-4">
           <p className="text-sm text-gray-400">
             {t('dont-have-account')}{' '}
             <button
@@ -173,6 +173,17 @@ const Login: React.FC = () => {
               {t('sign-up')}
             </button>
           </p>
+          
+          {/* Language Selector Link */}
+          <div className="pt-4 border-t border-white/10">
+            <button
+              onClick={() => navigate('/language')}
+              className="text-sm text-gray-400 hover:text-white transition-colors flex items-center justify-center mx-auto"
+            >
+              <span className="mr-2">🌐</span>
+              {t('language')} / Language
+            </button>
+          </div>
         </div>
       </div>
     </div>

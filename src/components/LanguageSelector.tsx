@@ -1,8 +1,10 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useLanguage, Language } from '../contexts/LanguageContext'
 
 const LanguageSelector: React.FC = () => {
   const { language, setLanguage, t } = useLanguage()
+  const navigate = useNavigate()
 
   // Defensive guards - ensure all required functions and values are available
   if (!language || !setLanguage || !t) {
@@ -37,6 +39,10 @@ const LanguageSelector: React.FC = () => {
     } catch (error) {
       console.error('Error changing language:', error)
     }
+  }
+
+  const handleContinue = () => {
+    navigate('/login')
   }
 
   return (
@@ -127,6 +133,16 @@ const LanguageSelector: React.FC = () => {
                   </p>
                 </div>
               </div>
+            </div>
+
+            {/* Continue Button */}
+            <div className="mt-8 flex justify-center">
+              <button
+                onClick={handleContinue}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200 text-lg"
+              >
+                {language === 'ENU' ? 'Continue to Login' : 'Continuar para Login'}
+              </button>
             </div>
           </div>
         </div>
