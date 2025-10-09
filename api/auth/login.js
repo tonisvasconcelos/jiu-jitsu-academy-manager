@@ -47,11 +47,42 @@ export default async function handler(req, res) {
         email: authResult.user.email
       })).toString('base64');
 
+      // Add test data for tubaraobjj.com tenant
+      let testData = {};
+      if (authResult.tenant.id === 'tubaraobjj-tenant') {
+        testData = {
+          students: [{
+            id: 'student_1',
+            tenantId: 'tubaraobjj-tenant',
+            studentId: 'STU001',
+            firstName: 'Antonio',
+            lastName: 'Vasconcelos',
+            displayName: 'Antonio Vasconcelos',
+            birthDate: '1989-01-01',
+            gender: 'male',
+            beltLevel: 'blue',
+            documentId: '12345678901',
+            email: 'tonisvasconcelos@hotmail.com',
+            phone: '21998010725',
+            branchId: 'main-branch',
+            active: true,
+            isKidsStudent: false,
+            weight: 117,
+            weightDivisionId: 'ultra-heavy',
+            photoUrl: '',
+            preferredLanguage: 'PTB',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          }]
+        };
+      }
+
       res.status(200).json({
         success: true,
         token,
         user: authResult.user,
-        tenant: authResult.tenant
+        tenant: authResult.tenant,
+        testData
       });
 
   } catch (error) {

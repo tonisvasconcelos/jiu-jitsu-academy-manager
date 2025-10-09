@@ -177,6 +177,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Save to localStorage for persistence
       saveAuthToStorage(result.user, result.tenant);
       
+      // Store test data if available
+      if (result.testData) {
+        localStorage.setItem('testData', JSON.stringify(result.testData));
+      }
+      
       // Reset inactivity timer
       lastActivityRef.current = Date.now();
     } catch (error: any) {

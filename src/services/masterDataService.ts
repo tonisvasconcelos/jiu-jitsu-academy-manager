@@ -90,32 +90,18 @@ class MasterDataService {
     } catch (error: any) {
       console.error(`Error loading ${dataType} from API:`, error)
       
-      // Fallback: Return sample data for testing
-      if (dataType === 'students') {
-        console.log('Using fallback student data')
-        return [{
-          id: 'student_1',
-          tenantId: 'tubaraobjj-tenant',
-          studentId: 'STU001',
-          firstName: 'Antonio',
-          lastName: 'Vasconcelos',
-          displayName: 'Antonio Vasconcelos',
-          birthDate: '1989-01-01',
-          gender: 'male',
-          beltLevel: 'blue',
-          documentId: '12345678901',
-          email: 'tonisvasconcelos@hotmail.com',
-          phone: '21998010725',
-          branchId: 'main-branch',
-          active: true,
-          isKidsStudent: false,
-          weight: 117,
-          weightDivisionId: 'ultra-heavy',
-          photoUrl: '',
-          preferredLanguage: 'PTB',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }] as T[]
+      // Fallback: Try to get test data from localStorage
+      try {
+        const testData = localStorage.getItem('testData');
+        if (testData) {
+          const parsed = JSON.parse(testData);
+          if (parsed[dataType]) {
+            console.log(`Using test data for ${dataType}`)
+            return parsed[dataType] as T[]
+          }
+        }
+      } catch (fallbackError) {
+        console.error('Error loading test data:', fallbackError)
       }
       
       return []
