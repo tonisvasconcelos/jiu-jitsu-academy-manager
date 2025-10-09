@@ -36,25 +36,28 @@ const LanguageSelector: React.FC = () => {
   const handleLanguageChange = (newLanguage: Language) => {
     try {
       setLanguage(newLanguage)
+      // Immediately redirect to login after language selection
+      setTimeout(() => {
+        navigate('/login')
+      }, 100) // Small delay to ensure language is saved
     } catch (error) {
       console.error('Error changing language:', error)
     }
-  }
-
-  const handleContinue = () => {
-    navigate('/login')
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
-        <div className="mb-8">
+        <div className="mb-8 text-center">
           <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-3">
             {t('language-selector')}
           </h1>
-          <p className="text-lg text-gray-300 max-w-2xl">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             {t('select-language')}
+          </p>
+          <p className="text-sm text-gray-400 mt-2">
+            Click on your preferred language to continue
           </p>
         </div>
 
@@ -340,25 +343,6 @@ const LanguageSelector: React.FC = () => {
               </div>
             </div>
 
-            {/* Continue Button */}
-            <div className="mt-8 flex justify-center">
-              <button
-                onClick={handleContinue}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200 text-lg"
-              >
-                {language === 'ENU' ? 'Continue to Login' : 
-                 language === 'PTB' ? 'Continuar para Login' :
-                 language === 'GER' ? 'Zur Anmeldung fortfahren' :
-                 language === 'FRA' ? 'Continuer vers la connexion' :
-                 language === 'ESP' ? 'Continuar al inicio de sesión' :
-                 language === 'JPN' ? 'ログインに進む' :
-                 language === 'ITA' ? 'Continua al login' :
-                 language === 'RUS' ? 'Перейти к входу' :
-                 language === 'ARA' ? 'المتابعة إلى تسجيل الدخول' :
-                 language === 'KOR' ? '로그인으로 계속' : 
-                 'Continue to Login'}
-              </button>
-            </div>
           </div>
         </div>
       </div>
