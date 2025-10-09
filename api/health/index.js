@@ -1,4 +1,4 @@
-import { testConnection } from './shared/postgresDatabase.js';
+import { testConnection } from '../shared/postgresDatabase.js';
 
 export default async function handler(req, res) {
   // Force redeployment - PostgreSQL Health v1
