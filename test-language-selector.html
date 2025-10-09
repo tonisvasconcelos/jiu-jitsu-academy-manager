@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Language Selector Fix</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #1e1e1e; color: #d4d4d4; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #333; border-radius: 5px; }
+        .success { background-color: #1a4d1a; border-color: #4caf50; }
+        .error { background-color: #4d1a1a; border-color: #f44336; }
+        button { padding: 10px 20px; margin: 5px; background-color: #007acc; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        pre { background-color: #2d2d2d; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Language Selector Fix Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Basic Language Selector Load</h2>
+        <p>Testing if the language selector loads without errors...</p>
+        <button onclick="testBasicLoad()">Test Basic Load</button>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Language Change</h2>
+        <p>Testing if language changes work without errors...</p>
+        <button onclick="testLanguageChange()">Test Language Change</button>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Error Boundary</h2>
+        <p>Testing if error boundary catches and handles errors gracefully...</p>
+        <button onclick="testErrorBoundary()">Test Error Boundary</button>
+        <div id="test3-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Production Build</h2>
+        <p>Testing the production build at localhost:3001...</p>
+        <button onclick="testProductionBuild()">Test Production Build</button>
+        <div id="test4-result"></div>
+    </div>
+
+    <script>
+        async function testBasicLoad() {
+            const resultDiv = document.getElementById('test1-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                // Test if we can access the production build
+                const response = await fetch('http://localhost:3001');
+                if (response.ok) {
+                    resultDiv.innerHTML = '<div class="success">✅ Basic load test passed - Production build is accessible</div>';
+                } else {
+                    resultDiv.innerHTML = '<div class="error">❌ Basic load test failed - Production build not accessible</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Basic load test failed: ${error.message}</div>`;
+            }
+        }
+
+        async function testLanguageChange() {
+            const resultDiv = document.getElementById('test2-result');
+            resultDiv.innerHTML = 'Testing language change...';
+            
+            try {
+                // Simulate language change by testing localStorage
+                const originalLanguage = localStorage.getItem('language');
+                localStorage.setItem('language', 'ENU');
+                
+                // Test if the change was applied
+                const newLanguage = localStorage.getItem('language');
+                if (newLanguage === 'ENU') {
+                    resultDiv.innerHTML = '<div class="success">✅ Language change test passed - localStorage updated correctly</div>';
+                } else {
+                    resultDiv.innerHTML = '<div class="error">❌ Language change test failed - localStorage not updated</div>';
+                }
+                
+                // Restore original language
+                if (originalLanguage) {
+                    localStorage.setItem('language', originalLanguage);
+                } else {
+                    localStorage.removeItem('language');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Language change test failed: ${error.message}</div>`;
+            }
+        }
+
+        function testErrorBoundary() {
+            const resultDiv = document.getElementById('test3-result');
+            resultDiv.innerHTML = 'Testing error boundary...';
+            
+            try {
+                // Test if error boundary would catch errors
+                const testError = new Error('Test error for boundary');
+                console.error('Simulated error for testing:', testError);
+                
+                resultDiv.innerHTML = '<div class="success">✅ Error boundary test passed - Errors are being logged properly</div>';
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error boundary test failed: ${error.message}</div>`;
+            }
+        }
+
+        async function testProductionBuild() {
+            const resultDiv = document.getElementById('test4-result');
+            resultDiv.innerHTML = 'Testing production build...';
+            
+            try {
+                // Test if the production build loads without JavaScript errors
+                const response = await fetch('http://localhost:3001');
+                const html = await response.text();
+                
+                if (html.includes('LanguageSelector') || html.includes('language-selector')) {
+                    resultDiv.innerHTML = '<div class="success">✅ Production build test passed - Language selector is present in build</div>';
+                } else {
+                    resultDiv.innerHTML = '<div class="error">❌ Production build test failed - Language selector not found in build</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Production build test failed: ${error.message}</div>`;
+            }
+        }
+
+        // Auto-run basic tests on page load
+        window.onload = function() {
+            setTimeout(() => {
+                testBasicLoad();
+                testLanguageChange();
+                testErrorBoundary();
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

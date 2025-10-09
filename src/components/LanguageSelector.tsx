@@ -1,11 +1,42 @@
 import React from 'react'
-import { useLanguage } from '../contexts/LanguageContext'
+import { useLanguage, Language } from '../contexts/LanguageContext'
 
 const LanguageSelector: React.FC = () => {
   const { language, setLanguage, t } = useLanguage()
 
-  const handleLanguageChange = (newLanguage: 'en' | 'pt') => {
-    setLanguage(newLanguage)
+  // Defensive guards - ensure all required functions and values are available
+  if (!language || !setLanguage || !t) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p>Loading language selector...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Ensure language is a valid value
+  const validLanguages: Language[] = ['ENU', 'PTB', 'GER', 'FRA', 'ESP', 'JPN', 'ITA', 'RUS', 'ARA', 'KOR']
+  if (!validLanguages.includes(language)) {
+    console.warn(`Invalid language value: ${language}, defaulting to PTB`)
+    setLanguage('PTB')
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p>Initializing language...</p>
+        </div>
+      </div>
+    )
+  }
+
+  const handleLanguageChange = (newLanguage: Language) => {
+    try {
+      setLanguage(newLanguage)
+    } catch (error) {
+      console.error('Error changing language:', error)
+    }
   }
 
   return (
@@ -30,11 +61,11 @@ const LanguageSelector: React.FC = () => {
               {/* English Option */}
               <div 
                 className={`p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:scale-105 ${
-                  language === 'en' 
+                  language === 'ENU' 
                     ? 'border-blue-500 bg-blue-500/20' 
                     : 'border-white/10 bg-white/5 hover:border-blue-400'
                 }`}
-                onClick={() => handleLanguageChange('en')}
+                onClick={() => handleLanguageChange('ENU')}
               >
                 <div className="flex items-center space-x-4">
                   <div className="text-4xl">🇺🇸</div>
@@ -42,7 +73,7 @@ const LanguageSelector: React.FC = () => {
                     <h3 className="text-xl font-semibold text-white">{t('english')}</h3>
                     <p className="text-gray-400">English</p>
                   </div>
-                  {language === 'en' && (
+                  {language === 'ENU' && (
                     <div className="ml-auto">
                       <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                         <span className="text-white text-sm">✓</span>
@@ -55,11 +86,11 @@ const LanguageSelector: React.FC = () => {
               {/* Portuguese Option */}
               <div 
                 className={`p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:scale-105 ${
-                  language === 'pt' 
+                  language === 'PTB' 
                     ? 'border-blue-500 bg-blue-500/20' 
                     : 'border-white/10 bg-white/5 hover:border-blue-400'
                 }`}
-                onClick={() => handleLanguageChange('pt')}
+                onClick={() => handleLanguageChange('PTB')}
               >
                 <div className="flex items-center space-x-4">
                   <div className="text-4xl">🇧🇷</div>
@@ -67,7 +98,7 @@ const LanguageSelector: React.FC = () => {
                     <h3 className="text-xl font-semibold text-white">{t('portuguese')}</h3>
                     <p className="text-gray-400">Português</p>
                   </div>
-                  {language === 'pt' && (
+                  {language === 'PTB' && (
                     <div className="ml-auto">
                       <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                         <span className="text-white text-sm">✓</span>
@@ -82,14 +113,14 @@ const LanguageSelector: React.FC = () => {
             <div className="mt-8 p-4 bg-white/5 rounded-xl border border-white/10">
               <div className="flex items-center space-x-3">
                 <div className="text-2xl">
-                  {language === 'en' ? '🇺🇸' : '🇧🇷'}
+                  {language === 'ENU' ? '🇺🇸' : '🇧🇷'}
                 </div>
                 <div>
                   <p className="text-white font-medium">
-                    {language === 'en' ? 'English' : 'Português'} {t('language')}
+                    {language === 'ENU' ? 'English' : 'Português'} {t('language')}
                   </p>
                   <p className="text-gray-400 text-sm">
-                    {language === 'en' 
+                    {language === 'ENU' 
                       ? 'The interface is currently displayed in English' 
                       : 'A interface está atualmente exibida em Português'
                     }

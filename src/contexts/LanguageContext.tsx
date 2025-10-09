@@ -562,7 +562,14 @@ const translations: Record<Language, Record<string, string>> = {
     'sign-in': 'Sign In',
     'demo-credentials': 'Demo Credentials',
     'dont-have-account': "Don't have an account?",
-    'sign-up': 'Sign up'
+    'sign-up': 'Sign up',
+    
+    // Language Selector
+    'language-selector': 'Language Selector',
+    'select-language': 'Select your preferred language',
+    'language': 'Language',
+    'english': 'English',
+    'portuguese': 'Português'
   },
   
   PTB: {
@@ -1105,7 +1112,14 @@ const translations: Record<Language, Record<string, string>> = {
     'no-fights-found': 'Nenhuma luta encontrada',
     'no-fights-found-description': 'Crie sua primeira luta para começar',
     'create-first-fight': 'Criar Primeira Luta',
-    'confirm-delete-fight': 'Tem certeza de que deseja excluir esta luta?'
+    'confirm-delete-fight': 'Tem certeza de que deseja excluir esta luta?',
+    
+    // Language Selector
+    'language-selector': 'Seletor de Idioma',
+    'select-language': 'Selecione seu idioma preferido',
+    'language': 'Idioma',
+    'english': 'Inglês',
+    'portuguese': 'Português'
   },
   
   GER: {
@@ -1761,20 +1775,54 @@ const translations: Record<Language, Record<string, string>> = {
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('PTB')
+  const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language') as Language
-    if (savedLanguage && ['ENU', 'PTB', 'GER', 'FRA', 'ESP', 'JPN', 'ITA', 'RUS', 'ARA', 'KOR'].includes(savedLanguage)) {
-      setLanguage(savedLanguage)
+    try {
+      const savedLanguage = localStorage.getItem('language') as Language
+      const validLanguages: Language[] = ['ENU', 'PTB', 'GER', 'FRA', 'ESP', 'JPN', 'ITA', 'RUS', 'ARA', 'KOR']
+      
+      if (savedLanguage && validLanguages.includes(savedLanguage)) {
+        setLanguage(savedLanguage)
+      } else if (savedLanguage) {
+        console.warn(`Invalid saved language: ${savedLanguage}, using default: PTB`)
+      }
+    } catch (error) {
+      console.error('Error loading language from localStorage:', error)
+    } finally {
+      setIsInitialized(true)
     }
   }, [])
 
   useEffect(() => {
-    localStorage.setItem('language', language)
-  }, [language])
+    if (isInitialized) {
+      try {
+        localStorage.setItem('language', language)
+      } catch (error) {
+        console.error('Error saving language to localStorage:', error)
+      }
+    }
+  }, [language, isInitialized])
 
   const t = (key: string): string => {
-    return translations[language]?.[key] || key
+    try {
+      // Ensure language is valid and translations exist
+      if (!language || !translations[language]) {
+        console.warn(`Invalid language: ${language}, falling back to ENU`)
+        return translations['ENU']?.[key] || key
+      }
+      
+      const translation = translations[language][key]
+      if (translation === undefined) {
+        console.warn(`Missing translation for key: ${key} in language: ${language}`)
+        return key
+      }
+      
+      return translation
+    } catch (error) {
+      console.error('Error in translation function:', error)
+      return key
+    }
   }
 
   return (

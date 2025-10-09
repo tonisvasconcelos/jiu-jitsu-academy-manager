@@ -4,6 +4,7 @@ import { LanguageProvider } from './contexts/LanguageContext'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import LanguageSelector from './components/LanguageSelector'
 import ProtectedRoute from './components/ProtectedRoute'
+import ErrorBoundary from './components/ErrorBoundary'
 import Login from './pages/Login'
 import AdminPortal from './pages/admin/AdminPortal'
 
@@ -31,29 +32,43 @@ function App() {
   }
 
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <Router basename="/">
-          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-            <LanguageSelector />
-            <Routes>
-              {/* Public Routes - No Layout */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/admin" element={<AdminPortal />} />
-              
-              {/* Protected Routes - With Layout */}
-              <Route path="/*" element={
-                <ProtectedRoute 
-                  sidebarCollapsed={sidebarCollapsed}
-                  onToggleSidebar={toggleSidebar}
-                  isMobile={isMobile}
-                />
-              } />
-            </Routes>
-          </div>
-        </Router>
-      </AuthProvider>
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <AuthProvider>
+          <Router basename="/">
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+              <ErrorBoundary>
+                <LanguageSelector />
+              </ErrorBoundary>
+              <Routes>
+                {/* Public Routes - No Layout */}
+                <Route path="/login" element={
+                  <ErrorBoundary>
+                    <Login />
+                  </ErrorBoundary>
+                } />
+                <Route path="/admin" element={
+                  <ErrorBoundary>
+                    <AdminPortal />
+                  </ErrorBoundary>
+                } />
+                
+                {/* Protected Routes - With Layout */}
+                <Route path="/*" element={
+                  <ErrorBoundary>
+                    <ProtectedRoute 
+                      sidebarCollapsed={sidebarCollapsed}
+                      onToggleSidebar={toggleSidebar}
+                      isMobile={isMobile}
+                    />
+                  </ErrorBoundary>
+                } />
+              </Routes>
+            </div>
+          </Router>
+        </AuthProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   )
 }
 
