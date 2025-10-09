@@ -1,6 +1,5 @@
-import React, { useState, useEffect, ReactNode } from 'react'
+import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
 import { StudentProvider } from '../contexts/StudentContext'
 import { TeacherProvider } from '../contexts/TeacherContext'
 import { FightModalityProvider } from '../contexts/FightModalityContext'
@@ -67,24 +66,17 @@ import FightPhaseForm from '../pages/FightPhaseForm'
 import BranchRegistration from '../pages/BranchRegistration'
 import BranchForm from '../pages/BranchForm'
 
-interface AuthenticatedAppProps {
+interface AppWithContextsProps {
   sidebarCollapsed: boolean
   onToggleSidebar: () => void
   isMobile: boolean
 }
 
-const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({ 
+const AppWithContexts: React.FC<AppWithContextsProps> = ({ 
   sidebarCollapsed, 
   onToggleSidebar, 
   isMobile 
 }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  // Don't render anything if not authenticated or still loading
-  if (isLoading || !isAuthenticated) {
-    return null;
-  }
-
   return (
     <StudentProvider>
       <TeacherProvider>
@@ -231,4 +223,4 @@ const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({
   )
 }
 
-export default AuthenticatedApp
+export default AppWithContexts
