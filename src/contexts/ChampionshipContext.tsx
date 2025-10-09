@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface Championship {
   championshipId: string
@@ -39,24 +41,19 @@ export const useChampionships = () => {
 }
 
 export const ChampionshipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { tenant } = useAuth()
   const [championships, setChampionships] = useState<Championship[]>([])
 
   // Load championships from localStorage on mount
   useEffect(() => {
-    const savedChampionships = localStorage.getItem('championships')
-    if (savedChampionships) {
-      try {
-        setChampionships(JSON.parse(savedChampionships))
-      } catch (error) {
-        console.error('Error loading championships from localStorage:', error)
-      }
-    }
-  }, [])
+    const savedChampionships = getTenantData<Championship[]>('championships', tenant?.id || null, [])
+    setChampionships(savedChampionships)
+  }, [tenant?.id])
 
   // Save championships to localStorage whenever championships change
   useEffect(() => {
-    localStorage.setItem('championships', JSON.stringify(championships))
-  }, [championships])
+    saveTenantData('championships', tenant?.id || null, championships)
+  }, [championships, tenant?.id])
 
   const addChampionship = (championship: Omit<Championship, 'championshipId'>) => {
     const newChampionship: Championship = {

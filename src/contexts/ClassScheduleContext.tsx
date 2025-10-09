@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface ClassSchedule {
   classId: string
@@ -280,59 +282,43 @@ const initialClasses: ClassSchedule[] = [
   }
 ]
 
-const loadClassesFromStorage = (): ClassSchedule[] => {
-  try {
-    const stored = localStorage.getItem('jiu-jitsu-class-schedules')
-    if (stored) {
-      const parsed = JSON.parse(stored)
-      console.log('ClassScheduleContext: Loaded classes from localStorage:', parsed)
-      return parsed
-    }
-  } catch (error) {
-    console.error('ClassScheduleContext: Error loading classes from localStorage:', error)
-  }
-  console.log('ClassScheduleContext: No saved data found, using default classes')
-  // Save default classes to localStorage for future use
-  try {
-    localStorage.setItem('jiu-jitsu-class-schedules', JSON.stringify(initialClasses))
-    console.log('ClassScheduleContext: Saved default classes to localStorage')
-  } catch (error) {
-    console.error('ClassScheduleContext: Error saving default classes to localStorage:', error)
-  }
-  return initialClasses
+const loadClassesFromStorage = (tenantId: string | null): ClassSchedule[] => {
+  return getTenantData<ClassSchedule[]>('jiu-jitsu-class-schedules', tenantId, initialClasses)
 }
 
-const saveClassesToStorage = (classes: ClassSchedule[]) => {
-  try {
-    localStorage.setItem('jiu-jitsu-class-schedules', JSON.stringify(classes))
-    console.log('ClassScheduleContext: Saved classes to localStorage:', classes)
-  } catch (error) {
-    console.error('ClassScheduleContext: Error saving classes to localStorage:', error)
-  }
+const saveClassesToStorage = (classes: ClassSchedule[], tenantId: string | null) => {
+  saveTenantData('jiu-jitsu-class-schedules', tenantId, classes)
 }
 
 export const ClassScheduleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [classes, setClasses] = useState<ClassSchedule[]>(loadClassesFromStorage)
+  const { tenant } = useAuth()
+  const [classes, setClasses] = useState<ClassSchedule[]>(loadClassesFromStorage(tenant?.id || null))
+
+  // Reload classes when tenant changes
+  useEffect(() => {
+    const newClasses = loadClassesFromStorage(tenant?.id || null)
+    setClasses(newClasses)
+  }, [tenant?.id])
 
   const addClass = (classSchedule: ClassSchedule) => {
     console.log('ClassScheduleContext: Adding class:', classSchedule)
     const newClasses = [...classes, classSchedule]
     setClasses(newClasses)
-    saveClassesToStorage(newClasses)
+    saveClassesToStorage(newClasses, tenant?.id || null)
   }
 
   const updateClass = (classSchedule: ClassSchedule) => {
     console.log('ClassScheduleContext: Updating class:', classSchedule)
     const newClasses = classes.map(c => c.classId === classSchedule.classId ? classSchedule : c)
     setClasses(newClasses)
-    saveClassesToStorage(newClasses)
+    saveClassesToStorage(newClasses, tenant?.id || null)
   }
 
   const deleteClass = (classId: string) => {
     console.log('ClassScheduleContext: Deleting class:', classId)
     const newClasses = classes.filter(c => c.classId !== classId)
     setClasses(newClasses)
-    saveClassesToStorage(newClasses)
+    saveClassesToStorage(newClasses, tenant?.id || null)
   }
 
   const getClass = (classId: string) => {

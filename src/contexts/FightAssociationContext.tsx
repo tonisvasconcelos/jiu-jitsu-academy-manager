@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react'
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface FightAssociation {
   associationId: string
@@ -225,46 +227,45 @@ const defaultFightAssociations: FightAssociation[] = [
 ]
 
 export const FightAssociationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { tenant } = useAuth()
+  
   // Load fight associations from localStorage or use default data
   const loadFightAssociationsFromStorage = (): FightAssociation[] => {
-    try {
-      const stored = localStorage.getItem('jiu-jitsu-fight-associations')
-      if (stored) {
-        const parsed = JSON.parse(stored)
-        console.log('FightAssociationContext: Loaded fight associations from localStorage:', parsed)
-        
-        // Migration: Convert old fightModality to fightModalities array
-        const migratedAssociations = parsed.map((association: any) => {
-          if (association.fightModality && !association.fightModalities) {
-            console.log('FightAssociationContext: Migrating association', association.associationId, 'from fightModality to fightModalities')
-            return {
-              ...association,
-              fightModalities: [association.fightModality],
-              fightModality: undefined // Remove old field
-            }
-          }
-          return association
-        })
-        
-        return migratedAssociations
+    const associations = getTenantData<FightAssociation[]>('jiu-jitsu-fight-associations', tenant?.id || null, defaultFightAssociations)
+    
+    // Migration: Convert old fightModality to fightModalities array
+    const migratedAssociations = associations.map((association: any) => {
+      if (association.fightModality && !association.fightModalities) {
+        console.log('FightAssociationContext: Migrating association', association.associationId, 'from fightModality to fightModalities')
+        return {
+          ...association,
+          fightModalities: [association.fightModality],
+          fightModality: undefined // Remove old field
+        }
       }
-    } catch (error) {
-      console.error('FightAssociationContext: Error loading fight associations from localStorage:', error)
+      return association
+    })
+    
+    // Save migrated data back to localStorage if there were changes
+    if (migratedAssociations.some((assoc: any, index: number) => associations[index].fightModality && !associations[index].fightModalities)) {
+      console.log('FightAssociationContext: Saving migrated data')
+      saveTenantData('jiu-jitsu-fight-associations', tenant?.id || null, migratedAssociations)
     }
-    console.log('FightAssociationContext: No saved data found, using default fight associations')
-    return defaultFightAssociations
+    
+    return migratedAssociations
   }
 
   const [fightAssociations, setFightAssociations] = useState<FightAssociation[]>(loadFightAssociationsFromStorage)
 
+  // Reload fight associations when tenant changes
+  useEffect(() => {
+    const newAssociations = loadFightAssociationsFromStorage()
+    setFightAssociations(newAssociations)
+  }, [tenant?.id])
+
   // Save fight associations to localStorage
   const saveFightAssociationsToStorage = (associationsToSave: FightAssociation[]) => {
-    try {
-      localStorage.setItem('jiu-jitsu-fight-associations', JSON.stringify(associationsToSave))
-      console.log('FightAssociationContext: Saved fight associations to localStorage:', associationsToSave)
-    } catch (error) {
-      console.error('FightAssociationContext: Error saving fight associations to localStorage:', error)
-    }
+    saveTenantData('jiu-jitsu-fight-associations', tenant?.id || null, associationsToSave)
   }
 
   // Update localStorage whenever fightAssociations changes

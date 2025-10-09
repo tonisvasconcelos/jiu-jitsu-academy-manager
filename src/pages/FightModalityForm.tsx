@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { useLanguage } from '../contexts/LanguageContext'
 import { useFightModalities, FightModality } from '../contexts/FightModalityContext'
 
 const FightModalityForm: React.FC = () => {
-  const { t } = useLanguage()
   const { action, id } = useParams<{ action: string; id?: string }>()
   const navigate = useNavigate()
   const { addModality, updateModality, getModality } = useFightModalities()
@@ -303,5 +301,7 @@ const FightModalityForm: React.FC = () => {
 }
 
 export default FightModalityForm
+
+
 
 

@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react'
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface WeightDivision {
   divisionId: string
@@ -58,32 +60,24 @@ const defaultWeightDivisions: WeightDivision[] = [
 ]
 
 export const WeightDivisionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { tenant } = useAuth()
+  
   // Load weight divisions from localStorage or use default data
   const loadWeightDivisionsFromStorage = (): WeightDivision[] => {
-    try {
-      const stored = localStorage.getItem('jiu-jitsu-weight-divisions')
-      if (stored) {
-        const parsed = JSON.parse(stored)
-        console.log('WeightDivisionContext: Loaded weight divisions from localStorage:', parsed)
-        return parsed
-      }
-    } catch (error) {
-      console.error('WeightDivisionContext: Error loading weight divisions from localStorage:', error)
-    }
-    console.log('WeightDivisionContext: No saved data found, using default weight divisions')
-    return defaultWeightDivisions
+    return getTenantData<WeightDivision[]>('jiu-jitsu-weight-divisions', tenant?.id || null, defaultWeightDivisions)
   }
 
   const [weightDivisions, setWeightDivisions] = useState<WeightDivision[]>(loadWeightDivisionsFromStorage)
 
+  // Reload weight divisions when tenant changes
+  useEffect(() => {
+    const newWeightDivisions = loadWeightDivisionsFromStorage()
+    setWeightDivisions(newWeightDivisions)
+  }, [tenant?.id])
+
   // Save weight divisions to localStorage
   const saveWeightDivisionsToStorage = (divisionsToSave: WeightDivision[]) => {
-    try {
-      localStorage.setItem('jiu-jitsu-weight-divisions', JSON.stringify(divisionsToSave))
-      console.log('WeightDivisionContext: Saved weight divisions to localStorage:', divisionsToSave)
-    } catch (error) {
-      console.error('WeightDivisionContext: Error saving weight divisions to localStorage:', error)
-    }
+    saveTenantData('jiu-jitsu-weight-divisions', tenant?.id || null, divisionsToSave)
   }
 
   // Update localStorage whenever weightDivisions changes
@@ -152,5 +146,7 @@ export const useWeightDivisions = () => {
   }
   return context
 }
+
+
 
 

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <!-- Dark blue gradient background -->
+  <defs>
+    <linearGradient id="bgGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1445;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a237e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#283593;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="beltPattern" x="0" y="0" width="300" height="300" patternUnits="userSpaceOnUse">
+      <path d="M 50 150 Q 150 100 250 150 Q 150 200 50 150" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.03"/>
+      <circle cx="150" cy="150" r="5" fill="#ffffff" opacity="0.05"/>
+    </pattern>
+  </defs>
+  
+  <rect width="1920" height="1080" fill="url(#bgGradient2)"/>
+  <rect width="1920" height="1080" fill="url(#beltPattern)"/>
+  
+  <!-- Subtle geometric elements -->
+  <polygon points="100,100 200,50 300,100 200,150" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.03"/>
+  <polygon points="1600,800 1700,750 1800,800 1700,850" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.03"/>
+</svg>
+

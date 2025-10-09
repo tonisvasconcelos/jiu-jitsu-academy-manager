@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface Fight {
   fightId: string
@@ -55,69 +57,19 @@ interface FightProviderProps {
 }
 
 export const FightProvider: React.FC<FightProviderProps> = ({ children }) => {
+  const { tenant } = useAuth()
   const [fights, setFights] = useState<Fight[]>([])
 
   // Load fights from localStorage on component mount
   useEffect(() => {
-    const savedFights = localStorage.getItem('fights')
-    if (savedFights) {
-      try {
-        setFights(JSON.parse(savedFights))
-      } catch (error) {
-        console.error('Error loading fights from localStorage:', error)
-        setFights([])
-      }
-    } else {
-      // Initialize with sample data
-      const initialFights: Fight[] = [
-        {
-          fightId: 'F001',
-          phaseId: 'FP001',
-          championshipId: 'CH001',
-          fightNumber: 'F001',
-          categoryId: 'CC001',
-          athlete1Id: 'ST001',
-          athlete2Id: 'ST002',
-          scheduledTime: '2025-10-11T10:00:00',
-          status: 'scheduled',
-          isActive: true
-        },
-        {
-          fightId: 'F002',
-          phaseId: 'FP001',
-          championshipId: 'CH001',
-          fightNumber: 'F002',
-          categoryId: 'CC001',
-          athlete1Id: 'ST003',
-          athlete2Id: 'ST004',
-          scheduledTime: '2025-10-11T10:30:00',
-          status: 'scheduled',
-          isActive: true
-        },
-        {
-          fightId: 'F003',
-          phaseId: 'FP002',
-          championshipId: 'CH001',
-          fightNumber: 'F003',
-          categoryId: 'CC001',
-          athlete1Id: 'ST001',
-          athlete2Id: 'ST003',
-          scheduledTime: '2025-10-12T14:00:00',
-          status: 'scheduled',
-          isActive: true
-        }
-      ]
-      setFights(initialFights)
-      localStorage.setItem('fights', JSON.stringify(initialFights))
-    }
-  }, [])
+    const savedFights = getTenantData<Fight[]>('fights', tenant?.id || null, [])
+    setFights(savedFights)
+  }, [tenant?.id])
 
   // Save fights to localStorage whenever fights change
   useEffect(() => {
-    if (fights.length > 0) {
-      localStorage.setItem('fights', JSON.stringify(fights))
-    }
-  }, [fights])
+    saveTenantData('fights', tenant?.id || null, fights)
+  }, [fights, tenant?.id])
 
   const generateFightId = (): string => {
     const existingIds = fights.map(fight => fight.fightId)

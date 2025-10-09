@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface Affiliation {
   affiliationId: string
@@ -31,24 +33,19 @@ export const useAffiliations = () => {
 }
 
 export const AffiliationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { tenant } = useAuth()
   const [affiliations, setAffiliations] = useState<Affiliation[]>([])
 
   // Load affiliations from localStorage on mount
   useEffect(() => {
-    const savedAffiliations = localStorage.getItem('affiliations')
-    if (savedAffiliations) {
-      try {
-        setAffiliations(JSON.parse(savedAffiliations))
-      } catch (error) {
-        console.error('Error loading affiliations from localStorage:', error)
-      }
-    }
-  }, [])
+    const savedAffiliations = getTenantData<Affiliation[]>('affiliations', tenant?.id || null, [])
+    setAffiliations(savedAffiliations)
+  }, [tenant?.id])
 
   // Save affiliations to localStorage whenever affiliations change
   useEffect(() => {
-    localStorage.setItem('affiliations', JSON.stringify(affiliations))
-  }, [affiliations])
+    saveTenantData('affiliations', tenant?.id || null, affiliations)
+  }, [affiliations, tenant?.id])
 
   const addAffiliation = (affiliation: Omit<Affiliation, 'affiliationId'>) => {
     const newAffiliation: Affiliation = {

@@ -1,149 +1,71 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react'
+import React, { createContext, useContext, ReactNode } from 'react'
+import { useMasterData } from '../hooks/useMasterData'
 
 export interface FightModality {
-  modalityId: string
   name: string
   description: string
-  type: 'striking' | 'grappling' | 'mixed' | 'other'
-  level: 'beginner' | 'intermediate' | 'advanced' | 'expert'
-  duration: number // in minutes
   active: boolean
+  // API fields
+  id: string
+  tenantId: string
   createdAt: string
+  updatedAt: string
 }
 
 interface FightModalityContextType {
-  modalities: FightModality[]
-  addModality: (modality: FightModality) => void
-  updateModality: (modalityId: string, updatedModality: FightModality) => void
-  deleteModality: (modalityId: string) => void
-  getModality: (modalityId: string) => FightModality | undefined
+  fightModalities: FightModality[]
+  isLoading: boolean
+  error: string | null
+  addFightModality: (modality: Omit<FightModality, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>) => Promise<void>
+  updateFightModality: (modalityId: string, updatedModality: Partial<Omit<FightModality, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>>) => Promise<void>
+  deleteFightModality: (modalityId: string) => Promise<void>
+  getFightModality: (modalityId: string) => FightModality | undefined
+  refreshFightModalities: () => Promise<void>
+  clearError: () => void
 }
 
 const FightModalityContext = createContext<FightModalityContextType | undefined>(undefined)
 
-// Sample initial data
-const initialModalities: FightModality[] = [
-  {
-    modalityId: 'MOD001',
-    name: 'Brazilian Jiu-Jitsu',
-    description: 'Ground fighting and submission grappling martial art',
-    type: 'grappling',
-    level: 'intermediate',
-    duration: 90,
-    active: true,
-    createdAt: new Date().toISOString()
-  },
-  {
-    modalityId: 'MOD002',
-    name: 'Boxing',
-    description: 'Striking martial art using punches',
-    type: 'striking',
-    level: 'beginner',
-    duration: 60,
-    active: true,
-    createdAt: new Date().toISOString()
-  },
-  {
-    modalityId: 'MOD0938592',
-    name: 'Karate',
-    description: 'Karate',
-    type: 'striking',
-    level: 'beginner',
-    duration: 60,
-    active: true,
-    createdAt: new Date().toISOString()
-  },
-  {
-    modalityId: 'MOD004',
-    name: 'Brazilian Jiu-Jitsu (Iniciante)',
-    description: 'Brazilian Jiu-Jitsu (Iniciante)',
-    type: 'grappling',
-    level: 'beginner',
-    duration: 60,
-    active: true,
-    createdAt: new Date().toISOString()
-  }
-]
-
 export const FightModalityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Load modalities from localStorage or use initial data
-  const loadModalitiesFromStorage = (): FightModality[] => {
-    try {
-      const stored = localStorage.getItem('jiu-jitsu-modalities')
-      if (stored) {
-        const parsed = JSON.parse(stored)
-        console.log('FightModalityContext: Loaded modalities from localStorage:', parsed)
-        return parsed
-      }
-    } catch (error) {
-      console.error('FightModalityContext: Error loading modalities from localStorage:', error)
-    }
-    console.log('FightModalityContext: No saved data found, starting with initial modalities data')
-    return initialModalities
+  const {
+    data: fightModalities,
+    isLoading,
+    error,
+    addItem: addFightModality,
+    updateItem: updateFightModality,
+    deleteItem: deleteFightModality,
+    refreshData: refreshFightModalities,
+    clearError
+  } = useMasterData<FightModality>({
+    dataType: 'fightModalities',
+    initialData: []
+  })
+
+  // Helper function to get modality by id
+  const getFightModality = (modalityId: string): FightModality | undefined => {
+    return fightModalities.find(modality => modality.id === modalityId)
   }
 
-  const [modalities, setModalities] = useState<FightModality[]>(loadModalitiesFromStorage)
-
-  // Save modalities to localStorage
-  const saveModalitiesToStorage = (modalitiesToSave: FightModality[]) => {
-    try {
-      localStorage.setItem('jiu-jitsu-modalities', JSON.stringify(modalitiesToSave))
-      console.log('FightModalityContext: Saved modalities to localStorage:', modalitiesToSave)
-    } catch (error) {
-      console.error('FightModalityContext: Error saving modalities to localStorage:', error)
-    }
-  }
-
-  const addModality = (modality: FightModality) => {
-    console.log('=== FIGHT MODALITY CONTEXT: ADD MODALITY CALLED ===')
-    console.log('FightModalityContext: Adding modality:', modality)
-    setModalities(prev => {
-      const newModalities = [...prev, modality]
-      console.log('FightModalityContext: Previous modalities count:', prev.length)
-      console.log('FightModalityContext: New modalities array:', newModalities)
-      console.log('FightModalityContext: New modalities count:', newModalities.length)
-      saveModalitiesToStorage(newModalities)
-      console.log('FightModalityContext: Modalities saved to localStorage')
-      return newModalities
-    })
-  }
-
-  const updateModality = (modalityId: string, updatedModality: FightModality) => {
-    setModalities(prev => {
-      const updatedModalities = prev.map(modality => 
-        modality.modalityId === modalityId ? updatedModality : modality
-      )
-      saveModalitiesToStorage(updatedModalities)
-      return updatedModalities
-    })
-  }
-
-  const deleteModality = (modalityId: string) => {
-    setModalities(prev => {
-      const filteredModalities = prev.filter(modality => modality.modalityId !== modalityId)
-      saveModalitiesToStorage(filteredModalities)
-      return filteredModalities
-    })
-  }
-
-  const getModality = (modalityId: string) => {
-    return modalities.find(modality => modality.modalityId === modalityId)
+  const contextValue: FightModalityContextType = {
+    fightModalities,
+    isLoading,
+    error,
+    addFightModality,
+    updateFightModality,
+    deleteFightModality,
+    getFightModality,
+    refreshFightModalities,
+    clearError
   }
 
   return (
-    <FightModalityContext.Provider value={{
-      modalities,
-      addModality,
-      updateModality,
-      deleteModality,
-      getModality
-    }}>
+    <FightModalityContext.Provider value={contextValue}>
       {children}
     </FightModalityContext.Provider>
   )
 }
 
-export const useFightModalities = () => {
+export const useFightModalities = (): FightModalityContextType => {
   const context = useContext(FightModalityContext)
   if (context === undefined) {
     throw new Error('useFightModalities must be used within a FightModalityProvider')

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
+import { useAuth } from '../contexts/AuthContext'
 
 interface SidebarProps {
   collapsed: boolean
@@ -9,10 +10,12 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const location = useLocation()
+  const navigate = useNavigate()
   const [isMobile, setIsMobile] = useState(false)
   const [expandedMenus, setExpandedMenus] = useState<string[]>([])
   const [menuPositions, setMenuPositions] = useState<Record<string, number>>({})
   const { t } = useLanguage()
+  const { logout } = useAuth()
   const sidebarRef = useRef<HTMLDivElement>(null)
   const menuRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
@@ -65,6 +68,15 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 
   const isMenuExpanded = (menuId: string) => expandedMenus.includes(menuId)
 
+  const handleLogout = async () => {
+    try {
+      await logout()
+      navigate('/login')
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
+  }
+
   const menuItems = [
     { id: 'students', title: t('coach-students'), icon: '🥋', path: '/students' },
     { id: 'championships', title: t('championships'), icon: '🥇', path: '/championships' },
@@ -107,35 +119,12 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
         <div className="p-3 border-b border-white/10">
           <div className="flex items-center justify-center">
             {(!collapsed || isMobile) ? (
-              <div className="text-center">
-                <div className="relative">
-                  <div className="text-white font-bold text-lg leading-tight">
-                    <div className="relative">
-                      <span className="text-2xl font-black tracking-wide">OSS</span>
-                      {/* Belt graphic */}
-                      <div className="absolute -bottom-1 left-0 right-0 h-2 bg-white rounded-sm transform -skew-x-12">
-                        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white border border-gray-800 rounded-full"></div>
-                        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-gray-800 rounded-full"></div>
-                      </div>
-                    </div>
-                    <div className="text-2xl font-black tracking-wide mt-1">365</div>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-400 mt-1">Fight Academy Manager</p>
+              <div className="w-full flex items-center justify-center">
+                <img src="/oss365_Logo_Horizontal_white.PNG" alt="OSS 365" className="h-16 w-full object-contain" />
               </div>
             ) : (
               <div className="text-center">
-                <div className="text-white font-bold text-sm leading-tight">
-                  <div className="relative">
-                    <span className="text-lg font-black tracking-wide">OSS</span>
-                    {/* Belt graphic */}
-                    <div className="absolute -bottom-0.5 left-0 right-0 h-1.5 bg-white rounded-sm transform -skew-x-12">
-                      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white border border-gray-800 rounded-full"></div>
-                      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-gray-800 rounded-full"></div>
-                    </div>
-                  </div>
-                  <div className="text-lg font-black tracking-wide mt-0.5">365</div>
-                </div>
+                <img src="/oss365_Logo_Icon_white.PNG" alt="OSS 365" className="h-8 w-auto mx-auto" />
               </div>
             )}
           </div>
@@ -246,6 +235,21 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
             </div>
           ))}
         </nav>
+
+        {/* Logout Button */}
+        <div className="mt-auto px-3 pb-3">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-300 group"
+          >
+            <svg className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            {(!collapsed || isMobile) && (
+              <span className="group-hover:scale-105 transition-transform">Logout</span>
+            )}
+          </button>
+        </div>
       </div>
     </>
   )

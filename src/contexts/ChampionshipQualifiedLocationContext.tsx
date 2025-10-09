@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface ChampionshipQualifiedLocation {
   locationId: string
@@ -44,95 +46,19 @@ export const useChampionshipQualifiedLocations = () => {
 }
 
 export const ChampionshipQualifiedLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { tenant } = useAuth()
   const [qualifiedLocations, setQualifiedLocations] = useState<ChampionshipQualifiedLocation[]>([])
 
   // Load qualified locations from localStorage on mount
   useEffect(() => {
-    const savedLocations = localStorage.getItem('championshipQualifiedLocations')
-    if (savedLocations) {
-      try {
-        setQualifiedLocations(JSON.parse(savedLocations))
-      } catch (error) {
-        console.error('Error loading qualified locations from localStorage:', error)
-      }
-    } else {
-      // Initialize with sample data
-      const sampleLocations: ChampionshipQualifiedLocation[] = [
-        {
-          locationId: 'QL001',
-          name: 'Rio de Janeiro Convention Center',
-          address: 'Av. Salvador Allende, 6555',
-          city: 'Rio de Janeiro',
-          state: 'RJ',
-          country: 'Brazil',
-          postalCode: '22783-127',
-          capacity: 5000,
-          facilities: ['Main Arena', 'Warm-up Areas', 'Medical Station', 'Parking', 'Food Court'],
-          contactPerson: 'João Silva',
-          contactEmail: 'joao.silva@rjcc.com.br',
-          contactPhone: '+55 21 99999-9999',
-          imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop',
-          isActive: true,
-          certificationLevel: 'premium',
-          certificationDate: '2024-01-15',
-          certificationExpiry: '2025-01-15',
-          notes: 'Premium venue with full championship facilities',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          locationId: 'QL002',
-          name: 'Abu Dhabi National Exhibition Centre',
-          address: 'Al Khaleej Al Arabi Street',
-          city: 'Abu Dhabi',
-          state: 'Abu Dhabi',
-          country: 'UAE',
-          postalCode: '00000',
-          capacity: 8000,
-          facilities: ['Main Arena', 'Training Areas', 'Medical Center', 'VIP Lounge', 'Media Center'],
-          contactPerson: 'Ahmed Al-Rashid',
-          contactEmail: 'ahmed.rashid@adnec.ae',
-          contactPhone: '+971 50 123 4567',
-          imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
-          isActive: true,
-          certificationLevel: 'premium',
-          certificationDate: '2024-02-01',
-          certificationExpiry: '2025-02-01',
-          notes: 'World-class facility for international championships',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          locationId: 'QL003',
-          name: 'Los Angeles Convention Center',
-          address: '1201 S Figueroa St',
-          city: 'Los Angeles',
-          state: 'CA',
-          country: 'USA',
-          postalCode: '90015',
-          capacity: 3000,
-          facilities: ['Main Hall', 'Warm-up Rooms', 'First Aid', 'Parking'],
-          contactPerson: 'Maria Rodriguez',
-          contactEmail: 'maria.rodriguez@lacc.com',
-          contactPhone: '+1 213 741-1151',
-          imageUrl: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop',
-          isActive: true,
-          certificationLevel: 'advanced',
-          certificationDate: '2024-01-20',
-          certificationExpiry: '2025-01-20',
-          notes: 'Excellent facility for regional championships',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ]
-      setQualifiedLocations(sampleLocations)
-    }
-  }, [])
+    const savedLocations = getTenantData<ChampionshipQualifiedLocation[]>('championshipQualifiedLocations', tenant?.id || null, [])
+    setQualifiedLocations(savedLocations)
+  }, [tenant?.id])
 
-  // Save qualified locations to localStorage whenever the state changes
+  // Save qualified locations to localStorage whenever locations change
   useEffect(() => {
-    localStorage.setItem('championshipQualifiedLocations', JSON.stringify(qualifiedLocations))
-  }, [qualifiedLocations])
+    saveTenantData('championshipQualifiedLocations', tenant?.id || null, qualifiedLocations)
+  }, [qualifiedLocations, tenant?.id])
 
   const addQualifiedLocation = (location: Omit<ChampionshipQualifiedLocation, 'locationId' | 'createdAt' | 'updatedAt'>) => {
     const newLocation: ChampionshipQualifiedLocation = {

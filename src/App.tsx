@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { LanguageProvider } from './contexts/LanguageContext'
+import { AuthProvider } from './contexts/AuthContext'
 import { StudentProvider } from './contexts/StudentContext'
 import { TeacherProvider } from './contexts/TeacherContext'
 import { FightModalityProvider } from './contexts/FightModalityContext'
@@ -25,6 +26,9 @@ import { FightProvider } from './contexts/FightContext'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import LanguageSelector from './components/LanguageSelector'
+import ProtectedRoute from './components/ProtectedRoute'
+import Login from './pages/Login'
+import AdminPortal from './pages/admin/AdminPortal'
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
 import Championships from './pages/Championships'
@@ -100,7 +104,8 @@ function App() {
 
           return (
         <LanguageProvider>
-          <StudentProvider>
+          <AuthProvider>
+            <StudentProvider>
             <TeacherProvider>
               <FightModalityProvider>
                 <StudentModalityProvider>
@@ -121,20 +126,33 @@ function App() {
                           <FightTeamProvider>
                             <FightPhaseProvider>
                               <FightProvider>
-                            <Router basename="/jiu-jitsu-academy-manager">
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-          <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
-              <div className={`transition-all duration-300 ${
-                isMobile 
-                  ? 'ml-0' 
-                  : sidebarCollapsed 
-                    ? 'ml-16' 
-                    : 'ml-64'
-              } min-h-screen`}>
-            <Header onToggleSidebar={toggleSidebar} />
-                <main className="relative">
+                            <Router basename="/">
                   <Routes>
-                    <Route path="/" element={<Dashboard />} />
+                    {/* Public Routes - No Layout */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/admin" element={<AdminPortal />} />
+                    
+                    {/* Protected Routes - With Layout */}
+                    <Route path="/*" element={
+                      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+                        <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
+                        <div className={`transition-all duration-300 ${
+                          isMobile 
+                            ? 'ml-0' 
+                            : sidebarCollapsed 
+                              ? 'ml-16' 
+                              : 'ml-64'
+                        } min-h-screen`}>
+                          <Header onToggleSidebar={toggleSidebar} />
+                          <main className="relative">
+                            <Routes>
+                    
+                    {/* Protected Routes */}
+                    <Route path="/" element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } />
                     
                     {/* Main Menu Pages */}
                     <Route path="/students" element={<Students />} />
@@ -238,10 +256,12 @@ function App() {
                             <Route path="/branches/facilities" element={<BranchFacilityRegistration />} />
                             <Route path="/branches/facilities/:action" element={<BranchFacilityForm />} />
                             <Route path="/branches/facilities/:action/:id" element={<BranchFacilityForm />} />
+                            </Routes>
+                          </main>
+                        </div>
+                      </div>
+                    } />
                   </Routes>
-                </main>
-          </div>
-        </div>
                             </Router>
                               </FightProvider>
                             </FightPhaseProvider>
@@ -264,6 +284,7 @@ function App() {
               </FightModalityProvider>
             </TeacherProvider>
           </StudentProvider>
+          </AuthProvider>
         </LanguageProvider>
   )
 }

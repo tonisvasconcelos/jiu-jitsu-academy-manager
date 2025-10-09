@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface BranchFacility {
   facilityId: string
@@ -143,59 +145,43 @@ const initialFacilities: BranchFacility[] = [
   }
 ]
 
-const loadFacilitiesFromStorage = (): BranchFacility[] => {
-  try {
-    const stored = localStorage.getItem('jiu-jitsu-branch-facilities')
-    if (stored) {
-      const parsed = JSON.parse(stored)
-      console.log('BranchFacilityContext: Loaded facilities from localStorage:', parsed)
-      return parsed
-    }
-  } catch (error) {
-    console.error('BranchFacilityContext: Error loading facilities from localStorage:', error)
-  }
-  console.log('BranchFacilityContext: No saved data found, using default facilities')
-  // Save default facilities to localStorage for future use
-  try {
-    localStorage.setItem('jiu-jitsu-branch-facilities', JSON.stringify(initialFacilities))
-    console.log('BranchFacilityContext: Saved default facilities to localStorage')
-  } catch (error) {
-    console.error('BranchFacilityContext: Error saving default facilities to localStorage:', error)
-  }
-  return initialFacilities
+const loadFacilitiesFromStorage = (tenantId: string | null): BranchFacility[] => {
+  return getTenantData<BranchFacility[]>('jiu-jitsu-branch-facilities', tenantId, initialFacilities)
 }
 
-const saveFacilitiesToStorage = (facilities: BranchFacility[]) => {
-  try {
-    localStorage.setItem('jiu-jitsu-branch-facilities', JSON.stringify(facilities))
-    console.log('BranchFacilityContext: Saved facilities to localStorage:', facilities)
-  } catch (error) {
-    console.error('BranchFacilityContext: Error saving facilities to localStorage:', error)
-  }
+const saveFacilitiesToStorage = (facilities: BranchFacility[], tenantId: string | null) => {
+  saveTenantData('jiu-jitsu-branch-facilities', tenantId, facilities)
 }
 
 export const BranchFacilityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [facilities, setFacilities] = useState<BranchFacility[]>(loadFacilitiesFromStorage)
+  const { tenant } = useAuth()
+  const [facilities, setFacilities] = useState<BranchFacility[]>(loadFacilitiesFromStorage(tenant?.id || null))
+
+  // Reload facilities when tenant changes
+  useEffect(() => {
+    const newFacilities = loadFacilitiesFromStorage(tenant?.id || null)
+    setFacilities(newFacilities)
+  }, [tenant?.id])
 
   const addFacility = (facility: BranchFacility) => {
     console.log('BranchFacilityContext: Adding facility:', facility)
     const newFacilities = [...facilities, facility]
     setFacilities(newFacilities)
-    saveFacilitiesToStorage(newFacilities)
+    saveFacilitiesToStorage(newFacilities, tenant?.id || null)
   }
 
   const updateFacility = (facility: BranchFacility) => {
     console.log('BranchFacilityContext: Updating facility:', facility)
     const newFacilities = facilities.map(f => f.facilityId === facility.facilityId ? facility : f)
     setFacilities(newFacilities)
-    saveFacilitiesToStorage(newFacilities)
+    saveFacilitiesToStorage(newFacilities, tenant?.id || null)
   }
 
   const deleteFacility = (facilityId: string) => {
     console.log('BranchFacilityContext: Deleting facility:', facilityId)
     const newFacilities = facilities.filter(f => f.facilityId !== facilityId)
     setFacilities(newFacilities)
-    saveFacilitiesToStorage(newFacilities)
+    saveFacilitiesToStorage(newFacilities, tenant?.id || null)
   }
 
   const getFacility = (facilityId: string) => {
@@ -234,5 +220,7 @@ export const useBranchFacilities = () => {
   }
   return context
 }
+
+
 
 

@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react'
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface StudentModalityConnection {
   connectionId: string
@@ -63,45 +65,38 @@ const initialConnections: StudentModalityConnection[] = [
 ]
 
 export const StudentModalityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { tenant } = useAuth()
+  
   // Load connections from localStorage or use initial data
   const loadConnectionsFromStorage = (): StudentModalityConnection[] => {
-    try {
-      const stored = localStorage.getItem('jiu-jitsu-student-modalities')
-      if (stored) {
-        const parsed = JSON.parse(stored)
-        console.log('StudentModalityContext: Loaded connections from localStorage:', parsed)
-        
-        // Migrate old data to include beltLevelAtStart field
-        const migratedConnections = parsed.map((connection: any) => ({
-          ...connection,
-          beltLevelAtStart: connection.beltLevelAtStart || 'white' // Default to white belt if missing
-        }))
-        
-        // Save migrated data back to localStorage
-        if (migratedConnections.some((conn: any, index: number) => !parsed[index].beltLevelAtStart)) {
-          console.log('StudentModalityContext: Migrating data to include beltLevelAtStart field')
-          localStorage.setItem('jiu-jitsu-student-modalities', JSON.stringify(migratedConnections))
-        }
-        
-        return migratedConnections
-      }
-    } catch (error) {
-      console.error('StudentModalityContext: Error loading connections from localStorage:', error)
+    const connections = getTenantData<StudentModalityConnection[]>('jiu-jitsu-student-modalities', tenant?.id || null, initialConnections)
+    
+    // Migrate old data to include beltLevelAtStart field
+    const migratedConnections = connections.map((connection: any) => ({
+      ...connection,
+      beltLevelAtStart: connection.beltLevelAtStart || 'white' // Default to white belt if missing
+    }))
+    
+    // Save migrated data back to localStorage if there were changes
+    if (migratedConnections.some((conn: any, index: number) => !connections[index].beltLevelAtStart)) {
+      console.log('StudentModalityContext: Migrating data to include beltLevelAtStart field')
+      saveTenantData('jiu-jitsu-student-modalities', tenant?.id || null, migratedConnections)
     }
-    console.log('StudentModalityContext: No saved data found, starting with initial connections data')
-    return initialConnections
+    
+    return migratedConnections
   }
 
   const [connections, setConnections] = useState<StudentModalityConnection[]>(loadConnectionsFromStorage)
 
+  // Reload connections when tenant changes
+  useEffect(() => {
+    const newConnections = loadConnectionsFromStorage()
+    setConnections(newConnections)
+  }, [tenant?.id])
+
   // Save connections to localStorage
   const saveConnectionsToStorage = (connectionsToSave: StudentModalityConnection[]) => {
-    try {
-      localStorage.setItem('jiu-jitsu-student-modalities', JSON.stringify(connectionsToSave))
-      console.log('StudentModalityContext: Saved connections to localStorage:', connectionsToSave)
-    } catch (error) {
-      console.error('StudentModalityContext: Error saving connections to localStorage:', error)
-    }
+    saveTenantData('jiu-jitsu-student-modalities', tenant?.id || null, connectionsToSave)
   }
 
   const addConnection = (connection: StudentModalityConnection) => {

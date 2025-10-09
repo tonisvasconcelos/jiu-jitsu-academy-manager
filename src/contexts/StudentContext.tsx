@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react'
+import React, { createContext, useContext, ReactNode } from 'react'
+import { useMasterData } from '../hooks/useMasterData'
 
 export interface Student {
   studentId: string
@@ -24,128 +25,67 @@ export interface Student {
   weightDivisionId?: string
   photoUrl?: string
   preferredLanguage?: 'ENU' | 'PTB' | 'ESP' | 'FRA' | 'GER' | 'JPN' | 'ITA' | 'RUS' | 'ARA' | 'KOR'
+  // API fields
+  id: string
+  tenantId: string
+  createdAt: string
+  updatedAt: string
 }
 
 interface StudentContextType {
   students: Student[]
-  addStudent: (student: Student) => void
-  updateStudent: (studentId: string, updatedStudent: Student) => void
-  deleteStudent: (studentId: string) => void
+  isLoading: boolean
+  error: string | null
+  addStudent: (student: Omit<Student, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>) => Promise<void>
+  updateStudent: (studentId: string, updatedStudent: Partial<Omit<Student, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>>) => Promise<void>
+  deleteStudent: (studentId: string) => Promise<void>
   getStudent: (studentId: string) => Student | undefined
-  clearAllStudents: () => void
+  refreshStudents: () => Promise<void>
+  clearError: () => void
 }
 
 const StudentContext = createContext<StudentContextType | undefined>(undefined)
 
-// Start with empty array - no sample data
-const initialStudents: Student[] = []
-
 export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Load students from localStorage or use initial data
-  const loadStudentsFromStorage = (): Student[] => {
-    try {
-      const stored = localStorage.getItem('jiu-jitsu-students')
-      if (stored) {
-        const parsed = JSON.parse(stored)
-        console.log('StudentContext: Loaded students from localStorage:', parsed)
-        
-        // Migrate existing students to include isKidsStudent field
-        const migratedStudents = parsed.map((student: any) => {
-          if (student.isKidsStudent === undefined) {
-            // Calculate age and set isKidsStudent based on birth date
-            const today = new Date()
-            const dob = new Date(student.birthDate)
-            let age = today.getFullYear() - dob.getFullYear()
-            const m = today.getMonth() - dob.getMonth()
-            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-              age--
-            }
-            student.isKidsStudent = age < 18
-            console.log(`StudentContext: Migrated student ${student.firstName} ${student.lastName} - Age: ${age}, isKidsStudent: ${student.isKidsStudent}`)
-          }
-          return student
-        })
-        
-        // Save migrated data back to localStorage
-        localStorage.setItem('jiu-jitsu-students', JSON.stringify(migratedStudents))
-        
-        return migratedStudents
-      }
-    } catch (error) {
-      console.error('StudentContext: Error loading students from localStorage:', error)
-    }
-    console.log('StudentContext: No saved data found, starting with empty student list')
-    return initialStudents
-  }
+  const {
+    data: students,
+    isLoading,
+    error,
+    addItem: addStudent,
+    updateItem: updateStudent,
+    deleteItem: deleteStudent,
+    refreshData: refreshStudents,
+    clearError
+  } = useMasterData<Student>({
+    dataType: 'students',
+    initialData: []
+  })
 
-  const [students, setStudents] = useState<Student[]>(loadStudentsFromStorage)
-
-  // Save students to localStorage
-  const saveStudentsToStorage = (studentsToSave: Student[]) => {
-    try {
-      localStorage.setItem('jiu-jitsu-students', JSON.stringify(studentsToSave))
-      console.log('StudentContext: Saved students to localStorage:', studentsToSave)
-    } catch (error) {
-      console.error('StudentContext: Error saving students to localStorage:', error)
-    }
-  }
-
-  const addStudent = (student: Student) => {
-    console.log('=== STUDENT CONTEXT: ADD STUDENT CALLED ===')
-    console.log('StudentContext: Adding student:', student)
-    setStudents(prev => {
-      const newStudents = [...prev, student]
-      console.log('StudentContext: Previous students count:', prev.length)
-      console.log('StudentContext: New students array:', newStudents)
-      console.log('StudentContext: New students count:', newStudents.length)
-      saveStudentsToStorage(newStudents)
-      console.log('StudentContext: Students saved to localStorage')
-      return newStudents
-    })
-  }
-
-  const updateStudent = (studentId: string, updatedStudent: Student) => {
-    setStudents(prev => {
-      const updatedStudents = prev.map(student => 
-        student.studentId === studentId ? updatedStudent : student
-      )
-      saveStudentsToStorage(updatedStudents)
-      return updatedStudents
-    })
-  }
-
-  const deleteStudent = (studentId: string) => {
-    setStudents(prev => {
-      const filteredStudents = prev.filter(student => student.studentId !== studentId)
-      saveStudentsToStorage(filteredStudents)
-      return filteredStudents
-    })
-  }
-
-  const getStudent = (studentId: string) => {
+  // Helper function to get student by studentId (not the API id)
+  const getStudent = (studentId: string): Student | undefined => {
     return students.find(student => student.studentId === studentId)
   }
 
-  const clearAllStudents = () => {
-    setStudents([])
-    saveStudentsToStorage([])
+  const contextValue: StudentContextType = {
+    students,
+    isLoading,
+    error,
+    addStudent,
+    updateStudent,
+    deleteStudent,
+    getStudent,
+    refreshStudents,
+    clearError
   }
 
   return (
-    <StudentContext.Provider value={{
-      students,
-      addStudent,
-      updateStudent,
-      deleteStudent,
-      getStudent,
-      clearAllStudents
-    }}>
+    <StudentContext.Provider value={contextValue}>
       {children}
     </StudentContext.Provider>
   )
 }
 
-export const useStudents = () => {
+export const useStudents = (): StudentContextType => {
   const context = useContext(StudentContext)
   if (context === undefined) {
     throw new Error('useStudents must be used within a StudentProvider')

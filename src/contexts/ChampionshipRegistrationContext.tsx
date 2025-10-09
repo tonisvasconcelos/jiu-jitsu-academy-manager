@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface ChampionshipRegistration {
   registrationId: string
@@ -39,24 +41,19 @@ export const useChampionshipRegistrations = () => {
 }
 
 export const ChampionshipRegistrationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { tenant } = useAuth()
   const [registrations, setRegistrations] = useState<ChampionshipRegistration[]>([])
 
   // Load registrations from localStorage on mount
   useEffect(() => {
-    const savedRegistrations = localStorage.getItem('championshipRegistrations')
-    if (savedRegistrations) {
-      try {
-        setRegistrations(JSON.parse(savedRegistrations))
-      } catch (error) {
-        console.error('Error loading championship registrations from localStorage:', error)
-      }
-    }
-  }, [])
+    const savedRegistrations = getTenantData<ChampionshipRegistration[]>('championshipRegistrations', tenant?.id || null, [])
+    setRegistrations(savedRegistrations)
+  }, [tenant?.id])
 
   // Save registrations to localStorage whenever registrations change
   useEffect(() => {
-    localStorage.setItem('championshipRegistrations', JSON.stringify(registrations))
-  }, [registrations])
+    saveTenantData('championshipRegistrations', tenant?.id || null, registrations)
+  }, [registrations, tenant?.id])
 
   const addRegistration = (registration: Omit<ChampionshipRegistration, 'registrationId'>) => {
     const newRegistration: ChampionshipRegistration = {

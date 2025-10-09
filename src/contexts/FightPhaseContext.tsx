@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface FightPhase {
   phaseId: string
@@ -40,89 +42,19 @@ interface FightPhaseProviderProps {
 }
 
 export const FightPhaseProvider: React.FC<FightPhaseProviderProps> = ({ children }) => {
+  const { tenant } = useAuth()
   const [phases, setPhases] = useState<FightPhase[]>([])
 
   // Load phases from localStorage on component mount
   useEffect(() => {
-    const savedPhases = localStorage.getItem('fightPhases')
-    if (savedPhases) {
-      try {
-        setPhases(JSON.parse(savedPhases))
-      } catch (error) {
-        console.error('Error loading fight phases from localStorage:', error)
-        setPhases([])
-      }
-    } else {
-      // Initialize with sample data
-      const initialPhases: FightPhase[] = [
-        {
-          phaseId: 'FP001',
-          championshipId: 'CH001',
-          phaseName: 'Elimination Round',
-          phaseType: 'elimination',
-          phaseOrder: 1,
-          startDate: '2025-10-11',
-          endDate: '2025-10-11',
-          status: 'scheduled',
-          description: 'First elimination round',
-          maxParticipants: 32,
-          rules: 'Single elimination format',
-          isActive: true
-        },
-        {
-          phaseId: 'FP002',
-          championshipId: 'CH001',
-          phaseName: 'Quarter Finals',
-          phaseType: 'bracket',
-          phaseOrder: 2,
-          startDate: '2025-10-12',
-          endDate: '2025-10-12',
-          status: 'scheduled',
-          description: 'Quarter final matches',
-          maxParticipants: 8,
-          rules: 'Bracket format',
-          isActive: true
-        },
-        {
-          phaseId: 'FP003',
-          championshipId: 'CH001',
-          phaseName: 'Semi Finals',
-          phaseType: 'bracket',
-          phaseOrder: 3,
-          startDate: '2025-10-12',
-          endDate: '2025-10-12',
-          status: 'scheduled',
-          description: 'Semi final matches',
-          maxParticipants: 4,
-          rules: 'Bracket format',
-          isActive: true
-        },
-        {
-          phaseId: 'FP004',
-          championshipId: 'CH001',
-          phaseName: 'Finals',
-          phaseType: 'bracket',
-          phaseOrder: 4,
-          startDate: '2025-10-12',
-          endDate: '2025-10-12',
-          status: 'scheduled',
-          description: 'Final matches',
-          maxParticipants: 2,
-          rules: 'Bracket format',
-          isActive: true
-        }
-      ]
-      setPhases(initialPhases)
-      localStorage.setItem('fightPhases', JSON.stringify(initialPhases))
-    }
-  }, [])
+    const savedPhases = getTenantData<FightPhase[]>('fightPhases', tenant?.id || null, [])
+    setPhases(savedPhases)
+  }, [tenant?.id])
 
   // Save phases to localStorage whenever phases change
   useEffect(() => {
-    if (phases.length > 0) {
-      localStorage.setItem('fightPhases', JSON.stringify(phases))
-    }
-  }, [phases])
+    saveTenantData('fightPhases', tenant?.id || null, phases)
+  }, [phases, tenant?.id])
 
   const generatePhaseId = (): string => {
     const existingIds = phases.map(phase => phase.phaseId)

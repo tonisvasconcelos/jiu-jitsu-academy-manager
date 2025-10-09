@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useAuth } from './AuthContext';
+import { getTenantData, saveTenantData } from '../utils/tenantStorage';
 
 export interface ClassCheckIn {
   id: string;
@@ -43,25 +45,19 @@ interface ClassCheckInProviderProps {
 }
 
 export const ClassCheckInProvider: React.FC<ClassCheckInProviderProps> = ({ children }) => {
+  const { tenant } = useAuth();
   const [checkIns, setCheckIns] = useState<ClassCheckIn[]>([]);
 
   // Load data from localStorage on component mount
   useEffect(() => {
-    const savedCheckIns = localStorage.getItem('classCheckIns');
-    if (savedCheckIns) {
-      try {
-        setCheckIns(JSON.parse(savedCheckIns));
-      } catch (error) {
-        console.error('Error loading class check-ins from localStorage:', error);
-        setCheckIns([]);
-      }
-    }
-  }, []);
+    const savedCheckIns = getTenantData<ClassCheckIn[]>('classCheckIns', tenant?.id || null, []);
+    setCheckIns(savedCheckIns);
+  }, [tenant?.id]);
 
   // Save data to localStorage whenever checkIns changes
   useEffect(() => {
-    localStorage.setItem('classCheckIns', JSON.stringify(checkIns));
-  }, [checkIns]);
+    saveTenantData('classCheckIns', tenant?.id || null, checkIns);
+  }, [checkIns, tenant?.id]);
 
   const addCheckIn = (checkInData: Omit<ClassCheckIn, 'id' | 'createdAt'>) => {
     const newCheckIn: ClassCheckIn = {

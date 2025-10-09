@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useAuth } from './AuthContext'
+import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
 export interface ChampionshipSponsor {
   sponsorId: string
@@ -37,24 +39,19 @@ export const useChampionshipSponsors = () => {
 }
 
 export const ChampionshipSponsorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { tenant } = useAuth()
   const [sponsors, setSponsors] = useState<ChampionshipSponsor[]>([])
 
   // Load sponsors from localStorage on mount
   useEffect(() => {
-    const savedSponsors = localStorage.getItem('championshipSponsors')
-    if (savedSponsors) {
-      try {
-        setSponsors(JSON.parse(savedSponsors))
-      } catch (error) {
-        console.error('Error loading championship sponsors from localStorage:', error)
-      }
-    }
-  }, [])
+    const savedSponsors = getTenantData<ChampionshipSponsor[]>('championshipSponsors', tenant?.id || null, [])
+    setSponsors(savedSponsors)
+  }, [tenant?.id])
 
   // Save sponsors to localStorage whenever sponsors change
   useEffect(() => {
-    localStorage.setItem('championshipSponsors', JSON.stringify(sponsors))
-  }, [sponsors])
+    saveTenantData('championshipSponsors', tenant?.id || null, sponsors)
+  }, [sponsors, tenant?.id])
 
   const addSponsor = (sponsor: Omit<ChampionshipSponsor, 'sponsorId'>) => {
     const newSponsor: ChampionshipSponsor = {
