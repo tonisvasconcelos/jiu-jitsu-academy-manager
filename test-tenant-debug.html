@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tenant Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Tenant Debug Test</h1>
+    
+    <div class="test-section info">
+        <h3>📋 Debug Plan</h3>
+        <p>This will help us debug the tenant lookup issue:</p>
+        <ul>
+            <li>Check what tenants exist in the database</li>
+            <li>Test tenant creation with a simple domain</li>
+            <li>Test login with the created tenant</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>1. Check All Tenants in Database</h3>
+        <button onclick="checkAllTenants()">Check All Tenants</button>
+        <div id="all-tenants-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Create Simple Test Tenant</h3>
+        <button onclick="createSimpleTenant()">Create Simple Test Tenant</button>
+        <div id="create-simple-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Test Login with Simple Tenant</h3>
+        <button onclick="testSimpleLogin()">Test Simple Login</button>
+        <div id="test-simple-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        async function checkAllTenants() {
+            const resultDiv = document.getElementById('all-tenants-result');
+            resultDiv.innerHTML = 'Checking all tenants in database...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/tenants`);
+                const data = await response.json();
+                
+                const resultHtml = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${data.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${data.success ? '#c3e6cb' : '#f5c6cb'};">
+                        <h4>All Tenants in Database</h4>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Success:</strong> ${data.success}</p>
+                        <p><strong>Count:</strong> ${data.data?.length || 0} tenants</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+                
+                resultDiv.innerHTML = resultHtml;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: #f8d7da; border: 1px solid #f5c6cb;">
+                        <h4>Error checking tenants</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function createSimpleTenant() {
+            const resultDiv = document.getElementById('create-simple-result');
+            resultDiv.innerHTML = 'Creating simple test tenant...';
+            
+            try {
+                // Create tenant
+                const tenantResponse = await fetch(`${API_BASE}/admin/tenants`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: 'Test Academy Simple',
+                        domain: 'test-simple',
+                        plan: 'basic',
+                        contactEmail: 'admin@test-simple.com',
+                        contactPhone: '+55 21 99999-9999',
+                        address: 'Test Address, Rio de Janeiro, Brazil',
+                        companyId: '11.111.111/0001-11',
+                        licenseLimits: {
+                            users: 10,
+                            coaches: 2,
+                            branches: 1,
+                            students: 50,
+                            classes: 10
+                        }
+                    })
+                });
+                
+                const tenantData = await tenantResponse.json();
+                
+                let resultHtml = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${tenantData.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${tenantData.success ? '#c3e6cb' : '#f5c6cb'};">
+                        <h4>Simple Tenant Creation Result</h4>
+                        <p><strong>Status:</strong> ${tenantResponse.status}</p>
+                        <p><strong>Success:</strong> ${tenantData.success}</p>
+                        <p><strong>Message:</strong> ${tenantData.message || tenantData.error || 'No message'}</p>
+                        <pre>${JSON.stringify(tenantData, null, 2)}</pre>
+                    </div>
+                `;
+                
+                if (tenantData.success) {
+                    // Create user
+                    const userResponse = await fetch(`${API_BASE}/admin/users`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tenantDomain: 'test-simple',
+                            email: 'admin@test-simple.com',
+                            password: 'admin123',
+                            firstName: 'Admin',
+                            lastName: 'User',
+                            role: 'system_manager'
+                        })
+                    });
+                    
+                    const userData = await userResponse.json();
+                    
+                    resultHtml += `
+                        <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${userData.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${userData.success ? '#c3e6cb' : '#f5c6cb'};">
+                            <h4>Simple User Creation Result</h4>
+                            <p><strong>Status:</strong> ${userResponse.status}</p>
+                            <p><strong>Success:</strong> ${userData.success}</p>
+                            <p><strong>Message:</strong> ${userData.message || userData.error || 'No message'}</p>
+                            <pre>${JSON.stringify(userData, null, 2)}</pre>
+                        </div>
+                    `;
+                    
+                    if (userData.success) {
+                        resultHtml += `
+                            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                                <h4>🎉 Simple Test Credentials Created:</h4>
+                                <p><strong>Domain:</strong> test-simple</p>
+                                <p><strong>Email:</strong> admin@test-simple.com</p>
+                                <p><strong>Password:</strong> admin123</p>
+                            </div>
+                        `;
+                    }
+                }
+                
+                resultDiv.innerHTML = resultHtml;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: #f8d7da; border: 1px solid #f5c6cb;">
+                        <h4>Error creating simple tenant</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function testSimpleLogin() {
+            const resultDiv = document.getElementById('test-simple-result');
+            resultDiv.innerHTML = 'Testing login with simple tenant...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tenantDomain: 'test-simple',
+                        email: 'admin@test-simple.com',
+                        password: 'admin123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = 'test-section ' + (data.success ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h4>Simple Login Test Result</h4>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Success:</strong> ${data.success}</p>
+                    <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                    ${data.success ? '<p style="color: green; font-weight: bold;">🎉 LOGIN SUCCESSFUL!</p>' : ''}
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'test-section error';
+                resultDiv.innerHTML = `
+                    <h4>Error</h4>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
