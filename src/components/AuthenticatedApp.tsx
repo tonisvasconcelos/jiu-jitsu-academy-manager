@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ReactNode } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import { StudentProvider } from '../contexts/StudentContext'
 import { TeacherProvider } from '../contexts/TeacherContext'
 import { FightModalityProvider } from '../contexts/FightModalityContext'
@@ -77,6 +78,13 @@ const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({
   onToggleSidebar, 
   isMobile 
 }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Don't render anything if not authenticated or still loading
+  if (isLoading || !isAuthenticated) {
+    return null;
+  }
+
   return (
     <StudentProvider>
       <TeacherProvider>
