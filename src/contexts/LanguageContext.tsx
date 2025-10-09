@@ -22,6 +22,8 @@ const translations: Record<Language, Record<string, string>> = {
     
     // Dashboard specific translations
     'welcome-message': 'Welcome to your Fight Academy Manager',
+    'welcome-admin': 'Welcome, Admin',
+    'welcome-user': 'Welcome, {name}',
     'total-students': 'Total Students',
     'active-teachers': 'Active Teachers',
     'fight-modalities': 'Fight Modalities',
@@ -548,7 +550,19 @@ const translations: Record<Language, Record<string, string>> = {
     'no-fights-found': 'No fights found',
     'no-fights-found-description': 'Create your first fight to get started',
     'create-first-fight': 'Create First Fight',
-    'confirm-delete-fight': 'Are you sure you want to delete this fight?'
+    'confirm-delete-fight': 'Are you sure you want to delete this fight?',
+    
+    // Authentication
+    'sign-in-to-account': 'Sign in to your account',
+    'welcome-back-message': 'Welcome back! Please sign in to continue',
+    'academy-domain': 'Academy Domain',
+    'email-address': 'Email Address',
+    'password': 'Password',
+    'signing-in': 'Signing in',
+    'sign-in': 'Sign In',
+    'demo-credentials': 'Demo Credentials',
+    'dont-have-account': "Don't have an account?",
+    'sign-up': 'Sign up'
   },
   
   PTB: {
@@ -562,6 +576,8 @@ const translations: Record<Language, Record<string, string>> = {
     
     // Dashboard specific translations
     'welcome-message': 'Bem-vindo ao seu Gerenciador de Academia de Lutas',
+    'welcome-admin': 'Bem-vindo, Admin',
+    'welcome-user': 'Bem-vindo, {name}',
     'total-students': 'Total de Estudantes',
     'active-teachers': 'Professores Ativos',
     'fight-modalities': 'Modalidades de Luta',
@@ -1345,6 +1361,10 @@ const translations: Record<Language, Record<string, string>> = {
     'teachers-instructors': '教師・インストラクター',
     'championships': '選手権',
     'administration': '管理',
+    
+    // Welcome messages
+    'welcome-admin': 'ようこそ、管理者',
+    'welcome-user': 'ようこそ、{name}',
     
     // Common actions
     'new': '新規',

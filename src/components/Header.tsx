@@ -1,6 +1,7 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
+import { useAuth } from '../contexts/AuthContext'
 
 interface HeaderProps {
   onToggleSidebar: () => void
@@ -8,6 +9,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   const { t } = useLanguage()
+  const { user } = useAuth()
   const location = useLocation()
 
   const getCurrentPageTitle = () => {
@@ -30,6 +32,32 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
     if (path === '/martial-art-types') return t('martial-arts')
     
     return t('dashboard')
+  }
+
+  const getWelcomeMessage = () => {
+    if (!user) {
+      return t('welcome-admin')
+    }
+    
+    const userName = user.firstName || user.email?.split('@')[0] || 'User'
+    return t('welcome-user').replace('{name}', userName)
+  }
+
+  const getUserInitial = () => {
+    if (!user) return 'A'
+    
+    const firstName = user.firstName || ''
+    const lastName = user.lastName || ''
+    
+    if (firstName && lastName) {
+      return `${firstName[0]}${lastName[0]}`.toUpperCase()
+    } else if (firstName) {
+      return firstName[0].toUpperCase()
+    } else if (user.email) {
+      return user.email[0].toUpperCase()
+    }
+    
+    return 'U'
   }
   
   return (
@@ -65,11 +93,11 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
         
         <div className="flex items-center space-x-3 sm:space-x-4">
           <div className="hidden sm:block text-sm text-gray-300">
-            {t('welcome-admin')}
+            {getWelcomeMessage()}
           </div>
           <div className="relative group">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 cursor-pointer">
-              <span className="text-white text-sm sm:text-base font-semibold">A</span>
+              <span className="text-white text-sm sm:text-base font-semibold">{getUserInitial()}</span>
             </div>
             <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900"></div>
           </div>
