@@ -82,7 +82,8 @@ async function handleCreateTenant(req, res) {
       adminEmail,
       adminPassword,
       adminFirstName,
-      adminLastName
+      adminLastName,
+      customLimits
     } = req.body;
 
     // Validate required fields
@@ -95,14 +96,82 @@ async function handleCreateTenant(req, res) {
 
     const db = (await import('../shared/postgresDatabase.js')).default;
 
+    // Define license limits based on plan
+    let licenseLimits;
+    if (customLimits) {
+      licenseLimits = customLimits;
+    } else {
+      switch (plan) {
+        case 'trial':
+          licenseLimits = {
+            students: 25,
+            coaches: 2,
+            branches: 1,
+            classes: 10,
+            championships: 2,
+            weight_divisions: 10,
+            fight_modalities: 5,
+            affiliations: 2
+          };
+          break;
+        case 'basic':
+          licenseLimits = {
+            students: 100,
+            coaches: 5,
+            branches: 2,
+            classes: 50,
+            championships: 10,
+            weight_divisions: 20,
+            fight_modalities: 10,
+            affiliations: 5
+          };
+          break;
+        case 'professional':
+          licenseLimits = {
+            students: 500,
+            coaches: 15,
+            branches: 5,
+            classes: 200,
+            championships: 50,
+            weight_divisions: 50,
+            fight_modalities: 25,
+            affiliations: 15
+          };
+          break;
+        case 'enterprise':
+          licenseLimits = {
+            students: -1, // Unlimited
+            coaches: -1,
+            branches: -1,
+            classes: -1,
+            championships: -1,
+            weight_divisions: -1,
+            fight_modalities: -1,
+            affiliations: -1
+          };
+          break;
+        default:
+          licenseLimits = {
+            students: 100,
+            coaches: 5,
+            branches: 1,
+            classes: 50,
+            championships: 10,
+            weight_divisions: 20,
+            fight_modalities: 10,
+            affiliations: 5
+          };
+      }
+    }
+
     // Start transaction
     const result = await db.tx(async (t) => {
       // Create tenant
       const tenant = await t.one(`
         INSERT INTO tenants (
           name, domain, plan, contact_email, contact_phone, address,
-          license_start, license_end, is_active, settings
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          license_start, license_end, is_active, settings, license_limits
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING *
       `, [
         name,
@@ -124,7 +193,8 @@ async function handleCreateTenant(req, res) {
             studentManagement: true,
             championshipManagement: plan !== 'trial'
           }
-        })
+        }),
+        JSON.stringify(licenseLimits)
       ]);
 
       // Hash admin password

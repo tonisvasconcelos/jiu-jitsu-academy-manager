@@ -107,11 +107,12 @@
                 <div>
                     <div class="form-group">
                         <label>Plan *</label>
-                        <select id="plan">
+                        <select id="plan" onchange="updateLicenseLimits()">
                             <option value="trial">Trial (14 days)</option>
                             <option value="basic">Basic</option>
                             <option value="professional" selected>Professional</option>
                             <option value="enterprise">Enterprise</option>
+                            <option value="custom">Custom Limits</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -143,6 +144,52 @@
                         <input type="text" id="adminLastName" placeholder="Last name" value="Gracie">
                     </div>
                 </div>
+            </div>
+            
+            <!-- License Limits Section -->
+            <div id="licenseLimitsSection" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 5px;">
+                <h3>License Limits</h3>
+                <div class="grid">
+                    <div>
+                        <div class="form-group">
+                            <label>Students</label>
+                            <input type="number" id="limitStudents" value="500" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Coaches</label>
+                            <input type="number" id="limitCoaches" value="15" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Branches</label>
+                            <input type="number" id="limitBranches" value="5" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Classes</label>
+                            <input type="number" id="limitClasses" value="200" min="0">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label>Championships</label>
+                            <input type="number" id="limitChampionships" value="50" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Weight Divisions</label>
+                            <input type="number" id="limitWeightDivisions" value="50" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Fight Modalities</label>
+                            <input type="number" id="limitFightModalities" value="25" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Affiliations</label>
+                            <input type="number" id="limitAffiliations" value="15" min="0">
+                        </div>
+                    </div>
+                </div>
+                <p style="color: #666; font-size: 12px; margin-top: 10px;">
+                    <strong>Note:</strong> Set to -1 for unlimited. These limits will be enforced when customers try to create new records.
+                </p>
             </div>
             
             <button onclick="createCustomer()">Create Customer</button>
@@ -181,9 +228,20 @@
             <div id="loginResult"></div>
         </div>
 
+        <!-- View Customer Usage -->
+        <div class="section">
+            <h2>4. View Customer Usage & Limits</h2>
+            <div class="form-group">
+                <label>Customer Domain</label>
+                <input type="text" id="usageDomain" placeholder="e.g., graciebarra-rio.com" value="graciebarra-rio.com">
+            </div>
+            <button onclick="viewCustomerUsage()">View Usage Statistics</button>
+            <div id="usageResult"></div>
+        </div>
+
         <!-- Add Users to Customer -->
         <div class="section">
-            <h2>4. Add Users to Customer</h2>
+            <h2>5. Add Users to Customer</h2>
             <div class="grid">
                 <div>
                     <div class="form-group">
@@ -225,12 +283,103 @@
     </div>
 
     <script>
+        // License limits for each plan
+        const planLimits = {
+            trial: {
+                students: 25,
+                coaches: 2,
+                branches: 1,
+                classes: 10,
+                championships: 2,
+                weight_divisions: 10,
+                fight_modalities: 5,
+                affiliations: 2
+            },
+            basic: {
+                students: 100,
+                coaches: 5,
+                branches: 2,
+                classes: 50,
+                championships: 10,
+                weight_divisions: 20,
+                fight_modalities: 10,
+                affiliations: 5
+            },
+            professional: {
+                students: 500,
+                coaches: 15,
+                branches: 5,
+                classes: 200,
+                championships: 50,
+                weight_divisions: 50,
+                fight_modalities: 25,
+                affiliations: 15
+            },
+            enterprise: {
+                students: -1,
+                coaches: -1,
+                branches: -1,
+                classes: -1,
+                championships: -1,
+                weight_divisions: -1,
+                fight_modalities: -1,
+                affiliations: -1
+            }
+        };
+
+        // Update license limits based on selected plan
+        function updateLicenseLimits() {
+            const plan = document.getElementById('plan').value;
+            const limitsSection = document.getElementById('licenseLimitsSection');
+            
+            if (plan === 'custom') {
+                limitsSection.style.display = 'block';
+                return;
+            }
+            
+            const limits = planLimits[plan];
+            if (limits) {
+                document.getElementById('limitStudents').value = limits.students;
+                document.getElementById('limitCoaches').value = limits.coaches;
+                document.getElementById('limitBranches').value = limits.branches;
+                document.getElementById('limitClasses').value = limits.classes;
+                document.getElementById('limitChampionships').value = limits.championships;
+                document.getElementById('limitWeightDivisions').value = limits.weight_divisions;
+                document.getElementById('limitFightModalities').value = limits.fight_modalities;
+                document.getElementById('limitAffiliations').value = limits.affiliations;
+            }
+            
+            // Hide limits section for predefined plans
+            if (plan !== 'custom') {
+                limitsSection.style.display = 'none';
+            }
+        }
+
+        // Initialize with professional plan limits
+        updateLicenseLimits();
+
         // Create new customer
         async function createCustomer() {
             const resultDiv = document.getElementById('createResult');
             resultDiv.innerHTML = 'Creating customer...';
             
             try {
+                const plan = document.getElementById('plan').value;
+                let customLimits = null;
+                
+                if (plan === 'custom') {
+                    customLimits = {
+                        students: parseInt(document.getElementById('limitStudents').value),
+                        coaches: parseInt(document.getElementById('limitCoaches').value),
+                        branches: parseInt(document.getElementById('limitBranches').value),
+                        classes: parseInt(document.getElementById('limitClasses').value),
+                        championships: parseInt(document.getElementById('limitChampionships').value),
+                        weight_divisions: parseInt(document.getElementById('limitWeightDivisions').value),
+                        fight_modalities: parseInt(document.getElementById('limitFightModalities').value),
+                        affiliations: parseInt(document.getElementById('limitAffiliations').value)
+                    };
+                }
+
                 const response = await fetch('https://oss365.app/api/admin/tenants-postgres', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -240,11 +389,12 @@
                         contactEmail: document.getElementById('contactEmail').value,
                         contactPhone: document.getElementById('contactPhone').value,
                         address: document.getElementById('address').value,
-                        plan: document.getElementById('plan').value,
+                        plan: plan,
                         adminEmail: document.getElementById('adminEmail').value,
                         adminPassword: document.getElementById('adminPassword').value,
                         adminFirstName: document.getElementById('adminFirstName').value,
-                        adminLastName: document.getElementById('adminLastName').value
+                        adminLastName: document.getElementById('adminLastName').value,
+                        customLimits: customLimits
                     })
                 });
                 
@@ -333,6 +483,73 @@
                     `;
                 } else {
                     resultDiv.innerHTML = `<div class="error">❌ Login Failed: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // View customer usage statistics
+        async function viewCustomerUsage() {
+            const resultDiv = document.getElementById('usageResult');
+            resultDiv.innerHTML = 'Loading usage statistics...';
+            
+            try {
+                // First, get the tenant ID
+                const tenantsResponse = await fetch('https://oss365.app/api/admin/tenants-postgres');
+                const tenantsData = await tenantsResponse.json();
+                
+                if (!tenantsData.success) {
+                    throw new Error('Failed to load tenants');
+                }
+                
+                const tenant = tenantsData.data.find(t => t.domain === document.getElementById('usageDomain').value);
+                if (!tenant) {
+                    throw new Error('Tenant not found');
+                }
+                
+                // Get usage statistics
+                const response = await fetch(`https://oss365.app/api/admin/usage-postgres?tenantId=${tenant.id}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    let html = `
+                        <div class="success">
+                            <strong>📊 Usage Statistics for ${data.data.tenant.name}</strong><br>
+                            <strong>Plan:</strong> ${data.data.tenant.plan}<br>
+                            <strong>Domain:</strong> ${data.data.tenant.domain}
+                        </div>
+                        <h4>Usage Summary:</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+                    `;
+                    
+                    data.data.usageStats.forEach(stat => {
+                        const percentage = stat.isUnlimited ? '∞' : `${stat.percentage}%`;
+                        const statusClass = stat.isOverLimit ? 'error' : (stat.percentage >= 80 ? 'warning' : 'success');
+                        const statusText = stat.isOverLimit ? 'OVER LIMIT' : (stat.percentage >= 80 ? 'NEAR LIMIT' : 'OK');
+                        
+                        html += `
+                            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; background: ${stat.isOverLimit ? '#f8d7da' : (stat.percentage >= 80 ? '#fff3cd' : '#d4edda')};">
+                                <strong>${stat.type.replace('_', ' ').toUpperCase()}</strong><br>
+                                <span style="font-size: 18px; font-weight: bold;">${stat.current}</span> / ${stat.limit}<br>
+                                <span class="status ${statusClass}">${statusText}</span><br>
+                                <small>${percentage} used</small>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                        </div>
+                        <h4>Summary:</h4>
+                        <p><strong>Total Items:</strong> ${data.data.summary.totalItems}</p>
+                        <p><strong>Over Limit Items:</strong> ${data.data.summary.overLimitItems}</p>
+                        <p><strong>Near Limit Items:</strong> ${data.data.summary.nearLimitItems}</p>
+                        <pre>${JSON.stringify(data.data, null, 2)}</pre>
+                    `;
+                    
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Error: ${data.error}</div>`;
                 }
             } catch (error) {
                 resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
