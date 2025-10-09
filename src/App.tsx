@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext'
 import WelcomeLanguage from './pages/WelcomeLanguage'
 import ProtectedRoute from './components/ProtectedRoute'
 import ErrorBoundary from './components/ErrorBoundary'
+import LanguageRouter from './components/LanguageRouter'
 import Login from './pages/Login'
 import AdminPortal from './pages/admin/AdminPortal'
 
