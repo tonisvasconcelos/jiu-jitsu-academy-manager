@@ -67,12 +67,24 @@ export const WeightDivisionProvider: React.FC<{ children: ReactNode }> = ({ chil
     return getTenantData<WeightDivision[]>('jiu-jitsu-weight-divisions', tenant?.id || null, defaultWeightDivisions)
   }
 
-  const [weightDivisions, setWeightDivisions] = useState<WeightDivision[]>(loadWeightDivisionsFromStorage)
+  const [weightDivisions, setWeightDivisions] = useState<WeightDivision[]>(() => {
+    try {
+      return loadWeightDivisionsFromStorage()
+    } catch (error) {
+      console.warn('Error loading weight divisions from storage:', error)
+      return defaultWeightDivisions
+    }
+  })
 
   // Reload weight divisions when tenant changes
   useEffect(() => {
-    const newWeightDivisions = loadWeightDivisionsFromStorage()
-    setWeightDivisions(newWeightDivisions)
+    try {
+      const newWeightDivisions = loadWeightDivisionsFromStorage()
+      setWeightDivisions(newWeightDivisions)
+    } catch (error) {
+      console.warn('Error reloading weight divisions from storage:', error)
+      setWeightDivisions(defaultWeightDivisions)
+    }
   }, [tenant?.id])
 
   // Save weight divisions to localStorage
@@ -86,26 +98,28 @@ export const WeightDivisionProvider: React.FC<{ children: ReactNode }> = ({ chil
   }, [weightDivisions])
 
   const addWeightDivision = (weightDivision: WeightDivision) => {
-    setWeightDivisions(prev => [...prev, weightDivision])
+    setWeightDivisions(prev => prev ? [...prev, weightDivision] : [weightDivision])
   }
 
   const updateWeightDivision = (divisionId: string, updatedWeightDivision: WeightDivision) => {
     setWeightDivisions(prev => 
-      prev.map(division => 
+      prev ? prev.map(division => 
         division.divisionId === divisionId ? updatedWeightDivision : division
-      )
+      ) : [updatedWeightDivision]
     )
   }
 
   const deleteWeightDivision = (divisionId: string) => {
-    setWeightDivisions(prev => prev.filter(division => division.divisionId !== divisionId))
+    setWeightDivisions(prev => prev ? prev.filter(division => division.divisionId !== divisionId) : [])
   }
 
   const getWeightDivision = (divisionId: string) => {
-    return weightDivisions.find(division => division.divisionId === divisionId)
+    return weightDivisions?.find(division => division.divisionId === divisionId)
   }
 
   const getWeightDivisionByWeight = (weight: number, gender: 'male' | 'female' | 'other', isKidsStudent: boolean) => {
+    if (!weightDivisions) return undefined
+    
     const ageGroup = isKidsStudent ? 'kids' : 'adult'
     const genderFilter = gender === 'other' ? 'both' : gender
     
@@ -123,7 +137,7 @@ export const WeightDivisionProvider: React.FC<{ children: ReactNode }> = ({ chil
   }
 
   const value: WeightDivisionContextType = {
-    weightDivisions,
+    weightDivisions: weightDivisions || [],
     addWeightDivision,
     updateWeightDivision,
     deleteWeightDivision,
