@@ -1,4 +1,20 @@
 import { testConnection } from '../shared/postgresDatabase.js';
+import pgPromise from 'pg-promise';
+
+const pgp = pgPromise();
+const dbConfig = {
+  host: process.env.DB_HOST || 'ep-steep-tooth-ac14qe2b-pooler.sa-east-1.aws.neon.tech',
+  port: parseInt(process.env.DB_PORT || '5432'),
+  database: process.env.DB_NAME || 'neondb',
+  user: process.env.DB_USER || 'neondb_owner',
+  password: process.env.DB_PASSWORD || 'npg_5NJmWgEc4rtU',
+  ssl: { rejectUnauthorized: false },
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+};
+
+const db = pgp(dbConfig);
 
 export default async function handler(req, res) {
   // Force redeployment - Usage Tracking v1
@@ -53,7 +69,7 @@ async function handleGetUsage(req, res) {
       });
     }
 
-    const db = (await import('../shared/postgresDatabase.js')).default;
+    // Using direct db connection
 
     // Get tenant and its limits
     const tenant = await db.oneOrNone('SELECT * FROM tenants WHERE id = $1', [tenantId]);
@@ -162,7 +178,7 @@ async function handleCheckUsage(req, res) {
       });
     }
 
-    const db = (await import('../shared/postgresDatabase.js')).default;
+    // Using direct db connection
 
     // Get tenant limits
     const tenant = await db.oneOrNone('SELECT license_limits FROM tenants WHERE id = $1', [tenantId]);

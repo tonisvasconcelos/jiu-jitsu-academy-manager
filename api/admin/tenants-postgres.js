@@ -1,5 +1,21 @@
 import bcrypt from 'bcryptjs';
-import { authService, testConnection } from '../shared/postgresDatabase.js';
+import { testConnection } from '../shared/postgresDatabase.js';
+import pgPromise from 'pg-promise';
+
+const pgp = pgPromise();
+const dbConfig = {
+  host: process.env.DB_HOST || 'ep-steep-tooth-ac14qe2b-pooler.sa-east-1.aws.neon.tech',
+  port: parseInt(process.env.DB_PORT || '5432'),
+  database: process.env.DB_NAME || 'neondb',
+  user: process.env.DB_USER || 'neondb_owner',
+  password: process.env.DB_PASSWORD || 'npg_5NJmWgEc4rtU',
+  ssl: { rejectUnauthorized: false },
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+};
+
+const db = pgp(dbConfig);
 
 export default async function handler(req, res) {
   // Force redeployment - Tenant Management v1
@@ -50,7 +66,7 @@ export default async function handler(req, res) {
 async function handleGetTenants(req, res) {
   try {
     const { authService } = await import('../shared/postgresDatabase.js');
-    const db = (await import('../shared/postgresDatabase.js')).default;
+    // Using direct db connection
     
     const tenants = await db.any('SELECT * FROM tenants ORDER BY created_at DESC');
     
@@ -94,7 +110,7 @@ async function handleCreateTenant(req, res) {
       });
     }
 
-    const db = (await import('../shared/postgresDatabase.js')).default;
+    // Using direct db connection
 
     // Define license limits based on plan
     let licenseLimits;
@@ -279,7 +295,7 @@ async function handleUpdateTenant(req, res) {
       });
     }
 
-    const db = (await import('../shared/postgresDatabase.js')).default;
+    // Using direct db connection
 
     // Build dynamic update query
     const allowedFields = ['name', 'domain', 'plan', 'contact_email', 'contact_phone', 'address', 'is_active', 'settings'];
@@ -340,7 +356,7 @@ async function handleDeleteTenant(req, res) {
       });
     }
 
-    const db = (await import('../shared/postgresDatabase.js')).default;
+    // Using direct db connection
 
     // Delete tenant (cascade will handle related records)
     await db.none('DELETE FROM tenants WHERE id = $1', [id]);
