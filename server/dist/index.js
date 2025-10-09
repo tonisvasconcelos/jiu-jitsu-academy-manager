@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
-const sqlite_database_1 = require("./config/sqlite-database");
+const database_1 = require("./config/database");
 const PORT = process.env.PORT || 5000;
 async function startServer() {
     try {
-        await (0, sqlite_database_1.testConnection)();
+        await (0, database_1.testConnection)();
         app_1.default.listen(PORT, () => {
             console.log(`🚀 Server running on port ${PORT}`);
             console.log(`📊 Health check: http://localhost:${PORT}/health`);

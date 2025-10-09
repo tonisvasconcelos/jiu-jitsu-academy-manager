@@ -11,23 +11,19 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Import routes
-import authRoutes from './routes/simple-auth';
-// Temporarily disable other routes to get basic server running
-// import userRoutes from './routes/users';
-// import tenantRoutes from './routes/tenants';
-// import branchRoutes from './routes/branches';
-// import classRoutes from './routes/classes';
-// import studentRoutes from './routes/students';
-// import enrollmentRoutes from './routes/enrollments';
-// import checkInRoutes from './routes/checkIns';
-import publicRoutes from './routes/simple-public';
+import authRoutes from './routes/auth';
+import userRoutes from './routes/users';
+import tenantRoutes from './routes/tenants';
+import branchRoutes from './routes/branches';
+import classRoutes from './routes/classes';
+import studentRoutes from './routes/students';
+import enrollmentRoutes from './routes/enrollments';
+import checkInRoutes from './routes/checkIns';
+import publicRoutes from './routes/public';
 
 // Import middleware
 import { errorHandler } from './middlewares/errorHandler';
-// SQLite doesn't need tenant context clearing like PostgreSQL RLS
-const clearTenantContext = async () => {
-  // No-op for SQLite
-};
+import { clearTenantContext } from './config/database';
 
 const app = express();
 
@@ -120,14 +116,13 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
-// Temporarily disable other routes
-// app.use('/api/users', userRoutes);
-// app.use('/api/tenants', tenantRoutes);
-// app.use('/api/branches', branchRoutes);
-// app.use('/api/classes', classRoutes);
-// app.use('/api/students', studentRoutes);
-// app.use('/api/enrollments', enrollmentRoutes);
-// app.use('/api/check-ins', checkInRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/tenants', tenantRoutes);
+app.use('/api/branches', branchRoutes);
+app.use('/api/classes', classRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/enrollments', enrollmentRoutes);
+app.use('/api/check-ins', checkInRoutes);
 app.use('/api/public', publicRoutes);
 
 // Serve public pages

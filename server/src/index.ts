@@ -1,5 +1,5 @@
 import app from './app';
-import { testConnection } from './config/sqlite-database';
+import { testConnection } from './config/database';
 
 const PORT = process.env.PORT || 5000;
 

@@ -12,11 +12,17 @@ const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const path_1 = __importDefault(require("path"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const simple_auth_1 = __importDefault(require("./routes/simple-auth"));
-const simple_public_1 = __importDefault(require("./routes/simple-public"));
+const auth_1 = __importDefault(require("./routes/auth"));
+const users_1 = __importDefault(require("./routes/users"));
+const tenants_1 = __importDefault(require("./routes/tenants"));
+const branches_1 = __importDefault(require("./routes/branches"));
+const classes_1 = __importDefault(require("./routes/classes"));
+const students_1 = __importDefault(require("./routes/students"));
+const enrollments_1 = __importDefault(require("./routes/enrollments"));
+const checkIns_1 = __importDefault(require("./routes/checkIns"));
+const public_1 = __importDefault(require("./routes/public"));
 const errorHandler_1 = require("./middlewares/errorHandler");
-const clearTenantContext = async () => {
-};
+const database_1 = require("./config/database");
 const app = (0, express_1.default)();
 app.use((0, helmet_1.default)({
     contentSecurityPolicy: {
@@ -90,8 +96,15 @@ app.get('/health', (req, res) => {
         environment: process.env.NODE_ENV
     });
 });
-app.use('/api/auth', simple_auth_1.default);
-app.use('/api/public', simple_public_1.default);
+app.use('/api/auth', auth_1.default);
+app.use('/api/users', users_1.default);
+app.use('/api/tenants', tenants_1.default);
+app.use('/api/branches', branches_1.default);
+app.use('/api/classes', classes_1.default);
+app.use('/api/students', students_1.default);
+app.use('/api/enrollments', enrollments_1.default);
+app.use('/api/check-ins', checkIns_1.default);
+app.use('/api/public', public_1.default);
 app.get('/', (req, res) => {
     res.sendFile(path_1.default.join(__dirname, '../public/index.html'));
 });
@@ -105,7 +118,7 @@ app.use(errorHandler_1.errorHandler);
 app.use((req, res, next) => {
     res.on('finish', async () => {
         try {
-            await clearTenantContext();
+            await (0, database_1.clearTenantContext)();
         }
         catch (error) {
             console.error('Error clearing tenant context:', error);
