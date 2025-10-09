@@ -13,10 +13,6 @@
     {
       "src": "/health",
       "dest": "/api/health"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/health"
     }
   ],
   "env": {
