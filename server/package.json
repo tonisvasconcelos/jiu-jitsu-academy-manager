@@ -9,6 +9,8 @@
     "start": "cross-env PORT=5000 node dist/index.js",
     "db:migrate": "node dist/scripts/migrate.js",
     "db:seed": "node dist/scripts/seed.js",
+    "db:test": "node test-db.js",
+    "setup": "node setup.js",
     "create-academy": "ts-node src/scripts/createNewAcademy.ts",
     "setup-sqlite": "ts-node src/scripts/setup-sqlite.ts",
     "simple": "ts-node src/simple-server.ts",

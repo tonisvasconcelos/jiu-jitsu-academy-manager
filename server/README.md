@@ -1,368 +1,187 @@
-# 🥋 Jiu-Jitsu Academy Manager - Backend API
+# Jiu-Jitsu Academy Manager - Backend API
 
-A comprehensive Node.js backend API for the Jiu-Jitsu Academy Manager SaaS platform, built with Express, TypeScript, and PostgreSQL.
+A production-ready, multi-tenant SaaS backend for Jiu-Jitsu Academy management with PostgreSQL database.
 
-## 🚀 Features
+## 🚀 Quick Start
 
-- **Multi-tenant Architecture**: Row-level security with tenant isolation
-- **JWT Authentication**: Secure token-based authentication with refresh tokens
-- **Role-Based Access Control**: Four user roles with hierarchical permissions
-- **RESTful API**: Complete CRUD operations for all entities
-- **Public Booking System**: Public endpoints for class booking
-- **Database Migrations**: Automated schema management
-- **Data Seeding**: Sample data for development and testing
-- **Input Validation**: Comprehensive request validation with Joi
-- **Error Handling**: Centralized error handling and logging
-- **Rate Limiting**: API rate limiting for security
-- **CORS Support**: Configurable cross-origin resource sharing
+### 1. Set up PostgreSQL Database
 
-## 🏗️ Architecture
+Choose one of these options:
 
-### Database Design
-- **Multi-tenancy**: Table-level isolation with `tenant_id` column
-- **Row Level Security (RLS)**: PostgreSQL RLS policies for data isolation
-- **User Roles**: System Manager > Branch Manager > Coach > Student
-- **Comprehensive Schema**: Users, tenants, branches, classes, students, enrollments, check-ins
+#### Option A: Neon (Recommended - Free)
+1. Go to [https://neon.tech](https://neon.tech)
+2. Sign up and create a new project
+3. Copy the connection string
 
-### API Structure
-```
-/api
-├── /auth          # Authentication endpoints
-├── /users         # User management
-├── /tenants       # Tenant management (System Manager only)
-├── /branches      # Branch management
-├── /classes       # Class scheduling
-├── /students      # Student management
-├── /enrollments   # Class enrollments
-├── /check-ins     # Attendance tracking
-└── /public        # Public booking system
+#### Option B: Supabase (Free)
+1. Go to [https://supabase.com](https://supabase.com)
+2. Sign up and create a new project
+3. Get connection details from Settings > Database
+
+#### Option C: Railway (Free)
+1. Go to [https://railway.app](https://railway.app)
+2. Sign up and create a PostgreSQL service
+3. Copy the connection string
+
+### 2. Configure Environment
+
+Run the setup script:
+```bash
+npm run setup
 ```
 
-## 🛠️ Tech Stack
+Or manually create a `.env` file with your database credentials.
 
-- **Runtime**: Node.js with TypeScript
-- **Framework**: Express.js
-- **Database**: PostgreSQL with pg-promise
-- **Authentication**: JWT with bcryptjs
-- **Validation**: Joi schemas
-- **Security**: Helmet, CORS, Rate limiting
-- **Development**: Nodemon, ts-node
-
-## 📦 Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd server
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp env.example .env
-   # Edit .env with your configuration
-   ```
-
-4. **Set up PostgreSQL database**
-   ```bash
-   # Create database
-   createdb jiu_jitsu_academy_manager
-   
-   # Run migrations
-   npm run db:migrate
-   
-   # Seed with sample data
-   npm run db:seed
-   ```
-
-5. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-## 🔧 Configuration
-
-### Environment Variables
-
-```env
-# Database
-DATABASE_URL=postgresql://username:password@localhost:5432/jiu_jitsu_academy_manager
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=jiu_jitsu_academy_manager
-DB_USER=username
-DB_PASSWORD=password
-
-# JWT
-JWT_SECRET=your-super-secret-jwt-key
-JWT_EXPIRES_IN=7d
-JWT_REFRESH_SECRET=your-super-secret-refresh-key
-JWT_REFRESH_EXPIRES_IN=30d
-
-# Server
-PORT=3001
-NODE_ENV=development
-API_BASE_URL=http://localhost:3001/api
-
-# CORS
-CORS_ORIGIN=http://localhost:3000,http://localhost:5173
-
-# Email (optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
-
-# Security
-BCRYPT_ROUNDS=12
+### 3. Install Dependencies
+```bash
+npm install
 ```
 
-## 📚 API Documentation
+### 4. Build and Setup Database
+```bash
+# Build the project
+npm run build
 
-### Authentication
+# Test database connection
+npm run db:test
 
-#### Login
-```http
-POST /api/auth/login
-Content-Type: application/json
+# Run database migrations
+npm run db:migrate
 
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "tenantDomain": "demo.jiu-jitsu.com"
-}
+# Seed initial data
+npm run db:seed
 ```
 
-#### Register
-```http
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "email": "newuser@example.com",
-  "password": "password123",
-  "firstName": "John",
-  "lastName": "Doe",
-  "role": "student",
-  "tenantDomain": "demo.jiu-jitsu.com"
-}
+### 5. Start the Server
+```bash
+npm start
 ```
 
-### Public Endpoints
+The server will be running on `http://localhost:5000`
 
-#### Get Classes
-```http
-GET /api/public/classes?tenantDomain=demo.jiu-jitsu.com&branchId=optional
-```
+## 📊 Database Schema
 
-#### Book Class
-```http
-POST /api/public/bookings
-Content-Type: application/json
+The system includes the following tables with multi-tenant architecture:
 
-{
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john@example.com",
-  "phone": "+1234567890",
-  "classId": "class-uuid",
-  "branchId": "branch-uuid",
-  "tenantDomain": "demo.jiu-jitsu.com",
-  "notes": "First time student",
-  "preferredContactMethod": "email"
-}
-```
-
-### Protected Endpoints
-
-All protected endpoints require the `Authorization` header:
-```http
-Authorization: Bearer <jwt-token>
-```
-
-#### Get Users
-```http
-GET /api/users?page=1&limit=10&search=john&role=student
-```
-
-#### Create User
-```http
-POST /api/users
-Content-Type: application/json
-
-{
-  "email": "newuser@example.com",
-  "password": "password123",
-  "firstName": "Jane",
-  "lastName": "Smith",
-  "role": "coach",
-  "branchId": "branch-uuid"
-}
-```
+- **tenants** - Tenant information and license management
+- **users** - User accounts with role-based access control
+- **branches** - Academy branch locations
+- **students** - Student profiles and information
+- **classes** - Class schedules and details
+- **enrollments** - Student class enrollments
+- **check_ins** - Class attendance tracking
+- **student_modalities** - Student training modalities
+- **bookings** - Public class bookings
+- **subscriptions** - Payment and subscription management
 
 ## 🔐 Security Features
 
-### Multi-Tenancy
-- **Row Level Security**: All queries automatically filtered by tenant
-- **Tenant Context**: Session variable set for each request
-- **Data Isolation**: Complete separation between tenants
+- **Row Level Security (RLS)** - Automatic tenant data isolation
+- **JWT Authentication** - Secure token-based authentication
+- **Password Hashing** - bcrypt password encryption
+- **Role-Based Access Control** - SYSTEM_MANAGER, BRANCH_MANAGER, COACH, STUDENT
+- **CORS Protection** - Configured for production domains
+- **Rate Limiting** - API request rate limiting
+- **Input Validation** - Joi schema validation
 
-### Authentication & Authorization
-- **JWT Tokens**: Secure access and refresh tokens
-- **Role Hierarchy**: System Manager > Branch Manager > Coach > Student
-- **Permission Checks**: Middleware validates user permissions
-- **Password Security**: bcrypt hashing with configurable rounds
+## 🛠️ API Endpoints
 
-### API Security
-- **Rate Limiting**: Configurable request limits
-- **CORS**: Cross-origin resource sharing protection
-- **Helmet**: Security headers
-- **Input Validation**: Comprehensive request validation
-- **Error Handling**: Secure error responses
+### Authentication
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/refresh` - Refresh access token
+- `POST /api/auth/logout` - User logout
 
-## 🗄️ Database Schema
+### Admin (System Manager)
+- `GET /api/tenants` - List all tenants
+- `POST /api/tenants` - Create new tenant
+- `PUT /api/tenants/:id` - Update tenant
+- `DELETE /api/tenants/:id` - Delete tenant
+- `GET /api/users` - List all users
+- `POST /api/users` - Create new user
 
-### Core Tables
-- `tenants` - Multi-tenant organization data
-- `users` - User accounts with roles and authentication
-- `branches` - Physical locations and facilities
-- `students` - Student profiles and information
-- `classes` - Class schedules and details
-- `enrollments` - Student class registrations
-- `check_ins` - Attendance tracking
-- `bookings` - Public booking requests
+### Tenant Management
+- `GET /api/branches` - List tenant branches
+- `POST /api/branches` - Create new branch
+- `GET /api/students` - List tenant students
+- `POST /api/students` - Create new student
+- `GET /api/classes` - List tenant classes
+- `POST /api/classes` - Create new class
 
-### Key Features
-- **UUID Primary Keys**: Globally unique identifiers
-- **Audit Timestamps**: Created/updated timestamps
-- **Soft Deletes**: Optional soft delete support
-- **JSON Fields**: Flexible settings and metadata storage
-- **Foreign Key Constraints**: Referential integrity
+### Public
+- `GET /api/public/classes` - Public class schedules
+- `POST /api/public/bookings` - Public class bookings
+
+## 🔧 Development
+
+### Available Scripts
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Build TypeScript to JavaScript
+- `npm start` - Start production server
+- `npm run db:migrate` - Run database migrations
+- `npm run db:seed` - Seed initial data
+- `npm run db:test` - Test database connection
+- `npm run setup` - Interactive database setup
+- `npm test` - Run tests
+- `npm run lint` - Run ESLint
+
+### Environment Variables
+
+Required environment variables:
+```env
+# Database
+DATABASE_URL=postgresql://user:pass@host:port/db
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=jiu_jitsu_academy_manager
+DB_USER=postgres
+DB_PASSWORD=password
+
+# JWT
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
+JWT_REFRESH_SECRET=your-refresh-secret
+JWT_REFRESH_EXPIRES_IN=30d
+
+# Server
+PORT=5000
+NODE_ENV=development
+API_BASE_URL=http://localhost:5000/api
+CORS_ORIGIN=https://oss365.app
+```
 
 ## 🚀 Deployment
 
-### Production Setup
+### Production Checklist
+1. Set up production PostgreSQL database
+2. Update environment variables for production
+3. Set secure JWT secrets
+4. Configure CORS for production domains
+5. Set up SSL certificates
+6. Configure rate limiting
+7. Set up monitoring and logging
 
-1. **Environment Configuration**
-   ```bash
-   NODE_ENV=production
-   DATABASE_URL=postgresql://user:pass@host:port/db
-   JWT_SECRET=your-production-secret
-   ```
-
-2. **Build Application**
-   ```bash
-   npm run build
-   ```
-
-3. **Run Migrations**
-   ```bash
-   npm run db:migrate
-   ```
-
-4. **Start Production Server**
-   ```bash
-   npm start
-   ```
-
-### Cloud Deployment
-
-The application is designed to be deployed on:
-- **Render**: Easy deployment with PostgreSQL addon
-- **Railway**: Full-stack deployment platform
-- **AWS**: EC2 with RDS PostgreSQL
-- **Heroku**: With Heroku Postgres addon
-
-## 🧪 Development
-
-### Available Scripts
-
+### Docker Deployment
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm start           # Start production server
-npm run db:migrate  # Run database migrations
-npm run db:seed     # Seed database with sample data
-npm run lint        # Run ESLint
-npm run lint:fix    # Fix ESLint errors
+# Build Docker image
+docker build -t jiu-jitsu-api .
+
+# Run with environment variables
+docker run -p 5000:5000 --env-file .env jiu-jitsu-api
 ```
-
-### Database Management
-
-```bash
-# Create migration
-npm run db:migrate
-
-# Seed with sample data
-npm run db:seed
-
-# Reset database (development only)
-npm run db:reset
-```
-
-## 📊 Monitoring & Logging
-
-- **Health Check**: `GET /health`
-- **Request Logging**: Morgan middleware
-- **Error Logging**: Centralized error handling
-- **Performance**: Built-in metrics collection
-
-## 🔄 Integration
-
-### Frontend Integration
-The API is designed to work seamlessly with the React frontend:
-- **CORS Configuration**: Pre-configured for frontend domains
-- **JWT Authentication**: Token-based auth flow
-- **Error Handling**: Consistent error response format
-- **TypeScript Types**: Shared type definitions
-
-### Third-Party Services
-- **Email**: Nodemailer integration for notifications
-- **Payments**: Stripe and Mercado Pago hooks
-- **File Storage**: Multer for file uploads
-- **Maps**: Coordinates storage for branch locations
-
-## 📈 Performance
-
-### Optimization Features
-- **Connection Pooling**: PostgreSQL connection management
-- **Query Optimization**: Efficient database queries
-- **Caching**: Redis integration ready
-- **Compression**: Gzip response compression
-- **Rate Limiting**: API abuse prevention
-
-## 🛡️ Security Best Practices
-
-1. **Environment Variables**: All secrets in environment
-2. **Input Validation**: Comprehensive request validation
-3. **SQL Injection Prevention**: Parameterized queries
-4. **XSS Protection**: Helmet security headers
-5. **CSRF Protection**: Token-based protection
-6. **Rate Limiting**: API abuse prevention
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License - see LICENSE file for details.
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests if applicable
+4. Add tests
 5. Submit a pull request
 
 ## 📞 Support
 
-For support and questions:
-- Create an issue in the repository
-- Contact the development team
-- Check the documentation
-
----
-
-**Built with ❤️ for the Jiu-Jitsu community** 🥋
+For support, email support@oss365.app or create an issue in the repository.
