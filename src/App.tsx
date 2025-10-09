@@ -134,25 +134,22 @@ function App() {
                     
                     {/* Protected Routes - With Layout */}
                     <Route path="/*" element={
-                      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-                        <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
-                        <div className={`transition-all duration-300 ${
-                          isMobile 
-                            ? 'ml-0' 
-                            : sidebarCollapsed 
-                              ? 'ml-16' 
-                              : 'ml-64'
-                        } min-h-screen`}>
-                          <Header onToggleSidebar={toggleSidebar} />
-                          <main className="relative">
-                            <Routes>
+                      <ProtectedRoute>
+                        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+                          <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
+                          <div className={`transition-all duration-300 ${
+                            isMobile 
+                              ? 'ml-0' 
+                              : sidebarCollapsed 
+                                ? 'ml-16' 
+                                : 'ml-64'
+                          } min-h-screen`}>
+                            <Header onToggleSidebar={toggleSidebar} />
+                            <main className="relative">
+                              <Routes>
                     
                     {/* Protected Routes */}
-                    <Route path="/" element={
-                      <ProtectedRoute>
-                        <Dashboard />
-                      </ProtectedRoute>
-                    } />
+                    <Route path="/" element={<Dashboard />} />
                     
                     {/* Main Menu Pages */}
                     <Route path="/students" element={<Students />} />
@@ -256,10 +253,11 @@ function App() {
                             <Route path="/branches/facilities" element={<BranchFacilityRegistration />} />
                             <Route path="/branches/facilities/:action" element={<BranchFacilityForm />} />
                             <Route path="/branches/facilities/:action/:id" element={<BranchFacilityForm />} />
-                            </Routes>
-                          </main>
+                              </Routes>
+                            </main>
+                          </div>
                         </div>
-                      </div>
+                      </ProtectedRoute>
                     } />
                   </Routes>
                             </Router>
