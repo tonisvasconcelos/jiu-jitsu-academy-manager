@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   console.log('PostgreSQL Login API called:', req.method, req.body);
 
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', 'https://oss365.app');
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins for testing
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
