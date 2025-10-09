@@ -62,16 +62,45 @@ export const clearTenantContext = async () => {
 
 // Authentication service functions
 export const authService = {
-  // Find tenant by domain
+  // Find tenant by domain - Enhanced with deterministic lookup
   async findTenantByDomain(domain) {
     try {
-      const tenant = await db.oneOrNone(
-        'SELECT * FROM tenants WHERE domain = $1 AND is_active = true',
-        [domain]
-      );
+      console.log('🔍 Tenant lookup - Input domain:', domain);
+      console.log('🔍 Tenant lookup - Domain type:', typeof domain);
+      console.log('🔍 Tenant lookup - Domain length:', domain?.length);
+      
+      // Set search path to ensure we're querying the right schema
+      await db.none('SET search_path TO public, pg_catalog');
+      
+      // Normalize domain comparison and fully qualify schema
+      const tenant = await db.oneOrNone(`
+        SELECT id, domain, name, plan, license_start, license_end, is_active, 
+               contact_email, contact_phone, address, created_at, updated_at, license_limits
+        FROM public.tenants 
+        WHERE lower(trim(domain)) = lower(trim($1)) 
+          AND is_active = true
+        LIMIT 1
+      `, [domain]);
+      
+      console.log('🔍 Tenant lookup - Result:', tenant ? 'FOUND' : 'NOT FOUND');
+      if (tenant) {
+        console.log('🔍 Tenant lookup - Found tenant:', {
+          id: tenant.id,
+          domain: tenant.domain,
+          name: tenant.name,
+          is_active: tenant.is_active
+        });
+      }
+      
       return tenant;
     } catch (error) {
-      console.error('Error finding tenant by domain:', error);
+      console.error('❌ Error finding tenant by domain:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        code: error.code,
+        detail: error.detail,
+        query: error.query
+      });
       throw error;
     }
   },

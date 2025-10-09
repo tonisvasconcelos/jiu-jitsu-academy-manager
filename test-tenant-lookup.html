@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tenant Lookup Integration Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Tenant Lookup Integration Test Suite</h1>
+    
+    <div class="test-section info">
+        <h3>📋 Test Cases</h3>
+        <p>This test suite validates tenant lookup functionality across different scenarios:</p>
+        <ul>
+            <li>Database diagnostics</li>
+            <li>RLS policy status</li>
+            <li>Tenant lookup with various domain formats</li>
+            <li>Login API integration</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>1. Database Diagnostics</h3>
+        <button onclick="runDiagnostics()">Run Database Diagnostics</button>
+        <div id="diagnostics-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. RLS Policy Fix</h3>
+        <button onclick="fixRlsPolicies()">Fix RLS Policies</button>
+        <div id="rls-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Tenant Lookup Tests</h3>
+        <button onclick="testTenantLookup('gbbrrj01')">Test: gbbrrj01</button>
+        <button onclick="testTenantLookup('GBBRRJ01')">Test: GBBRRJ01</button>
+        <button onclick="testTenantLookup(' gbbrrj01 ')">Test: ' gbbrrj01 '</button>
+        <div id="lookup-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Login API Integration Test</h3>
+        <button onclick="testLogin()">Test Login API</button>
+        <div id="login-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://oss365.app/api';
+
+        async function runDiagnostics() {
+            const resultDiv = document.getElementById('diagnostics-result');
+            resultDiv.innerHTML = 'Running diagnostics...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/_diag/login-db`);
+                const data = await response.json();
+                
+                resultDiv.className = 'test-section ' + (data.success ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h4>Diagnostics Result</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'test-section error';
+                resultDiv.innerHTML = `<h4>Error</h4><pre>${error.message}</pre>`;
+            }
+        }
+
+        async function fixRlsPolicies() {
+            const resultDiv = document.getElementById('rls-result');
+            resultDiv.innerHTML = 'Fixing RLS policies...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/scripts/fix-rls-policies`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                resultDiv.className = 'test-section ' + (data.success ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h4>RLS Fix Result</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'test-section error';
+                resultDiv.innerHTML = `<h4>Error</h4><pre>${error.message}</pre>`;
+            }
+        }
+
+        async function testTenantLookup(domain) {
+            const resultDiv = document.getElementById('lookup-result');
+            resultDiv.innerHTML = `Testing tenant lookup for: "${domain}"`;
+            
+            try {
+                // This would need a dedicated endpoint, for now we'll test via login
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tenantDomain: domain,
+                        email: 'mario@email.com',
+                        password: 'Mario2024!'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = 'test-section ' + (data.success ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h4>Lookup Test: "${domain}"</h4>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Success:</strong> ${data.success}</p>
+                    <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'test-section error';
+                resultDiv.innerHTML = `<h4>Error</h4><pre>${error.message}</pre>`;
+            }
+        }
+
+        async function testLogin() {
+            const resultDiv = document.getElementById('login-result');
+            resultDiv.innerHTML = 'Testing login API...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tenantDomain: 'gbbrrj01',
+                        email: 'mario@email.com',
+                        password: 'Mario2024!'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = 'test-section ' + (data.success ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h4>Login Test Result</h4>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Success:</strong> ${data.success}</p>
+                    <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'test-section error';
+                resultDiv.innerHTML = `<h4>Error</h4><pre>${error.message}</pre>`;
+            }
+        }
+    </script>
+</body>
+</html>

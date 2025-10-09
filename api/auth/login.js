@@ -28,8 +28,16 @@ export default async function handler(req, res) {
   try {
     const { email, password, tenantDomain } = req.body;
 
+    console.log('🔐 Login attempt started:', {
+      email: email ? 'provided' : 'missing',
+      password: password ? 'provided' : 'missing',
+      tenantDomain: tenantDomain || 'missing',
+      timestamp: new Date().toISOString()
+    });
+
     // Validate required fields
     if (!email || !password || !tenantDomain) {
+      console.log('❌ Validation failed - missing required fields');
       return res.status(400).json({
         success: false,
         error: 'Email, password, and tenant domain are required'
@@ -37,12 +45,14 @@ export default async function handler(req, res) {
     }
 
     // Test database connection
+    console.log('🔗 Testing database connection...');
     await testConnection();
+    console.log('✅ Database connection successful');
 
     // Find tenant by domain
-    console.log('Looking for tenant with domain:', tenantDomain);
+    console.log('🔍 Starting tenant lookup for domain:', tenantDomain);
     const tenant = await authService.findTenantByDomain(tenantDomain);
-    console.log('Found tenant:', tenant ? 'YES' : 'NO', tenant);
+    console.log('🔍 Tenant lookup completed:', tenant ? 'SUCCESS' : 'FAILED');
     if (!tenant) {
       return res.status(401).json({
         success: false,
