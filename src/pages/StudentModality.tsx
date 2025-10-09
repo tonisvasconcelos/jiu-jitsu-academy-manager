@@ -5,7 +5,7 @@ import { useStudents } from '../contexts/StudentContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
 import { useStudentModalities, StudentModalityConnection } from '../contexts/StudentModalityContext'
 import { useAuth } from '../contexts/AuthContext'
-import { UserRole } from '../types/api'
+import { UserRole } from '../types/api.js'
 import * as XLSX from 'xlsx'
 
 const StudentModality: React.FC = () => {
