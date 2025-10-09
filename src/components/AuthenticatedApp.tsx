@@ -48,7 +48,7 @@ import FightAssociations from '../pages/FightAssociations'
 import FightAssociationForm from '../pages/FightAssociationForm'
 import ClassSchedules from '../pages/ClassSchedules'
 import ClassScheduleForm from '../pages/ClassScheduleForm'
-import ClassCheckIns from '../pages/ClassCheckIns'
+import ClassCheckIn from '../pages/ClassCheckIn'
 import ClassCheckInForm from '../pages/ClassCheckInForm'
 import Affiliations from '../pages/Affiliations'
 import AffiliationForm from '../pages/AffiliationForm'
@@ -68,8 +68,6 @@ import FightTeams from '../pages/FightTeams'
 import FightTeamForm from '../pages/FightTeamForm'
 import FightPhases from '../pages/FightPhases'
 import FightPhaseForm from '../pages/FightPhaseForm'
-import Fights from '../pages/Fights'
-import FightForm from '../pages/FightForm'
 import BranchRegistration from '../pages/BranchRegistration'
 import BranchForm from '../pages/BranchForm'
 
@@ -163,7 +161,7 @@ const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({
                                                       <Route path="/class-management/schedules" element={<ClassSchedules />} />
                                                       <Route path="/class-management/schedules/:action" element={<ClassScheduleForm />} />
                                                       <Route path="/class-management/schedules/:action/:id" element={<ClassScheduleForm />} />
-                                                      <Route path="/class-management/check-ins" element={<ClassCheckIns />} />
+                                                      <Route path="/class-management/check-ins" element={<ClassCheckIn />} />
                                                       <Route path="/class-management/check-ins/:action" element={<ClassCheckInForm />} />
                                                       <Route path="/class-management/check-ins/:action/:id" element={<ClassCheckInForm />} />
                                                       <Route path="/class-management/check-ins/:action/:id/:studentId" element={<ClassCheckInForm />} />
@@ -193,9 +191,6 @@ const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({
                                                       <Route path="/championships/fight-phases" element={<FightPhases />} />
                                                       <Route path="/championships/fight-phases/:action" element={<FightPhaseForm />} />
                                                       <Route path="/championships/fight-phases/:action/:id" element={<FightPhaseForm />} />
-                                                      <Route path="/championships/fights" element={<Fights />} />
-                                                      <Route path="/championships/fights/:action" element={<FightForm />} />
-                                                      <Route path="/championships/fights/:action/:id" element={<FightForm />} />
                                                     
                                                       {/* Sub-menu Routes - Administration */}
                                                       <Route path="/administration/user-profiles" element={<UserProfiles />} />
