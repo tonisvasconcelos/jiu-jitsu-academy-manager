@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { authService, testConnection } from '../shared/postgresDatabase.js';
+import { authService, testConnection, clearTenantContext } from '../shared/postgresDatabase.js';
 
 export default async function handler(req, res) {
   // Force redeployment - PostgreSQL v2
@@ -38,6 +38,9 @@ export default async function handler(req, res) {
 
     // Test database connection
     await testConnection();
+
+    // Clear any existing tenant context before looking up tenant
+    await clearTenantContext();
 
     // Find tenant by domain
     console.log('Looking for tenant with domain:', tenantDomain);
