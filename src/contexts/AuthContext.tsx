@@ -177,9 +177,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Save to localStorage for persistence
       saveAuthToStorage(result.user, result.tenant);
       
-      // Store test data if available
-      if (result.testData) {
-        localStorage.setItem('testData', JSON.stringify(result.testData));
+      // Store test data for tubaraobjj.com tenant
+      if (result.tenant && result.tenant.id === 'tubaraobjj-tenant') {
+        const testData = {
+          students: [{
+            id: 'student_1',
+            tenantId: 'tubaraobjj-tenant',
+            studentId: 'STU001',
+            firstName: 'Antonio',
+            lastName: 'Vasconcelos',
+            displayName: 'Antonio Vasconcelos',
+            birthDate: '1989-01-01',
+            gender: 'male',
+            beltLevel: 'blue',
+            documentId: '12345678901',
+            email: 'tonisvasconcelos@hotmail.com',
+            phone: '21998010725',
+            branchId: 'main-branch',
+            active: true,
+            isKidsStudent: false,
+            weight: 117,
+            weightDivisionId: 'ultra-heavy',
+            photoUrl: '',
+            preferredLanguage: 'PTB',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          }]
+        };
+        localStorage.setItem('testData', JSON.stringify(testData));
       }
       
       // Reset inactivity timer
