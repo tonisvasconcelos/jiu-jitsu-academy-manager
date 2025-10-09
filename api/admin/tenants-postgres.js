@@ -1,26 +1,7 @@
 import bcrypt from 'bcryptjs';
-import { testConnection } from '../shared/postgresDatabase.js';
-import pgPromise from 'pg-promise';
-
-const pgp = pgPromise();
-const dbConfig = {
-  host: process.env.DB_HOST || 'ep-steep-tooth-ac14qe2b-pooler.sa-east-1.aws.neon.tech',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME || 'neondb',
-  user: process.env.DB_USER || 'neondb_owner',
-  password: process.env.DB_PASSWORD || 'npg_5NJmWgEc4rtU',
-  ssl: { rejectUnauthorized: false },
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-};
-
-const db = pgp(dbConfig);
+import { testConnection, db } from '../shared/postgresDatabase.js';
 
 export default async function handler(req, res) {
-  // Force redeployment - Tenant Management v1
-  console.log('PostgreSQL Tenant Management API called:', req.method, req.body);
-
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -32,6 +13,9 @@ export default async function handler(req, res) {
     res.status(200).end();
     return;
   }
+
+  // Force redeployment - Tenant Management v1
+  console.log('PostgreSQL Tenant Management API called:', req.method, req.body);
 
   try {
     // Test database connection

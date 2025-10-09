@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Lookup Test</title>
+</head>
+<body>
+    <h1>🔍 User Lookup Test</h1>
+    
+    <div style="margin: 20px 0; padding: 15px; background: #e7f3ff; border: 1px solid #b3d9ff; border-radius: 5px;">
+        <h3>📋 Available Tenants:</h3>
+        <ul>
+            <li><strong>demo.jiu-jitsu.com</strong> - Demo Jiu-Jitsu Academy</li>
+            <li><strong>graciebarra-rio.com</strong> - Gracie Barra Rio</li>
+        </ul>
+    </div>
+
+    <div style="margin: 20px 0;">
+        <h3>Test 1: Get Users for Demo Tenant</h3>
+        <button onclick="getUsers('demo.jiu-jitsu.com')">
+            Get Users for demo.jiu-jitsu.com
+        </button>
+        <div id="result1"></div>
+    </div>
+
+    <div style="margin: 20px 0;">
+        <h3>Test 2: Get Users for Gracie Barra Tenant</h3>
+        <button onclick="getUsers('graciebarra-rio.com')">
+            Get Users for graciebarra-rio.com
+        </button>
+        <div id="result2"></div>
+    </div>
+
+    <div style="margin: 20px 0;">
+        <h3>Test 3: Create User for Demo Tenant</h3>
+        <button onclick="createUser('demo.jiu-jitsu.com', 'admin@demo.com', 'Demo2024!')">
+            Create Admin User for Demo
+        </button>
+        <div id="result3"></div>
+    </div>
+
+    <div style="margin: 20px 0;">
+        <h3>Test 4: Create User for Gracie Barra Tenant</h3>
+        <button onclick="createUser('graciebarra-rio.com', 'admin@graciebarra-rio.com', 'Gracie2024!')">
+            Create Admin User for Gracie Barra
+        </button>
+        <div id="result4"></div>
+    </div>
+
+    <script>
+        async function getUsers(domain) {
+            const resultDiv = document.getElementById(domain.includes('demo') ? 'result1' : 'result2');
+            resultDiv.innerHTML = 'Getting users...';
+            
+            try {
+                const response = await fetch('https://oss365.app/api/admin/users', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${data.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${data.success ? '#c3e6cb' : '#f5c6cb'};">
+                        <h4>Users for ${domain}</h4>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Success:</strong> ${data.success}</p>
+                        <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: #f8d7da; border: 1px solid #f5c6cb;">
+                        <h4>Error</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function createUser(domain, email, password) {
+            const resultDiv = document.getElementById(domain.includes('demo') ? 'result3' : 'result4');
+            resultDiv.innerHTML = 'Creating user...';
+            
+            try {
+                const response = await fetch('https://oss365.app/api/admin/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        firstName: 'Admin',
+                        lastName: 'User',
+                        role: 'system_manager',
+                        tenantDomain: domain
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${data.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${data.success ? '#c3e6cb' : '#f5c6cb'};">
+                        <h4>User Creation Result for ${domain}</h4>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Success:</strong> ${data.success}</p>
+                        <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: #f8d7da; border: 1px solid #f5c6cb;">
+                        <h4>Error</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
