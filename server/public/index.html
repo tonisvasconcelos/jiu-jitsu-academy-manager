@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jiu-Jitsu Academy Manager - Public Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .class-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .class-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .class-card h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .class-card p {
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .class-card .time {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #4a5568;
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #c6f6d5;
+            color: #2f855a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .classes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🥋 Jiu-Jitsu Academy</h1>
+            <p>Book your classes and start your martial arts journey</p>
+        </div>
+
+        <!-- Tenant Selection -->
+        <div class="card" id="tenant-selection">
+            <h2>Select Your Academy</h2>
+            <div class="form-group">
+                <label for="tenant-domain">Academy Domain:</label>
+                <input type="text" id="tenant-domain" placeholder="e.g., myacademy.jiu-jitsu.com" value="demo.jiu-jitsu.com">
+            </div>
+            <button class="btn" onclick="loadAcademyInfo()">Load Academy</button>
+        </div>
+
+        <!-- Academy Info -->
+        <div class="card hidden" id="academy-info">
+            <h2 id="academy-name">Academy Name</h2>
+            <p id="academy-details"></p>
+        </div>
+
+        <!-- Classes Section -->
+        <div class="card hidden" id="classes-section">
+            <h2>Available Classes</h2>
+            <div class="form-group">
+                <label for="branch-filter">Filter by Branch:</label>
+                <select id="branch-filter">
+                    <option value="">All Branches</option>
+                </select>
+            </div>
+            <div id="classes-container">
+                <div class="loading">Loading classes...</div>
+            </div>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="card hidden" id="booking-section">
+            <h2>Book a Class</h2>
+            <div id="booking-messages"></div>
+            <form id="booking-form">
+                <div class="form-group">
+                    <label for="booking-first-name">First Name:</label>
+                    <input type="text" id="booking-first-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="booking-last-name">Last Name:</label>
+                    <input type="text" id="booking-last-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="booking-email">Email:</label>
+                    <input type="email" id="booking-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="booking-phone">Phone:</label>
+                    <input type="tel" id="booking-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="booking-class">Select Class:</label>
+                    <select id="booking-class" required>
+                        <option value="">Choose a class...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="booking-notes">Additional Notes:</label>
+                    <textarea id="booking-notes" rows="3" placeholder="Any special requirements or questions..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="preferred-contact">Preferred Contact Method:</label>
+                    <select id="preferred-contact">
+                        <option value="email">Email</option>
+                        <option value="phone">Phone</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Submit Booking Request</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentTenantDomain = '';
+        let currentClasses = [];
+        let currentBranches = [];
+
+        // Load academy information
+        async function loadAcademyInfo() {
+            const tenantDomain = document.getElementById('tenant-domain').value.trim();
+            if (!tenantDomain) {
+                alert('Please enter an academy domain');
+                return;
+            }
+
+            currentTenantDomain = tenantDomain;
+            
+            try {
+                // Load tenant info
+                const tenantResponse = await fetch(`/api/public/tenant-info?tenantDomain=${encodeURIComponent(tenantDomain)}`);
+                const tenantData = await tenantResponse.json();
+                
+                if (!tenantData.success) {
+                    throw new Error(tenantData.error);
+                }
+
+                // Display academy info
+                document.getElementById('academy-name').textContent = tenantData.data.name;
+                document.getElementById('academy-details').innerHTML = `
+                    <strong>Contact:</strong> ${tenantData.data.contactEmail}<br>
+                    ${tenantData.data.contactPhone ? `<strong>Phone:</strong> ${tenantData.data.contactPhone}<br>` : ''}
+                    ${tenantData.data.address ? `<strong>Address:</strong> ${tenantData.data.address}` : ''}
+                `;
+                
+                document.getElementById('academy-info').classList.remove('hidden');
+                document.getElementById('classes-section').classList.remove('hidden');
+                document.getElementById('booking-section').classList.remove('hidden');
+
+                // Load branches and classes
+                await loadBranches();
+                await loadClasses();
+                
+            } catch (error) {
+                alert('Error loading academy: ' + error.message);
+            }
+        }
+
+        // Load branches
+        async function loadBranches() {
+            try {
+                const response = await fetch(`/api/public/branches?tenantDomain=${encodeURIComponent(currentTenantDomain)}`);
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error);
+                }
+
+                currentBranches = data.data;
+                const branchSelect = document.getElementById('branch-filter');
+                const bookingBranchSelect = document.getElementById('booking-class');
+                
+                // Clear existing options
+                branchSelect.innerHTML = '<option value="">All Branches</option>';
+                bookingBranchSelect.innerHTML = '<option value="">Choose a class...</option>';
+                
+                // Add branch options
+                currentBranches.forEach(branch => {
+                    const option = document.createElement('option');
+                    option.value = branch.id;
+                    option.textContent = branch.name;
+                    branchSelect.appendChild(option);
+                });
+
+                // Add event listener for branch filter
+                branchSelect.addEventListener('change', loadClasses);
+                
+            } catch (error) {
+                console.error('Error loading branches:', error);
+            }
+        }
+
+        // Load classes
+        async function loadClasses() {
+            const branchId = document.getElementById('branch-filter').value;
+            const container = document.getElementById('classes-container');
+            
+            container.innerHTML = '<div class="loading">Loading classes...</div>';
+            
+            try {
+                let url = `/api/public/classes?tenantDomain=${encodeURIComponent(currentTenantDomain)}`;
+                if (branchId) {
+                    url += `&branchId=${branchId}`;
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error);
+                }
+
+                currentClasses = data.data;
+                displayClasses(currentClasses);
+                updateBookingClassSelect(currentClasses);
+                
+            } catch (error) {
+                container.innerHTML = `<div class="error">Error loading classes: ${error.message}</div>`;
+            }
+        }
+
+        // Display classes
+        function displayClasses(classes) {
+            const container = document.getElementById('classes-container');
+            
+            if (classes.length === 0) {
+                container.innerHTML = '<div class="loading">No classes available at the moment.</div>';
+                return;
+            }
+
+            const classesHtml = classes.map(cls => `
+                <div class="class-card">
+                    <h3>${cls.name}</h3>
+                    <p><strong>Modality:</strong> ${cls.modality}</p>
+                    <p><strong>Branch:</strong> ${cls.branch_name}</p>
+                    <p><strong>Coach:</strong> ${cls.first_name} ${cls.last_name}</p>
+                    <p class="time"><strong>Time:</strong> ${new Date(cls.start_time).toLocaleString()}</p>
+                    <p><strong>Duration:</strong> ${Math.round((new Date(cls.end_time) - new Date(cls.start_time)) / 60000)} minutes</p>
+                    <p><strong>Available Spots:</strong> ${cls.max_capacity - cls.current_enrollment}</p>
+                </div>
+            `).join('');
+
+            container.innerHTML = `<div class="classes-grid">${classesHtml}</div>`;
+        }
+
+        // Update booking class select
+        function updateBookingClassSelect(classes) {
+            const select = document.getElementById('booking-class');
+            select.innerHTML = '<option value="">Choose a class...</option>';
+            
+            classes.forEach(cls => {
+                const option = document.createElement('option');
+                option.value = cls.id;
+                option.textContent = `${cls.name} - ${new Date(cls.start_time).toLocaleString()} (${cls.branch_name})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Handle booking form submission
+        document.getElementById('booking-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const selectedClassId = document.getElementById('booking-class').value;
+            if (!selectedClassId) {
+                alert('Please select a class');
+                return;
+            }
+
+            const selectedClass = currentClasses.find(cls => cls.id === selectedClassId);
+            if (!selectedClass) {
+                alert('Selected class not found');
+                return;
+            }
+
+            const bookingData = {
+                firstName: document.getElementById('booking-first-name').value,
+                lastName: document.getElementById('booking-last-name').value,
+                email: document.getElementById('booking-email').value,
+                phone: document.getElementById('booking-phone').value,
+                classId: selectedClassId,
+                branchId: selectedClass.branch_id,
+                tenantDomain: currentTenantDomain,
+                notes: document.getElementById('booking-notes').value,
+                preferredContactMethod: document.getElementById('preferred-contact').value
+            };
+
+            const messagesContainer = document.getElementById('booking-messages');
+            messagesContainer.innerHTML = '<div class="loading">Submitting booking request...</div>';
+
+            try {
+                const response = await fetch('/api/public/bookings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bookingData)
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    messagesContainer.innerHTML = `
+                        <div class="success">
+                            ${data.message}
+                        </div>
+                    `;
+                    document.getElementById('booking-form').reset();
+                } else {
+                    messagesContainer.innerHTML = `
+                        <div class="error">
+                            ${data.error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                messagesContainer.innerHTML = `
+                    <div class="error">
+                        Error submitting booking: ${error.message}
+                    </div>
+                `;
+            }
+        });
+
+        // Load demo academy on page load
+        window.addEventListener('load', function() {
+            loadAcademyInfo();
+        });
+    </script>
+</body>
+</html>
