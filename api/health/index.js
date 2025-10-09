@@ -1,7 +1,7 @@
 import { testConnection } from '../shared/postgresDatabase.js';
 
 export default async function handler(req, res) {
-  // Force redeployment - PostgreSQL Health v1
+  // Force redeployment - PostgreSQL Health v2
   console.log('PostgreSQL Health API called:', req.method);
 
   // Set CORS headers
@@ -35,7 +35,8 @@ export default async function handler(req, res) {
         timestamp: dbResult.now,
         type: 'PostgreSQL (Neon)'
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      version: 'PostgreSQL-v2'
     });
 
   } catch (error) {
