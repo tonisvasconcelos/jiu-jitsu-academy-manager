@@ -4,7 +4,6 @@ import { LanguageProvider } from './contexts/LanguageContext'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import LanguageSelector from './components/LanguageSelector'
 import ProtectedRoute from './components/ProtectedRoute'
-import AppWithContexts from './components/AppWithContexts'
 import Login from './pages/Login'
 import AdminPortal from './pages/admin/AdminPortal'
 
@@ -44,13 +43,11 @@ function App() {
               
               {/* Protected Routes - With Layout */}
               <Route path="/*" element={
-                <ProtectedRoute>
-                  <AppWithContexts 
-                    sidebarCollapsed={sidebarCollapsed}
-                    onToggleSidebar={toggleSidebar}
-                    isMobile={isMobile}
-                  />
-                </ProtectedRoute>
+                <ProtectedRoute 
+                  sidebarCollapsed={sidebarCollapsed}
+                  onToggleSidebar={toggleSidebar}
+                  isMobile={isMobile}
+                />
               } />
             </Routes>
           </div>

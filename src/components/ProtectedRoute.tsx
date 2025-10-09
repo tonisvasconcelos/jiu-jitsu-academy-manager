@@ -1,18 +1,28 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types/api';
 
+// Lazy load the AppWithContexts component to prevent early initialization
+const AppWithContexts = lazy(() => import('./AppWithContexts'));
+
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   requiredRole?: UserRole;
   fallbackPath?: string;
+  // Props for AppWithContexts
+  sidebarCollapsed?: boolean;
+  onToggleSidebar?: () => void;
+  isMobile?: boolean;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredRole,
-  fallbackPath = '/login'
+  fallbackPath = '/login',
+  sidebarCollapsed,
+  onToggleSidebar,
+  isMobile
 }) => {
   const { isAuthenticated, isLoading, user, canAccess } = useAuth();
   const location = useLocation();
@@ -63,6 +73,27 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
+  // If we have props for AppWithContexts, render it with lazy loading
+  if (sidebarCollapsed !== undefined && onToggleSidebar && isMobile !== undefined) {
+    return (
+      <Suspense fallback={
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-white">Loading application...</p>
+          </div>
+        </div>
+      }>
+        <AppWithContexts 
+          sidebarCollapsed={sidebarCollapsed}
+          onToggleSidebar={onToggleSidebar}
+          isMobile={isMobile}
+        />
+      </Suspense>
+    );
+  }
+
+  // Otherwise, render children as before
   return <>{children}</>;
 };
 
