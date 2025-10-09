@@ -40,7 +40,9 @@ export default async function handler(req, res) {
     await testConnection();
 
     // Find tenant by domain
+    console.log('Looking for tenant with domain:', tenantDomain);
     const tenant = await authService.findTenantByDomain(tenantDomain);
+    console.log('Found tenant:', tenant ? 'YES' : 'NO', tenant);
     if (!tenant) {
       return res.status(401).json({
         success: false,
