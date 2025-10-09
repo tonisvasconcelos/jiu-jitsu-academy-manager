@@ -2,6 +2,7 @@
 import { userService } from '../shared/hybridDatabase.js';
 
 export default async function handler(req, res) {
+  // Force redeployment - v2
   console.log('Login API called:', req.method, req.body);
   
   // Set CORS headers
