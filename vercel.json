@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "domains": ["oss365.app", "www.oss365.app"],
   "redirects": [
     {
       "source": "https://www.oss365.app/(.*)",
