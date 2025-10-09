@@ -1773,31 +1773,42 @@ const translations: Record<Language, Record<string, string>> = {
   }
 }
 
-export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('PTB')
+interface LanguageProviderProps {
+  children: ReactNode;
+  initialLanguage?: Language;
+}
+
+export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children, initialLanguage = 'PTB' }) => {
+  const [language, setLanguage] = useState<Language>(initialLanguage)
   const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
     try {
+      // Check for selectedLanguage first (from Welcome page), then fallback to language
+      const selectedLanguage = localStorage.getItem('selectedLanguage') as Language
       const savedLanguage = localStorage.getItem('language') as Language
       const validLanguages: Language[] = ['ENU', 'PTB', 'GER', 'FRA', 'ESP', 'JPN', 'ITA', 'RUS', 'ARA', 'KOR']
       
-      if (savedLanguage && validLanguages.includes(savedLanguage)) {
-        setLanguage(savedLanguage)
-      } else if (savedLanguage) {
-        console.warn(`Invalid saved language: ${savedLanguage}, using default: PTB`)
+      // Use selectedLanguage if available, otherwise use savedLanguage, otherwise use initialLanguage
+      const languageToUse = selectedLanguage || savedLanguage || initialLanguage
+      
+      if (languageToUse && validLanguages.includes(languageToUse)) {
+        setLanguage(languageToUse)
+      } else if (languageToUse) {
+        console.warn(`Invalid saved language: ${languageToUse}, using default: ${initialLanguage}`)
       }
     } catch (error) {
       console.error('Error loading language from localStorage:', error)
     } finally {
       setIsInitialized(true)
     }
-  }, [])
+  }, [initialLanguage])
 
   useEffect(() => {
     if (isInitialized) {
       try {
         localStorage.setItem('language', language)
+        localStorage.setItem('selectedLanguage', language)
       } catch (error) {
         console.error('Error saving language to localStorage:', error)
       }
