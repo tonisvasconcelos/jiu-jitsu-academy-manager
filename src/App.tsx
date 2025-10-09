@@ -38,8 +38,8 @@ function App() {
           <Router basename="/">
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
               <Routes>
-                {/* Language Selection Route */}
-                <Route path="/language" element={
+                {/* Language Selection Route - Default landing page */}
+                <Route path="/" element={
                   <ErrorBoundary>
                     <LanguageSelector />
                   </ErrorBoundary>
@@ -56,9 +56,6 @@ function App() {
                     <AdminPortal />
                   </ErrorBoundary>
                 } />
-                
-                {/* Default redirect to login */}
-                <Route path="/" element={<Navigate to="/login" replace />} />
                 
                 {/* Protected Routes - With Layout */}
                 <Route path="/*" element={
