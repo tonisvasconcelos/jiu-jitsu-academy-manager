@@ -1119,7 +1119,20 @@ const translations: Record<Language, Record<string, string>> = {
     'select-language': 'Selecione seu idioma preferido',
     'language': 'Idioma',
     'english': 'Inglês',
-    'portuguese': 'Português'
+    'portuguese': 'Português',
+    
+    // Authentication
+    'sign-in-to-account': 'Entre na sua conta',
+    'welcome-back-message': 'Bem-vindo de volta! Por favor, entre para continuar',
+    'academy-domain': 'Domínio da Academia',
+    'customer-domain': 'Domínio do Cliente',
+    'email-address': 'Endereço de Email',
+    'password': 'Senha',
+    'signing-in': 'Entrando',
+    'sign-in': 'Entrar',
+    'demo-credentials': 'Credenciais Demo',
+    'dont-have-account': 'Não tem uma conta?',
+    'sign-up': 'Cadastrar'
   },
   
   GER: {
