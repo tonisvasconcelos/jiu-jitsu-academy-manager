@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types/api';
@@ -10,20 +10,34 @@ interface ProtectedRouteProps {
   children?: React.ReactNode;
   requiredRole?: UserRole;
   fallbackPath?: string;
-  // Props for AppWithContexts
-  sidebarCollapsed?: boolean;
-  onToggleSidebar?: () => void;
-  isMobile?: boolean;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredRole,
-  fallbackPath = '/login',
-  sidebarCollapsed,
-  onToggleSidebar,
-  isMobile
+  fallbackPath = '/login'
 }) => {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      // On mobile, always start with collapsed sidebar
+      if (window.innerWidth < 768) {
+        setSidebarCollapsed(true);
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  };
   const { isAuthenticated, isLoading, user, canAccess } = useAuth();
   const location = useLocation();
 
@@ -73,28 +87,23 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  // If we have props for AppWithContexts, render it with lazy loading
-  if (sidebarCollapsed !== undefined && onToggleSidebar && isMobile !== undefined) {
-    return (
-      <Suspense fallback={
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <p className="text-white">Loading application...</p>
-          </div>
+  // Render AppWithContexts with lazy loading
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-white">Loading application...</p>
         </div>
-      }>
-        <AppWithContexts 
-          sidebarCollapsed={sidebarCollapsed}
-          onToggleSidebar={onToggleSidebar}
-          isMobile={isMobile}
-        />
-      </Suspense>
-    );
-  }
-
-  // Otherwise, render children as before
-  return <>{children}</>;
+      </div>
+    }>
+      <AppWithContexts
+        sidebarCollapsed={sidebarCollapsed}
+        onToggleSidebar={toggleSidebar}
+        isMobile={isMobile}
+      />
+    </Suspense>
+  );
 };
 
 export default ProtectedRoute;

@@ -1,33 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { LanguageProvider, Language } from './contexts/LanguageContext'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { AuthProvider } from './contexts/AuthContext'
 import WelcomeLanguage from './pages/WelcomeLanguage'
 import ProtectedRoute from './components/ProtectedRoute'
 import ErrorBoundary from './components/ErrorBoundary'
-import LanguageRouter from './components/LanguageRouter'
 import Login from './pages/Login'
 import AdminPortal from './pages/admin/AdminPortal'
 
 function App() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('ENU')
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-      // On mobile, always start with collapsed sidebar
-      if (window.innerWidth < 768) {
-        setSidebarCollapsed(true)
-      }
-    }
-    
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   useEffect(() => {
     // Initialize language from localStorage
@@ -37,12 +19,9 @@ function App() {
     }
   }, [])
 
-  const toggleSidebar = () => {
-    setSidebarCollapsed(!sidebarCollapsed)
-  }
-
   const handleLanguageSelect = (language: Language) => {
     setSelectedLanguage(language)
+    localStorage.setItem('selectedLanguage', language)
   }
 
   return (
@@ -51,12 +30,57 @@ function App() {
         <AuthProvider>
           <Router basename="/">
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-              <LanguageRouter
-                sidebarCollapsed={sidebarCollapsed}
-                onToggleSidebar={toggleSidebar}
-                isMobile={isMobile}
-                onLanguageSelect={handleLanguageSelect}
-              />
+              <Routes>
+                {/* Welcome Language Page - Always in English */}
+                <Route 
+                  path="/welcome-language" 
+                  element={
+                    <ErrorBoundary>
+                      <WelcomeLanguage onLanguageSelect={handleLanguageSelect} />
+                    </ErrorBoundary>
+                  } 
+                />
+                
+                {/* Login Page - Translated based on selected language */}
+                <Route 
+                  path="/login" 
+                  element={
+                    <ErrorBoundary>
+                      <Login />
+                    </ErrorBoundary>
+                  } 
+                />
+                
+                {/* Admin Portal */}
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ErrorBoundary>
+                      <AdminPortal />
+                    </ErrorBoundary>
+                  } 
+                />
+                
+                {/* Protected Routes - With Layout */}
+                <Route 
+                  path="/*" 
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute />
+                    </ErrorBoundary>
+                  } 
+                />
+                
+                {/* Default redirect based on language selection */}
+                <Route 
+                  path="/" 
+                  element={
+                    localStorage.getItem('selectedLanguage') ? 
+                      <Navigate to="/login" replace /> : 
+                      <Navigate to="/welcome-language" replace />
+                  } 
+                />
+              </Routes>
             </div>
           </Router>
         </AuthProvider>
