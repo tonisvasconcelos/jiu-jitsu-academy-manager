@@ -4,7 +4,6 @@ import { Language } from '../contexts/LanguageContext';
 import WelcomeLanguage from '../pages/WelcomeLanguage';
 import Login from '../pages/Login';
 import AdminPortal from '../pages/admin/AdminPortal';
-import TenantCreator from '../pages/TenantCreator';
 import ProtectedRoute from './ProtectedRoute';
 import ErrorBoundary from './ErrorBoundary';
 
@@ -69,16 +68,6 @@ const LanguageRouter: React.FC<LanguageRouterProps> = ({
         element={
           <ErrorBoundary>
             <AdminPortal />
-          </ErrorBoundary>
-        } 
-      />
-      
-      {/* Tenant Creator */}
-      <Route 
-        path="/tenant-creator" 
-        element={
-          <ErrorBoundary>
-            <TenantCreator />
           </ErrorBoundary>
         } 
       />

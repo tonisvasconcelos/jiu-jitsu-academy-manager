@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Creator - OSS365</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .form-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            background: #f8f9fa;
+        }
+        
+        .form-section h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .license-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .license-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+        }
+        
+        .license-item h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .license-item input {
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .result.info {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
+        .credentials {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .credentials h3 {
+            color: #856404;
+            margin-bottom: 20px;
+        }
+        
+        .credentials h4 {
+            color: #856404;
+            margin: 15px 0 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .credentials p {
+            margin: 5px 0;
+            font-size: 1rem;
+        }
+        
+        .credentials strong {
+            color: #495057;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .info-box ol {
+            margin-left: 20px;
+        }
+        
+        .info-box li {
+            margin-bottom: 8px;
+            color: #424242;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .license-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 Tenant Creator</h1>
+            <p>Create new customer licenses for OSS365 Academy Management System</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-box">
+                <h3>📋 Instructions</h3>
+                <ol>
+                    <li>Fill out the company information below</li>
+                    <li>Configure the license limits for your customer</li>
+                    <li>Set up the admin user credentials</li>
+                    <li>Click "Create Tenant & Admin User"</li>
+                    <li>Send the generated credentials to your customer</li>
+                </ol>
+            </div>
+
+            <form id="tenantForm">
+                <div class="form-section">
+                    <h2>🏢 Company Information</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="companyName">Company Name <span class="required">*</span></label>
+                            <input type="text" id="companyName" value="Gracie Barra Copacabana Ltda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyId">Company ID (CNPJ/Tax ID) <span class="required">*</span></label>
+                            <input type="text" id="companyId" value="12.345.678/0001-90" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="domain">Domain (unique identifier) <span class="required">*</span></label>
+                            <input type="text" id="domain" value="gb-copacabana" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Contact Email <span class="required">*</span></label>
+                            <input type="email" id="contactEmail" value="admin@gb-copacabana.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactPhone">Contact Phone <span class="required">*</span></label>
+                            <input type="tel" id="contactPhone" value="+55 21 99999-9999" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address <span class="required">*</span></label>
+                            <input type="text" id="address" value="Rua Copacabana, 123, Rio de Janeiro, RJ, Brazil" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>📋 License Configuration</h2>
+                    
+                    <div class="form-group">
+                        <label for="licenseType">License Type <span class="required">*</span></label>
+                        <select id="licenseType" onchange="updateLicenseLimits()">
+                            <option value="trial">Trial (30 days)</option>
+                            <option value="basic">Basic (1 year)</option>
+                            <option value="professional">Professional (1 year)</option>
+                            <option value="enterprise" selected>Enterprise (1 year)</option>
+                            <option value="custom">Custom License</option>
+                        </select>
+                    </div>
+                    
+                    <div class="license-grid">
+                        <div class="license-item">
+                            <h4>👥 Max Users</h4>
+                            <input type="number" id="maxUsers" min="1" max="1000" value="50" onchange="validateCustomLimits()">
+                        </div>
+                        <div class="license-item">
+                            <h4>👨‍🏫 Max Coaches</h4>
+                            <input type="number" id="maxCoaches" min="1" max="100" value="10" onchange="validateCustomLimits()">
+                        </div>
+                        <div class="license-item">
+                            <h4>🏢 Max Branches</h4>
+                            <input type="number" id="maxBranches" min="1" max="10" value="5" onchange="validateCustomLimits()">
+                        </div>
+                        <div class="license-item">
+                            <h4>🎓 Max Students</h4>
+                            <input type="number" id="maxStudents" min="1" max="10000" value="500" onchange="validateCustomLimits()">
+                        </div>
+                        <div class="license-item">
+                            <h4>📚 Max Classes</h4>
+                            <input type="number" id="maxClasses" min="1" max="500" value="50" onchange="validateCustomLimits()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>👤 Admin User Information</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="adminEmail">Admin Email <span class="required">*</span></label>
+                            <input type="email" id="adminEmail" value="admin@gb-copacabana.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminPassword">Admin Password <span class="required">*</span></label>
+                            <input type="password" id="adminPassword" value="Admin2024!" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name <span class="required">*</span></label>
+                            <input type="text" id="firstName" value="João" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name <span class="required">*</span></label>
+                            <input type="text" id="lastName" value="Silva" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userRole">User Role <span class="required">*</span></label>
+                        <select id="userRole">
+                            <option value="system_manager" selected>System Manager (Full Access)</option>
+                            <option value="branch_manager">Branch Manager (Branch Access)</option>
+                            <option value="coach">Coach (Limited Access)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <button type="button" class="btn" onclick="createTenantAndUser()" id="createBtn">
+                        🚀 Create Tenant & Admin User
+                    </button>
+                    
+                    <button type="button" class="btn btn-secondary" onclick="testLogin()">
+                        🧪 Test Login
+                    </button>
+                    
+                    <button type="button" class="btn btn-danger" onclick="clearForm()">
+                        🗑️ Clear Form
+                    </button>
+                </div>
+            </form>
+
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // License type configurations
+        const licenseConfigs = {
+            trial: { users: 5, coaches: 1, branches: 1, students: 25, classes: 5 },
+            basic: { users: 10, coaches: 2, branches: 1, students: 50, classes: 10 },
+            professional: { users: 25, coaches: 5, branches: 2, students: 100, classes: 20 },
+            enterprise: { users: 50, coaches: 10, branches: 5, students: 500, classes: 50 },
+            custom: { users: 0, coaches: 0, branches: 0, students: 0, classes: 0 }
+        };
+
+        // Update license limits based on selected type
+        function updateLicenseLimits() {
+            const licenseType = document.getElementById('licenseType').value;
+            const config = licenseConfigs[licenseType];
+            
+            if (config) {
+                document.getElementById('maxUsers').value = config.users;
+                document.getElementById('maxCoaches').value = config.coaches;
+                document.getElementById('maxBranches').value = config.branches;
+                document.getElementById('maxStudents').value = config.students;
+                document.getElementById('maxClasses').value = config.classes;
+            }
+        }
+
+        // Validate custom limits
+        function validateCustomLimits() {
+            const licenseType = document.getElementById('licenseType').value;
+            if (licenseType === 'custom') {
+                return true;
+            }
+            
+            const maxUsers = parseInt(document.getElementById('maxUsers').value);
+            const maxCoaches = parseInt(document.getElementById('maxCoaches').value);
+            const maxBranches = parseInt(document.getElementById('maxBranches').value);
+            const maxStudents = parseInt(document.getElementById('maxStudents').value);
+            
+            if (maxUsers < 1 || maxCoaches < 1 || maxBranches < 1 || maxStudents < 1) {
+                alert('All limits must be at least 1');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Clear form
+        function clearForm() {
+            if (confirm('Are you sure you want to clear all form data?')) {
+                document.getElementById('tenantForm').reset();
+                document.getElementById('result').innerHTML = '';
+            }
+        }
+
+        // Create tenant and user
+        async function createTenantAndUser() {
+            const resultDiv = document.getElementById('result');
+            const createBtn = document.getElementById('createBtn');
+            
+            // Get form values
+            const formData = {
+                companyName: document.getElementById('companyName').value,
+                companyId: document.getElementById('companyId').value,
+                domain: document.getElementById('domain').value,
+                contactEmail: document.getElementById('contactEmail').value,
+                contactPhone: document.getElementById('contactPhone').value,
+                address: document.getElementById('address').value,
+                licenseType: document.getElementById('licenseType').value,
+                maxUsers: parseInt(document.getElementById('maxUsers').value),
+                maxCoaches: parseInt(document.getElementById('maxCoaches').value),
+                maxBranches: parseInt(document.getElementById('maxBranches').value),
+                maxStudents: parseInt(document.getElementById('maxStudents').value),
+                maxClasses: parseInt(document.getElementById('maxClasses').value),
+                adminEmail: document.getElementById('adminEmail').value,
+                adminPassword: document.getElementById('adminPassword').value,
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                userRole: document.getElementById('userRole').value
+            };
+
+            // Validate required fields
+            if (!formData.companyName || !formData.companyId || !formData.domain || 
+                !formData.contactEmail || !formData.adminEmail || !formData.adminPassword || 
+                !formData.firstName || !formData.lastName) {
+                resultDiv.innerHTML = '<div class="result error">❌ Please fill in all required fields (marked with *)</div>';
+                return;
+            }
+
+            // Validate license limits
+            if (!validateCustomLimits()) {
+                return;
+            }
+
+            // Show loading state
+            createBtn.innerHTML = '<span class="loading"></span>Creating...';
+            createBtn.disabled = true;
+            resultDiv.innerHTML = '<div class="result info">Creating tenant and admin user...</div>';
+
+            try {
+                // Step 1: Create tenant
+                const tenantResponse = await fetch('/api/admin/tenants', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: formData.companyName,
+                        domain: formData.domain,
+                        plan: formData.licenseType,
+                        contactEmail: formData.contactEmail,
+                        contactPhone: formData.contactPhone,
+                        address: formData.address,
+                        companyId: formData.companyId,
+                        licenseLimits: {
+                            users: formData.maxUsers,
+                            coaches: formData.maxCoaches,
+                            branches: formData.maxBranches,
+                            students: formData.maxStudents,
+                            classes: formData.maxClasses
+                        }
+                    })
+                });
+                
+                const tenantData = await tenantResponse.json();
+                
+                let resultHtml = `
+                    <div class="result ${tenantData.success ? 'success' : 'error'}">
+                        <h3>🏢 Tenant Creation Result</h3>
+                        <p><strong>Status:</strong> ${tenantResponse.status}</p>
+                        <p><strong>Success:</strong> ${tenantData.success}</p>
+                        <p><strong>Message:</strong> ${tenantData.message || tenantData.error || 'No message'}</p>
+                    </div>
+                `;
+                
+                if (tenantData.success) {
+                    // Step 2: Create admin user
+                    const userResponse = await fetch('/api/admin/users', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tenantDomain: formData.domain,
+                            email: formData.adminEmail,
+                            password: formData.adminPassword,
+                            firstName: formData.firstName,
+                            lastName: formData.lastName,
+                            role: formData.userRole
+                        })
+                    });
+                    
+                    const userData = await userResponse.json();
+                    
+                    resultHtml += `
+                        <div class="result ${userData.success ? 'success' : 'error'}">
+                            <h3>👤 Admin User Creation Result</h3>
+                            <p><strong>Status:</strong> ${userResponse.status}</p>
+                            <p><strong>Success:</strong> ${userData.success}</p>
+                            <p><strong>Message:</strong> ${userData.message || userData.error || 'No message'}</p>
+                        </div>
+                    `;
+                    
+                    if (userData.success) {
+                        resultHtml += `
+                            <div class="credentials">
+                                <h3>🎉 Success! Customer License Created</h3>
+                                
+                                <h4>🏢 Company Information:</h4>
+                                <p><strong>Company Name:</strong> ${formData.companyName}</p>
+                                <p><strong>Company ID:</strong> ${formData.companyId}</p>
+                                <p><strong>Domain:</strong> ${formData.domain}</p>
+                                <p><strong>Contact Email:</strong> ${formData.contactEmail}</p>
+                                <p><strong>Contact Phone:</strong> ${formData.contactPhone}</p>
+                                <p><strong>Address:</strong> ${formData.address}</p>
+                                
+                                <h4>📋 License Information:</h4>
+                                <p><strong>License Type:</strong> ${formData.licenseType.toUpperCase()}</p>
+                                <p><strong>Max Users:</strong> ${formData.maxUsers}</p>
+                                <p><strong>Max Coaches:</strong> ${formData.maxCoaches}</p>
+                                <p><strong>Max Branches:</strong> ${formData.maxBranches}</p>
+                                <p><strong>Max Students:</strong> ${formData.maxStudents}</p>
+                                <p><strong>Max Classes:</strong> ${formData.maxClasses}</p>
+                                
+                                <h4>👤 Admin User Access:</h4>
+                                <p><strong>Name:</strong> ${formData.firstName} ${formData.lastName}</p>
+                                <p><strong>Email:</strong> ${formData.adminEmail}</p>
+                                <p><strong>Password:</strong> ${formData.adminPassword}</p>
+                                <p><strong>Role:</strong> ${formData.userRole.replace('_', ' ').toUpperCase()}</p>
+                                
+                                <hr style="margin: 20px 0;">
+                                <p><strong>🔗 Login URL:</strong> <a href="/login" target="_blank">https://oss365.app/login</a></p>
+                                <p><strong>📧 Send these credentials to your customer</strong></p>
+                            </div>
+                        `;
+                    }
+                }
+                
+                resultDiv.innerHTML = resultHtml;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Error</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                // Reset button state
+                createBtn.innerHTML = '🚀 Create Tenant & Admin User';
+                createBtn.disabled = false;
+            }
+        }
+
+        // Test login
+        async function testLogin() {
+            const resultDiv = document.getElementById('result');
+            const domain = document.getElementById('domain').value;
+            const adminEmail = document.getElementById('adminEmail').value;
+            const adminPassword = document.getElementById('adminPassword').value;
+
+            if (!domain || !adminEmail || !adminPassword) {
+                resultDiv.innerHTML = '<div class="result error">❌ Please create a tenant first or fill in the domain, email, and password fields.</div>';
+                return;
+            }
+
+            resultDiv.innerHTML = '<div class="result info">Testing login...</div>';
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tenantDomain: domain,
+                        email: adminEmail,
+                        password: adminPassword
+                    })
+                });
+                
+                const data = await response.json();
+                
+                const resultHtml = `
+                    <div class="result ${data.success ? 'success' : 'error'}">
+                        <h3>🧪 Login Test Result</h3>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Success:</strong> ${data.success}</p>
+                        <p><strong>Message:</strong> ${data.message || data.error || 'No message'}</p>
+                        ${data.success ? '<p><strong>🎉 Login successful! You can now access your academy.</strong></p>' : ''}
+                    </div>
+                `;
+                
+                resultDiv.innerHTML = resultHtml;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Login Test Error</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

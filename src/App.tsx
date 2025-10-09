@@ -8,7 +8,6 @@ import ErrorBoundary from './components/ErrorBoundary'
 import LanguageRouter from './components/LanguageRouter'
 import Login from './pages/Login'
 import AdminPortal from './pages/admin/AdminPortal'
-import TenantCreator from './pages/TenantCreator'
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
