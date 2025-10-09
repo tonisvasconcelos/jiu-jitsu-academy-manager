@@ -57,11 +57,6 @@ import ChampionshipCategoryForm from '../pages/ChampionshipCategoryForm'
 import ChampionshipRegistrations from '../pages/ChampionshipRegistrations'
 import ChampionshipRegistrationForm from '../pages/ChampionshipRegistrationForm'
 import ChampionshipResults from '../pages/ChampionshipResults'
-import ChampionshipResultForm from '../pages/ChampionshipResultForm'
-import ChampionshipOfficials from '../pages/ChampionshipOfficials'
-import ChampionshipOfficialForm from '../pages/ChampionshipOfficialForm'
-import ChampionshipSponsors from '../pages/ChampionshipSponsors'
-import ChampionshipSponsorForm from '../pages/ChampionshipSponsorForm'
 import ChampionshipQualifiedLocations from '../pages/ChampionshipQualifiedLocations'
 import ChampionshipQualifiedLocationForm from '../pages/ChampionshipQualifiedLocationForm'
 import FightTeams from '../pages/FightTeams'
@@ -174,14 +169,6 @@ const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({
                                                       <Route path="/championships/registrations/:action" element={<ChampionshipRegistrationForm />} />
                                                       <Route path="/championships/registrations/:action/:id" element={<ChampionshipRegistrationForm />} />
                                                       <Route path="/championships/results" element={<ChampionshipResults />} />
-                                                      <Route path="/championships/results/:action" element={<ChampionshipResultForm />} />
-                                                      <Route path="/championships/results/:action/:id" element={<ChampionshipResultForm />} />
-                                                      <Route path="/championships/officials" element={<ChampionshipOfficials />} />
-                                                      <Route path="/championships/officials/:action" element={<ChampionshipOfficialForm />} />
-                                                      <Route path="/championships/officials/:action/:id" element={<ChampionshipOfficialForm />} />
-                                                      <Route path="/championships/sponsors" element={<ChampionshipSponsors />} />
-                                                      <Route path="/championships/sponsors/:action" element={<ChampionshipSponsorForm />} />
-                                                      <Route path="/championships/sponsors/:action/:id" element={<ChampionshipSponsorForm />} />
                                                       <Route path="/championships/qualified-locations" element={<ChampionshipQualifiedLocations />} />
                                                       <Route path="/championships/qualified-locations/:action" element={<ChampionshipQualifiedLocationForm />} />
                                                       <Route path="/championships/qualified-locations/:action/:id" element={<ChampionshipQualifiedLocationForm />} />
