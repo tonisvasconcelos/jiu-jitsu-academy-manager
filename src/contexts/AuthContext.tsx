@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react'
-import { apiClient, LoginCredentials, RegisterData, AuthResult } from '../services/api'
-import { User, Tenant, UserRole } from '../types/api'
+import { apiClient } from '../services/api'
+import type { LoginCredentials, RegisterData, AuthResult, User, Tenant, UserRole } from '../types/api'
 
 interface AuthContextType {
   // State
