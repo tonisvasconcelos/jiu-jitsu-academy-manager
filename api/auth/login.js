@@ -1,12 +1,12 @@
-// Import hybrid database service
-import { userService } from '../shared/hybridDatabase.js';
+import bcrypt from 'bcryptjs';
+import { authService, testConnection } from '../shared/postgresDatabase.js';
 
 export default async function handler(req, res) {
-  // Force redeployment - v2
-  console.log('Login API called:', req.method, req.body);
-  
+  // Force redeployment - PostgreSQL v2
+  console.log('PostgreSQL Login API called:', req.method, req.body);
+
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', 'https://oss365.app');
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins for testing
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -19,75 +19,122 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== 'POST') {
-    console.log('Method not allowed:', req.method);
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ 
+      success: false, 
+      error: 'Method not allowed' 
+    });
   }
 
-    try {
-      const { domain, email, password } = req.body;
-      console.log('Login attempt:', { domain, email, password: password ? '***' : 'missing' });
+  try {
+    const { email, password, tenantDomain } = req.body;
 
-      if (!domain || !email || !password) {
-        console.log('Missing required fields');
-        return res.status(400).json({ error: 'Missing required fields' });
-      }
-
-      // Use database service for authentication
-      const authResult = await userService.authenticate(email, password, domain);
-      console.log('Authentication result:', authResult.success ? 'success' : 'failed');
-
-      if (!authResult.success) {
-        return res.status(401).json({ error: authResult.error });
-      }
-
-      // Generate token
-      const token = Buffer.from(JSON.stringify({
-        userId: authResult.user.id,
-        tenantId: authResult.tenant.id,
-        role: authResult.user.role,
-        email: authResult.user.email
-      })).toString('base64');
-
-      // Add test data for tubaraobjj.com tenant
-      let testData = {};
-      if (authResult.tenant.id === 'tubaraobjj-tenant') {
-        testData = {
-          students: [{
-            id: 'student_1',
-            tenantId: 'tubaraobjj-tenant',
-            studentId: 'STU001',
-            firstName: 'Antonio',
-            lastName: 'Vasconcelos',
-            displayName: 'Antonio Vasconcelos',
-            birthDate: '1989-01-01',
-            gender: 'male',
-            beltLevel: 'blue',
-            documentId: '12345678901',
-            email: 'tonisvasconcelos@hotmail.com',
-            phone: '21998010725',
-            branchId: 'main-branch',
-            active: true,
-            isKidsStudent: false,
-            weight: 117,
-            weightDivisionId: 'ultra-heavy',
-            photoUrl: '',
-            preferredLanguage: 'PTB',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }]
-        };
-      }
-
-      res.status(200).json({
-        success: true,
-        token,
-        user: authResult.user,
-        tenant: authResult.tenant,
-        testData
+    // Validate required fields
+    if (!email || !password || !tenantDomain) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email, password, and tenant domain are required'
       });
+    }
+
+    // Test database connection
+    await testConnection();
+
+    // Find tenant by domain
+    const tenant = await authService.findTenantByDomain(tenantDomain);
+    if (!tenant) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid tenant domain'
+      });
+    }
+
+    if (!tenant.is_active) {
+      return res.status(401).json({
+        success: false,
+        error: 'Tenant account is inactive'
+      });
+    }
+
+    // Check if license is still valid
+    if (new Date(tenant.license_end) < new Date()) {
+      return res.status(401).json({
+        success: false,
+        error: 'Tenant license has expired'
+      });
+    }
+
+    // Find user by email within tenant
+    const user = await authService.findUserByEmail(email, tenant.id);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid credentials'
+      });
+    }
+
+    // Verify password
+    const isValidPassword = await bcrypt.compare(password, user.password_hash);
+    if (!isValidPassword) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid credentials'
+      });
+    }
+
+    // Check user status
+    if (user.status === 'suspended') {
+      return res.status(401).json({
+        success: false,
+        error: 'Account is suspended'
+      });
+    }
+
+    if (user.status === 'inactive') {
+      return res.status(401).json({
+        success: false,
+        error: 'Account is inactive'
+      });
+    }
+
+    // Update last login
+    await authService.updateLastLogin(user.id, tenant.id);
+
+    // Generate simple token (in production, use proper JWT)
+    const token = Buffer.from(`${user.id}:${tenant.id}:${Date.now()}`).toString('base64');
+
+    // Return success response
+    return res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        role: user.role,
+        status: user.status,
+        branchId: user.branch_id,
+        avatarUrl: user.avatar_url,
+        lastLogin: user.last_login
+      },
+      tenant: {
+        id: tenant.id,
+        name: tenant.name,
+        domain: tenant.domain,
+        plan: tenant.plan,
+        licenseStart: tenant.license_start,
+        licenseEnd: tenant.license_end,
+        isActive: tenant.is_active,
+        settings: tenant.settings
+      }
+    });
 
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('PostgreSQL Login error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      details: error.message
+    });
   }
 }
