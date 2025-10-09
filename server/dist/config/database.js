@@ -19,12 +19,12 @@ const pgp = (0, pg_promise_1.default)({
 });
 exports.pgp = pgp;
 const dbConfig = {
-    host: process.env.DB_HOST || 'localhost',
+    host: process.env.DB_HOST || 'ep-steep-tooth-ac14qe2b-pooler.sa-east-1.aws.neon.tech',
     port: parseInt(process.env.DB_PORT || '5432'),
-    database: process.env.DB_NAME || 'jiu_jitsu_academy_manager',
-    user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || 'password',
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    database: process.env.DB_NAME || 'neondb',
+    user: process.env.DB_USER || 'neondb_owner',
+    password: process.env.DB_PASSWORD || 'npg_5NJmWgEc4rtU',
+    ssl: { rejectUnauthorized: false },
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,

@@ -313,12 +313,14 @@ async function migrate(): Promise<void> {
 async function createRLSPolicies(): Promise<void> {
   console.log('🔒 Creating RLS policies...');
 
-  const tables = [
-    'tenants', 'branches', 'users', 'students', 'classes', 
+  // Tables that have tenant_id column (exclude tenants table)
+  const tenantTables = [
+    'branches', 'users', 'students', 'classes', 
     'enrollments', 'check_ins', 'student_modalities', 'bookings', 'subscriptions'
   ];
 
-  for (const table of tables) {
+  // Create tenant isolation policies for tables with tenant_id
+  for (const table of tenantTables) {
     // Drop existing policies if they exist
     await db.none(`DROP POLICY IF EXISTS tenant_isolation_policy ON ${table};`);
     

@@ -19,12 +19,12 @@ const pgp = pgPromise({
 
 // Database configuration
 const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'ep-steep-tooth-ac14qe2b-pooler.sa-east-1.aws.neon.tech',
   port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME || 'jiu_jitsu_academy_manager',
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'password',
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  database: process.env.DB_NAME || 'neondb',
+  user: process.env.DB_USER || 'neondb_owner',
+  password: process.env.DB_PASSWORD || 'npg_5NJmWgEc4rtU',
+  ssl: { rejectUnauthorized: false }, // Always use SSL for Neon
   max: 20, // Maximum number of clients in the pool
   idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
