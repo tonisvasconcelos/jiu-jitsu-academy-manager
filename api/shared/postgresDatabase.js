@@ -28,6 +28,9 @@ const dbConfig = {
 // Create database connection
 const db = pgp(dbConfig);
 
+// Export db for use in other modules
+export { db };
+
 // Test database connection
 export const testConnection = async () => {
   try {
@@ -72,15 +75,28 @@ export const authService = {
       // Set search path to ensure we're querying the right schema
       await db.none('SET search_path TO public, pg_catalog');
       
-      // Normalize domain comparison and fully qualify schema
-      const tenant = await db.oneOrNone(`
-        SELECT id, domain, name, plan, license_start, license_end, is_active, 
-               contact_email, contact_phone, address, created_at, updated_at, license_limits
+      // First, let's see what's actually in the database
+      const allTenants = await db.any('SELECT id, domain, name, is_active FROM public.tenants ORDER BY domain');
+      console.log('🔍 All tenants in database:', allTenants);
+      
+      // Test exact match first
+      const exactMatch = await db.oneOrNone(`
+        SELECT id, domain, name, is_active 
         FROM public.tenants 
-        WHERE lower(trim(domain)) = lower(trim($1)) 
-          AND is_active = true
-        LIMIT 1
+        WHERE domain = $1
       `, [domain]);
+      console.log('🔍 Exact match result:', exactMatch);
+      
+      // Test normalized match
+      const normalizedMatch = await db.oneOrNone(`
+        SELECT id, domain, name, is_active 
+        FROM public.tenants 
+        WHERE lower(trim(domain)) = lower(trim($1))
+      `, [domain]);
+      console.log('🔍 Normalized match result:', normalizedMatch);
+      
+      // Use the exact match for now
+      const tenant = exactMatch;
       
       console.log('🔍 Tenant lookup - Result:', tenant ? 'FOUND' : 'NOT FOUND');
       if (tenant) {
