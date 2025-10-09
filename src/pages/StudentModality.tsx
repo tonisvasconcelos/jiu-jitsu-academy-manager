@@ -4,13 +4,16 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { useStudents } from '../contexts/StudentContext'
 import { useFightModalities } from '../contexts/FightModalityContext'
 import { useStudentModalities, StudentModalityConnection } from '../contexts/StudentModalityContext'
+import { useAuth } from '../contexts/AuthContext'
+import { UserRole } from '../types/api'
 import * as XLSX from 'xlsx'
 
 const StudentModality: React.FC = () => {
   const { t } = useLanguage()
   const { students } = useStudents()
   const { modalities } = useFightModalities()
-  const { connections, addConnection } = useStudentModalities()
+  const { connections, addConnection, deleteConnection } = useStudentModalities()
+  const { hasAnyRole } = useAuth()
   
   // Filter states
   const [searchTerm, setSearchTerm] = useState('')
@@ -208,6 +211,33 @@ const StudentModality: React.FC = () => {
     // Save file
     XLSX.writeFile(wb, filename)
   }
+
+  // Delete connection handler
+  const handleDeleteConnection = async (connectionId: string) => {
+    const connection = connections.find(c => c.connectionId === connectionId)
+    if (!connection) return
+
+    const student = students.find(s => s.studentId === connection.studentId)
+    const studentName = student ? student.displayName : 'Unknown Student'
+    
+    // Show confirmation dialog
+    const confirmed = window.confirm(
+      `Are you sure you want to delete the modality assignment for ${studentName}?\n\nThis action cannot be undone.`
+    )
+    
+    if (confirmed) {
+      try {
+        deleteConnection(connectionId)
+        console.log('Connection deleted:', connectionId)
+      } catch (error) {
+        console.error('Error deleting connection:', error)
+        alert('Failed to delete the assignment. Please try again.')
+      }
+    }
+  }
+
+  // Check if user can delete connections
+  const canDeleteConnections = hasAnyRole([UserRole.SYSTEM_MANAGER, UserRole.BRANCH_MANAGER, UserRole.COACH])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
@@ -527,6 +557,15 @@ const StudentModality: React.FC = () => {
                             >
                               ✏️ Edit
                             </Link>
+                            {canDeleteConnections && (
+                              <button
+                                onClick={() => handleDeleteConnection(connection.connectionId)}
+                                className="text-red-400 hover:text-red-300 transition-colors"
+                                title="Delete Assignment"
+                              >
+                                🗑️ Delete
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>
