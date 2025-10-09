@@ -32,40 +32,76 @@
     </div>
 
     <div class="form-section">
-        <h2>🏫 Academy Information</h2>
+        <h2>🏢 Company Information</h2>
         
         <div class="form-group">
-            <label for="academyName">Academy Name:</label>
-            <input type="text" id="academyName" placeholder="e.g., Gracie Barra Copacabana" value="Gracie Barra Copacabana">
+            <label for="companyName">Company Name *:</label>
+            <input type="text" id="companyName" placeholder="e.g., Gracie Barra Copacabana Ltda" value="Gracie Barra Copacabana Ltda">
         </div>
 
         <div class="form-group">
-            <label for="domain">Domain (unique identifier):</label>
+            <label for="companyId">Company ID (CNPJ/Tax ID) *:</label>
+            <input type="text" id="companyId" placeholder="e.g., 12.345.678/0001-90" value="12.345.678/0001-90">
+        </div>
+
+        <div class="form-group">
+            <label for="domain">Domain (unique identifier) *:</label>
             <input type="text" id="domain" placeholder="e.g., gb-copacabana" value="gb-copacabana">
         </div>
 
         <div class="form-group">
-            <label for="contactEmail">Contact Email:</label>
+            <label for="contactEmail">Contact Email *:</label>
             <input type="email" id="contactEmail" placeholder="e.g., admin@gb-copacabana.com" value="admin@gb-copacabana.com">
         </div>
 
         <div class="form-group">
-            <label for="contactPhone">Contact Phone:</label>
+            <label for="contactPhone">Contact Phone *:</label>
             <input type="tel" id="contactPhone" placeholder="e.g., +55 21 99999-9999" value="+55 21 99999-9999">
         </div>
 
         <div class="form-group">
-            <label for="address">Address:</label>
-            <input type="text" id="address" placeholder="e.g., Copacabana, Rio de Janeiro, Brazil" value="Copacabana, Rio de Janeiro, Brazil">
+            <label for="address">Address *:</label>
+            <input type="text" id="address" placeholder="e.g., Rua Copacabana, 123, Rio de Janeiro, RJ, Brazil" value="Rua Copacabana, 123, Rio de Janeiro, RJ, Brazil">
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h2>📋 License Configuration</h2>
+        
+        <div class="form-group">
+            <label for="licenseType">License Type *:</label>
+            <select id="licenseType" onchange="updateLicenseLimits()">
+                <option value="trial">Trial (30 days)</option>
+                <option value="basic">Basic (1 year)</option>
+                <option value="professional">Professional (1 year)</option>
+                <option value="enterprise" selected>Enterprise (1 year)</option>
+                <option value="custom">Custom License</option>
+            </select>
         </div>
 
         <div class="form-group">
-            <label for="plan">License Plan:</label>
-            <select id="plan">
-                <option value="basic">Basic (50 students, 2 coaches)</option>
-                <option value="professional">Professional (100 students, 5 coaches)</option>
-                <option value="enterprise" selected>Enterprise (Unlimited)</option>
-            </select>
+            <label for="maxUsers">Maximum Users *:</label>
+            <input type="number" id="maxUsers" min="1" max="1000" value="50" onchange="validateCustomLimits()">
+        </div>
+
+        <div class="form-group">
+            <label for="maxCoaches">Maximum Coaches *:</label>
+            <input type="number" id="maxCoaches" min="1" max="100" value="5" onchange="validateCustomLimits()">
+        </div>
+
+        <div class="form-group">
+            <label for="maxBranches">Maximum Branches *:</label>
+            <input type="number" id="maxBranches" min="1" max="10" value="1" onchange="validateCustomLimits()">
+        </div>
+
+        <div class="form-group">
+            <label for="maxStudents">Maximum Students *:</label>
+            <input type="number" id="maxStudents" min="1" max="10000" value="100" onchange="validateCustomLimits()">
+        </div>
+
+        <div class="form-group">
+            <label for="maxClasses">Maximum Classes:</label>
+            <input type="number" id="maxClasses" min="1" max="500" value="20" onchange="validateCustomLimits()">
         </div>
     </div>
 
@@ -73,23 +109,32 @@
         <h2>👤 Admin User Information</h2>
         
         <div class="form-group">
-            <label for="adminEmail">Admin Email:</label>
+            <label for="adminEmail">Admin Email *:</label>
             <input type="email" id="adminEmail" placeholder="e.g., admin@gb-copacabana.com" value="admin@gb-copacabana.com">
         </div>
 
         <div class="form-group">
-            <label for="adminPassword">Admin Password:</label>
+            <label for="adminPassword">Admin Password *:</label>
             <input type="password" id="adminPassword" placeholder="Enter a secure password" value="Admin2024!">
         </div>
 
         <div class="form-group">
-            <label for="firstName">First Name:</label>
+            <label for="firstName">First Name *:</label>
             <input type="text" id="firstName" placeholder="e.g., João" value="João">
         </div>
 
         <div class="form-group">
-            <label for="lastName">Last Name:</label>
+            <label for="lastName">Last Name *:</label>
             <input type="text" id="lastName" placeholder="e.g., Silva" value="Silva">
+        </div>
+
+        <div class="form-group">
+            <label for="userRole">User Role *:</label>
+            <select id="userRole">
+                <option value="system_manager" selected>System Manager (Full Access)</option>
+                <option value="branch_manager">Branch Manager (Branch Access)</option>
+                <option value="coach">Coach (Limited Access)</option>
+            </select>
         </div>
     </div>
 
@@ -106,26 +151,83 @@
     </div>
 
     <script>
+        // License type configurations
+        const licenseConfigs = {
+            trial: { users: 5, coaches: 1, branches: 1, students: 25, classes: 5 },
+            basic: { users: 10, coaches: 2, branches: 1, students: 50, classes: 10 },
+            professional: { users: 25, coaches: 5, branches: 2, students: 100, classes: 20 },
+            enterprise: { users: 50, coaches: 10, branches: 5, students: 500, classes: 50 },
+            custom: { users: 0, coaches: 0, branches: 0, students: 0, classes: 0 }
+        };
+
+        // Update license limits based on selected type
+        function updateLicenseLimits() {
+            const licenseType = document.getElementById('licenseType').value;
+            const config = licenseConfigs[licenseType];
+            
+            if (config) {
+                document.getElementById('maxUsers').value = config.users;
+                document.getElementById('maxCoaches').value = config.coaches;
+                document.getElementById('maxBranches').value = config.branches;
+                document.getElementById('maxStudents').value = config.students;
+                document.getElementById('maxClasses').value = config.classes;
+            }
+        }
+
+        // Validate custom limits
+        function validateCustomLimits() {
+            const licenseType = document.getElementById('licenseType').value;
+            if (licenseType === 'custom') {
+                // Custom limits - no validation needed
+                return true;
+            }
+            
+            // For predefined types, ensure limits don't exceed reasonable bounds
+            const maxUsers = parseInt(document.getElementById('maxUsers').value);
+            const maxCoaches = parseInt(document.getElementById('maxCoaches').value);
+            const maxBranches = parseInt(document.getElementById('maxBranches').value);
+            const maxStudents = parseInt(document.getElementById('maxStudents').value);
+            
+            if (maxUsers < 1 || maxCoaches < 1 || maxBranches < 1 || maxStudents < 1) {
+                alert('All limits must be at least 1');
+                return false;
+            }
+            
+            return true;
+        }
+
         async function createTenantAndUser() {
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = 'Creating tenant and admin user...';
             
             // Get form values
-            const academyName = document.getElementById('academyName').value;
+            const companyName = document.getElementById('companyName').value;
+            const companyId = document.getElementById('companyId').value;
             const domain = document.getElementById('domain').value;
             const contactEmail = document.getElementById('contactEmail').value;
             const contactPhone = document.getElementById('contactPhone').value;
             const address = document.getElementById('address').value;
-            const plan = document.getElementById('plan').value;
+            const licenseType = document.getElementById('licenseType').value;
+            const maxUsers = parseInt(document.getElementById('maxUsers').value);
+            const maxCoaches = parseInt(document.getElementById('maxCoaches').value);
+            const maxBranches = parseInt(document.getElementById('maxBranches').value);
+            const maxStudents = parseInt(document.getElementById('maxStudents').value);
+            const maxClasses = parseInt(document.getElementById('maxClasses').value);
             const adminEmail = document.getElementById('adminEmail').value;
             const adminPassword = document.getElementById('adminPassword').value;
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
+            const userRole = document.getElementById('userRole').value;
 
             // Validate required fields
-            if (!academyName || !domain || !contactEmail || !adminEmail || !adminPassword) {
+            if (!companyName || !companyId || !domain || !contactEmail || !adminEmail || !adminPassword || !firstName || !lastName) {
                 resultDiv.className = 'result error';
-                resultDiv.innerHTML = '❌ Please fill in all required fields (Academy Name, Domain, Contact Email, Admin Email, Admin Password)';
+                resultDiv.innerHTML = '❌ Please fill in all required fields (marked with *)';
+                return;
+            }
+
+            // Validate license limits
+            if (!validateCustomLimits()) {
                 return;
             }
 
@@ -135,17 +237,19 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        name: academyName,
+                        name: companyName,
                         domain: domain,
-                        plan: plan,
+                        plan: licenseType,
                         contactEmail: contactEmail,
                         contactPhone: contactPhone,
                         address: address,
+                        companyId: companyId,
                         licenseLimits: {
-                            students: plan === 'basic' ? 50 : plan === 'professional' ? 100 : 1000,
-                            coaches: plan === 'basic' ? 2 : plan === 'professional' ? 5 : 20,
-                            branches: 1,
-                            classes: plan === 'basic' ? 10 : plan === 'professional' ? 20 : 50
+                            users: maxUsers,
+                            coaches: maxCoaches,
+                            branches: maxBranches,
+                            students: maxStudents,
+                            classes: maxClasses
                         }
                     })
                 });
@@ -172,7 +276,7 @@
                             password: adminPassword,
                             firstName: firstName,
                             lastName: lastName,
-                            role: 'system_manager'
+                            role: userRole
                         })
                     });
                     
@@ -190,14 +294,33 @@
                     if (userData.success) {
                         resultHtml += `
                             <div class="credentials">
-                                <h3>🎉 Success! Your Login Credentials:</h3>
-                                <p><strong>🏢 Academy:</strong> ${academyName}</p>
-                                <p><strong>🌐 Domain:</strong> ${domain}</p>
-                                <p><strong>📧 Email:</strong> ${adminEmail}</p>
-                                <p><strong>🔑 Password:</strong> ${adminPassword}</p>
-                                <p><strong>📋 Plan:</strong> ${plan}</p>
+                                <h3>🎉 Success! Customer License Created</h3>
+                                
+                                <h4>🏢 Company Information:</h4>
+                                <p><strong>Company Name:</strong> ${companyName}</p>
+                                <p><strong>Company ID:</strong> ${companyId}</p>
+                                <p><strong>Domain:</strong> ${domain}</p>
+                                <p><strong>Contact Email:</strong> ${contactEmail}</p>
+                                <p><strong>Contact Phone:</strong> ${contactPhone}</p>
+                                <p><strong>Address:</strong> ${address}</p>
+                                
+                                <h4>📋 License Information:</h4>
+                                <p><strong>License Type:</strong> ${licenseType.toUpperCase()}</p>
+                                <p><strong>Max Users:</strong> ${maxUsers}</p>
+                                <p><strong>Max Coaches:</strong> ${maxCoaches}</p>
+                                <p><strong>Max Branches:</strong> ${maxBranches}</p>
+                                <p><strong>Max Students:</strong> ${maxStudents}</p>
+                                <p><strong>Max Classes:</strong> ${maxClasses}</p>
+                                
+                                <h4>👤 Admin User Access:</h4>
+                                <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+                                <p><strong>Email:</strong> ${adminEmail}</p>
+                                <p><strong>Password:</strong> ${adminPassword}</p>
+                                <p><strong>Role:</strong> ${userRole.replace('_', ' ').toUpperCase()}</p>
+                                
                                 <hr>
-                                <p><strong>🔗 Login URL:</strong> <a href="/login" target="_blank">Click here to login</a></p>
+                                <p><strong>🔗 Login URL:</strong> <a href="/login" target="_blank">https://oss365.app/login</a></p>
+                                <p><strong>📧 Send these credentials to your customer</strong></p>
                             </div>
                         `;
                     }
