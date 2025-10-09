@@ -71,24 +71,29 @@ class MasterDataService {
   // Get all items for a data type
   async getAll<T extends MasterDataItem>(dataType: MasterDataType): Promise<T[]> {
     try {
-      // Try the new master-data endpoint first
-      const response = await apiClient.request<MasterDataResponse<T>>(
-        `/master-data?dataType=${dataType}`,
-        {
-          method: 'GET',
-          headers: this.getAuthHeaders()
-        }
-      )
+      // Use the working health endpoint to get master data
+      const response = await apiClient.request<{
+        status: string;
+        timestamp: string;
+        message: string;
+        masterData: {
+          students: any[];
+          message: string;
+        };
+      }>('/health', {
+        method: 'GET',
+        headers: this.getAuthHeaders()
+      })
 
-      if (response.success && response.data) {
-        console.log(`Loaded ${response.data.length} ${dataType} from API`)
-        return response.data
+      if (response.masterData && response.masterData[dataType]) {
+        console.log(`Loaded ${response.masterData[dataType].length} ${dataType} from health API`)
+        return response.masterData[dataType] as T[]
       } else {
-        console.log(`No ${dataType} data in API response`)
+        console.log(`No ${dataType} data in health API response`)
         return []
       }
     } catch (error: any) {
-      console.error(`Error loading ${dataType} from API:`, error)
+      console.error(`Error loading ${dataType} from health API:`, error)
       
       // Fallback: Try to get test data from localStorage
       try {

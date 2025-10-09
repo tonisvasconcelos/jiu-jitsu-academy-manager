@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     status: 'ok',
     timestamp: new Date().toISOString(),
     message: 'GFTeam Tubarão API is running',
-    testData: {
+    masterData: {
       students: testStudents,
       message: 'Master data functionality is working'
     }
