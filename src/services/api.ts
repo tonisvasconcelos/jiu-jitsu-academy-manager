@@ -157,7 +157,7 @@ class ApiClient {
 
     // For other credentials, try the real API
     const backendCredentials = {
-      domain: credentials.tenantDomain,
+      tenantDomain: credentials.tenantDomain,
       email: credentials.email,
       password: credentials.password
     };
