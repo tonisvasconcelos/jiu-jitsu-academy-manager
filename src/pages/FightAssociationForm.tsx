@@ -7,7 +7,7 @@ const FightAssociationForm: React.FC = () => {
   const { action, id } = useParams<{ action: string; id?: string }>()
   const navigate = useNavigate()
   const { addFightAssociation, updateFightAssociation, getFightAssociation } = useFightAssociations()
-  const { modalities: fightModalities } = useFightModalities()
+  const { fightModalities } = useFightModalities()
   
   const [association, setAssociation] = useState<FightAssociation>({
     associationId: '',
