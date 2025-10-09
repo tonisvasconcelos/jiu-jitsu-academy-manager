@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Users via Customer Onboarding</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .credentials { background: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>👥 Create Users via Customer Onboarding</h1>
+    
+    <div class="test-section info">
+        <h3>📋 Strategy</h3>
+        <p>Since CORS is blocking direct API calls, we'll use the existing customer onboarding system to create users for existing tenants:</p>
+        <ul>
+            <li>Create new tenants with admin users</li>
+            <li>Test login with the created credentials</li>
+            <li>Verify the system works end-to-end</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>1. Create Demo Academy with Admin User</h3>
+        <button onclick="createTenantWithUser('demo-academy', 'Demo Academy', 'admin@demo-academy.com', 'admin123')">
+            Create Demo Academy + Admin User
+        </button>
+        <div id="demo-academy-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Create Gracie Barra with Admin User</h3>
+        <button onclick="createTenantWithUser('gracie-barra-test', 'Gracie Barra Test', 'admin@gracie-barra-test.com', 'admin123')">
+            Create Gracie Barra Test + Admin User
+        </button>
+        <div id="gracie-barra-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Test Login with Created Users</h3>
+        <button onclick="testCreatedUsers()">Test Login with Created Users</button>
+        <div id="test-created-users-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Test Original Tenants (if they have users)</h3>
+        <button onclick="testOriginalTenants()">Test Original Tenants</button>
+        <div id="test-original-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://oss365.app/api';
+
+        async function createTenantWithUser(domain, name, email, password) {
+            const resultDiv = document.getElementById(domain.includes('demo') ? 'demo-academy-result' : 'gracie-barra-result');
+            resultDiv.innerHTML = `Creating ${name} with admin user...`;
+            
+            try {
+                // Step 1: Create tenant
+                const tenantResponse = await fetch(`${API_BASE}/admin/tenants`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        domain: domain,
+                        plan: 'enterprise',
+                        contactEmail: email,
+                        contactPhone: '+55 21 99999-9999',
+                        address: 'Test Address, Rio de Janeiro, Brazil',
+                        licenseLimits: {
+                            students: 100,
+                            coaches: 5,
+                            branches: 1,
+                            classes: 20
+                        }
+                    })
+                });
+                
+                const tenantData = await tenantResponse.json();
+                
+                let resultHtml = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${tenantData.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${tenantData.success ? '#c3e6cb' : '#f5c6cb'};">
+                        <h4>Tenant Creation Result</h4>
+                        <p><strong>Status:</strong> ${tenantResponse.status}</p>
+                        <p><strong>Success:</strong> ${tenantData.success}</p>
+                        <p><strong>Error:</strong> ${tenantData.error || 'None'}</p>
+                        <pre>${JSON.stringify(tenantData, null, 2)}</pre>
+                    </div>
+                `;
+                
+                if (tenantData.success) {
+                    // Step 2: Create admin user
+                    const userResponse = await fetch(`${API_BASE}/admin/users`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tenantDomain: domain,
+                            email: email,
+                            password: password,
+                            firstName: 'Admin',
+                            lastName: 'User',
+                            role: 'system_manager'
+                        })
+                    });
+                    
+                    const userData = await userResponse.json();
+                    
+                    resultHtml += `
+                        <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${userData.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${userData.success ? '#c3e6cb' : '#f5c6cb'};">
+                            <h4>Admin User Creation Result</h4>
+                            <p><strong>Status:</strong> ${userResponse.status}</p>
+                            <p><strong>Success:</strong> ${userData.success}</p>
+                            <p><strong>Error:</strong> ${userData.error || 'None'}</p>
+                            <pre>${JSON.stringify(userData, null, 2)}</pre>
+                        </div>
+                    `;
+                    
+                    if (userData.success) {
+                        resultHtml += `
+                            <div class="credentials">
+                                <h4>🎉 Success! Login Credentials:</h4>
+                                <p><strong>Domain:</strong> ${domain}</p>
+                                <p><strong>Email:</strong> ${email}</p>
+                                <p><strong>Password:</strong> ${password}</p>
+                            </div>
+                        `;
+                    }
+                }
+                
+                resultDiv.innerHTML = resultHtml;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: #f8d7da; border: 1px solid #f5c6cb;">
+                        <h4>Error</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function testCreatedUsers() {
+            const resultDiv = document.getElementById('test-created-users-result');
+            resultDiv.innerHTML = 'Testing login with created users...';
+            
+            const testCases = [
+                { domain: 'demo-academy', email: 'admin@demo-academy.com', password: 'admin123' },
+                { domain: 'gracie-barra-test', email: 'admin@gracie-barra-test.com', password: 'admin123' }
+            ];
+            
+            let resultsHtml = '';
+            
+            for (const testCase of testCases) {
+                try {
+                    const response = await fetch(`${API_BASE}/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tenantDomain: testCase.domain,
+                            email: testCase.email,
+                            password: testCase.password
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    resultsHtml += `
+                        <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${data.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${data.success ? '#c3e6cb' : '#f5c6cb'};">
+                            <h4>Login Test: ${testCase.email}</h4>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Success:</strong> ${data.success}</p>
+                            <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                            ${data.success ? '<p style="color: green; font-weight: bold;">🎉 LOGIN SUCCESSFUL!</p>' : ''}
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } catch (error) {
+                    resultsHtml += `
+                        <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: #f8d7da; border: 1px solid #f5c6cb;">
+                            <h4>Error for ${testCase.email}</h4>
+                            <pre>${error.message}</pre>
+                        </div>
+                    `;
+                }
+            }
+            
+            resultDiv.innerHTML = resultsHtml;
+        }
+
+        async function testOriginalTenants() {
+            const resultDiv = document.getElementById('test-original-result');
+            resultDiv.innerHTML = 'Testing original tenants...';
+            
+            const testCases = [
+                { domain: 'demo.jiu-jitsu.com', email: 'admin@demo.jiu-jitsu.com', password: 'admin123' },
+                { domain: 'graciebarra-rio.com', email: 'admin@graciebarra-rio.com', password: 'admin123' }
+            ];
+            
+            let resultsHtml = '';
+            
+            for (const testCase of testCases) {
+                try {
+                    const response = await fetch(`${API_BASE}/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tenantDomain: testCase.domain,
+                            email: testCase.email,
+                            password: testCase.password
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    resultsHtml += `
+                        <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${data.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${data.success ? '#c3e6cb' : '#f5c6cb'};">
+                            <h4>Login Test: ${testCase.email}</h4>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Success:</strong> ${data.success}</p>
+                            <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                            ${data.success ? '<p style="color: green; font-weight: bold;">🎉 LOGIN SUCCESSFUL!</p>' : ''}
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } catch (error) {
+                    resultsHtml += `
+                        <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: #f8d7da; border: 1px solid #f5c6cb;">
+                            <h4>Error for ${testCase.email}</h4>
+                            <pre>${error.message}</pre>
+                        </div>
+                    `;
+                }
+            }
+            
+            resultDiv.innerHTML = resultsHtml;
+        }
+    </script>
+</body>
+</html>

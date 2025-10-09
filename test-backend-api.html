@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Backend API Test Suite</h1>
+    
+    <div class="test-section info">
+        <h3>📋 Test Plan</h3>
+        <p>This test suite validates the Express backend API endpoints:</p>
+        <ul>
+            <li>Health check endpoint</li>
+            <li>Authentication endpoints</li>
+            <li>Tenant management endpoints</li>
+            <li>User management endpoints</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>1. Health Check</h3>
+        <button onclick="testHealth()">Test Health Endpoint</button>
+        <div id="health-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Authentication Test</h3>
+        <button onclick="testAuth()">Test Auth Endpoint</button>
+        <div id="auth-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Tenant Management Test</h3>
+        <button onclick="testTenants()">Test Tenants Endpoint</button>
+        <div id="tenants-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Create Test Tenant</h3>
+        <button onclick="createTestTenant()">Create Test Tenant</button>
+        <div id="create-tenant-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        async function testHealth() {
+            const resultDiv = document.getElementById('health-result');
+            resultDiv.innerHTML = 'Testing health endpoint...';
+            
+            try {
+                const response = await fetch('http://localhost:5000/health');
+                const data = await response.json();
+                
+                resultDiv.className = 'test-section ' + (response.ok ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h4>Health Check Result</h4>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Success:</strong> ${data.success || 'Unknown'}</p>
+                    <p><strong>Message:</strong> ${data.message || 'No message'}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'test-section error';
+                resultDiv.innerHTML = `
+                    <h4>Health Check Error</h4>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p>Make sure the backend server is running on port 5000</p>
+                `;
+            }
+        }
+
+        async function testAuth() {
+            const resultDiv = document.getElementById('auth-result');
+            resultDiv.innerHTML = 'Testing auth endpoint...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tenantDomain: 'demo.jiu-jitsu.com',
+                        email: 'admin@demo.com',
+                        password: 'admin123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = 'test-section ' + (data.success ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h4>Auth Test Result</h4>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Success:</strong> ${data.success}</p>
+                    <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'test-section error';
+                resultDiv.innerHTML = `
+                    <h4>Auth Test Error</h4>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+            }
+        }
+
+        async function testTenants() {
+            const resultDiv = document.getElementById('tenants-result');
+            resultDiv.innerHTML = 'Testing tenants endpoint...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/tenants`);
+                const data = await response.json();
+                
+                resultDiv.className = 'test-section ' + (data.success ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h4>Tenants Test Result</h4>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Success:</strong> ${data.success}</p>
+                    <p><strong>Count:</strong> ${data.data?.length || 0} tenants</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'test-section error';
+                resultDiv.innerHTML = `
+                    <h4>Tenants Test Error</h4>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+            }
+        }
+
+        async function createTestTenant() {
+            const resultDiv = document.getElementById('create-tenant-result');
+            resultDiv.innerHTML = 'Creating test tenant...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/tenants`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: 'Test Academy',
+                        domain: 'test-academy.com',
+                        plan: 'enterprise',
+                        contactEmail: 'admin@test-academy.com',
+                        contactPhone: '+55 21 99999-9999',
+                        address: 'Test Address, Rio de Janeiro, Brazil'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = 'test-section ' + (data.success ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h4>Create Tenant Result</h4>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Success:</strong> ${data.success}</p>
+                    <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'test-section error';
+                resultDiv.innerHTML = `
+                    <h4>Create Tenant Error</h4>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

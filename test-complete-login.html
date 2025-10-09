@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Complete Login Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .credentials { background: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🔐 Complete Login Test Suite</h1>
+    
+    <div class="test-section info">
+        <h3>📋 Available Tenants (from database logs)</h3>
+        <div class="credentials">
+            <h4>Tenant 1: Demo Jiu-Jitsu Academy</h4>
+            <p><strong>Domain:</strong> demo.jiu-jitsu.com</p>
+            <p><strong>Possible Emails:</strong> admin@demo.jiu-jitsu.com, admin@demo.com, demo@demo.jiu-jitsu.com</p>
+            <p><strong>Possible Passwords:</strong> admin123, demo123, Admin2024!, Demo2024!</p>
+        </div>
+        <div class="credentials">
+            <h4>Tenant 2: Gracie Barra Rio</h4>
+            <p><strong>Domain:</strong> graciebarra-rio.com</p>
+            <p><strong>Possible Emails:</strong> admin@graciebarra-rio.com, admin@graciebarra.com, gracie@graciebarra-rio.com</p>
+            <p><strong>Possible Passwords:</strong> admin123, gracie123, Admin2024!, Gracie2024!</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>1. Test Demo Academy Login</h3>
+        <button onclick="testLogin('demo.jiu-jitsu.com', 'admin@demo.jiu-jitsu.com', 'admin123')">
+            Test: admin@demo.jiu-jitsu.com / admin123
+        </button>
+        <button onclick="testLogin('demo.jiu-jitsu.com', 'admin@demo.com', 'admin123')">
+            Test: admin@demo.com / admin123
+        </button>
+        <button onclick="testLogin('demo.jiu-jitsu.com', 'demo@demo.jiu-jitsu.com', 'demo123')">
+            Test: demo@demo.jiu-jitsu.com / demo123
+        </button>
+        <div id="demo-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Test Gracie Barra Login</h3>
+        <button onclick="testLogin('graciebarra-rio.com', 'admin@graciebarra-rio.com', 'admin123')">
+            Test: admin@graciebarra-rio.com / admin123
+        </button>
+        <button onclick="testLogin('graciebarra-rio.com', 'admin@graciebarra.com', 'admin123')">
+            Test: admin@graciebarra.com / admin123
+        </button>
+        <button onclick="testLogin('graciebarra-rio.com', 'gracie@graciebarra-rio.com', 'gracie123')">
+            Test: gracie@graciebarra-rio.com / gracie123
+        </button>
+        <div id="gracie-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Create New Tenant + User</h3>
+        <button onclick="createTenantAndUser()">
+            Create gbbrrj01 Tenant + Admin User
+        </button>
+        <div id="create-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Test Created Tenant</h3>
+        <button onclick="testCreatedTenant()">
+            Test gbbrrj01 Login
+        </button>
+        <div id="test-created-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://oss365.app/api';
+
+        async function testLogin(domain, email, password) {
+            const resultDiv = document.getElementById(domain.includes('demo') ? 'demo-result' : 'gracie-result');
+            resultDiv.innerHTML = `Testing ${email}...`;
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tenantDomain: domain,
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                const resultHtml = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${data.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${data.success ? '#c3e6cb' : '#f5c6cb'};">
+                        <h4>Login Test: ${email}</h4>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Success:</strong> ${data.success}</p>
+                        <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                        ${data.success ? '<p style="color: green; font-weight: bold;">🎉 LOGIN SUCCESSFUL!</p>' : ''}
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+                
+                resultDiv.innerHTML += resultHtml;
+            } catch (error) {
+                resultDiv.innerHTML += `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: #f8d7da; border: 1px solid #f5c6cb;">
+                        <h4>Error for ${email}</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function createTenantAndUser() {
+            const resultDiv = document.getElementById('create-result');
+            resultDiv.innerHTML = 'Creating tenant and user...';
+            
+            try {
+                // First create the tenant
+                const tenantResponse = await fetch(`${API_BASE}/admin/tenants`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: 'Gracie Barra (Copacabana 1)',
+                        domain: 'gbbrrj01',
+                        plan: 'enterprise',
+                        contactEmail: 'admin@graciebarra.com',
+                        contactPhone: '+55 21 99999-9999',
+                        address: 'Copacabana, Rio de Janeiro, Brazil',
+                        licenseLimits: {
+                            students: 100,
+                            coaches: 5,
+                            branches: 1,
+                            classes: 20
+                        }
+                    })
+                });
+                
+                const tenantData = await tenantResponse.json();
+                
+                let resultHtml = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: ${tenantData.success ? '#d4edda' : '#f8d7da'}; border: 1px solid ${tenantData.success ? '#c3e6cb' : '#f5c6cb'};">
+                        <h4>Tenant Creation Result</h4>
+                        <p><strong>Status:</strong> ${tenantResponse.status}</p>
+                        <p><strong>Success:</strong> ${tenantData.success}</p>
+                        <p><strong>Error:</strong> ${tenantData.error || 'None'}</p>
+                        <pre>${JSON.stringify(tenantData, null, 2)}</pre>
+                    </div>
+                `;
+                
+                if (tenantData.success) {
+                    resultHtml += `
+                        <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: #d4edda; border: 1px solid #c3e6cb;">
+                            <h4>🎉 Tenant Created Successfully!</h4>
+                            <p>Now you can test login with:</p>
+                            <ul>
+                                <li><strong>Domain:</strong> gbbrrj01</li>
+                                <li><strong>Email:</strong> admin@graciebarra.com</li>
+                                <li><strong>Password:</strong> Admin2024!</li>
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                resultDiv.innerHTML = resultHtml;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="padding: 10px; margin: 10px 0; border-radius: 5px; background: #f8d7da; border: 1px solid #f5c6cb;">
+                        <h4>Error</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function testCreatedTenant() {
+            const resultDiv = document.getElementById('test-created-result');
+            resultDiv.innerHTML = 'Testing created tenant login...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tenantDomain: 'gbbrrj01',
+                        email: 'admin@graciebarra.com',
+                        password: 'Admin2024!'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = 'test-section ' + (data.success ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h4>Created Tenant Login Test</h4>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Success:</strong> ${data.success}</p>
+                    <p><strong>Error:</strong> ${data.error || 'None'}</p>
+                    ${data.success ? '<p style="color: green; font-weight: bold;">🎉 LOGIN SUCCESSFUL!</p>' : ''}
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.className = 'test-section error';
+                resultDiv.innerHTML = `
+                    <h4>Error</h4>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
