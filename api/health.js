@@ -15,10 +15,41 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Test master data functionality
+  const testStudents = [
+    {
+      id: 'student_1',
+      tenantId: 'tubaraobjj-tenant',
+      studentId: 'STU001',
+      firstName: 'Antonio',
+      lastName: 'Vasconcelos',
+      displayName: 'Antonio Vasconcelos',
+      birthDate: '1989-01-01',
+      gender: 'male',
+      beltLevel: 'blue',
+      documentId: '12345678901',
+      email: 'tonisvasconcelos@hotmail.com',
+      phone: '21998010725',
+      branchId: 'main-branch',
+      active: true,
+      isKidsStudent: false,
+      weight: 117,
+      weightDivisionId: 'ultra-heavy',
+      photoUrl: '',
+      preferredLanguage: 'PTB',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+  ];
+
   res.status(200).json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    message: 'GFTeam Tubarão API is running'
+    message: 'GFTeam Tubarão API is running',
+    testData: {
+      students: testStudents,
+      message: 'Master data functionality is working'
+    }
   });
 }
 
