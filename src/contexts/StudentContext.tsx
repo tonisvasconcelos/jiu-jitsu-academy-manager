@@ -1,5 +1,4 @@
-import React, { createContext, useContext, ReactNode } from 'react'
-import { useMasterData } from '../hooks/useMasterData'
+import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react'
 
 export interface Student {
   studentId: string
@@ -47,24 +46,129 @@ interface StudentContextType {
 const StudentContext = createContext<StudentContextType | undefined>(undefined)
 
 export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const {
-    data: students,
-    isLoading,
-    error,
-    addItem: addStudent,
-    updateItem: updateStudent,
-    deleteItem: deleteStudent,
-    refreshData: refreshStudents,
-    clearError
-  } = useMasterData<Student>({
-    dataType: 'students',
-    initialData: []
-  })
+  const [students, setStudents] = useState<Student[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  // Helper function to get student by studentId (not the API id)
-  const getStudent = (studentId: string): Student | undefined => {
-    return students.find(student => student.studentId === studentId)
+  // Load students from localStorage on mount
+  useEffect(() => {
+    const loadStudents = () => {
+      try {
+        // First try to load from testData (from login)
+        const testData = localStorage.getItem('testData')
+        if (testData) {
+          const parsed = JSON.parse(testData)
+          if (parsed.students && Array.isArray(parsed.students)) {
+            setStudents(parsed.students)
+            return
+          }
+        }
+        
+        // If no test data, check for existing students in localStorage
+        const existingStudents = localStorage.getItem('students')
+        if (existingStudents) {
+          const parsed = JSON.parse(existingStudents)
+          if (Array.isArray(parsed)) {
+            setStudents(parsed)
+          }
+        }
+      } catch (err) {
+        console.error('Error loading students:', err)
+        setError('Failed to load students')
+      }
+    }
+
+    loadStudents()
+  }, [])
+
+  // Save students to localStorage whenever students change
+  useEffect(() => {
+    if (students.length > 0) {
+      localStorage.setItem('students', JSON.stringify(students))
+      
+      // Also update testData if it exists
+      const testData = localStorage.getItem('testData')
+      if (testData) {
+        try {
+          const parsed = JSON.parse(testData)
+          parsed.students = students
+          localStorage.setItem('testData', JSON.stringify(parsed))
+        } catch (err) {
+          console.error('Error updating testData:', err)
+        }
+      }
+    }
+  }, [students])
+
+  const addStudent = async (student: Omit<Student, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      const newStudent: Student = {
+        ...student,
+        id: `student_${Date.now()}`,
+        tenantId: 'tubaraobjj-tenant',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+      
+      setStudents(prev => [...prev, newStudent])
+    } catch (err: any) {
+      setError(err.message || 'Failed to add student')
+    } finally {
+      setIsLoading(false)
+    }
   }
+
+  const updateStudent = async (studentId: string, updatedStudent: Partial<Omit<Student, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>>) => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      setStudents(prev => prev.map(student => 
+        student.studentId === studentId 
+          ? { ...student, ...updatedStudent, updatedAt: new Date().toISOString() }
+          : student
+      ))
+    } catch (err: any) {
+      setError(err.message || 'Failed to update student')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const deleteStudent = async (studentId: string) => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      setStudents(prev => prev.filter(student => student.studentId !== studentId))
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete student')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const getStudent = (studentId: string) => students.find(s => s.studentId === studentId)
+
+  const refreshStudents = async () => {
+    // Reload from localStorage
+    const existingStudents = localStorage.getItem('students')
+    if (existingStudents) {
+      try {
+        const parsed = JSON.parse(existingStudents)
+        if (Array.isArray(parsed)) {
+          setStudents(parsed)
+        }
+      } catch (err) {
+        console.error('Error refreshing students:', err)
+      }
+    }
+  }
+
+  const clearError = () => setError(null)
 
   const contextValue: StudentContextType = {
     students,
