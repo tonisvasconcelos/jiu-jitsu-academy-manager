@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface BranchFacility {
   facilityId: string
@@ -145,43 +145,22 @@ const initialFacilities: BranchFacility[] = [
   }
 ]
 
-const loadFacilitiesFromStorage = (tenantId: string | null): BranchFacility[] => {
-  return getTenantData<BranchFacility[]>('jiu-jitsu-branch-facilities', tenantId, initialFacilities)
-}
-
-const saveFacilitiesToStorage = (facilities: BranchFacility[], tenantId: string | null) => {
-  saveTenantData('jiu-jitsu-branch-facilities', tenantId, facilities)
-}
-
 export const BranchFacilityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const [facilities, setFacilities] = useState<BranchFacility[]>(loadFacilitiesFromStorage(tenant?.id || null))
-
-  // Reload facilities when tenant changes
-  useEffect(() => {
-    const newFacilities = loadFacilitiesFromStorage(tenant?.id || null)
-    setFacilities(newFacilities)
-  }, [tenant?.id])
+  const [facilities, setFacilities] = useTenantData<BranchFacility[]>('jiu-jitsu-branch-facilities', initialFacilities)
 
   const addFacility = (facility: BranchFacility) => {
     console.log('BranchFacilityContext: Adding facility:', facility)
-    const newFacilities = [...facilities, facility]
-    setFacilities(newFacilities)
-    saveFacilitiesToStorage(newFacilities, tenant?.id || null)
+    setFacilities(prev => [...prev, facility])
   }
 
   const updateFacility = (facility: BranchFacility) => {
     console.log('BranchFacilityContext: Updating facility:', facility)
-    const newFacilities = facilities.map(f => f.facilityId === facility.facilityId ? facility : f)
-    setFacilities(newFacilities)
-    saveFacilitiesToStorage(newFacilities, tenant?.id || null)
+    setFacilities(prev => prev.map(f => f.facilityId === facility.facilityId ? facility : f))
   }
 
   const deleteFacility = (facilityId: string) => {
     console.log('BranchFacilityContext: Deleting facility:', facilityId)
-    const newFacilities = facilities.filter(f => f.facilityId !== facilityId)
-    setFacilities(newFacilities)
-    saveFacilitiesToStorage(newFacilities, tenant?.id || null)
+    setFacilities(prev => prev.filter(f => f.facilityId !== facilityId))
   }
 
   const getFacility = (facilityId: string) => {
