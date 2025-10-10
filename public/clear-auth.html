@@ -100,10 +100,11 @@
         }
         
         function clearAuthData() {
-            // Clear all authentication data
+            // Clear all authentication and language data
             localStorage.removeItem('auth_data');
             localStorage.removeItem('auth_token');
             localStorage.removeItem('selectedLanguage');
+            localStorage.removeItem('language');
             
             // Clear any other potential auth-related data
             const keysToRemove = [];

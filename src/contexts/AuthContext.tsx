@@ -78,10 +78,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       
-      // For now, always require fresh login to ensure proper flow
-      // This prevents issues with stale authentication data
+      // Clear ALL localStorage data to ensure fresh start
+      // This prevents issues with stale authentication and language data
       localStorage.removeItem('auth_data');
       localStorage.removeItem('auth_token');
+      localStorage.removeItem('selectedLanguage');
+      localStorage.removeItem('language');
       
       // Clear any existing authentication state
       setUser(null);
