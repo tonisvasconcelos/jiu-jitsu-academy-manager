@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface ClassSchedule {
   classId: string
@@ -282,43 +282,22 @@ const initialClasses: ClassSchedule[] = [
   }
 ]
 
-const loadClassesFromStorage = (tenantId: string | null): ClassSchedule[] => {
-  return getTenantData<ClassSchedule[]>('jiu-jitsu-class-schedules', tenantId, initialClasses)
-}
-
-const saveClassesToStorage = (classes: ClassSchedule[], tenantId: string | null) => {
-  saveTenantData('jiu-jitsu-class-schedules', tenantId, classes)
-}
-
 export const ClassScheduleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const [classes, setClasses] = useState<ClassSchedule[]>(loadClassesFromStorage(tenant?.id || null))
-
-  // Reload classes when tenant changes
-  useEffect(() => {
-    const newClasses = loadClassesFromStorage(tenant?.id || null)
-    setClasses(newClasses)
-  }, [tenant?.id])
+  const [classes, setClasses] = useTenantData<ClassSchedule[]>('jiu-jitsu-class-schedules', initialClasses)
 
   const addClass = (classSchedule: ClassSchedule) => {
     console.log('ClassScheduleContext: Adding class:', classSchedule)
-    const newClasses = [...classes, classSchedule]
-    setClasses(newClasses)
-    saveClassesToStorage(newClasses, tenant?.id || null)
+    setClasses(prev => [...prev, classSchedule])
   }
 
   const updateClass = (classSchedule: ClassSchedule) => {
     console.log('ClassScheduleContext: Updating class:', classSchedule)
-    const newClasses = classes.map(c => c.classId === classSchedule.classId ? classSchedule : c)
-    setClasses(newClasses)
-    saveClassesToStorage(newClasses, tenant?.id || null)
+    setClasses(prev => prev.map(c => c.classId === classSchedule.classId ? classSchedule : c))
   }
 
   const deleteClass = (classId: string) => {
     console.log('ClassScheduleContext: Deleting class:', classId)
-    const newClasses = classes.filter(c => c.classId !== classId)
-    setClasses(newClasses)
-    saveClassesToStorage(newClasses, tenant?.id || null)
+    setClasses(prev => prev.filter(c => c.classId !== classId))
   }
 
   const getClass = (classId: string) => {
