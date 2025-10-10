@@ -14,6 +14,16 @@ interface LoginResponse {
     firstName: string;
     lastName: string;
   };
+  tenant: {
+    id: string;
+    name: string;
+    domain: string;
+    plan: string;
+    licenseStart: string;
+    licenseEnd: string;
+    isActive: boolean;
+    settings: any;
+  };
 }
 
 // API Client class
