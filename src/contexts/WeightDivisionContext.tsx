@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface WeightDivision {
   divisionId: string
@@ -60,42 +60,7 @@ const defaultWeightDivisions: WeightDivision[] = [
 ]
 
 export const WeightDivisionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  
-  // Load weight divisions from localStorage or use default data
-  const loadWeightDivisionsFromStorage = (): WeightDivision[] => {
-    return getTenantData<WeightDivision[]>('jiu-jitsu-weight-divisions', tenant?.id || null, defaultWeightDivisions)
-  }
-
-  const [weightDivisions, setWeightDivisions] = useState<WeightDivision[]>(() => {
-    try {
-      return loadWeightDivisionsFromStorage()
-    } catch (error) {
-      console.warn('Error loading weight divisions from storage:', error)
-      return defaultWeightDivisions
-    }
-  })
-
-  // Reload weight divisions when tenant changes
-  useEffect(() => {
-    try {
-      const newWeightDivisions = loadWeightDivisionsFromStorage()
-      setWeightDivisions(newWeightDivisions)
-    } catch (error) {
-      console.warn('Error reloading weight divisions from storage:', error)
-      setWeightDivisions(defaultWeightDivisions)
-    }
-  }, [tenant?.id])
-
-  // Save weight divisions to localStorage
-  const saveWeightDivisionsToStorage = (divisionsToSave: WeightDivision[]) => {
-    saveTenantData('jiu-jitsu-weight-divisions', tenant?.id || null, divisionsToSave)
-  }
-
-  // Update localStorage whenever weightDivisions changes
-  React.useEffect(() => {
-    saveWeightDivisionsToStorage(weightDivisions)
-  }, [weightDivisions])
+  const [weightDivisions, setWeightDivisions] = useTenantData<WeightDivision[]>('jiu-jitsu-weight-divisions', defaultWeightDivisions)
 
   const addWeightDivision = (weightDivision: WeightDivision) => {
     setWeightDivisions(prev => prev ? [...prev, weightDivision] : [weightDivision])

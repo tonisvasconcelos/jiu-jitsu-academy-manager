@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface FightAssociation {
   associationId: string
@@ -227,51 +227,7 @@ const defaultFightAssociations: FightAssociation[] = [
 ]
 
 export const FightAssociationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  
-  // Load fight associations from localStorage or use default data
-  const loadFightAssociationsFromStorage = (): FightAssociation[] => {
-    const associations = getTenantData<FightAssociation[]>('jiu-jitsu-fight-associations', tenant?.id || null, defaultFightAssociations)
-    
-    // Migration: Convert old fightModality to fightModalities array
-    const migratedAssociations = associations.map((association: any) => {
-      if (association.fightModality && !association.fightModalities) {
-        console.log('FightAssociationContext: Migrating association', association.associationId, 'from fightModality to fightModalities')
-        return {
-          ...association,
-          fightModalities: [association.fightModality],
-          fightModality: undefined // Remove old field
-        }
-      }
-      return association
-    })
-    
-    // Save migrated data back to localStorage if there were changes
-    if (migratedAssociations.some((assoc: any, index: number) => associations[index].fightModality && !associations[index].fightModalities)) {
-      console.log('FightAssociationContext: Saving migrated data')
-      saveTenantData('jiu-jitsu-fight-associations', tenant?.id || null, migratedAssociations)
-    }
-    
-    return migratedAssociations
-  }
-
-  const [fightAssociations, setFightAssociations] = useState<FightAssociation[]>(loadFightAssociationsFromStorage)
-
-  // Reload fight associations when tenant changes
-  useEffect(() => {
-    const newAssociations = loadFightAssociationsFromStorage()
-    setFightAssociations(newAssociations)
-  }, [tenant?.id])
-
-  // Save fight associations to localStorage
-  const saveFightAssociationsToStorage = (associationsToSave: FightAssociation[]) => {
-    saveTenantData('jiu-jitsu-fight-associations', tenant?.id || null, associationsToSave)
-  }
-
-  // Update localStorage whenever fightAssociations changes
-  React.useEffect(() => {
-    saveFightAssociationsToStorage(fightAssociations)
-  }, [fightAssociations])
+  const [fightAssociations, setFightAssociations] = useTenantData<FightAssociation[]>('jiu-jitsu-fight-associations', defaultFightAssociations)
 
   const addFightAssociation = (association: FightAssociation) => {
     setFightAssociations(prev => [...prev, association])
