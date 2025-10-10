@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Data Loading Fix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Data Loading Fix Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Instructions</h2>
+        <p>This test verifies that the data loading race condition has been fixed:</p>
+        <ol>
+            <li><strong>Clear localStorage</strong> to start fresh</li>
+            <li><strong>Login</strong> with tenant credentials</li>
+            <li><strong>Check console logs</strong> for correct tenantId in keys</li>
+            <li><strong>Verify Dashboard</strong> shows non-zero counts</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Actions</h2>
+        <button onclick="clearStorage()">🗑️ Clear localStorage</button>
+        <button onclick="openLogin()">🔐 Open Login Page</button>
+        <button onclick="openDashboard()">📊 Open Dashboard</button>
+        <button onclick="openDebug()">🐛 Open Admin Debug</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Expected Results</h2>
+        <div class="log" id="expectedResults">
+✅ SUCCESS CRITERIA:
+1. Console logs should show:
+   useTenantData(students): tenantId=<actual-tenant-id> key=oss365:students-<tenant-id> loaded 1
+   useTenantData(teachers): tenantId=<actual-tenant-id> key=oss365:teachers-<tenant-id> loaded 1
+   useTenantData(branches): tenantId=<actual-tenant-id> key=oss365:branches-<tenant-id> loaded 1
+
+2. Dashboard should show:
+   - Non-zero student count
+   - Non-zero teacher count  
+   - Non-zero branch count
+
+3. Admin Debug should show:
+   - seedFlag: 1
+   - All oss365: prefixed keys with len=1 or higher
+
+❌ PREVIOUS FAILURE:
+   useTenantData(students): tenantId= key=oss365:students- loaded 0
+   (Empty tenantId and missing tenant-id in key)
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Credentials</h2>
+        <div class="log">
+Tenant Domain: amfight
+Email: user@amfight.com
+Password: password123
+
+Alternative:
+Tenant Domain: gbbrrj01
+Email: mario@email.com
+Password: Mario2024!
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Log</h2>
+        <div class="log" id="testLog">Ready to test... Click "Clear localStorage" to start.</div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('testLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            logElement.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function clearStorage() {
+            localStorage.clear();
+            log('✅ localStorage cleared - ready for fresh test', 'success');
+        }
+
+        function openLogin() {
+            window.open('https://oss365.app/login', '_blank');
+            log('🔐 Opened login page in new tab', 'info');
+        }
+
+        function openDashboard() {
+            window.open('https://oss365.app/dashboard', '_blank');
+            log('📊 Opened dashboard in new tab', 'info');
+        }
+
+        function openDebug() {
+            window.open('https://oss365.app/admin/debug', '_blank');
+            log('🐛 Opened admin debug in new tab', 'info');
+        }
+
+        // Auto-log when page loads
+        log('🚀 Test page loaded - ready to verify data loading fix', 'success');
+    </script>
+</body>
+</html>

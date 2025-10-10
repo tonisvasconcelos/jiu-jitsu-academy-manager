@@ -1,5 +1,5 @@
-import React, { createContext, useContext, ReactNode } from 'react'
-import { useMasterData } from '../hooks/useMasterData'
+import React, { createContext, useContext, ReactNode, useState } from 'react'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface FightModality {
   name: string
@@ -14,6 +14,7 @@ export interface FightModality {
 
 interface FightModalityContextType {
   fightModalities: FightModality[]
+  modalities: FightModality[] // Alias for Dashboard compatibility
   isLoading: boolean
   error: string | null
   addFightModality: (modality: Omit<FightModality, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>) => Promise<void>
@@ -27,27 +28,42 @@ interface FightModalityContextType {
 const FightModalityContext = createContext<FightModalityContextType | undefined>(undefined)
 
 export const FightModalityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const {
-    data: fightModalities,
-    isLoading,
-    error,
-    addItem: addFightModality,
-    updateItem: updateFightModality,
-    deleteItem: deleteFightModality,
-    refreshData: refreshFightModalities,
-    clearError
-  } = useMasterData<FightModality>({
-    dataType: 'fightModalities',
-    initialData: []
-  })
+  const fightModalities = useTenantData<FightModality>('jiu-jitsu-fight-modalities') // tenantId comes from AuthContext
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Helper function to get modality by id
+  const addFightModality = async (modality: Omit<FightModality, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>) => {
+    // TODO: Implement localStorage save
+    console.log('FightModalityProvider: addFightModality called with', modality);
+  }
+
+  const updateFightModality = async (modalityId: string, updatedModality: Partial<Omit<FightModality, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>>) => {
+    // TODO: Implement localStorage save
+    console.log('FightModalityProvider: updateFightModality called with', modalityId, updatedModality);
+  }
+
+  const deleteFightModality = async (modalityId: string) => {
+    // TODO: Implement localStorage save
+    console.log('FightModalityProvider: deleteFightModality called with', modalityId);
+  }
+
   const getFightModality = (modalityId: string): FightModality | undefined => {
     return fightModalities.find(modality => modality.id === modalityId)
   }
 
+  const refreshFightModalities = async () => {
+    // TODO: Implement localStorage refresh
+    console.log('FightModalityProvider: refreshFightModalities called');
+  }
+
+  const clearError = () => {
+    setError(null);
+  }
+
   const contextValue: FightModalityContextType = {
     fightModalities,
+    modalities: fightModalities, // Alias for Dashboard compatibility
     isLoading,
     error,
     addFightModality,

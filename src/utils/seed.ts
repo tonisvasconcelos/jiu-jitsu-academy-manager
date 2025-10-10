@@ -117,6 +117,31 @@ export async function seedSampleDataIfNeeded(tenantId: string): Promise<void> {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       }
+    ],
+    'jiu-jitsu-branch-facilities': [
+      {
+        id: 'facility_1',
+        tenantId: tenantId,
+        branchId: 'main-branch',
+        name: 'Main Training Area',
+        type: 'training-mat',
+        capacity: 20,
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ],
+    'jiu-jitsu-student-modalities': [
+      {
+        id: 'connection_1',
+        tenantId: tenantId,
+        studentId: 'student_1',
+        modalityId: 'modality_1',
+        startDate: new Date().toISOString(),
+        active: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
     ]
   };
 
