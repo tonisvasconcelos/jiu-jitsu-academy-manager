@@ -152,10 +152,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Save to localStorage for persistence
       saveAuthToStorage(result.user, result.tenant);
       
-      // Store test data for all tenants
-      if (result.tenant) {
-        const testData = {
-          students: [{
+      // Initialize tenant-specific data for new tenants
+      if (result.tenant && result.tenant.id) {
+        // Check if this tenant already has data
+        const existingStudents = localStorage.getItem(`students-${result.tenant.id}`);
+        const existingTeachers = localStorage.getItem(`teachers-${result.tenant.id}`);
+        const existingBranches = localStorage.getItem(`branches-${result.tenant.id}`);
+        
+        // Only create sample data if tenant has no existing data
+        if (!existingStudents && !existingTeachers && !existingBranches) {
+          console.log(`Initializing sample data for new tenant: ${result.tenant.id}`);
+          
+          // Create tenant-specific sample data
+          const sampleStudents = [{
             id: 'student_1',
             tenantId: result.tenant.id,
             studentId: 'STU001',
@@ -199,8 +208,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             preferredLanguage: 'ENU',
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
-          }],
-          teachers: [{
+          }];
+
+          const sampleTeachers = [{
             id: 'teacher_1',
             tenantId: result.tenant.id,
             firstName: 'Master',
@@ -215,8 +225,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             experience: 10,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
-          }],
-          branches: [{
+          }];
+
+          const sampleBranches = [{
             id: 'main-branch',
             tenantId: result.tenant.id,
             name: 'Main Branch',
@@ -226,8 +237,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             active: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
-          }],
-          modalities: [{
+          }];
+
+          const sampleModalities = [{
             id: 'modality_1',
             tenantId: result.tenant.id,
             name: 'Brazilian Jiu-Jitsu',
@@ -235,8 +247,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             active: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
-          }],
-          classes: [{
+          }];
+
+          const sampleClasses = [{
             id: 'class_1',
             tenantId: result.tenant.id,
             name: 'Morning BJJ',
@@ -250,8 +263,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             status: 'active',
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
-          }],
-          checkIns: [{
+          }];
+
+          const sampleCheckIns = [{
             id: 'checkin_1',
             tenantId: result.tenant.id,
             studentId: 'student_1',
@@ -260,9 +274,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             status: 'present',
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
-          }]
-        };
-        localStorage.setItem('testData', JSON.stringify(testData));
+          }];
+
+          // Store tenant-specific data
+          localStorage.setItem(`students-${result.tenant.id}`, JSON.stringify(sampleStudents));
+          localStorage.setItem(`teachers-${result.tenant.id}`, JSON.stringify(sampleTeachers));
+          localStorage.setItem(`branches-${result.tenant.id}`, JSON.stringify(sampleBranches));
+          localStorage.setItem(`jiu-jitsu-fight-modalities-${result.tenant.id}`, JSON.stringify(sampleModalities));
+          localStorage.setItem(`jiu-jitsu-class-schedules-${result.tenant.id}`, JSON.stringify(sampleClasses));
+          localStorage.setItem(`jiu-jitsu-class-check-ins-${result.tenant.id}`, JSON.stringify(sampleCheckIns));
+          
+          console.log(`Sample data created for tenant: ${result.tenant.id}`);
+        } else {
+          console.log(`Tenant ${result.tenant.id} already has data, skipping initialization`);
+        }
       }
       
       // Reset inactivity timer

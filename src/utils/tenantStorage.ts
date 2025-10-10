@@ -5,38 +5,8 @@ export const getTenantStorageKey = (baseKey: string, tenantId: string): string =
 }
 
 export const getTenantData = <T>(baseKey: string, tenantId: string | null, defaultValue: T): T => {
-  if (!tenantId) {
-    console.log(`No tenant context for ${baseKey}, checking testData`)
-    
-    // Try to get data from testData as fallback
-    try {
-      const testData = localStorage.getItem('testData')
-      if (testData) {
-        const parsed = JSON.parse(testData)
-        // Map the baseKey to the testData property
-        let testDataKey = baseKey.replace('jiu-jitsu-', '')
-        
-        // Handle specific mappings
-        const keyMappings: { [key: string]: string } = {
-          'branch-facilities': 'facilities',
-          'fight-modalities': 'modalities',
-          'class-schedules': 'classes',
-          'class-check-ins': 'checkIns',
-          'student-modalities': 'connections'
-        }
-        
-        testDataKey = keyMappings[testDataKey] || testDataKey
-        
-        if (parsed[testDataKey] && Array.isArray(parsed[testDataKey])) {
-          console.log(`Loaded ${baseKey} from testData:`, parsed[testDataKey])
-          return parsed[testDataKey] as T
-        }
-      }
-    } catch (error) {
-      console.error(`Error loading ${baseKey} from testData:`, error)
-    }
-    
-    console.log(`No tenant context for ${baseKey}, returning default value`)
+  if (!tenantId || tenantId === '') {
+    console.warn(`No valid tenant context for ${baseKey}, returning default value`)
     return defaultValue
   }
   
