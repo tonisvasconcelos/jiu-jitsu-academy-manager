@@ -89,12 +89,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const isExpired = Date.now() - timestamp > 24 * 60 * 60 * 1000;
           
           if (!isExpired && savedUser && savedTenant) {
+            console.log('AuthContext: Restoring saved auth data:', { savedUser, savedTenant });
+            console.log('AuthContext: Saved tenant ID:', savedTenant?.id);
             setUser(savedUser);
             setTenant(savedTenant);
             setIsAuthenticated(true);
             return;
           } else {
             // Clear expired data
+            console.log('AuthContext: Clearing expired auth data');
             localStorage.removeItem('auth_data');
           }
         } catch (parseError) {
@@ -162,6 +165,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
 
       const result: AuthResult = await apiClient.login(credentials);
+      
+      console.log('AuthContext: Login result:', result);
+      console.log('AuthContext: Tenant object:', result.tenant);
+      console.log('AuthContext: Tenant ID:', result.tenant?.id);
       
       setUser(result.user);
       setTenant(result.tenant);
