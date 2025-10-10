@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface FightTeam {
   teamId: string
@@ -40,19 +40,7 @@ export const useFightTeams = () => {
 }
 
 export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const [fightTeams, setFightTeams] = useState<FightTeam[]>([])
-
-  // Load fight teams from localStorage on mount
-  useEffect(() => {
-    const savedTeams = getTenantData<FightTeam[]>('fightTeams', tenant?.id || null, [])
-    setFightTeams(savedTeams)
-  }, [tenant?.id])
-
-  // Save fight teams to localStorage whenever teams change
-  useEffect(() => {
-    saveTenantData('fightTeams', tenant?.id || null, fightTeams)
-  }, [fightTeams, tenant?.id])
+  const [fightTeams, setFightTeams] = useTenantData<FightTeam[]>('fightTeams', [])
 
   const addFightTeam = (team: Omit<FightTeam, 'teamId' | 'createdAt' | 'updatedAt'>) => {
     const newTeam: FightTeam = {

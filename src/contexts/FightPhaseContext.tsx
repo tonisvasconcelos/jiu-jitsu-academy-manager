@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface FightPhase {
   phaseId: string
@@ -42,19 +42,7 @@ interface FightPhaseProviderProps {
 }
 
 export const FightPhaseProvider: React.FC<FightPhaseProviderProps> = ({ children }) => {
-  const { tenant } = useAuth()
-  const [phases, setPhases] = useState<FightPhase[]>([])
-
-  // Load phases from localStorage on component mount
-  useEffect(() => {
-    const savedPhases = getTenantData<FightPhase[]>('fightPhases', tenant?.id || null, [])
-    setPhases(savedPhases)
-  }, [tenant?.id])
-
-  // Save phases to localStorage whenever phases change
-  useEffect(() => {
-    saveTenantData('fightPhases', tenant?.id || null, phases)
-  }, [phases, tenant?.id])
+  const [phases, setPhases] = useTenantData<FightPhase[]>('fightPhases', [])
 
   const generatePhaseId = (): string => {
     const existingIds = phases.map(phase => phase.phaseId)
