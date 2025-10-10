@@ -77,7 +77,7 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">{t('total-students')}</p>
-                <p className="text-3xl font-bold text-white">{totalStudents}</p>
+                <p className="text-3xl font-bold text-white" data-testid="students-count">{totalStudents}</p>
                 <p className="text-xs text-blue-400 mt-1">{activeStudents} {t('active')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
@@ -95,7 +95,7 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">{t('instructors')}</p>
-                <p className="text-3xl font-bold text-white">{totalTeachers}</p>
+                <p className="text-3xl font-bold text-white" data-testid="teachers-count">{totalTeachers}</p>
                 <p className="text-xs text-green-400 mt-1">{t('active-teachers')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
@@ -170,7 +170,7 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400 mb-1">{t('branches')}</p>
-                <p className="text-3xl font-bold text-white">{totalBranches}</p>
+                <p className="text-3xl font-bold text-white" data-testid="branches-count">{totalBranches}</p>
                 <p className="text-xs text-indigo-400 mt-1">{totalFacilities} {t('facilities')}</p>
               </div>
               <div className="p-3 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-lg">
