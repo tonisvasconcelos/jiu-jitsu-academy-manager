@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Diagnostic Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Tenant Diagnostic Test</h1>
+        <p>This tool checks what tenants and users exist in the database.</p>
+        
+        <button class="btn" onclick="checkTenants()">Check All Tenants & Users</button>
+        <button class="btn" onclick="testSpecificTenant()">Test Specific Tenant Lookup</button>
+        <button class="btn" onclick="clearResults()">Clear Results</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function checkTenants() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="result info">Checking tenants and users...</div>';
+            
+            try {
+                const response = await fetch('/api/_diag/check-tenants');
+                const data = await response.json();
+                
+                if (data.success) {
+                    let html = '<div class="result success">';
+                    html += `✅ Diagnostic completed successfully!\n\n`;
+                    html += `📊 Summary:\n`;
+                    html += `- Total Tenants: ${data.data.summary.totalTenants}\n`;
+                    html += `- Total Users: ${data.data.summary.totalUsers}\n`;
+                    html += `- Active Tenants: ${data.data.summary.activeTenants}\n\n`;
+                    
+                    html += `🏢 Tenants:\n`;
+                    if (data.data.tenants.length > 0) {
+                        html += '<table><tr><th>ID</th><th>Domain</th><th>Name</th><th>Active</th><th>Plan</th><th>Created</th></tr>';
+                        data.data.tenants.forEach(tenant => {
+                            html += `<tr>
+                                <td>${tenant.id}</td>
+                                <td>"${tenant.domain}"</td>
+                                <td>"${tenant.name}"</td>
+                                <td>${tenant.is_active}</td>
+                                <td>${tenant.plan}</td>
+                                <td>${new Date(tenant.created_at).toLocaleString()}</td>
+                            </tr>`;
+                        });
+                        html += '</table>';
+                    } else {
+                        html += 'No tenants found.\n';
+                    }
+                    
+                    html += `\n👤 Users:\n`;
+                    if (data.data.users.length > 0) {
+                        html += '<table><tr><th>ID</th><th>Email</th><th>Name</th><th>Role</th><th>Status</th><th>Tenant Domain</th></tr>';
+                        data.data.users.forEach(user => {
+                            html += `<tr>
+                                <td>${user.id}</td>
+                                <td>"${user.email}"</td>
+                                <td>"${user.first_name} ${user.last_name}"</td>
+                                <td>${user.role}</td>
+                                <td>${user.status}</td>
+                                <td>"${user.tenant_domain}"</td>
+                            </tr>`;
+                        });
+                        html += '</table>';
+                    } else {
+                        html += 'No users found.\n';
+                    }
+                    
+                    html += '</div>';
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.innerHTML = `<div class="result error">❌ Error: ${data.error}\nDetails: ${data.details}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="result error">❌ Request failed: ${error.message}</div>`;
+            }
+        }
+        
+        async function testSpecificTenant() {
+            const domain = prompt('Enter tenant domain to test:');
+            if (!domain) return;
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="result info">Testing specific tenant lookup...</div>';
+            
+            try {
+                // Test the login API with the domain
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'test@test.com',
+                        password: 'test123',
+                        tenantDomain: domain
+                    })
+                });
+                
+                const data = await response.json();
+                
+                let html = '<div class="result info">';
+                html += `🔍 Testing tenant domain: "${domain}"\n`;
+                html += `📡 Response Status: ${response.status}\n`;
+                html += `📄 Response: ${JSON.stringify(data, null, 2)}\n`;
+                
+                if (response.status === 401 && data.error === 'Invalid tenant domain') {
+                    html += `\n❌ Result: Tenant domain "${domain}" was NOT found in database\n`;
+                } else if (response.status === 401 && data.error === 'Invalid credentials') {
+                    html += `\n✅ Result: Tenant domain "${domain}" was found, but credentials are invalid (expected)\n`;
+                } else {
+                    html += `\n🤔 Unexpected response - check the details above\n`;
+                }
+                
+                html += '</div>';
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="result error">❌ Request failed: ${error.message}</div>`;
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('result').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
