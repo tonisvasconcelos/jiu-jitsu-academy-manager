@@ -71,7 +71,7 @@ function App() {
                   } 
                 />
                 
-                {/* Default redirect based on language selection */}
+                {/* Default redirect - always check language first */}
                 <Route 
                   path="/" 
                   element={

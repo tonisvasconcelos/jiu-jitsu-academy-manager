@@ -208,6 +208,7 @@ const translations: Record<Language, Record<string, string>> = {
     'established': 'Established',
     'no-teams-found': 'No Teams Found',
     'management-system': 'Management System',
+    'customer-domain': 'Customer Domain',
     'no-teams-found-description': 'No fight teams match your current filters',
     'create-first-team': 'Create First Team',
     'confirm-delete-team': 'Are you sure you want to delete this fight team?',
