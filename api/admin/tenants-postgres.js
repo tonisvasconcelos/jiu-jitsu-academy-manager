@@ -165,7 +165,10 @@ async function handleCreateTenant(req, res) {
     }
 
     // Start transaction
+    console.log('🔄 Starting tenant creation transaction...');
     const result = await db.tx(async (t) => {
+      console.log('📝 Creating tenant with data:', { name, domain, plan, contactEmail });
+      
       // Create tenant
       const tenant = await t.one(`
         INSERT INTO tenants (
@@ -196,11 +199,15 @@ async function handleCreateTenant(req, res) {
         }),
         JSON.stringify(licenseLimits)
       ]);
+      
+      console.log('✅ Tenant created successfully:', { id: tenant.id, domain: tenant.domain });
 
       // Hash admin password
+      console.log('🔐 Hashing admin password...');
       const hashedPassword = await bcrypt.hash(adminPassword, 12);
 
       // Create admin user
+      console.log('👤 Creating admin user with data:', { adminEmail, adminFirstName, adminLastName, tenantId: tenant.id });
       const adminUser = await t.one(`
         INSERT INTO users (
           tenant_id, email, password_hash, first_name, last_name,
@@ -217,8 +224,11 @@ async function handleCreateTenant(req, res) {
         'active',
         true
       ]);
+      
+      console.log('✅ Admin user created successfully:', { id: adminUser.id, email: adminUser.email });
 
       // Create default branch
+      console.log('🏢 Creating default branch...');
       const branch = await t.one(`
         INSERT INTO branches (
           tenant_id, name, address, city, state, country, postal_code,
@@ -239,8 +249,18 @@ async function handleCreateTenant(req, res) {
         true,
         50
       ]);
+      
+      console.log('✅ Default branch created successfully:', { id: branch.id, name: branch.name });
 
+      console.log('🎉 Transaction completed successfully!');
       return { tenant, adminUser, branch };
+    });
+
+    console.log('📤 Sending success response with data:', {
+      tenantId: result.tenant.id,
+      tenantDomain: result.tenant.domain,
+      adminUserId: result.adminUser.id,
+      adminEmail: result.adminUser.email
     });
 
     return res.status(201).json({
@@ -257,7 +277,13 @@ async function handleCreateTenant(req, res) {
     });
 
   } catch (error) {
-    console.error('Error creating tenant:', error);
+    console.error('❌ Error creating tenant:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      code: error.code,
+      detail: error.detail,
+      stack: error.stack
+    });
     return res.status(500).json({
       success: false,
       error: 'Failed to create tenant',
