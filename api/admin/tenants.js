@@ -1,226 +1,387 @@
-// Import hybrid database service
-import { tenantService } from '../shared/hybridDatabase.js';
+import bcrypt from 'bcryptjs';
+import { testConnection, db } from '../shared/postgresDatabase.js';
 
-// API endpoint for tenant management (CRUD operations)
 export default async function handler(req, res) {
-  console.log('Tenants API called:', req.method, req.body);
-  
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', 'https://oss365.app');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
 
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    console.log('OPTIONS request handled');
     res.status(200).end();
     return;
   }
 
+  // Force redeployment - Tenant Management v1
+  console.log('PostgreSQL Tenant Management API called:', req.method, req.body);
+
   try {
+    // Test database connection
+    await testConnection();
+
     switch (req.method) {
       case 'GET':
-        return await getTenants(req, res);
+        return await handleGetTenants(req, res);
       case 'POST':
-        return await createTenant(req, res);
+        return await handleCreateTenant(req, res);
       case 'PUT':
-        return await updateTenant(req, res);
+        return await handleUpdateTenant(req, res);
       case 'DELETE':
-        return await deleteTenant(req, res);
+        return await handleDeleteTenant(req, res);
       default:
-        return res.status(405).json({ error: 'Method not allowed' });
+        return res.status(405).json({ 
+          success: false, 
+          error: 'Method not allowed' 
+        });
     }
   } catch (error) {
-    console.error('Tenants API error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Tenant Management error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      details: error.message
+    });
   }
 }
 
-// Get all tenants
-async function getTenants(req, res) {
+// Get all tenants (admin only)
+async function handleGetTenants(req, res) {
   try {
-    const allTenants = await tenantService.getAll();
-
-    res.status(200).json({
+    const { authService } = await import('../shared/postgresDatabase.js');
+    // Using direct db connection
+    
+    const tenants = await db.any('SELECT * FROM tenants ORDER BY created_at DESC');
+    
+    return res.status(200).json({
       success: true,
-      data: allTenants
+      data: tenants,
+      count: tenants.length
     });
-
   } catch (error) {
     console.error('Error getting tenants:', error);
-    res.status(500).json({ error: 'Failed to fetch tenants' });
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve tenants',
+      details: error.message
+    });
   }
 }
 
-// Create a new tenant
-async function createTenant(req, res) {
+// Create new tenant with admin user
+async function handleCreateTenant(req, res) {
   try {
-    const {
-      name,
-      domain,
-      plan,
-      contactEmail,
-      contactPhone,
+    const { 
+      name, 
+      domain, 
+      contactEmail, 
+      contactPhone, 
       address,
-      licenseDays
+      plan = 'trial',
+      adminEmail,
+      adminPassword,
+      adminFirstName,
+      adminLastName,
+      customLimits
     } = req.body;
 
     // Validate required fields
-    if (!name || !domain || !contactEmail) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: name, domain, contactEmail' 
+    if (!name || !domain || !contactEmail || !adminEmail || !adminPassword) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: name, domain, contactEmail, adminEmail, adminPassword'
       });
     }
 
-    // Check if domain already exists
-    const existingTenant = await tenantService.getByDomain(domain);
-    
-    if (existingTenant) {
-      return res.status(409).json({ 
-        error: 'Domain already exists' 
-      });
+    // Using direct db connection
+
+    // Define license limits based on plan
+    let licenseLimits;
+    if (customLimits) {
+      licenseLimits = customLimits;
+    } else {
+      switch (plan) {
+        case 'trial':
+          licenseLimits = {
+            students: 25,
+            coaches: 2,
+            branches: 1,
+            classes: 10,
+            championships: 2,
+            weight_divisions: 10,
+            fight_modalities: 5,
+            affiliations: 2
+          };
+          break;
+        case 'basic':
+          licenseLimits = {
+            students: 100,
+            coaches: 5,
+            branches: 2,
+            classes: 50,
+            championships: 10,
+            weight_divisions: 20,
+            fight_modalities: 10,
+            affiliations: 5
+          };
+          break;
+        case 'professional':
+          licenseLimits = {
+            students: 500,
+            coaches: 15,
+            branches: 5,
+            classes: 200,
+            championships: 50,
+            weight_divisions: 50,
+            fight_modalities: 25,
+            affiliations: 15
+          };
+          break;
+        case 'enterprise':
+          licenseLimits = {
+            students: -1, // Unlimited
+            coaches: -1,
+            branches: -1,
+            classes: -1,
+            championships: -1,
+            weight_divisions: -1,
+            fight_modalities: -1,
+            affiliations: -1
+          };
+          break;
+        default:
+          licenseLimits = {
+            students: 100,
+            coaches: 5,
+            branches: 1,
+            classes: 50,
+            championships: 10,
+            weight_divisions: 20,
+            fight_modalities: 10,
+            affiliations: 5
+          };
+      }
     }
 
-    // Create new tenant
-    const tenantData = {
-      name,
-      domain,
-      plan: plan || 'enterprise',
-      licenseStart: new Date().toISOString(),
-      licenseEnd: new Date(Date.now() + (licenseDays || 365) * 24 * 60 * 60 * 1000).toISOString(),
-      isActive: true,
-      contactEmail,
-      contactPhone: contactPhone || '',
-      address: address || ''
-    };
+    // Start transaction
+    console.log('🔄 Starting tenant creation transaction...');
+    const result = await db.tx(async (t) => {
+      console.log('📝 Creating tenant with data:', { name, domain, plan, contactEmail });
+      
+      // Create tenant
+      const tenant = await t.one(`
+        INSERT INTO tenants (
+          name, domain, plan, contact_email, contact_phone, address,
+          license_start, license_end, is_active, settings, license_limits
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        RETURNING *
+      `, [
+        name,
+        domain,
+        plan,
+        contactEmail,
+        contactPhone || null,
+        address || null,
+        new Date(),
+        new Date(Date.now() + (plan === 'trial' ? 14 * 24 * 60 * 60 * 1000 : 365 * 24 * 60 * 60 * 1000)), // 14 days for trial, 1 year for paid
+        true,
+        JSON.stringify({
+          currency: 'USD',
+          language: 'ENU',
+          timezone: 'America/New_York',
+          features: {
+            publicBooking: true,
+            classScheduling: true,
+            studentManagement: true,
+            championshipManagement: plan !== 'trial'
+          }
+        }),
+        JSON.stringify(licenseLimits)
+      ]);
+      
+      console.log('✅ Tenant created successfully:', { id: tenant.id, domain: tenant.domain });
 
-    const newTenant = await tenantService.create(tenantData);
+      // Hash admin password
+      console.log('🔐 Hashing admin password...');
+      const hashedPassword = await bcrypt.hash(adminPassword, 12);
 
-    res.status(201).json({
+      // Create admin user
+      console.log('👤 Creating admin user with data:', { adminEmail, adminFirstName, adminLastName, tenantId: tenant.id });
+      const adminUser = await t.one(`
+        INSERT INTO users (
+          tenant_id, email, password_hash, first_name, last_name,
+          role, status, email_verified
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING id, email, first_name, last_name, role, status, created_at
+      `, [
+        tenant.id,
+        adminEmail,
+        hashedPassword,
+        adminFirstName || 'Admin',
+        adminLastName || 'User',
+        'system_manager',
+        'active',
+        true
+      ]);
+      
+      console.log('✅ Admin user created successfully:', { id: adminUser.id, email: adminUser.email });
+
+      // Create default branch
+      console.log('🏢 Creating default branch...');
+      const branch = await t.one(`
+        INSERT INTO branches (
+          tenant_id, name, address, city, state, country, postal_code,
+          phone, email, manager_id, is_active, capacity
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        RETURNING *
+      `, [
+        tenant.id,
+        'Main Dojo',
+        address || '123 Main Street',
+        'City',
+        'State',
+        'Country',
+        '12345',
+        contactPhone || null,
+        contactEmail,
+        adminUser.id,
+        true,
+        50
+      ]);
+      
+      console.log('✅ Default branch created successfully:', { id: branch.id, name: branch.name });
+
+      console.log('🎉 Transaction completed successfully!');
+      return { tenant, adminUser, branch };
+    });
+
+    console.log('📤 Sending success response with data:', {
+      tenantId: result.tenant.id,
+      tenantDomain: result.tenant.domain,
+      adminUserId: result.adminUser.id,
+      adminEmail: result.adminUser.email
+    });
+
+    return res.status(201).json({
       success: true,
-      data: newTenant,
-      message: 'Tenant created successfully'
+      message: 'Tenant created successfully',
+      data: {
+        tenant: result.tenant,
+        adminUser: {
+          ...result.adminUser,
+          password: '[HIDDEN]'
+        },
+        branch: result.branch
+      }
     });
 
   } catch (error) {
-    console.error('Error creating tenant:', error);
-    res.status(500).json({ error: 'Failed to create tenant' });
+    console.error('❌ Error creating tenant:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      code: error.code,
+      detail: error.detail,
+      stack: error.stack
+    });
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to create tenant',
+      details: error.message
+    });
   }
 }
 
 // Update tenant
-async function updateTenant(req, res) {
+async function handleUpdateTenant(req, res) {
   try {
     const { id } = req.query;
     const updateData = req.body;
 
     if (!id) {
-      return res.status(400).json({ error: 'Tenant ID is required' });
+      return res.status(400).json({
+        success: false,
+        error: 'Tenant ID is required'
+      });
     }
 
-    // In a real application, this would update the database
-    const tenants = await getTenantsFromStorage();
-    const tenantIndex = tenants.findIndex(t => t.id === id);
-    
-    if (tenantIndex === -1) {
-      return res.status(404).json({ error: 'Tenant not found' });
+    // Using direct db connection
+
+    // Build dynamic update query
+    const allowedFields = ['name', 'domain', 'plan', 'contact_email', 'contact_phone', 'address', 'is_active', 'settings'];
+    const updates = [];
+    const values = [];
+    let paramCount = 1;
+
+    for (const [key, value] of Object.entries(updateData)) {
+      if (allowedFields.includes(key)) {
+        updates.push(`${key} = $${paramCount}`);
+        values.push(value);
+        paramCount++;
+      }
     }
 
-    const updatedTenant = {
-      ...tenants[tenantIndex],
-      ...updateData,
-      updatedAt: new Date().toISOString()
-    };
+    if (updates.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'No valid fields to update'
+      });
+    }
 
-    tenants[tenantIndex] = updatedTenant;
-    await saveTenantsToStorage(tenants);
+    updates.push(`updated_at = NOW()`);
+    values.push(id);
 
-    res.status(200).json({
+    const tenant = await db.one(`
+      UPDATE tenants 
+      SET ${updates.join(', ')}
+      WHERE id = $${paramCount}
+      RETURNING *
+    `, values);
+
+    return res.status(200).json({
       success: true,
-      data: updatedTenant,
-      message: 'Tenant updated successfully'
+      message: 'Tenant updated successfully',
+      data: tenant
     });
 
   } catch (error) {
     console.error('Error updating tenant:', error);
-    res.status(500).json({ error: 'Failed to update tenant' });
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to update tenant',
+      details: error.message
+    });
   }
 }
 
 // Delete tenant
-async function deleteTenant(req, res) {
+async function handleDeleteTenant(req, res) {
   try {
     const { id } = req.query;
 
     if (!id) {
-      return res.status(400).json({ error: 'Tenant ID is required' });
+      return res.status(400).json({
+        success: false,
+        error: 'Tenant ID is required'
+      });
     }
 
-    // In a real application, this would delete from database
-    const tenants = await getTenantsFromStorage();
-    const filteredTenants = tenants.filter(t => t.id !== id);
-    
-    if (tenants.length === filteredTenants.length) {
-      return res.status(404).json({ error: 'Tenant not found' });
-    }
+    // Using direct db connection
 
-    await saveTenantsToStorage(filteredTenants);
+    // Delete tenant (cascade will handle related records)
+    await db.none('DELETE FROM tenants WHERE id = $1', [id]);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Tenant deleted successfully'
     });
 
   } catch (error) {
     console.error('Error deleting tenant:', error);
-    res.status(500).json({ error: 'Failed to delete tenant' });
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to delete tenant',
+      details: error.message
+    });
   }
-}
-
-// Helper functions for data storage
-async function getTenantsFromStorage() {
-  // In a real application, this would query the database
-  // For this mock setup, we'll return hardcoded data
-  return [
-    {
-      id: 'tubaraobjj-tenant',
-      name: 'GFTeam Tubarão',
-      domain: 'tubaraobjj.com',
-      plan: 'enterprise',
-      licenseStart: new Date().toISOString(),
-      licenseEnd: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-      isActive: true,
-      contactEmail: 'marciotubaraobjj@gmail.com',
-      contactPhone: '+55 21 97366-8820',
-      address: 'R. Teodoro da Silva, 725 - Vila Isabel, Rio de Janeiro - RJ, 20560-060',
-      createdAt: new Date().toISOString(),
-      userCount: 3
-    },
-    {
-      id: 'elite-combat-tenant',
-      name: 'Elite Combat Jiu-Jitsu',
-      domain: 'elite-combat.jiu-jitsu.com',
-      plan: 'enterprise',
-      licenseStart: new Date().toISOString(),
-      licenseEnd: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-      isActive: true,
-      contactEmail: 'admin@elite-combat.jiu-jitsu.com',
-      contactPhone: '',
-      address: '',
-      createdAt: new Date().toISOString(),
-      userCount: 3
-    }
-  ];
-}
-
-async function saveTenantToStorage(tenant) {
-  // In a real application, this would save to database
-  console.log('Saving tenant to storage:', tenant);
-  // For now, we'll just log it
-}
-
-async function saveTenantsToStorage(tenants) {
-  // In a real application, this would save to database
-  console.log('Saving tenants to storage:', tenants);
-  // For now, we'll just log it
 }
