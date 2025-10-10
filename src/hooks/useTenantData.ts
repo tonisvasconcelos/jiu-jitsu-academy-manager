@@ -3,42 +3,22 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
 
-export function useTenantData<T>(
-  baseKey: string,
-  defaultValue: T
-): [T, (data: T) => void, boolean] {
-  const { tenant, isLoading: authLoading } = useAuth()
-  const [data, setData] = useState<T>(defaultValue)
-  const [isLoading, setIsLoading] = useState(true)
-
-  // Load data when auth loading completes and tenant is available
+export function useTenantData<T>(key: string, tenantId?: string): T[] {
+  const [data, setData] = useState<T[]>([]);
+  const { tenant, isLoading: authLoading } = useAuth();
+  
   useEffect(() => {
-    console.log(`useTenantData(${baseKey}): authLoading=${authLoading}, tenant=`, tenant)
-    console.log(`useTenantData(${baseKey}): tenant.id=${tenant?.id}`)
-    if (!authLoading) {
-      if (tenant?.id) {
-        const loadedData = getTenantData<T>(baseKey, tenant.id, defaultValue)
-        console.log(`useTenantData(${baseKey}): loaded data:`, loadedData)
-        setData(loadedData)
-        setIsLoading(false)
-      } else {
-        // No tenant available, use default value
-        console.log(`useTenantData(${baseKey}): no tenant, using default value`)
-        setData(defaultValue)
-        setIsLoading(false)
-      }
-    }
-  }, [tenant?.id, authLoading, baseKey, defaultValue])
-
-  // Save data function
-  const saveData = (newData: T) => {
-    if (tenant?.id) {
-      saveTenantData(baseKey, tenant.id, newData)
-      setData(newData)
-    }
-  }
-
-  return [data, saveData, isLoading]
+    const currentTenantId = tenantId || tenant?.id;
+    if (!currentTenantId || authLoading) return;
+    
+    const storageKey = `oss365:${key}-${currentTenantId}`;
+    const raw = localStorage.getItem(storageKey);
+    const parsed = raw ? JSON.parse(raw) : [];
+    const safe = Array.isArray(parsed) ? parsed : [];
+    setData(safe);
+    console.log(`useTenantData(${key}): loaded ${safe.length} items for tenant ${currentTenantId}`);
+  }, [key, tenantId, tenant?.id, authLoading]);
+  
+  return data;
 }

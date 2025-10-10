@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { LanguageProvider, Language } from './contexts/LanguageContext'
 import { AuthProvider } from './contexts/AuthContext'
+import { TenantReady } from './components/TenantReady'
+import { AllDataProviders } from './components/AllDataProviders'
 import WelcomeLanguage from './pages/WelcomeLanguage'
 import ProtectedRoute from './components/ProtectedRoute'
 import ErrorBoundary from './components/ErrorBoundary'
 import Login from './pages/Login'
 import AdminPortal from './pages/admin/AdminPortal'
+import AppWithContexts from './components/AppWithContexts'
 
 function App() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('ENU')
@@ -21,8 +24,8 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <LanguageProvider initialLanguage={selectedLanguage}>
-        <AuthProvider>
+      <AuthProvider>
+        <LanguageProvider initialLanguage={selectedLanguage}>
           <Router basename="/">
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
               <Routes>
@@ -61,7 +64,13 @@ function App() {
                   path="/*" 
                   element={
                     <ErrorBoundary>
-                      <ProtectedRoute />
+                      <ProtectedRoute>
+                        <TenantReady>
+                          <AllDataProviders>
+                            <AppWithContexts />
+                          </AllDataProviders>
+                        </TenantReady>
+                      </ProtectedRoute>
                     </ErrorBoundary>
                   } 
                 />
@@ -74,8 +83,8 @@ function App() {
               </Routes>
             </div>
           </Router>
-        </AuthProvider>
-      </LanguageProvider>
+        </LanguageProvider>
+      </AuthProvider>
     </ErrorBoundary>
   )
 }

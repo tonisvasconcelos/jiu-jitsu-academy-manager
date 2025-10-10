@@ -1,15 +1,18 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react'
 import { apiClient } from '../services/api'
 import type { LoginCredentials, RegisterData, AuthResult, User, Tenant, UserRole } from '../types/api'
+import { seedSampleDataIfNeeded } from '../utils/seed'
 
-interface AuthContextType {
-  // State
+type AuthState = {
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  token: string | null;
   user: User | null;
   tenant: Tenant | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
   error: string | null;
+};
 
+interface AuthContextType extends AuthState {
   // Actions
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
@@ -39,16 +42,15 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   console.log('AuthProvider: Component rendered');
-  const [user, setUser] = useState<User | null>(null);
-  const [tenant, setTenant] = useState<Tenant | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   
-  // Track changes to isAuthenticated
-  useEffect(() => {
-    console.log('AuthContext: isAuthenticated changed to:', isAuthenticated);
-  }, [isAuthenticated]);
+  const [auth, setAuth] = useState<AuthState>({
+    isLoading: true,
+    isAuthenticated: false,
+    token: null,
+    user: null,
+    tenant: null,
+    error: null
+  });
   
   // Inactivity timeout (5 minutes)
   const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds
@@ -82,82 +84,193 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const initializeAuth = async (): Promise<void> => {
+    console.log('AuthContext: initializeAuth called');
     try {
-      console.log('AuthContext: initializeAuth called');
-      setIsLoading(true);
+      const raw = localStorage.getItem('oss365-auth');
+      if (!raw) throw new Error('No saved auth');
       
-      // Check localStorage for saved auth data
-      const savedAuth = localStorage.getItem('auth_data');
-      console.log('AuthContext: savedAuth from localStorage:', savedAuth);
-      if (savedAuth) {
-        try {
-          const authData = JSON.parse(savedAuth);
-          const { user: savedUser, tenant: savedTenant, timestamp } = authData;
-          
-          // Check if the saved data is not too old (24 hours)
-          const isExpired = Date.now() - timestamp > 24 * 60 * 60 * 1000;
-          
-          if (!isExpired && savedUser && savedTenant) {
-            console.log('AuthContext: Restoring saved auth data:', { savedUser, savedTenant });
-            console.log('AuthContext: Saved tenant ID:', savedTenant?.id);
-            setUser(savedUser);
-            setTenant(savedTenant);
-            setIsAuthenticated(true);
-            return;
-          } else {
-            // Clear expired data
-            console.log('AuthContext: Clearing expired auth data');
-            localStorage.removeItem('auth_data');
-          }
-        } catch (parseError) {
-          console.error('Failed to parse saved auth data:', parseError);
-          localStorage.removeItem('auth_data');
-        }
-      }
-
-      // No valid saved auth data, user needs to login
-      console.log('AuthContext: No valid saved auth data, setting unauthenticated');
-      setIsAuthenticated(false);
-      setUser(null);
-      setTenant(null);
+      const parsed = JSON.parse(raw);
+      if (!parsed?.token || !parsed?.tenant?.id) throw new Error('Invalid saved auth');
       
-    } catch (error) {
-      console.error('Auth initialization failed:', error);
-      setIsAuthenticated(false);
-    } finally {
-      setIsLoading(false);
+      setAuth({ 
+        isLoading: false, 
+        isAuthenticated: true, 
+        token: parsed.token,
+        user: parsed.user,
+        tenant: parsed.tenant,
+        error: null
+      });
+      console.log('AuthContext: restored auth for tenant', parsed.tenant.id);
+    } catch {
+      setAuth({ 
+        isLoading: false, 
+        isAuthenticated: false, 
+        token: null, 
+        user: null, 
+        tenant: null,
+        error: null
+      });
+      console.log('AuthContext: No valid saved auth, setting unauthenticated');
     }
   };
 
-  const saveAuthToStorage = (user: User, tenant: Tenant): void => {
-    const authData = {
-      user,
-      tenant,
-      timestamp: Date.now()
-    };
-    localStorage.setItem('auth_data', JSON.stringify(authData));
+  const login = async (credentials: LoginCredentials): Promise<void> => {
+    console.log('AuthContext.login: start', credentials.tenantDomain);
+    
+    try {
+      setAuth(prev => ({ ...prev, isLoading: true, error: null }));
+
+      const result: AuthResult = await apiClient.login(credentials);
+      
+      const next = { 
+        isLoading: false, 
+        isAuthenticated: true, 
+        token: result.accessToken,
+        user: result.user,
+        tenant: result.tenant,
+        error: null
+      };
+      
+      // Save to localStorage before setting state
+      localStorage.setItem('oss365-auth', JSON.stringify(next));
+      setAuth(next);
+      console.log('AuthContext.login: success - tenant', result.tenant.id);
+
+      // Seed sample data if needed
+      await seedSampleDataIfNeeded(result.tenant.id);
+      
+      // Reset inactivity timer
+      resetInactivityTimer();
+      
+    } catch (error: any) {
+      console.error('Login failed:', error);
+      setAuth(prev => ({ 
+        ...prev, 
+        isLoading: false, 
+        isAuthenticated: false, 
+        token: null,
+        user: null, 
+        tenant: null,
+        error: error.message || 'Login failed'
+      }));
+    }
   };
 
-  const clearAuthFromStorage = (): void => {
-    localStorage.removeItem('auth_data');
+  const logout = async (): Promise<void> => {
+    console.log('AuthContext: Logout called');
+    
+    // Clear localStorage
+    localStorage.removeItem('oss365-auth');
+    
+    // Clear all tenant-specific data
+    if (auth.tenant?.id) {
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.includes(auth.tenant!.id) || key.startsWith('oss365:')) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
+    
+    setAuth({
+      isLoading: false,
+      isAuthenticated: false,
+      token: null,
+      user: null,
+      tenant: null,
+      error: null
+    });
+    
+    // Clear inactivity timer
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+  };
+
+  const register = async (data: RegisterData): Promise<void> => {
+    try {
+      setAuth(prev => ({ ...prev, isLoading: true, error: null }));
+      
+      const result: AuthResult = await apiClient.register(data);
+      
+      const next = { 
+        isLoading: false, 
+        isAuthenticated: true, 
+        token: result.accessToken,
+        user: result.user,
+        tenant: result.tenant,
+        error: null
+      };
+      
+      localStorage.setItem('oss365-auth', JSON.stringify(next));
+      setAuth(next);
+      
+      // Seed sample data for new tenant
+      await seedSampleDataIfNeeded(result.tenant.id);
+      
+    } catch (error: any) {
+      console.error('Registration failed:', error);
+      setAuth(prev => ({ 
+        ...prev, 
+        isLoading: false, 
+        isAuthenticated: false, 
+        token: null,
+        user: null, 
+        tenant: null,
+        error: error.message || 'Registration failed'
+      }));
+    }
+  };
+
+  const refreshUser = async (): Promise<void> => {
+    // Implementation for refreshing user data
+    console.log('AuthContext: refreshUser called');
+  };
+
+  const clearError = (): void => {
+    setAuth(prev => ({ ...prev, error: null }));
+  };
+
+  // Utility functions
+  const hasRole = (role: UserRole): boolean => {
+    return auth.user?.role === role;
+  };
+
+  const hasAnyRole = (roles: UserRole[]): boolean => {
+    return roles.includes(auth.user?.role as UserRole);
+  };
+
+  const canAccess = (requiredRole: UserRole): boolean => {
+    if (!auth.user) return false;
+    
+    const roleHierarchy: Record<UserRole, number> = {
+      [UserRole.STUDENT]: 1,
+      [UserRole.COACH]: 2,
+      [UserRole.BRANCH_MANAGER]: 3,
+      [UserRole.SYSTEM_MANAGER]: 4
+    };
+    
+    const userRoleLevel = roleHierarchy[auth.user.role as UserRole] || 0;
+    const requiredRoleLevel = roleHierarchy[requiredRole] || 0;
+    
+    return userRoleLevel >= requiredRoleLevel;
+  };
+
+  // Inactivity tracking
+  const resetInactivityTimer = (): void => {
+    lastActivityRef.current = Date.now();
+    
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    
+    inactivityTimerRef.current = setTimeout(() => {
+      console.log('AuthContext: Inactivity timeout - logging out');
+      logout();
+    }, INACTIVITY_TIMEOUT);
   };
 
   const setupInactivityTracking = (): void => {
-    const resetInactivityTimer = () => {
-      lastActivityRef.current = Date.now();
-      
-      if (inactivityTimerRef.current) {
-        clearTimeout(inactivityTimerRef.current);
-      }
-      
-      if (isAuthenticated) {
-        inactivityTimerRef.current = setTimeout(() => {
-          console.log('User inactive for 5 minutes, logging out...');
-          logout();
-        }, INACTIVITY_TIMEOUT);
-      }
-    };
-
     // Track user activity
     const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
     
@@ -169,286 +282,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     resetInactivityTimer();
   };
 
-  const login = async (credentials: LoginCredentials): Promise<void> => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const result: AuthResult = await apiClient.login(credentials);
-      
-      console.log('AuthContext: Login result:', result);
-      console.log('AuthContext: Tenant object:', result.tenant);
-      console.log('AuthContext: Tenant ID:', result.tenant?.id);
-      
-      setUser(result.user);
-      setTenant(result.tenant);
-      setIsAuthenticated(true);
-      
-      // Save to localStorage for persistence
-      saveAuthToStorage(result.user, result.tenant);
-      
-      // Initialize tenant-specific data for new tenants
-      if (result.tenant && result.tenant.id) {
-        // Check if this tenant already has data
-        const existingStudents = localStorage.getItem(`students-${result.tenant.id}`);
-        const existingTeachers = localStorage.getItem(`teachers-${result.tenant.id}`);
-        const existingBranches = localStorage.getItem(`branches-${result.tenant.id}`);
-        
-        // Only create sample data if tenant has no existing data
-        console.log(`Checking existing data for tenant ${result.tenant.id}:`, {
-          existingStudents: !!existingStudents,
-          existingTeachers: !!existingTeachers,
-          existingBranches: !!existingBranches
-        });
-        
-        if (!existingStudents && !existingTeachers && !existingBranches) {
-          console.log(`Initializing sample data for new tenant: ${result.tenant.id}`);
-          
-          // Create tenant-specific sample data
-          const sampleStudents = [{
-            id: 'student_1',
-            tenantId: result.tenant.id,
-            studentId: 'STU001',
-            firstName: 'John',
-            lastName: 'Doe',
-            displayName: 'John Doe',
-            birthDate: '1990-01-01',
-            gender: 'male',
-            beltLevel: 'blue',
-            documentId: '12345678901',
-            email: 'john.doe@example.com',
-            phone: '1234567890',
-            branchId: 'main-branch',
-            active: true,
-            isKidsStudent: false,
-            weight: 80,
-            weightDivisionId: 'middleweight',
-            photoUrl: '',
-            preferredLanguage: 'ENU',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }, {
-            id: 'student_2',
-            tenantId: result.tenant.id,
-            studentId: 'STU002',
-            firstName: 'Jane',
-            lastName: 'Smith',
-            displayName: 'Jane Smith',
-            birthDate: '1992-05-15',
-            gender: 'female',
-            beltLevel: 'purple',
-            documentId: '98765432109',
-            email: 'jane.smith@example.com',
-            phone: '0987654321',
-            branchId: 'main-branch',
-            active: true,
-            isKidsStudent: false,
-            weight: 65,
-            weightDivisionId: 'lightweight',
-            photoUrl: '',
-            preferredLanguage: 'ENU',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }];
-
-          const sampleTeachers = [{
-            id: 'teacher_1',
-            tenantId: result.tenant.id,
-            firstName: 'Master',
-            lastName: 'Instructor',
-            displayName: 'Master Instructor',
-            email: 'master@example.com',
-            phone: '1111111111',
-            branchId: 'main-branch',
-            active: true,
-            beltLevel: 'black',
-            specialization: 'Brazilian Jiu-Jitsu',
-            experience: 10,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }];
-
-          const sampleBranches = [{
-            id: 'main-branch',
-            tenantId: result.tenant.id,
-            name: 'Main Branch',
-            address: '123 Main Street',
-            phone: '555-0123',
-            email: 'main@example.com',
-            active: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }];
-
-          const sampleModalities = [{
-            id: 'modality_1',
-            tenantId: result.tenant.id,
-            name: 'Brazilian Jiu-Jitsu',
-            description: 'Traditional Brazilian Jiu-Jitsu training',
-            active: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }];
-
-          const sampleClasses = [{
-            id: 'class_1',
-            tenantId: result.tenant.id,
-            name: 'Morning BJJ',
-            modalityId: 'modality_1',
-            teacherId: 'teacher_1',
-            branchId: 'main-branch',
-            daysOfWeek: ['monday', 'wednesday', 'friday'],
-            startTime: '09:00',
-            endTime: '10:30',
-            maxStudents: 20,
-            status: 'active',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }];
-
-          const sampleCheckIns = [{
-            id: 'checkin_1',
-            tenantId: result.tenant.id,
-            studentId: 'student_1',
-            classId: 'class_1',
-            checkInTime: new Date().toISOString(),
-            status: 'present',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }];
-
-          // Store tenant-specific data
-          console.log(`Saving sample data to localStorage for tenant: ${result.tenant.id}`);
-          localStorage.setItem(`students-${result.tenant.id}`, JSON.stringify(sampleStudents));
-          localStorage.setItem(`teachers-${result.tenant.id}`, JSON.stringify(sampleTeachers));
-          localStorage.setItem(`branches-${result.tenant.id}`, JSON.stringify(sampleBranches));
-          localStorage.setItem(`jiu-jitsu-fight-modalities-${result.tenant.id}`, JSON.stringify(sampleModalities));
-          localStorage.setItem(`jiu-jitsu-class-schedules-${result.tenant.id}`, JSON.stringify(sampleClasses));
-          localStorage.setItem(`jiu-jitsu-class-check-ins-${result.tenant.id}`, JSON.stringify(sampleCheckIns));
-          
-          console.log(`Sample data created and saved for tenant: ${result.tenant.id}`);
-          console.log(`Sample students count: ${sampleStudents.length}`);
-          console.log(`Sample teachers count: ${sampleTeachers.length}`);
-          console.log(`Sample branches count: ${sampleBranches.length}`);
-        } else {
-          console.log(`Tenant ${result.tenant.id} already has data, skipping initialization`);
-        }
-      }
-      
-      // Reset inactivity timer
-      lastActivityRef.current = Date.now();
-    } catch (error: any) {
-      setError(error.message || 'Login failed');
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const register = async (data: RegisterData): Promise<void> => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const result: AuthResult = await apiClient.register(data);
-      
-      setUser(result.user);
-      setTenant(result.tenant);
-      setIsAuthenticated(true);
-    } catch (error: any) {
-      setError(error.message || 'Registration failed');
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = async (): Promise<void> => {
-    try {
-      await apiClient.logout();
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      setUser(null);
-      setTenant(null);
-      setIsAuthenticated(false);
-      setError(null);
-      
-      // Clear from localStorage
-      clearAuthFromStorage();
-      
-      // Clear inactivity timer
-      if (inactivityTimerRef.current) {
-        clearTimeout(inactivityTimerRef.current);
-        inactivityTimerRef.current = null;
-      }
-    }
-  };
-
-  const refreshUser = async (): Promise<void> => {
-    try {
-      if (apiClient.isAuthenticated()) {
-        const userData = await apiClient.getCurrentUser();
-        if (userData) {
-          setUser(userData.user);
-          setTenant(userData.tenant);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to refresh user:', error);
-      await logout();
-    }
-  };
-
-  const clearError = (): void => {
-    setError(null);
-  };
-
-  // Role checking utilities
-  const hasRole = (role: UserRole): boolean => {
-    return user?.role === role;
-  };
-
-  const hasAnyRole = (roles: UserRole[]): boolean => {
-    return user ? roles.includes(user.role) : false;
-  };
-
-  const canAccess = (requiredRole: UserRole): boolean => {
-    if (!user) return false;
-
-    const roleHierarchy: Record<UserRole, number> = {
-      [UserRole.STUDENT]: 1,
-      [UserRole.COACH]: 2,
-      [UserRole.BRANCH_MANAGER]: 3,
-      [UserRole.SYSTEM_MANAGER]: 4
-    };
-
-    return roleHierarchy[user.role] >= roleHierarchy[requiredRole];
-  };
-
-  const value: AuthContextType = {
-    // State
-    user,
-    tenant,
-    isAuthenticated,
-    isLoading,
-    error,
-
-    // Actions
+  const contextValue: AuthContextType = {
+    ...auth,
     login,
     register,
     logout,
     refreshUser,
     clearError,
-
-    // Utilities
     hasRole,
     hasAnyRole,
     canAccess
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

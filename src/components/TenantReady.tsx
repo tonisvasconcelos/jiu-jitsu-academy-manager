@@ -2,15 +2,16 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-interface ProtectedRouteProps {
+interface TenantReadyProps {
   children: React.ReactNode;
 }
 
-export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const auth = useAuth();
-  console.log('ProtectedRoute: Auth state', auth);
+export function TenantReady({ children }: TenantReadyProps) {
+  const { isLoading, isAuthenticated, tenant } = useAuth();
   
-  if (auth.isLoading) {
+  console.log('TenantReady: Auth state', { isLoading, isAuthenticated, tenantId: tenant?.id });
+  
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -21,11 +22,11 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
   
-  if (!auth.isAuthenticated) {
-    console.log('ProtectedRoute: Redirecting to login - not authenticated');
+  if (!isAuthenticated || !tenant?.id) {
+    console.log('TenantReady: Redirecting to login - not authenticated or no tenant');
     return <Navigate to="/login" replace />;
   }
   
-  console.log('ProtectedRoute: Rendering children for authenticated user');
+  console.log('TenantReady: Rendering children for tenant', tenant.id);
   return <>{children}</>;
 }

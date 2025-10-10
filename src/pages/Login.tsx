@@ -53,7 +53,8 @@ const Login: React.FC = () => {
         tenantDomain: formData.tenantDomain
       });
       
-      // Navigation will be handled by useEffect
+      // Navigate to dashboard after successful login and seeding
+      navigate('/dashboard');
     } catch (error: any) {
       setError(error.message || 'Login failed');
     } finally {

@@ -47,9 +47,14 @@ interface StudentContextType {
 const StudentContext = createContext<StudentContextType | undefined>(undefined)
 
 export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [students, setStudents] = useTenantData<Student[]>('students', [])
+  const students = useTenantData<Student>('students')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
+  const setStudents = (newStudents: Student[]) => {
+    // This will be implemented to save to localStorage
+    console.log('StudentProvider: setStudents called with', newStudents.length, 'students');
+  }
 
 
   const addStudent = async (student: Omit<Student, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>) => {
