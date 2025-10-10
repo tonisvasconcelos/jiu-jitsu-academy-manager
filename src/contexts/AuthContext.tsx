@@ -76,10 +76,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const initializeAuth = async (): Promise<void> => {
     try {
+      console.log('AuthContext: initializeAuth called');
       setIsLoading(true);
       
       // Check localStorage for saved auth data
       const savedAuth = localStorage.getItem('auth_data');
+      console.log('AuthContext: savedAuth from localStorage:', savedAuth);
       if (savedAuth) {
         try {
           const authData = JSON.parse(savedAuth);
@@ -105,8 +107,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           localStorage.removeItem('auth_data');
         }
       }
-      
+
       // No valid saved auth data, user needs to login
+      console.log('AuthContext: No valid saved auth data, setting unauthenticated');
       setIsAuthenticated(false);
       setUser(null);
       setTenant(null);

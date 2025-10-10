@@ -15,7 +15,8 @@ export function useTenantData<T>(
 
   // Load data when auth loading completes and tenant is available
   useEffect(() => {
-    console.log(`useTenantData(${baseKey}): authLoading=${authLoading}, tenant.id=${tenant?.id}`)
+    console.log(`useTenantData(${baseKey}): authLoading=${authLoading}, tenant=`, tenant)
+    console.log(`useTenantData(${baseKey}): tenant.id=${tenant?.id}`)
     if (!authLoading) {
       if (tenant?.id) {
         const loadedData = getTenantData<T>(baseKey, tenant.id, defaultValue)
