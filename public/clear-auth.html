@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Authentication Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .btn:hover {
+            background: #c82333;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Clear Authentication Data</h1>
+        <p>This tool will clear all authentication data from your browser's local storage.</p>
+        
+        <div class="info">
+            <strong>Current Authentication Data:</strong><br>
+            <div id="currentAuth"></div>
+        </div>
+        
+        <button class="btn" onclick="clearAuthData()">Clear All Authentication Data</button>
+        
+        <div id="result"></div>
+        
+        <div class="info">
+            <strong>After clearing:</strong><br>
+            • You will be redirected to the login page<br>
+            • All saved login sessions will be removed<br>
+            • You'll need to log in again
+        </div>
+    </div>
+
+    <script>
+        // Show current auth data
+        function showCurrentAuth() {
+            const authData = localStorage.getItem('auth_data');
+            const authToken = localStorage.getItem('auth_token');
+            
+            let html = '';
+            if (authData) {
+                try {
+                    const parsed = JSON.parse(authData);
+                    html += `✅ Auth Data: ${parsed.user?.email || 'Unknown'} (${parsed.tenant?.domain || 'Unknown'})<br>`;
+                } catch (e) {
+                    html += `❌ Invalid Auth Data<br>`;
+                }
+            } else {
+                html += `❌ No Auth Data<br>`;
+            }
+            
+            if (authToken) {
+                html += `✅ Auth Token: Present<br>`;
+            } else {
+                html += `❌ No Auth Token<br>`;
+            }
+            
+            document.getElementById('currentAuth').innerHTML = html;
+        }
+        
+        function clearAuthData() {
+            // Clear all authentication data
+            localStorage.removeItem('auth_data');
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('selectedLanguage');
+            
+            // Clear any other potential auth-related data
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && (key.includes('auth') || key.includes('user') || key.includes('tenant'))) {
+                    keysToRemove.push(key);
+                }
+            }
+            
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            
+            document.getElementById('result').innerHTML = `
+                <div class="success">
+                    ✅ Authentication data cleared successfully!<br>
+                    Redirecting to login page...
+                </div>
+            `;
+            
+            // Update current auth display
+            showCurrentAuth();
+            
+            // Redirect to login after a short delay
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+        }
+        
+        // Show current auth data on page load
+        showCurrentAuth();
+    </script>
+</body>
+</html>
