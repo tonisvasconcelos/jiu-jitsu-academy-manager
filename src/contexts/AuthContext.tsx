@@ -78,14 +78,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       
-      // Always require fresh login - clear any saved auth data
-      localStorage.removeItem('auth_data');
-      localStorage.removeItem('auth_token');
+      // Check localStorage for saved auth data
+      const savedAuth = localStorage.getItem('auth_data');
+      if (savedAuth) {
+        try {
+          const authData = JSON.parse(savedAuth);
+          const { user: savedUser, tenant: savedTenant, timestamp } = authData;
+          
+          // Check if the saved data is not too old (24 hours)
+          const isExpired = Date.now() - timestamp > 24 * 60 * 60 * 1000;
+          
+          if (!isExpired && savedUser && savedTenant) {
+            setUser(savedUser);
+            setTenant(savedTenant);
+            setIsAuthenticated(true);
+            return;
+          } else {
+            // Clear expired data
+            localStorage.removeItem('auth_data');
+          }
+        } catch (parseError) {
+          console.error('Failed to parse saved auth data:', parseError);
+          localStorage.removeItem('auth_data');
+        }
+      }
       
-      // Clear any existing authentication state
+      // No valid saved auth data, user needs to login
+      setIsAuthenticated(false);
       setUser(null);
       setTenant(null);
-      setIsAuthenticated(false);
       
     } catch (error) {
       console.error('Auth initialization failed:', error);
