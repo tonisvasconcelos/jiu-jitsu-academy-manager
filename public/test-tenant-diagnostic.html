@@ -76,6 +76,7 @@
         
         <button class="btn" onclick="checkTenants()">Check All Tenants & Users</button>
         <button class="btn" onclick="testSpecificTenant()">Test Specific Tenant Lookup</button>
+        <button class="btn" onclick="testTransaction()">Test Database Transaction</button>
         <button class="btn" onclick="clearResults()">Clear Results</button>
         
         <div id="result"></div>
@@ -181,6 +182,41 @@
                 html += '</div>';
                 resultDiv.innerHTML = html;
                 
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="result error">❌ Request failed: ${error.message}</div>`;
+            }
+        }
+        
+        async function testTransaction() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="result info">Testing database transaction...</div>';
+            
+            try {
+                const response = await fetch('/api/diag/test-transaction');
+                const data = await response.json();
+                
+                if (data.success) {
+                    let html = '<div class="result success">';
+                    html += `✅ Transaction test completed!\n\n`;
+                    html += `📊 Results:\n`;
+                    html += `- Transaction Result: ${JSON.stringify(data.data.transactionResult, null, 2)}\n`;
+                    html += `- Verification: ${JSON.stringify(data.data.verification, null, 2)}\n`;
+                    html += `- Was Actually Saved: ${data.data.wasSaved ? 'YES ✅' : 'NO ❌'}\n\n`;
+                    
+                    if (data.data.wasSaved) {
+                        html += `🎉 SUCCESS: Transaction is working correctly!\n`;
+                        html += `The issue might be elsewhere in the tenant creation process.\n`;
+                    } else {
+                        html += `❌ PROBLEM: Transaction is NOT working!\n`;
+                        html += `Records are being created but not actually saved to database.\n`;
+                        html += `This explains why login cannot find the tenants.\n`;
+                    }
+                    
+                    html += '</div>';
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.innerHTML = `<div class="result error">❌ Transaction test failed: ${data.error}\nDetails: ${data.details}\nError Code: ${data.errorCode}\nError Detail: ${data.errorDetail}</div>`;
+                }
             } catch (error) {
                 resultDiv.innerHTML = `<div class="result error">❌ Request failed: ${error.message}</div>`;
             }
