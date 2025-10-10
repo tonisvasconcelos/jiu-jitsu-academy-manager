@@ -11,13 +11,8 @@ import AdminPortal from './pages/admin/AdminPortal'
 function App() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('ENU')
 
-  useEffect(() => {
-    // Initialize language from localStorage
-    const savedLanguage = localStorage.getItem('selectedLanguage') as Language
-    if (savedLanguage) {
-      setSelectedLanguage(savedLanguage)
-    }
-  }, [])
+  // Don't initialize from localStorage - force fresh language selection
+  // The AuthContext will clear localStorage, so we start fresh every time
 
   const handleLanguageSelect = (language: Language) => {
     setSelectedLanguage(language)
@@ -71,14 +66,10 @@ function App() {
                   } 
                 />
                 
-                {/* Default redirect - always check language first */}
+                {/* Default redirect - always go to language selection first */}
                 <Route 
                   path="/" 
-                  element={
-                    localStorage.getItem('selectedLanguage') ? 
-                      <Navigate to="/login" replace /> : 
-                      <Navigate to="/welcome-language" replace />
-                  } 
+                  element={<Navigate to="/welcome-language" replace />} 
                 />
               </Routes>
             </div>
