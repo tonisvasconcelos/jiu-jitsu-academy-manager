@@ -195,6 +195,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const existingBranches = localStorage.getItem(`branches-${result.tenant.id}`);
         
         // Only create sample data if tenant has no existing data
+        console.log(`Checking existing data for tenant ${result.tenant.id}:`, {
+          existingStudents: !!existingStudents,
+          existingTeachers: !!existingTeachers,
+          existingBranches: !!existingBranches
+        });
+        
         if (!existingStudents && !existingTeachers && !existingBranches) {
           console.log(`Initializing sample data for new tenant: ${result.tenant.id}`);
           
@@ -312,6 +318,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }];
 
           // Store tenant-specific data
+          console.log(`Saving sample data to localStorage for tenant: ${result.tenant.id}`);
           localStorage.setItem(`students-${result.tenant.id}`, JSON.stringify(sampleStudents));
           localStorage.setItem(`teachers-${result.tenant.id}`, JSON.stringify(sampleTeachers));
           localStorage.setItem(`branches-${result.tenant.id}`, JSON.stringify(sampleBranches));
@@ -319,7 +326,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           localStorage.setItem(`jiu-jitsu-class-schedules-${result.tenant.id}`, JSON.stringify(sampleClasses));
           localStorage.setItem(`jiu-jitsu-class-check-ins-${result.tenant.id}`, JSON.stringify(sampleCheckIns));
           
-          console.log(`Sample data created for tenant: ${result.tenant.id}`);
+          console.log(`Sample data created and saved for tenant: ${result.tenant.id}`);
+          console.log(`Sample students count: ${sampleStudents.length}`);
+          console.log(`Sample teachers count: ${sampleTeachers.length}`);
+          console.log(`Sample branches count: ${sampleBranches.length}`);
         } else {
           console.log(`Tenant ${result.tenant.id} already has data, skipping initialization`);
         }
