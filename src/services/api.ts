@@ -172,10 +172,10 @@ class ApiClient {
       password: credentials.password
     };
 
-    const response = await this.request<LoginResponse>('/auth/login', {
+    const response = await this.request('/auth/login', {
       method: 'POST',
       body: JSON.stringify(backendCredentials),
-    });
+    }) as LoginResponse;
 
     // Our backend returns the data directly, not wrapped in a data property
     if (response.success && response.token) {
@@ -186,7 +186,22 @@ class ApiClient {
 
     // Return in the expected format
     return {
-      user: response.user || {} as any,
+      user: {
+        id: response.user?.id || '',
+        tenant_id: response.user?.tenantId || '',
+        email: response.user?.email || '',
+        first_name: response.user?.firstName || '',
+        last_name: response.user?.lastName || '',
+        phone: '',
+        role: response.user?.role as any || 'student',
+        status: 'active' as any,
+        branch_id: '',
+        avatar_url: '',
+        last_login: new Date().toISOString(),
+        email_verified: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      },
       tenant: {
         id: response.tenant?.id || '',
         name: response.tenant?.name || '',
@@ -203,8 +218,8 @@ class ApiClient {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       },
-      accessToken: response.data?.token || '',
-      refreshToken: response.data?.token || ''
+      accessToken: response.token || '',
+      refreshToken: response.token || ''
     };
   }
 
