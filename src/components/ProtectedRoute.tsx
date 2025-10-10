@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types/api';
 
@@ -40,8 +40,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   };
   const { isAuthenticated, isLoading, user, canAccess, tenant } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   
   console.log('ProtectedRoute: Auth state:', { isAuthenticated, isLoading, user, tenant });
+  
+  // Handle redirect when not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      console.log('ProtectedRoute: useEffect - redirecting to login');
+      navigate(fallbackPath, { replace: true });
+    }
+  }, [isLoading, isAuthenticated, navigate, fallbackPath]);
 
   // Show loading spinner while checking authentication
   if (isLoading) {
@@ -55,9 +64,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated) {
-    return <Navigate to={fallbackPath} state={{ from: location }} replace />;
+  // Show loading while redirect is happening
+  if (!isLoading && !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-white">Redirecting to login...</p>
+        </div>
+      </div>
+    );
   }
 
   // Check role-based access if required role is specified
