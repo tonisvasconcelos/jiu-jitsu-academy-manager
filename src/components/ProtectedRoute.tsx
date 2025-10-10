@@ -38,8 +38,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
-  const { isAuthenticated, isLoading, user, canAccess } = useAuth();
+  const { isAuthenticated, isLoading, user, canAccess, tenant } = useAuth();
   const location = useLocation();
+  
+  console.log('ProtectedRoute: Auth state:', { isAuthenticated, isLoading, user, tenant });
 
   // Show loading spinner while checking authentication
   if (isLoading) {
