@@ -71,46 +71,66 @@ class MasterDataService {
   // Get all items for a data type
   async getAll<T extends MasterDataItem>(dataType: MasterDataType): Promise<T[]> {
     try {
-      // Use the working health endpoint to get master data
-      const response = await apiClient.request<{
-        status: string;
-        timestamp: string;
-        message: string;
-        masterData: {
-          students: any[];
-          message: string;
-        };
-      }>('/health', {
-        method: 'GET',
-        headers: this.getAuthHeaders()
-      })
+      // Get tenant ID from auth context
+      const authData = localStorage.getItem('auth_data');
+      if (!authData) {
+        console.log(`No auth data found for ${dataType}`);
+        return [];
+      }
 
-      if (response.masterData && response.masterData[dataType]) {
-        console.log(`Loaded ${response.masterData[dataType].length} ${dataType} from health API`)
-        return response.masterData[dataType] as T[]
+      const parsed = JSON.parse(authData);
+      const tenantId = parsed.tenant?.id;
+      
+      if (!tenantId) {
+        console.log(`No tenant ID found for ${dataType}`);
+        return [];
+      }
+
+      // Map dataType to localStorage key
+      const storageKey = this.getStorageKey(dataType, tenantId);
+      const stored = localStorage.getItem(storageKey);
+      
+      if (stored) {
+        const data = JSON.parse(stored);
+        console.log(`Loaded ${data.length} ${dataType} from tenant-specific storage for tenant ${tenantId}`);
+        return data as T[];
       } else {
-        console.log(`No ${dataType} data in health API response`)
-        return []
+        console.log(`No ${dataType} data found for tenant ${tenantId}`);
+        return [];
       }
     } catch (error: any) {
-      console.error(`Error loading ${dataType} from health API:`, error)
-      
-      // Fallback: Try to get test data from localStorage
-      try {
-        const testData = localStorage.getItem('testData');
-        if (testData) {
-          const parsed = JSON.parse(testData);
-          if (parsed[dataType]) {
-            console.log(`Using test data for ${dataType}`)
-            return parsed[dataType] as T[]
-          }
-        }
-      } catch (fallbackError) {
-        console.error('Error loading test data:', fallbackError)
-      }
-      
-      return []
+      console.error(`Error loading ${dataType} from tenant storage:`, error);
+      return [];
     }
+  }
+
+  // Helper method to get the correct storage key for a data type
+  private getStorageKey(dataType: MasterDataType, tenantId: string): string {
+    const keyMappings: { [key in MasterDataType]: string } = {
+      'students': `students-${tenantId}`,
+      'teachers': `teachers-${tenantId}`,
+      'branches': `branches-${tenantId}`,
+      'fightModalities': `jiu-jitsu-fight-modalities-${tenantId}`,
+      'weightDivisions': `jiu-jitsu-weight-divisions-${tenantId}`,
+      'classSchedules': `jiu-jitsu-class-schedules-${tenantId}`,
+      'championships': `jiu-jitsu-championships-${tenantId}`,
+      'championshipCategories': `jiu-jitsu-championship-categories-${tenantId}`,
+      'championshipRegistrations': `jiu-jitsu-championship-registrations-${tenantId}`,
+      'championshipResults': `jiu-jitsu-championship-results-${tenantId}`,
+      'championshipOfficials': `jiu-jitsu-championship-officials-${tenantId}`,
+      'championshipSponsors': `jiu-jitsu-championship-sponsors-${tenantId}`,
+      'championshipQualifiedLocations': `jiu-jitsu-championship-qualified-locations-${tenantId}`,
+      'fightAssociations': `jiu-jitsu-fight-associations-${tenantId}`,
+      'fightTeams': `jiu-jitsu-fight-teams-${tenantId}`,
+      'fightPhases': `jiu-jitsu-fight-phases-${tenantId}`,
+      'fights': `jiu-jitsu-fights-${tenantId}`,
+      'affiliations': `jiu-jitsu-affiliations-${tenantId}`,
+      'studentModalities': `jiu-jitsu-student-modalities-${tenantId}`,
+      'branchFacilities': `jiu-jitsu-branch-facilities-${tenantId}`,
+      'classCheckIns': `jiu-jitsu-class-check-ins-${tenantId}`
+    };
+    
+    return keyMappings[dataType] || `${dataType}-${tenantId}`;
   }
 
   // Get item by ID
@@ -138,70 +158,123 @@ class MasterDataService {
   // Create new item
   async create<T extends MasterDataItem>(dataType: MasterDataType, itemData: Omit<T, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>): Promise<T> {
     try {
-      const response = await apiClient.request<CreateResponse<T>>(
-        `/master-data?dataType=${dataType}`,
-        {
-          method: 'POST',
-          headers: this.getAuthHeaders(),
-          body: JSON.stringify(itemData)
-        }
-      )
-
-      if (response.success && response.data) {
-        console.log(`Created ${dataType}:`, response.data)
-        return response.data
-      } else {
-        throw new Error(response.message || `Failed to create ${dataType}`)
+      // Get tenant ID from auth context
+      const authData = localStorage.getItem('auth_data');
+      if (!authData) {
+        throw new Error('No auth data found');
       }
+
+      const parsed = JSON.parse(authData);
+      const tenantId = parsed.tenant?.id;
+      
+      if (!tenantId) {
+        throw new Error('No tenant ID found');
+      }
+
+      // Create new item with required fields
+      const newItem: T = {
+        ...itemData,
+        id: `${dataType}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        tenantId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      } as T;
+
+      // Get existing data
+      const storageKey = this.getStorageKey(dataType, tenantId);
+      const existing = localStorage.getItem(storageKey);
+      const existingData = existing ? JSON.parse(existing) : [];
+
+      // Add new item
+      const updatedData = [...existingData, newItem];
+      localStorage.setItem(storageKey, JSON.stringify(updatedData));
+
+      console.log(`Created ${dataType}:`, newItem);
+      return newItem;
     } catch (error: any) {
-      console.error(`Error creating ${dataType}:`, error)
-      throw new Error(error.message || `Failed to create ${dataType}`)
+      console.error(`Error creating ${dataType}:`, error);
+      throw new Error(error.message || `Failed to create ${dataType}`);
     }
   }
 
   // Update item
   async update<T extends MasterDataItem>(dataType: MasterDataType, id: string, updateData: Partial<Omit<T, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>>): Promise<T> {
     try {
-      const response = await apiClient.request<UpdateResponse<T>>(
-        `/master-data?dataType=${dataType}&id=${id}`,
-        {
-          method: 'PUT',
-          headers: this.getAuthHeaders(),
-          body: JSON.stringify(updateData)
-        }
-      )
-
-      if (response.success && response.data) {
-        console.log(`Updated ${dataType}:`, response.data)
-        return response.data
-      } else {
-        throw new Error(response.message || `Failed to update ${dataType}`)
+      // Get tenant ID from auth context
+      const authData = localStorage.getItem('auth_data');
+      if (!authData) {
+        throw new Error('No auth data found');
       }
+
+      const parsed = JSON.parse(authData);
+      const tenantId = parsed.tenant?.id;
+      
+      if (!tenantId) {
+        throw new Error('No tenant ID found');
+      }
+
+      // Get existing data
+      const storageKey = this.getStorageKey(dataType, tenantId);
+      const existing = localStorage.getItem(storageKey);
+      const existingData = existing ? JSON.parse(existing) : [];
+
+      // Find and update item
+      const itemIndex = existingData.findIndex((item: T) => item.id === id);
+      if (itemIndex === -1) {
+        throw new Error(`${dataType} with ID ${id} not found`);
+      }
+
+      const updatedItem: T = {
+        ...existingData[itemIndex],
+        ...updateData,
+        updatedAt: new Date().toISOString()
+      };
+
+      existingData[itemIndex] = updatedItem;
+      localStorage.setItem(storageKey, JSON.stringify(existingData));
+
+      console.log(`Updated ${dataType}:`, updatedItem);
+      return updatedItem;
     } catch (error: any) {
-      console.error(`Error updating ${dataType}:`, error)
-      throw new Error(error.message || `Failed to update ${dataType}`)
+      console.error(`Error updating ${dataType}:`, error);
+      throw new Error(error.message || `Failed to update ${dataType}`);
     }
   }
 
   // Delete item
   async delete(dataType: MasterDataType, id: string): Promise<void> {
     try {
-      const response = await apiClient.request<DeleteResponse>(
-        `/master-data?dataType=${dataType}&id=${id}`,
-        {
-          method: 'DELETE',
-          headers: this.getAuthHeaders()
-        }
-      )
-
-      if (response.success) {
-        console.log(`Deleted ${dataType} with ID:`, id)
-      } else {
-        throw new Error(response.message || `Failed to delete ${dataType}`)
+      // Get tenant ID from auth context
+      const authData = localStorage.getItem('auth_data');
+      if (!authData) {
+        throw new Error('No auth data found');
       }
+
+      const parsed = JSON.parse(authData);
+      const tenantId = parsed.tenant?.id;
+      
+      if (!tenantId) {
+        throw new Error('No tenant ID found');
+      }
+
+      // Get existing data
+      const storageKey = this.getStorageKey(dataType, tenantId);
+      const existing = localStorage.getItem(storageKey);
+      const existingData = existing ? JSON.parse(existing) : [];
+
+      // Find and remove item
+      const itemIndex = existingData.findIndex((item: any) => item.id === id);
+      if (itemIndex === -1) {
+        throw new Error(`${dataType} with ID ${id} not found`);
+      }
+
+      existingData.splice(itemIndex, 1);
+      localStorage.setItem(storageKey, JSON.stringify(existingData));
+
+      console.log(`Deleted ${dataType} with ID:`, id);
     } catch (error: any) {
-      console.error(`Error deleting ${dataType}:`, error)
-      throw new Error(error.message || `Failed to delete ${dataType}`)
+      console.error(`Error deleting ${dataType}:`, error);
+      throw new Error(error.message || `Failed to delete ${dataType}`);
     }
   }
 }
