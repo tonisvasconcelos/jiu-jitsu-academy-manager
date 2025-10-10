@@ -87,7 +87,7 @@
             resultDiv.innerHTML = '<div class="result info">Checking tenants and users...</div>';
             
             try {
-                const response = await fetch('/api/_diag/check-tenants');
+                const response = await fetch('/api/diag/check-tenants');
                 const data = await response.json();
                 
                 if (data.success) {
