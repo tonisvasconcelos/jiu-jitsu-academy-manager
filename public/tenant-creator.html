@@ -520,7 +520,7 @@
             resultDiv.innerHTML = '<div class="result info">Creating tenant and admin user...</div>';
 
             try {
-                // Step 1: Create tenant
+                // Step 1: Create tenant (includes admin user creation)
                 const tenantResponse = await fetch('/api/admin/tenants', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -531,8 +531,11 @@
                         contactEmail: formData.contactEmail,
                         contactPhone: formData.contactPhone,
                         address: formData.address,
-                        companyId: formData.companyId,
-                        licenseLimits: {
+                        adminEmail: formData.adminEmail,
+                        adminPassword: formData.adminPassword,
+                        adminFirstName: formData.firstName,
+                        adminLastName: formData.lastName,
+                        customLimits: {
                             users: formData.maxUsers,
                             coaches: formData.maxCoaches,
                             branches: formData.maxBranches,
@@ -553,62 +556,36 @@
                     </div>
                 `;
                 
-                if (tenantData.success) {
-                    // Step 2: Create admin user
-                    const userResponse = await fetch('/api/admin/users', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            tenantDomain: formData.domain,
-                            email: formData.adminEmail,
-                            password: formData.adminPassword,
-                            firstName: formData.firstName,
-                            lastName: formData.lastName,
-                            role: formData.userRole
-                        })
-                    });
-                    
-                    const userData = await userResponse.json();
-                    
+                if (tenantData.success && tenantData.data) {
+                    // Admin user was created automatically with the tenant
                     resultHtml += `
-                        <div class="result ${userData.success ? 'success' : 'error'}">
+                        <div class="result success">
                             <h3>👤 Admin User Creation Result</h3>
-                            <p><strong>Status:</strong> ${userResponse.status}</p>
-                            <p><strong>Success:</strong> ${userData.success}</p>
-                            <p><strong>Message:</strong> ${userData.message || userData.error || 'No message'}</p>
+                            <p><strong>Status:</strong> 201</p>
+                            <p><strong>Success:</strong> true</p>
+                            <p><strong>Message:</strong> Admin user created automatically with tenant</p>
                         </div>
                     `;
                     
-                    if (userData.success) {
+                    // Display complete customer information
+                    if (tenantData.data.tenant && tenantData.data.adminUser) {
                         resultHtml += `
                             <div class="credentials">
-                                <h3>🎉 Success! Customer License Created</h3>
+                                <h3>🎉 Customer Setup Complete!</h3>
+                                <h4>Company Information:</h4>
+                                <p><strong>Company Name:</strong> ${tenantData.data.tenant.name}</p>
+                                <p><strong>Company ID:</strong> ${tenantData.data.tenant.domain}</p>
+                                <p><strong>License Type:</strong> ${tenantData.data.tenant.plan}</p>
+                                <p><strong>Contact Email:</strong> ${tenantData.data.tenant.contact_email}</p>
                                 
-                                <h4>🏢 Company Information:</h4>
-                                <p><strong>Company Name:</strong> ${formData.companyName}</p>
-                                <p><strong>Company ID:</strong> ${formData.companyId}</p>
-                                <p><strong>Domain:</strong> ${formData.domain}</p>
-                                <p><strong>Contact Email:</strong> ${formData.contactEmail}</p>
-                                <p><strong>Contact Phone:</strong> ${formData.contactPhone}</p>
-                                <p><strong>Address:</strong> ${formData.address}</p>
+                                <h4>Admin User Credentials:</h4>
+                                <p><strong>Email:</strong> ${tenantData.data.adminUser.email}</p>
+                                <p><strong>Name:</strong> ${tenantData.data.adminUser.first_name} ${tenantData.data.adminUser.last_name}</p>
+                                <p><strong>Role:</strong> ${tenantData.data.adminUser.role}</p>
                                 
-                                <h4>📋 License Information:</h4>
-                                <p><strong>License Type:</strong> ${formData.licenseType.toUpperCase()}</p>
-                                <p><strong>Max Users:</strong> ${formData.maxUsers}</p>
-                                <p><strong>Max Coaches:</strong> ${formData.maxCoaches}</p>
-                                <p><strong>Max Branches:</strong> ${formData.maxBranches}</p>
-                                <p><strong>Max Students:</strong> ${formData.maxStudents}</p>
-                                <p><strong>Max Classes:</strong> ${formData.maxClasses}</p>
-                                
-                                <h4>👤 Admin User Access:</h4>
-                                <p><strong>Name:</strong> ${formData.firstName} ${formData.lastName}</p>
-                                <p><strong>Email:</strong> ${formData.adminEmail}</p>
-                                <p><strong>Password:</strong> ${formData.adminPassword}</p>
-                                <p><strong>Role:</strong> ${formData.userRole.replace('_', ' ').toUpperCase()}</p>
-                                
-                                <hr style="margin: 20px 0;">
-                                <p><strong>🔗 Login URL:</strong> <a href="/login" target="_blank">https://oss365.app/login</a></p>
-                                <p><strong>📧 Send these credentials to your customer</strong></p>
+                                <h4>Login Information:</h4>
+                                <p><strong>Domain:</strong> ${tenantData.data.tenant.domain}</p>
+                                <p><strong>Login URL:</strong> <a href="https://oss365.app/login" target="_blank">https://oss365.app/login</a></p>
                             </div>
                         `;
                     }
