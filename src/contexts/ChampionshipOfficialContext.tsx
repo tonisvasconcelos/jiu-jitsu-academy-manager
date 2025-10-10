@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface ChampionshipOfficial {
   officialId: string
@@ -38,19 +38,7 @@ export const useChampionshipOfficials = () => {
 }
 
 export const ChampionshipOfficialProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const [officials, setOfficials] = useState<ChampionshipOfficial[]>([])
-
-  // Load officials from localStorage on mount
-  useEffect(() => {
-    const savedOfficials = getTenantData<ChampionshipOfficial[]>('championshipOfficials', tenant?.id || null, [])
-    setOfficials(savedOfficials)
-  }, [tenant?.id])
-
-  // Save officials to localStorage whenever officials change
-  useEffect(() => {
-    saveTenantData('championshipOfficials', tenant?.id || null, officials)
-  }, [officials, tenant?.id])
+  const [officials, setOfficials] = useTenantData<ChampionshipOfficial[]>('championshipOfficials', [])
 
   const addOfficial = (official: Omit<ChampionshipOfficial, 'officialId'>) => {
     const newOfficial: ChampionshipOfficial = {

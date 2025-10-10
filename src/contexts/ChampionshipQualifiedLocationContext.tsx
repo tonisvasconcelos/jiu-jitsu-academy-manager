@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface ChampionshipQualifiedLocation {
   locationId: string
@@ -46,19 +46,7 @@ export const useChampionshipQualifiedLocations = () => {
 }
 
 export const ChampionshipQualifiedLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const [qualifiedLocations, setQualifiedLocations] = useState<ChampionshipQualifiedLocation[]>([])
-
-  // Load qualified locations from localStorage on mount
-  useEffect(() => {
-    const savedLocations = getTenantData<ChampionshipQualifiedLocation[]>('championshipQualifiedLocations', tenant?.id || null, [])
-    setQualifiedLocations(savedLocations)
-  }, [tenant?.id])
-
-  // Save qualified locations to localStorage whenever locations change
-  useEffect(() => {
-    saveTenantData('championshipQualifiedLocations', tenant?.id || null, qualifiedLocations)
-  }, [qualifiedLocations, tenant?.id])
+  const [qualifiedLocations, setQualifiedLocations] = useTenantData<ChampionshipQualifiedLocation[]>('championshipQualifiedLocations', [])
 
   const addQualifiedLocation = (location: Omit<ChampionshipQualifiedLocation, 'locationId' | 'createdAt' | 'updatedAt'>) => {
     const newLocation: ChampionshipQualifiedLocation = {

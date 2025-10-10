@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface ChampionshipCategory {
   categoryId: string
@@ -35,19 +35,7 @@ export const useChampionshipCategories = () => {
 }
 
 export const ChampionshipCategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const [categories, setCategories] = useState<ChampionshipCategory[]>([])
-
-  // Load categories from localStorage on mount
-  useEffect(() => {
-    const savedCategories = getTenantData<ChampionshipCategory[]>('championshipCategories', tenant?.id || null, [])
-    setCategories(savedCategories)
-  }, [tenant?.id])
-
-  // Save categories to localStorage whenever categories change
-  useEffect(() => {
-    saveTenantData('championshipCategories', tenant?.id || null, categories)
-  }, [categories, tenant?.id])
+  const [categories, setCategories] = useTenantData<ChampionshipCategory[]>('championshipCategories', [])
 
   const addCategory = (category: Omit<ChampionshipCategory, 'categoryId'>) => {
     const newCategory: ChampionshipCategory = {
