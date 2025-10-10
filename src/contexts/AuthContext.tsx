@@ -45,6 +45,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
+  // Track changes to isAuthenticated
+  useEffect(() => {
+    console.log('AuthContext: isAuthenticated changed to:', isAuthenticated);
+  }, [isAuthenticated]);
+  
   // Inactivity timeout (5 minutes)
   const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);

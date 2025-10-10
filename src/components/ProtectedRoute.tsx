@@ -66,6 +66,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Show loading while redirect is happening
   if (!isLoading && !isAuthenticated) {
+    console.log('ProtectedRoute: Rendering redirect spinner (isAuthenticated: false, isLoading: false)');
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -106,6 +107,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Render AppWithContexts with lazy loading
+  console.log('ProtectedRoute: Rendering AppWithContexts (user is authenticated)');
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
