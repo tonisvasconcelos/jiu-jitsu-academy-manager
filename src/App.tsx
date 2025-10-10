@@ -4,11 +4,13 @@ import { LanguageProvider, Language } from './contexts/LanguageContext'
 import { AuthProvider } from './contexts/AuthContext'
 import { TenantReady } from './components/TenantReady'
 import { AllDataProviders } from './components/AllDataProviders'
+import DataBootstrap from './components/DataBootstrap'
 import WelcomeLanguage from './pages/WelcomeLanguage'
 import ProtectedRoute from './components/ProtectedRoute'
 import ErrorBoundary from './components/ErrorBoundary'
 import Login from './pages/Login'
 import AdminPortal from './pages/admin/AdminPortal'
+import AdminDebug from './pages/AdminDebug'
 import AppWithContexts from './components/AppWithContexts'
 
 function App() {
@@ -59,6 +61,18 @@ function App() {
                   } 
                 />
                 
+                {/* Admin Debug */}
+                <Route 
+                  path="/admin/debug" 
+                  element={
+                    <ErrorBoundary>
+                      <ProtectedRoute>
+                        <AdminDebug />
+                      </ProtectedRoute>
+                    </ErrorBoundary>
+                  } 
+                />
+                
                 {/* Protected Routes - With Layout */}
                 <Route 
                   path="/*" 
@@ -66,9 +80,11 @@ function App() {
                     <ErrorBoundary>
                       <ProtectedRoute>
                         <TenantReady>
-                          <AllDataProviders>
-                            <AppWithContexts />
-                          </AllDataProviders>
+                          <DataBootstrap>
+                            <AllDataProviders>
+                              <AppWithContexts />
+                            </AllDataProviders>
+                          </DataBootstrap>
                         </TenantReady>
                       </ProtectedRoute>
                     </ErrorBoundary>

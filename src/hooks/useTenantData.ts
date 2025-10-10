@@ -13,11 +13,29 @@ export function useTenantData<T>(key: string, tenantId?: string): T[] {
     if (!currentTenantId || authLoading) return;
     
     const storageKey = `oss365:${key}-${currentTenantId}`;
-    const raw = localStorage.getItem(storageKey);
-    const parsed = raw ? JSON.parse(raw) : [];
-    const safe = Array.isArray(parsed) ? parsed : [];
-    setData(safe);
-    console.log(`useTenantData(${key}): loaded ${safe.length} items for tenant ${currentTenantId}`);
+    const load = () => {
+      const raw = localStorage.getItem(storageKey);
+      const parsed = raw ? JSON.parse(raw) : [];
+      const safe = Array.isArray(parsed) ? parsed : [];
+      setData(safe);
+      console.log(`useTenantData(${key}): tenantId=${currentTenantId} key=${storageKey} loaded ${safe.length}`);
+    };
+    load();
+
+    const onStorage = (e: StorageEvent) => { 
+      if (e.key === storageKey) load(); 
+    };
+    const onVisible = () => { 
+      if (!document.hidden) load(); 
+    };
+
+    window.addEventListener("storage", onStorage);
+    document.addEventListener("visibilitychange", onVisible);
+    
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [key, tenantId, tenant?.id, authLoading]);
   
   return data;

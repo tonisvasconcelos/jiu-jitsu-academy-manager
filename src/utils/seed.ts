@@ -1,4 +1,9 @@
 export async function seedSampleDataIfNeeded(tenantId: string): Promise<void> {
+  if (!tenantId) { 
+    console.error("Seed: missing tenantId"); 
+    return; 
+  }
+  
   const FLAG = `oss365:seeded-${tenantId}`;
   
   if (localStorage.getItem(FLAG) === "1") {
@@ -119,7 +124,7 @@ export async function seedSampleDataIfNeeded(tenantId: string): Promise<void> {
   Object.entries(seeds).forEach(([key, data]) => {
     const storageKey = `oss365:${key}-${tenantId}`;
     localStorage.setItem(storageKey, JSON.stringify(data));
-    console.log(`Seed: saved ${data.length} ${key} for tenant ${tenantId}`);
+    console.log(`Seed: wrote ${storageKey} len=${data.length}`);
   });
 
   // Mark as seeded
