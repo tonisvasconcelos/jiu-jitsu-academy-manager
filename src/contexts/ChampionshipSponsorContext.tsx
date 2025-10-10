@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface ChampionshipSponsor {
   sponsorId: string
@@ -39,19 +39,7 @@ export const useChampionshipSponsors = () => {
 }
 
 export const ChampionshipSponsorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const [sponsors, setSponsors] = useState<ChampionshipSponsor[]>([])
-
-  // Load sponsors from localStorage on mount
-  useEffect(() => {
-    const savedSponsors = getTenantData<ChampionshipSponsor[]>('championshipSponsors', tenant?.id || null, [])
-    setSponsors(savedSponsors)
-  }, [tenant?.id])
-
-  // Save sponsors to localStorage whenever sponsors change
-  useEffect(() => {
-    saveTenantData('championshipSponsors', tenant?.id || null, sponsors)
-  }, [sponsors, tenant?.id])
+  const [sponsors, setSponsors] = useTenantData<ChampionshipSponsor[]>('championshipSponsors', [])
 
   const addSponsor = (sponsor: Omit<ChampionshipSponsor, 'sponsorId'>) => {
     const newSponsor: ChampionshipSponsor = {

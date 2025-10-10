@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface ChampionshipRegistration {
   registrationId: string
@@ -41,19 +41,7 @@ export const useChampionshipRegistrations = () => {
 }
 
 export const ChampionshipRegistrationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const [registrations, setRegistrations] = useState<ChampionshipRegistration[]>([])
-
-  // Load registrations from localStorage on mount
-  useEffect(() => {
-    const savedRegistrations = getTenantData<ChampionshipRegistration[]>('championshipRegistrations', tenant?.id || null, [])
-    setRegistrations(savedRegistrations)
-  }, [tenant?.id])
-
-  // Save registrations to localStorage whenever registrations change
-  useEffect(() => {
-    saveTenantData('championshipRegistrations', tenant?.id || null, registrations)
-  }, [registrations, tenant?.id])
+  const [registrations, setRegistrations] = useTenantData<ChampionshipRegistration[]>('championshipRegistrations', [])
 
   const addRegistration = (registration: Omit<ChampionshipRegistration, 'registrationId'>) => {
     const newRegistration: ChampionshipRegistration = {
