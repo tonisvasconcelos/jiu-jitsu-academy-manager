@@ -1,4 +1,5 @@
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react'
+import { useAuth } from '../contexts/AuthContext'
 import { useTenantData } from '../hooks/useTenantData'
 
 export interface Student {
