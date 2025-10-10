@@ -76,7 +76,7 @@ function App() {
                   path="/" 
                   element={
                     localStorage.getItem('selectedLanguage') ? 
-                      <Navigate to="/dashboard" replace /> : 
+                      <Navigate to="/login" replace /> : 
                       <Navigate to="/welcome-language" replace />
                   } 
                 />

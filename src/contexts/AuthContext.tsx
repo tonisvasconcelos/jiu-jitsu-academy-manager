@@ -78,46 +78,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       
-      // Check localStorage for saved auth data
-      const savedAuth = localStorage.getItem('auth_data');
-      if (savedAuth) {
-        try {
-          const authData = JSON.parse(savedAuth);
-          const { user: savedUser, tenant: savedTenant, timestamp } = authData;
-          
-          // Check if the saved data is not too old (24 hours)
-          const isExpired = Date.now() - timestamp > 24 * 60 * 60 * 1000;
-          
-          if (!isExpired && savedUser && savedTenant) {
-            setUser(savedUser);
-            setTenant(savedTenant);
-            setIsAuthenticated(true);
-            return;
-          } else {
-            // Clear expired data
-            localStorage.removeItem('auth_data');
-          }
-        } catch (parseError) {
-          console.error('Failed to parse saved auth data:', parseError);
-          localStorage.removeItem('auth_data');
-        }
-      }
+      // Always require fresh login - clear any saved auth data
+      localStorage.removeItem('auth_data');
+      localStorage.removeItem('auth_token');
       
-      // Fallback to API client check
-      if (apiClient.isAuthenticated()) {
-        const userData = await apiClient.getCurrentUser();
-        if (userData) {
-          setUser(userData.user);
-          setTenant(userData.tenant);
-          setIsAuthenticated(true);
-          // Save to localStorage
-          saveAuthToStorage(userData.user, userData.tenant);
-        }
-      }
+      // Clear any existing authentication state
+      setUser(null);
+      setTenant(null);
+      setIsAuthenticated(false);
+      
     } catch (error) {
       console.error('Auth initialization failed:', error);
-      // Clear invalid tokens
-      await logout();
+      setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
     }
