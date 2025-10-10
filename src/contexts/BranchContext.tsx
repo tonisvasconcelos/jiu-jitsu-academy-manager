@@ -1,5 +1,6 @@
-import React, { createContext, useContext, ReactNode } from 'react'
-import { useMasterData } from '../hooks/useMasterData'
+import React, { createContext, useContext, ReactNode, useState } from 'react'
+import { useAuth } from '../contexts/AuthContext'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface Branch {
   name: string
@@ -40,19 +41,30 @@ interface BranchContextType {
 const BranchContext = createContext<BranchContextType | undefined>(undefined)
 
 export const BranchProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const {
-    data: branches,
-    isLoading,
-    error,
-    addItem: addBranch,
-    updateItem: updateBranch,
-    deleteItem: deleteBranch,
-    refreshData: refreshBranches,
-    clearError
-  } = useMasterData<Branch>({
-    dataType: 'branches',
-    initialData: []
-  })
+  const { tenant } = useAuth()
+  const branches = useTenantData<Branch>('branches', tenant?.id)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  
+  const addBranch = async (branch: Omit<Branch, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>) => {
+    console.log('BranchProvider: addBranch called with', branch);
+  }
+  
+  const updateBranch = async (branchId: string, updatedBranch: Partial<Omit<Branch, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>>) => {
+    console.log('BranchProvider: updateBranch called with', branchId, updatedBranch);
+  }
+  
+  const deleteBranch = async (branchId: string) => {
+    console.log('BranchProvider: deleteBranch called with', branchId);
+  }
+  
+  const refreshBranches = async () => {
+    console.log('BranchProvider: refreshBranches called');
+  }
+  
+  const clearError = () => {
+    setError(null);
+  }
 
   // Helper function to get branch by id
   const getBranch = (branchId: string): Branch | undefined => {

@@ -1,5 +1,6 @@
-import React, { createContext, useContext, ReactNode } from 'react'
-import { useMasterData } from '../hooks/useMasterData'
+import React, { createContext, useContext, ReactNode, useState } from 'react'
+import { useAuth } from '../contexts/AuthContext'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface Teacher {
   teacherId: string
@@ -35,19 +36,30 @@ interface TeacherContextType {
 const TeacherContext = createContext<TeacherContextType | undefined>(undefined)
 
 export const TeacherProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const {
-    data: teachers,
-    isLoading,
-    error,
-    addItem: addTeacher,
-    updateItem: updateTeacher,
-    deleteItem: deleteTeacher,
-    refreshData: refreshTeachers,
-    clearError
-  } = useMasterData<Teacher>({
-    dataType: 'teachers',
-    initialData: []
-  })
+  const { tenant } = useAuth()
+  const teachers = useTenantData<Teacher>('teachers', tenant?.id)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  
+  const addTeacher = async (teacher: Omit<Teacher, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>) => {
+    console.log('TeacherProvider: addTeacher called with', teacher);
+  }
+  
+  const updateTeacher = async (id: string, updates: Partial<Omit<Teacher, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>>) => {
+    console.log('TeacherProvider: updateTeacher called with', id, updates);
+  }
+  
+  const deleteTeacher = async (id: string) => {
+    console.log('TeacherProvider: deleteTeacher called with', id);
+  }
+  
+  const refreshTeachers = async () => {
+    console.log('TeacherProvider: refreshTeachers called');
+  }
+  
+  const clearError = () => {
+    setError(null);
+  }
 
   // Helper function to get teacher by teacherId (not the API id)
   const getTeacher = (teacherId: string): Teacher | undefined => {
