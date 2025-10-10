@@ -11,19 +11,22 @@ const Login: React.FC = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasRedirected, setHasRedirected] = useState(false);
 
-  const { login, isAuthenticated, error: authError } = useAuth();
+  const { login, isAuthenticated, isLoading: authLoading, error: authError } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
 
   // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated) {
-      const from = (location.state as any)?.from?.pathname || '/';
+    if (isAuthenticated && !authLoading && !hasRedirected) {
+      setHasRedirected(true);
+      const from = (location.state as any)?.from?.pathname || '/dashboard';
+      console.log('Redirecting authenticated user to:', from);
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, location]);
+  }, [isAuthenticated, authLoading, hasRedirected, navigate]);
 
   // Clear error when component mounts
   useEffect(() => {
