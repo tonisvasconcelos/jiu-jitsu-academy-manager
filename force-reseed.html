@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Force Re-seed Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .success { color: green; }
+        .error { color: red; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Force Re-seed Data</h1>
+        <p>This will clear the seeding flag and force the application to re-seed all data, including the newly added entities.</p>
+        
+        <button onclick="clearSeedingFlag()">🗑️ Clear Seeding Flag</button>
+        <button onclick="clearAllData()">🧹 Clear All Data</button>
+        <button onclick="checkCurrentData()">📊 Check Current Data</button>
+        
+        <div class="log" id="log">Ready to force re-seed...</div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            logElement.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function clearSeedingFlag() {
+            // Find the tenant ID from localStorage
+            const authData = localStorage.getItem('oss365-auth');
+            if (!authData) {
+                log('❌ No auth data found. Please login first.', 'error');
+                return;
+            }
+
+            try {
+                const auth = JSON.parse(authData);
+                const tenantId = auth.tenant?.id;
+                
+                if (!tenantId) {
+                    log('❌ No tenant ID found in auth data.', 'error');
+                    return;
+                }
+
+                const seedingFlag = `oss365:seeded-${tenantId}`;
+                localStorage.removeItem(seedingFlag);
+                
+                log(`✅ Cleared seeding flag: ${seedingFlag}`, 'success');
+                log(`🔄 Next time you access the dashboard, it will re-seed all data including the new entities.`, 'info');
+                log(`📝 Tenant ID: ${tenantId}`, 'info');
+                
+            } catch (error) {
+                log(`❌ Error parsing auth data: ${error.message}`, 'error');
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('This will clear ALL localStorage data. Are you sure?')) {
+                localStorage.clear();
+                log('✅ All localStorage data cleared. You will need to login again.', 'success');
+            }
+        }
+
+        function checkCurrentData() {
+            const authData = localStorage.getItem('oss365-auth');
+            if (!authData) {
+                log('❌ No auth data found.', 'error');
+                return;
+            }
+
+            try {
+                const auth = JSON.parse(authData);
+                const tenantId = auth.tenant?.id;
+                
+                if (!tenantId) {
+                    log('❌ No tenant ID found.', 'error');
+                    return;
+                }
+
+                log(`📊 Current data for tenant: ${tenantId}`, 'info');
+                
+                const entities = [
+                    'students', 'teachers', 'branches', 'jiu-jitsu-fight-modalities',
+                    'jiu-jitsu-weight-divisions', 'jiu-jitsu-class-schedules', 'jiu-jitsu-class-check-ins',
+                    'jiu-jitsu-branch-facilities', 'jiu-jitsu-student-modalities'
+                ];
+
+                entities.forEach(entity => {
+                    const key = `oss365:${entity}-${tenantId}`;
+                    const data = localStorage.getItem(key);
+                    if (data) {
+                        try {
+                            const parsed = JSON.parse(data);
+                            const count = Array.isArray(parsed) ? parsed.length : 0;
+                            log(`  ${entity}: ${count} items`, count > 0 ? 'success' : 'error');
+                        } catch {
+                            log(`  ${entity}: parse error`, 'error');
+                        }
+                    } else {
+                        log(`  ${entity}: no data`, 'error');
+                    }
+                });
+
+                const seedingFlag = `oss365:seeded-${tenantId}`;
+                const flagValue = localStorage.getItem(seedingFlag);
+                log(`  Seeding flag: ${flagValue || 'not set'}`, flagValue ? 'success' : 'error');
+                
+            } catch (error) {
+                log(`❌ Error checking data: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-check on load
+        window.onload = () => {
+            log('🚀 Force re-seed tool loaded', 'success');
+            checkCurrentData();
+        };
+    </script>
+</body>
+</html>

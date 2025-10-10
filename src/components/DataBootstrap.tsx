@@ -58,9 +58,17 @@ export default function DataBootstrap({ children }: DataBootstrapProps) {
 
       console.log("DataBootstrap: tenantId=", tenantId, "seedFlag=", flag, "totalItems=", totals);
 
-      // Seed if never seeded OR everything is empty (safety)
-      if (flag !== "1" || totals === 0) {
-        console.log("DataBootstrap: running seed for tenant", tenantId);
+      // Check if key entities are missing (even if seeded before)
+      const keyEntities = ["students", "teachers", "branches", "jiu-jitsu-branch-facilities", "jiu-jitsu-student-modalities"];
+      const missingEntities = keyEntities.filter(entity => countFor(tenantId, entity) === 0);
+      
+      // Seed if never seeded OR everything is empty OR key entities are missing
+      if (flag !== "1" || totals === 0 || missingEntities.length > 0) {
+        if (missingEntities.length > 0) {
+          console.log("DataBootstrap: missing key entities:", missingEntities, "- forcing re-seed");
+        } else {
+          console.log("DataBootstrap: running seed for tenant", tenantId);
+        }
         await seedSampleDataIfNeeded(tenantId);
         // Give providers a chance to re-read storage on next tick
         requestAnimationFrame(() => setReady(true));
