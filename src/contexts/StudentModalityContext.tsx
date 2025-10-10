@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface StudentModalityConnection {
   connectionId: string
@@ -65,43 +65,14 @@ const initialConnections: StudentModalityConnection[] = [
 ]
 
 export const StudentModalityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { tenant, isLoading: authLoading } = useAuth()
-  
-  // Load connections from localStorage or use initial data
-  const loadConnectionsFromStorage = (): StudentModalityConnection[] => {
-    const connections = getTenantData<StudentModalityConnection[]>('jiu-jitsu-student-modalities', tenant?.id || null, initialConnections)
-    
-    // Migrate old data to include beltLevelAtStart field
-    const migratedConnections = connections.map((connection: any) => ({
-      ...connection,
-      beltLevelAtStart: connection.beltLevelAtStart || 'white' // Default to white belt if missing
-    }))
-    
-    // Save migrated data back to localStorage if there were changes
-    if (migratedConnections.some((conn: any, index: number) => !connections[index].beltLevelAtStart)) {
-      console.log('StudentModalityContext: Migrating data to include beltLevelAtStart field')
-      saveTenantData('jiu-jitsu-student-modalities', tenant?.id || null, migratedConnections)
-    }
-    
-    return migratedConnections
-  }
-
-  const [connections, setConnections] = useState<StudentModalityConnection[]>([])
-
-  // Reload connections when tenant changes or auth loading completes
-  useEffect(() => {
-    if (!authLoading && tenant?.id) {
-      const newConnections = loadConnectionsFromStorage()
-      setConnections(newConnections)
-    } else if (!authLoading && !tenant?.id) {
-      // No tenant available, use empty array
-      setConnections([])
-    }
-  }, [tenant?.id, authLoading])
+  const [connections, setConnections, isLoading] = useTenantData<StudentModalityConnection[]>(
+    'jiu-jitsu-student-modalities',
+    initialConnections
+  )
 
   // Save connections to localStorage
   const saveConnectionsToStorage = (connectionsToSave: StudentModalityConnection[]) => {
-    saveTenantData('jiu-jitsu-student-modalities', tenant?.id || null, connectionsToSave)
+    setConnections(connectionsToSave)
   }
 
   const addConnection = (connection: StudentModalityConnection) => {
