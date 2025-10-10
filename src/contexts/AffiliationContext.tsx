@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useAuth } from './AuthContext'
-import { getTenantData, saveTenantData } from '../utils/tenantStorage'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface Affiliation {
   affiliationId: string
@@ -33,19 +33,7 @@ export const useAffiliations = () => {
 }
 
 export const AffiliationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const [affiliations, setAffiliations] = useState<Affiliation[]>([])
-
-  // Load affiliations from localStorage on mount
-  useEffect(() => {
-    const savedAffiliations = getTenantData<Affiliation[]>('affiliations', tenant?.id || null, [])
-    setAffiliations(savedAffiliations)
-  }, [tenant?.id])
-
-  // Save affiliations to localStorage whenever affiliations change
-  useEffect(() => {
-    saveTenantData('affiliations', tenant?.id || null, affiliations)
-  }, [affiliations, tenant?.id])
+  const [affiliations, setAffiliations] = useTenantData<Affiliation[]>('affiliations', [])
 
   const addAffiliation = (affiliation: Omit<Affiliation, 'affiliationId'>) => {
     const newAffiliation: Affiliation = {
