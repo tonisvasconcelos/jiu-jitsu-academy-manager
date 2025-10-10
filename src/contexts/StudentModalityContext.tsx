@@ -65,7 +65,7 @@ const initialConnections: StudentModalityConnection[] = [
 ]
 
 export const StudentModalityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
+  const { tenant, isLoading: authLoading } = useAuth()
   
   // Load connections from localStorage or use initial data
   const loadConnectionsFromStorage = (): StudentModalityConnection[] => {
@@ -86,13 +86,18 @@ export const StudentModalityProvider: React.FC<{ children: ReactNode }> = ({ chi
     return migratedConnections
   }
 
-  const [connections, setConnections] = useState<StudentModalityConnection[]>(loadConnectionsFromStorage)
+  const [connections, setConnections] = useState<StudentModalityConnection[]>([])
 
-  // Reload connections when tenant changes
+  // Reload connections when tenant changes or auth loading completes
   useEffect(() => {
-    const newConnections = loadConnectionsFromStorage()
-    setConnections(newConnections)
-  }, [tenant?.id])
+    if (!authLoading && tenant?.id) {
+      const newConnections = loadConnectionsFromStorage()
+      setConnections(newConnections)
+    } else if (!authLoading && !tenant?.id) {
+      // No tenant available, use empty array
+      setConnections([])
+    }
+  }, [tenant?.id, authLoading])
 
   // Save connections to localStorage
   const saveConnectionsToStorage = (connectionsToSave: StudentModalityConnection[]) => {
