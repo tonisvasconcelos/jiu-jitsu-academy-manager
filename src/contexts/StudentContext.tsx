@@ -1,4 +1,5 @@
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react'
+import { useTenantData } from '../hooks/useTenantData'
 
 export interface Student {
   studentId: string
@@ -46,59 +47,10 @@ interface StudentContextType {
 const StudentContext = createContext<StudentContextType | undefined>(undefined)
 
 export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [students, setStudents] = useState<Student[]>([])
+  const [students, setStudents] = useTenantData<Student[]>('students', [])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Load students from localStorage on mount
-  useEffect(() => {
-    const loadStudents = () => {
-      try {
-        // First try to load from testData (from login)
-        const testData = localStorage.getItem('testData')
-        if (testData) {
-          const parsed = JSON.parse(testData)
-          if (parsed.students && Array.isArray(parsed.students)) {
-            setStudents(parsed.students)
-            return
-          }
-        }
-        
-        // If no test data, check for existing students in localStorage
-        const existingStudents = localStorage.getItem('students')
-        if (existingStudents) {
-          const parsed = JSON.parse(existingStudents)
-          if (Array.isArray(parsed)) {
-            setStudents(parsed)
-          }
-        }
-      } catch (err) {
-        console.error('Error loading students:', err)
-        setError('Failed to load students')
-      }
-    }
-
-    loadStudents()
-  }, [])
-
-  // Save students to localStorage whenever students change
-  useEffect(() => {
-    if (students.length > 0) {
-      localStorage.setItem('students', JSON.stringify(students))
-      
-      // Also update testData if it exists
-      const testData = localStorage.getItem('testData')
-      if (testData) {
-        try {
-          const parsed = JSON.parse(testData)
-          parsed.students = students
-          localStorage.setItem('testData', JSON.stringify(parsed))
-        } catch (err) {
-          console.error('Error updating testData:', err)
-        }
-      }
-    }
-  }, [students])
 
   const addStudent = async (student: Omit<Student, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>) => {
     try {
