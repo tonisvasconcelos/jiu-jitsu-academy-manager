@@ -178,25 +178,25 @@ class ApiClient {
     });
 
     // Our backend returns the data directly, not wrapped in a data property
-    if (response.success && response.data?.token) {
+    if (response.success && response.token) {
       // Store the token (our backend uses 'token' instead of 'accessToken')
-      localStorage.setItem('accessToken', response.data.token);
-      localStorage.setItem('refreshToken', response.data.token); // Use same token for both
+      localStorage.setItem('accessToken', response.token);
+      localStorage.setItem('refreshToken', response.token); // Use same token for both
     }
 
     // Return in the expected format
     return {
-      user: response.data?.user || {} as any,
+      user: response.user || {} as any,
       tenant: {
-        id: response.data?.tenant?.id || '',
-        name: response.data?.tenant?.name || '',
-        domain: response.data?.tenant?.domain || credentials.tenantDomain,
-        plan: response.data?.tenant?.plan || 'enterprise' as any,
-        license_start: response.data?.tenant?.licenseStart || new Date().toISOString(),
-        license_end: response.data?.tenant?.licenseEnd || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-        is_active: response.data?.tenant?.isActive || true,
-        settings: response.data?.tenant?.settings || {},
-        contact_email: response.data?.user?.email || '',
+        id: response.tenant?.id || '',
+        name: response.tenant?.name || '',
+        domain: response.tenant?.domain || credentials.tenantDomain,
+        plan: response.tenant?.plan || 'enterprise' as any,
+        license_start: response.tenant?.licenseStart || new Date().toISOString(),
+        license_end: response.tenant?.licenseEnd || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+        is_active: response.tenant?.isActive || true,
+        settings: response.tenant?.settings || {},
+        contact_email: response.user?.email || '',
         contact_phone: '',
         address: '',
         logo_url: '',
