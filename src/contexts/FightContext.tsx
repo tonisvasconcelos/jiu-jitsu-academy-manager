@@ -57,7 +57,7 @@ interface FightProviderProps {
 }
 
 export const FightProvider: React.FC<FightProviderProps> = ({ children }) => {
-  const [fights, setFights] = useTenantData<Fight[]>('fights', [])
+  const fights = useTenantData<Fight>('fights') // tenantId comes from AuthContext
 
   const generateFightId = (): string => {
     const existingIds = fights.map(fight => fight.fightId)

@@ -42,7 +42,7 @@ interface FightPhaseProviderProps {
 }
 
 export const FightPhaseProvider: React.FC<FightPhaseProviderProps> = ({ children }) => {
-  const [phases, setPhases] = useTenantData<FightPhase[]>('fightPhases', [])
+  const phases = useTenantData<FightPhase>('fightPhases') // tenantId comes from AuthContext
 
   const generatePhaseId = (): string => {
     const existingIds = phases.map(phase => phase.phaseId)

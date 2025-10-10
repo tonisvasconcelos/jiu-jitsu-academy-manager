@@ -283,7 +283,7 @@ const initialClasses: ClassSchedule[] = [
 ]
 
 export const ClassScheduleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [classes, setClasses] = useTenantData<ClassSchedule[]>('jiu-jitsu-class-schedules', initialClasses)
+  const classes = useTenantData<ClassSchedule>('jiu-jitsu-class-schedules') // tenantId comes from AuthContext
 
   const addClass = (classSchedule: ClassSchedule) => {
     console.log('ClassScheduleContext: Adding class:', classSchedule)

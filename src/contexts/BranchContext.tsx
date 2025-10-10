@@ -41,8 +41,7 @@ interface BranchContextType {
 const BranchContext = createContext<BranchContextType | undefined>(undefined)
 
 export const BranchProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const branches = useTenantData<Branch>('branches', tenant?.id)
+  const branches = useTenantData<Branch>('branches') // tenantId comes from AuthContext
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   

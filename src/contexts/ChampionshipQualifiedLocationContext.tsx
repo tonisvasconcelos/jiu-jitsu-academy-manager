@@ -46,7 +46,7 @@ export const useChampionshipQualifiedLocations = () => {
 }
 
 export const ChampionshipQualifiedLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [qualifiedLocations, setQualifiedLocations] = useTenantData<ChampionshipQualifiedLocation[]>('championshipQualifiedLocations', [])
+  const qualifiedLocations = useTenantData<ChampionshipQualifiedLocation>('championshipQualifiedLocations') // tenantId comes from AuthContext
 
   const addQualifiedLocation = (location: Omit<ChampionshipQualifiedLocation, 'locationId' | 'createdAt' | 'updatedAt'>) => {
     const newLocation: ChampionshipQualifiedLocation = {

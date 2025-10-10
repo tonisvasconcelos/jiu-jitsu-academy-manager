@@ -36,8 +36,7 @@ interface TeacherContextType {
 const TeacherContext = createContext<TeacherContextType | undefined>(undefined)
 
 export const TeacherProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const teachers = useTenantData<Teacher>('teachers', tenant?.id)
+  const teachers = useTenantData<Teacher>('teachers') // tenantId comes from AuthContext
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   

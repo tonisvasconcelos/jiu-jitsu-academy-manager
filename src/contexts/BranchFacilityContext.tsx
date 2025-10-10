@@ -146,7 +146,7 @@ const initialFacilities: BranchFacility[] = [
 ]
 
 export const BranchFacilityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [facilities, setFacilities] = useTenantData<BranchFacility[]>('jiu-jitsu-branch-facilities', initialFacilities)
+  const facilities = useTenantData<BranchFacility>('jiu-jitsu-branch-facilities') // tenantId comes from AuthContext
 
   const addFacility = (facility: BranchFacility) => {
     console.log('BranchFacilityContext: Adding facility:', facility)

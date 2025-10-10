@@ -35,7 +35,7 @@ export const useChampionshipCategories = () => {
 }
 
 export const ChampionshipCategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [categories, setCategories] = useTenantData<ChampionshipCategory[]>('championshipCategories', [])
+  const categories = useTenantData<ChampionshipCategory>('championshipCategories') // tenantId comes from AuthContext
 
   const addCategory = (category: Omit<ChampionshipCategory, 'categoryId'>) => {
     const newCategory: ChampionshipCategory = {

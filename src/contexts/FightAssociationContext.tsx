@@ -227,7 +227,7 @@ const defaultFightAssociations: FightAssociation[] = [
 ]
 
 export const FightAssociationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [fightAssociations, setFightAssociations] = useTenantData<FightAssociation[]>('jiu-jitsu-fight-associations', defaultFightAssociations)
+  const fightAssociations = useTenantData<FightAssociation>('jiu-jitsu-fight-associations') // tenantId comes from AuthContext
 
   const addFightAssociation = (association: FightAssociation) => {
     setFightAssociations(prev => [...prev, association])

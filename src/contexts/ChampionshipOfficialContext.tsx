@@ -38,7 +38,7 @@ export const useChampionshipOfficials = () => {
 }
 
 export const ChampionshipOfficialProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [officials, setOfficials] = useTenantData<ChampionshipOfficial[]>('championshipOfficials', [])
+  const officials = useTenantData<ChampionshipOfficial>('championshipOfficials') // tenantId comes from AuthContext
 
   const addOfficial = (official: Omit<ChampionshipOfficial, 'officialId'>) => {
     const newOfficial: ChampionshipOfficial = {

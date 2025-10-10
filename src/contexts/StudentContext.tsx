@@ -48,8 +48,7 @@ interface StudentContextType {
 const StudentContext = createContext<StudentContextType | undefined>(undefined)
 
 export const StudentProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { tenant } = useAuth()
-  const students = useTenantData<Student>('students', tenant?.id)
+  const students = useTenantData<Student>('students') // tenantId comes from AuthContext
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   

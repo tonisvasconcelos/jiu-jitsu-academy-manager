@@ -60,22 +60,21 @@ const defaultWeightDivisions: WeightDivision[] = [
 ]
 
 export const WeightDivisionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [weightDivisions, setWeightDivisions] = useTenantData<WeightDivision[]>('jiu-jitsu-weight-divisions', defaultWeightDivisions)
+  const weightDivisions = useTenantData<WeightDivision>('jiu-jitsu-weight-divisions') // tenantId comes from AuthContext
 
   const addWeightDivision = (weightDivision: WeightDivision) => {
-    setWeightDivisions(prev => prev ? [...prev, weightDivision] : [weightDivision])
+    // TODO: Implement localStorage save
+    console.log('WeightDivisionProvider: addWeightDivision called with', weightDivision);
   }
 
   const updateWeightDivision = (divisionId: string, updatedWeightDivision: WeightDivision) => {
-    setWeightDivisions(prev => 
-      prev ? prev.map(division => 
-        division.divisionId === divisionId ? updatedWeightDivision : division
-      ) : [updatedWeightDivision]
-    )
+    // TODO: Implement localStorage save
+    console.log('WeightDivisionProvider: updateWeightDivision called with', divisionId, updatedWeightDivision);
   }
 
   const deleteWeightDivision = (divisionId: string) => {
-    setWeightDivisions(prev => prev ? prev.filter(division => division.divisionId !== divisionId) : [])
+    // TODO: Implement localStorage save
+    console.log('WeightDivisionProvider: deleteWeightDivision called with', divisionId);
   }
 
   const getWeightDivision = (divisionId: string) => {
@@ -98,7 +97,8 @@ export const WeightDivisionProvider: React.FC<{ children: ReactNode }> = ({ chil
   }
 
   const clearAllWeightDivisions = () => {
-    setWeightDivisions([])
+    // TODO: Implement localStorage save
+    console.log('WeightDivisionProvider: clearAllWeightDivisions called');
   }
 
   const value: WeightDivisionContextType = {

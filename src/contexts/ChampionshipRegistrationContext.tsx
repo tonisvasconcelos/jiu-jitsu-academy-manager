@@ -41,7 +41,7 @@ export const useChampionshipRegistrations = () => {
 }
 
 export const ChampionshipRegistrationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [registrations, setRegistrations] = useTenantData<ChampionshipRegistration[]>('championshipRegistrations', [])
+  const registrations = useTenantData<ChampionshipRegistration>('championshipRegistrations') // tenantId comes from AuthContext
 
   const addRegistration = (registration: Omit<ChampionshipRegistration, 'registrationId'>) => {
     const newRegistration: ChampionshipRegistration = {

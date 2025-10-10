@@ -65,10 +65,8 @@ const initialConnections: StudentModalityConnection[] = [
 ]
 
 export const StudentModalityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [connections, setConnections, isLoading] = useTenantData<StudentModalityConnection[]>(
-    'jiu-jitsu-student-modalities',
-    initialConnections
-  )
+  const connections = useTenantData<StudentModalityConnection>('jiu-jitsu-student-modalities') // tenantId comes from AuthContext
+  const [isLoading, setIsLoading] = useState(false)
 
   // Save connections to localStorage
   const saveConnectionsToStorage = (connectionsToSave: StudentModalityConnection[]) => {

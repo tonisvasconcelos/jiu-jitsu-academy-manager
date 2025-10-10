@@ -41,7 +41,7 @@ export const useChampionships = () => {
 }
 
 export const ChampionshipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [championships, setChampionships] = useTenantData<Championship[]>('championships', [])
+  const championships = useTenantData<Championship>('championships') // tenantId comes from AuthContext
 
   const addChampionship = (championship: Omit<Championship, 'championshipId'>) => {
     const newChampionship: Championship = {

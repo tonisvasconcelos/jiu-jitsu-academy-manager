@@ -40,7 +40,7 @@ export const useFightTeams = () => {
 }
 
 export const FightTeamProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [fightTeams, setFightTeams] = useTenantData<FightTeam[]>('fightTeams', [])
+  const fightTeams = useTenantData<FightTeam>('fightTeams') // tenantId comes from AuthContext
 
   const addFightTeam = (team: Omit<FightTeam, 'teamId' | 'createdAt' | 'updatedAt'>) => {
     const newTeam: FightTeam = {

@@ -45,7 +45,7 @@ interface ClassCheckInProviderProps {
 }
 
 export const ClassCheckInProvider: React.FC<ClassCheckInProviderProps> = ({ children }) => {
-  const [checkIns, setCheckIns] = useTenantData<ClassCheckIn[]>('jiu-jitsu-class-check-ins', []);
+  const checkIns = useTenantData<ClassCheckIn>('jiu-jitsu-class-check-ins'); // tenantId comes from AuthContext
 
   const addCheckIn = (checkInData: Omit<ClassCheckIn, 'id' | 'createdAt'>) => {
     const newCheckIn: ClassCheckIn = {

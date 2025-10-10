@@ -33,7 +33,7 @@ export const useAffiliations = () => {
 }
 
 export const AffiliationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [affiliations, setAffiliations] = useTenantData<Affiliation[]>('affiliations', [])
+  const affiliations = useTenantData<Affiliation>('affiliations') // tenantId comes from AuthContext
 
   const addAffiliation = (affiliation: Omit<Affiliation, 'affiliationId'>) => {
     const newAffiliation: Affiliation = {
