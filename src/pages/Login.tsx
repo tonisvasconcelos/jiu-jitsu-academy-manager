@@ -93,7 +93,7 @@ const Login: React.FC = () => {
               {/* Tenant Domain */}
               <div>
                 <label htmlFor="tenantDomain" className="block text-sm font-medium text-gray-300 mb-2">
-                  Customer Domain
+                  {t('customer-domain')}
                 </label>
                 <input
                   id="tenantDomain"
@@ -110,7 +110,7 @@ const Login: React.FC = () => {
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                  E-mail address
+                  {t('email-address')}
                 </label>
                 <input
                   id="email"
@@ -128,7 +128,7 @@ const Login: React.FC = () => {
               {/* Password */}
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
-                  Password
+                  {t('password')}
                 </label>
                 <input
                   id="password"
